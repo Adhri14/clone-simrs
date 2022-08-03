@@ -29,19 +29,3 @@
 
 </script>
 @endpush
-
-{{-- Set of CSS workarounds for the plugin --}}
-{{-- NOTE: this may change with newer plugin versions --}}
-
-@once
-@push('css')
-<style type="text/css">
-
-    {{-- Fix the invalid visual style --}}
-    .bootstrap-select.is-invalid {
-        padding-right: 0px !important;
-    }
-
-</style>
-@endpush
-@endonce

@@ -23,30 +23,32 @@
 @section('auth_body')
     <form action="{{ $login_url }}" method="post">
         @csrf
-
+        @if ($errors->any())
+            <div class="alert alert-danger">
+                @foreach ($errors->all() as $error)
+                    {{ $error }} <br>
+                @endforeach
+            </div>
+        @endif
         {{-- Email field --}}
         <div class="input-group mb-3">
-            <input type="email" name="email" class="form-control @error('email') is-invalid @enderror"
-                   value="{{ old('email') }}" placeholder="{{ __('adminlte::adminlte.email') }}" autofocus>
-
+            <input type="username" name="username" class="form-control @error('username')  @enderror"
+                value="{{ old('username') }}" placeholder="Username / Email" autofocus>
             <div class="input-group-append">
                 <div class="input-group-text">
                     <span class="fas fa-envelope {{ config('adminlte.classes_auth_icon', '') }}"></span>
                 </div>
             </div>
-
-            @error('email')
+            @error('username')
                 <span class="invalid-feedback" role="alert">
                     <strong>{{ $message }}</strong>
                 </span>
             @enderror
         </div>
-
         {{-- Password field --}}
         <div class="input-group mb-3">
             <input type="password" name="password" class="form-control @error('password') is-invalid @enderror"
-                   placeholder="{{ __('adminlte::adminlte.password') }}">
-
+                placeholder="{{ __('adminlte::adminlte.password') }}">
             <div class="input-group-append">
                 <div class="input-group-text">
                     <span class="fas fa-lock {{ config('adminlte.classes_auth_icon', '') }}"></span>
@@ -59,7 +61,6 @@
                 </span>
             @enderror
         </div>
-
         {{-- Login field --}}
         <div class="row">
             <div class="col-7">
@@ -73,19 +74,19 @@
             </div>
 
             <div class="col-5">
-                <button type=submit class="btn btn-block {{ config('adminlte.classes_auth_btn', 'btn-flat btn-primary') }}">
+                <button type=submit
+                    class="btn btn-block {{ config('adminlte.classes_auth_btn', 'btn-flat btn-primary') }}">
                     <span class="fas fa-sign-in-alt"></span>
                     {{ __('adminlte::adminlte.sign_in') }}
                 </button>
             </div>
         </div>
-
     </form>
 @stop
 
 @section('auth_footer')
     {{-- Password reset link --}}
-    @if($password_reset_url)
+    @if ($password_reset_url)
         <p class="my-0">
             <a href="{{ $password_reset_url }}">
                 {{ __('adminlte::adminlte.i_forgot_my_password') }}
@@ -94,7 +95,7 @@
     @endif
 
     {{-- Register link --}}
-    @if($register_url)
+    @if ($register_url)
         <p class="my-0">
             <a href="{{ $register_url }}">
                 {{ __('adminlte::adminlte.register_a_new_membership') }}

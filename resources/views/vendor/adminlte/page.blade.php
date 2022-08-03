@@ -15,14 +15,14 @@
     <div class="wrapper">
 
         {{-- Top Navbar --}}
-        @if($layoutHelper->isLayoutTopnavEnabled())
+        @if ($layoutHelper->isLayoutTopnavEnabled())
             @include('adminlte::partials.navbar.navbar-layout-topnav')
         @else
             @include('adminlte::partials.navbar.navbar')
         @endif
 
         {{-- Left Main Sidebar --}}
-        @if(!$layoutHelper->isLayoutTopnavEnabled())
+        @if (!$layoutHelper->isLayoutTopnavEnabled())
             @include('adminlte::partials.sidebar.left-sidebar')
         @endif
 
@@ -39,7 +39,7 @@
         @endif
 
         {{-- Right Control Sidebar --}}
-        @if(config('adminlte.right_sidebar'))
+        @if (config('adminlte.right_sidebar'))
             @include('adminlte::partials.sidebar.right-sidebar')
         @endif
 
@@ -49,4 +49,14 @@
 @section('adminlte_js')
     @stack('js')
     @yield('js')
+    @include('sweetalert::alert')
+    <script src="{{ asset('vendor/loading-overlay/loadingoverlay.min.js') }}"></script>
+    <script>
+        $(function() {
+            $(".withLoad").click(function() {
+                $.LoadingOverlay("show");
+            });
+        })
+    </script>
+
 @stop
