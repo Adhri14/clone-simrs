@@ -14,7 +14,7 @@ return [
     |
     */
 
-    'title' => 'AdminLTE 3',
+    'title' => 'SIM RSUD Waled',
     'title_prefix' => '',
     'title_postfix' => '',
 
@@ -30,7 +30,7 @@ return [
     |
     */
 
-    'use_ico_only' => false,
+    'use_ico_only' => true,
     'use_full_favicon' => false,
 
     /*
@@ -45,12 +45,12 @@ return [
     |
     */
 
-    'logo' => '<b>Admin</b>LTE',
-    'logo_img' => 'vendor/adminlte/dist/img/AdminLTELogo.png',
-    'logo_img_class' => 'brand-image img-circle elevation-3',
+    'logo' => '<b>SIMRS Waled</b>',
+    'logo_img' => 'vendor/adminlte/dist/img/rswaledico.png',
+    'logo_img_class' => 'brand-image',
     'logo_img_xl' => null,
     'logo_img_xl_class' => 'brand-image-xs',
-    'logo_img_alt' => 'AdminLTE',
+    'logo_img_alt' => 'SIMRS Waled',
 
     /*
     |--------------------------------------------------------------------------
@@ -121,7 +121,7 @@ return [
     |
     */
 
-    'classes_body' => '',
+    'classes_body' => 'text-sm',
     'classes_brand' => '',
     'classes_brand_text' => '',
     'classes_content_wrapper' => '',
@@ -152,7 +152,7 @@ return [
     'sidebar_collapse_remember_no_transition' => true,
     'sidebar_scrollbar_theme' => 'os-theme-light',
     'sidebar_scrollbar_auto_hide' => 'l',
-    'sidebar_nav_accordion' => true,
+    'sidebar_nav_accordion' => false,
     'sidebar_nav_animation_speed' => 300,
 
     /*
@@ -241,82 +241,238 @@ return [
             'type' => 'sidebar-menu-search',
             'text' => 'search',
         ],
+        ['header' => 'MENU UTAMA'],
         [
-            'text' => 'blog',
-            'url'  => 'admin/blog',
-            'can'  => 'manage-blog',
+            'text'        => 'Dashboard',
+            'url'         => 'home',
+            'icon'        => 'fas fa-home',
         ],
+        // MENU APLIKASI ANTRIAN
         [
-            'text'        => 'pages',
-            'url'         => 'admin/pages',
-            'icon'        => 'far fa-fw fa-file',
-            'label'       => 4,
-            'label_color' => 'success',
+            'text'    => 'Aplikasi Antrian',
+            'icon'    => 'fas fa-sign-in-alt',
+            'can' => ['admin', 'pendaftaran', 'kasir', 'poliklinik', 'farmasi'],
+            'submenu' => [
+                [
+                    'text' => 'Console Antrian',
+                    'icon'    => 'fas fa-desktop',
+                    'url'  => 'antrian/console',
+                    'shift'   => 'ml-2',
+                    'can' => 'pendaftaran',
+                ],
+                [
+                    'text' => 'Status TaskId Antrian',
+                    'icon'    => 'fas fa-desktop',
+                    'url'  => 'antrian/taskid',
+                    'shift'   => 'ml-2',
+                    'can' => 'pendaftaran',
+                ],
+                [
+                    'text' => 'Pemanggil Antrian Pendaftaran',
+                    'icon'    => 'fas fa-user-plus',
+                    'url'  => 'antrian/pendaftaran',
+                    'shift'   => 'ml-2',
+                    'can' => 'pendaftaran',
+                ],
+                [
+                    'text' => 'Pemanggil Antrian Pembayaran',
+                    'icon'    => 'fas fa-cash-register',
+                    'url'  => 'antrian/pembayaran',
+                    'shift'   => 'ml-2',
+                    'can' => 'kasir',
+                ],
+                [
+                    'text' => 'Pemanggil Antrian Poliklinik',
+                    'icon'    => 'fas fa-clinic-medical',
+                    'url'  => 'antrian/poli',
+                    'shift'   => 'ml-2',
+                    'can' => 'poliklinik',
+                ],
+                [
+                    'text' => 'Pemanggil Antrian Farmasi',
+                    'icon'    => 'fas fa-pills',
+                    'url'  => 'antrian/farmasi',
+                    'shift'   => 'ml-2',
+                    'can' => 'farmasi',
+                ],
+                // [
+                //     'text' => 'Display Antrian Pendaftaran',
+                //     'icon'    => 'fas fa-user-plus',
+                //     'url'  => 'antrian/display_pendaftaran',
+                //     'shift'   => 'ml-2',
+                //     'can' => 'admin',
+                // ],
+                [
+                    'text' => 'Jadwal Dokter Poliklinik',
+                    'icon'    => 'fas fa-calendar-alt',
+                    'shift'   => 'ml-2',
+                    'url'  => 'jadwaldokter',
+                    // 'can' => 'admin',
+                ],
+                [
+                    'text' => 'Jadwal Opersasi',
+                    'icon'    => 'fas fa-calendar-alt',
+                    'shift'   => 'ml-2',
+                    'url'  => 'jadwaloperasi',
+                    // 'can' => 'admin',
+                ],
+                [
+                    'text' => 'Laporan Antrian',
+                    'icon'    => 'fas fa-chart-line',
+                    'shift'   => 'ml-2',
+                    'url'  => 'antrian/laporan',
+                    // 'can' => 'admin',
+                ],
+                [
+                    'text' => 'Laporan Pertanggal',
+                    'icon'    => 'fas fa-chart-line',
+                    'shift'   => 'ml-2',
+                    'url'  => 'antrian/laporan_tanggal',
+                    // 'can' => 'admin',
+                ],
+                [
+                    'text' => 'Laporan Perbulan',
+                    'icon'    => 'fas fa-chart-line',
+                    'shift'   => 'ml-2',
+                    'url'  => 'antrian/laporan_bulan',
+                    // 'can' => 'admin',
+                ],
+            ],
+        ],
+        // MENU VCLAIM
+        [
+            'text'    => 'VClaim BPJS',
+            'icon'    => 'fas fa-sign-in-alt',
+            'can' => 'bpjs',
+            'submenu' => [
+                [
+                    'text' => 'Monitoring Pelayanan Peserta',
+                    'icon'    => 'fas fa-id-card',
+                    'url'  => 'vclaim/monitoring_pelayanan_peserta',
+                    'shift'   => 'ml-2',
+                    'can' => 'bpjs',
+                ],
+                [
+                    'text' => 'Rujukan',
+                    'icon'    => 'fas fa-id-card',
+                    'url'  => 'vclaim/rujukan',
+                    'shift'   => 'ml-2',
+                    'can' => 'bpjs',
+                ],
+                [
+                    'text' => 'Data Surat Kontrol',
+                    'icon'    => 'fas fa-id-card',
+                    'url'  => 'vclaim/data_surat_kontrol',
+                    'shift'   => 'ml-2',
+                    'can' => 'bpjs',
+                ],
+            ],
+        ],
+        // PELAYANAN MEDIS
+        [
+            'text' => 'Pelayanan Medis',
+            'icon'    => 'fas fa-stethoscope',
+            'can' => 'pelayanan-medis',
+            'submenu' => [
+                [
+                    'text' => 'Poliklinik',
+                    'icon'    => 'fas fa-clinic-medical',
+                    'url'  => 'poli',
+                    'shift'   => 'ml-2',
+                    'can' => 'pelayanan-medis',
+                ],
+                [
+                    'text' => 'Dokter',
+                    'icon'    => 'fas fa-user-md',
+                    'url'  => 'dokter',
+                    'shift'   => 'ml-2',
+                    'can' => 'pelayanan-medis',
+                ],
+                [
+                    'text' => 'Jadwal Dokter Poliklinik',
+                    'icon'    => 'fas fa-calendar-alt',
+                    'shift'   => 'ml-2',
+                    'url'  => 'jadwaldokter',
+                    'can' => 'pelayanan-medis',
+                ],
+                [
+                    'text' => 'Jadwal Opersi',
+                    'icon'    => 'fas fa-calendar-alt',
+                    'shift'   => 'ml-2',
+                    'url'  => 'jadwaloperasi',
+                    'can' => 'pelayanan-medis',
+                ],
+                [
+                    'text' => 'Tarif Layanan',
+                    'icon'    => 'fas fa-hand-holding-medical',
+                    'url'  => 'tarif_layanan',
+                    'shift'   => 'ml-2',
+                    'can' => 'pelayanan-medis',
+                ],
+                [
+                    'text' => 'Tarif Kelompok Layanan',
+                    'icon'    => 'fas fa-hand-holding-medical',
+                    'url'  => 'tarif_kelompok_layanan',
+                    'shift'   => 'ml-2',
+                    'can' => 'pelayanan-medis',
+                ],
+
+            ],
+        ],
+        // REKAM MEDIS
+        [
+            'text' => 'Rekam Medis',
+            'icon'    => 'fas fa-file-medical',
+            'can' => 'rekam-medis',
+            'submenu' => [
+                [
+                    'text' => 'Kunjungan',
+                    'icon'    => 'fas fa-hospital-user',
+                    'url'  => 'kunjungan',
+                    'shift'   => 'ml-2',
+                    'can' => 'rekam-medis',
+                ],
+                [
+                    'text' => 'Pasien',
+                    'icon'    => 'fas fa-user-injured',
+                    'url'  => 'pasien',
+                    'shift'   => 'ml-2',
+                    'can' => 'rekam-medis',
+                ],
+            ],
+        ],
+        // USER ACCESS CONTROLL
+        [
+            'text'    => 'User Access Control',
+            'icon'    => 'fas fa-users-cog',
+            'can' => 'admin',
+            'submenu' => [
+                [
+                    'text' => 'User',
+                    'icon'    => 'fas fa-users',
+                    'url'  => 'admin/user',
+                    'shift'   => 'ml-2',
+                    'can' => 'admin',
+                ],
+                [
+                    'text' => 'Role & Permission',
+                    'icon'    => 'fas fa-user-shield',
+                    'url'  => 'admin/role',
+                    'shift'   => 'ml-2',
+                    'can' => 'admin',
+                ],
+            ],
         ],
         ['header' => 'account_settings'],
         [
             'text' => 'profile',
-            'url'  => 'admin/settings',
+            'url'  => 'profile',
             'icon' => 'fas fa-fw fa-user',
         ],
         [
             'text' => 'change_password',
-            'url'  => 'admin/settings',
+            'url'  => 'password/reset',
             'icon' => 'fas fa-fw fa-lock',
-        ],
-        [
-            'text'    => 'multilevel',
-            'icon'    => 'fas fa-fw fa-share',
-            'submenu' => [
-                [
-                    'text' => 'level_one',
-                    'url'  => '#',
-                ],
-                [
-                    'text'    => 'level_one',
-                    'url'     => '#',
-                    'submenu' => [
-                        [
-                            'text' => 'level_two',
-                            'url'  => '#',
-                        ],
-                        [
-                            'text'    => 'level_two',
-                            'url'     => '#',
-                            'submenu' => [
-                                [
-                                    'text' => 'level_three',
-                                    'url'  => '#',
-                                ],
-                                [
-                                    'text' => 'level_three',
-                                    'url'  => '#',
-                                ],
-                            ],
-                        ],
-                    ],
-                ],
-                [
-                    'text' => 'level_one',
-                    'url'  => '#',
-                ],
-            ],
-        ],
-        ['header' => 'labels'],
-        [
-            'text'       => 'important',
-            'icon_color' => 'red',
-            'url'        => '#',
-        ],
-        [
-            'text'       => 'warning',
-            'icon_color' => 'yellow',
-            'url'        => '#',
-        ],
-        [
-            'text'       => 'information',
-            'icon_color' => 'cyan',
-            'url'        => '#',
         ],
     ],
 
@@ -355,23 +511,88 @@ return [
     */
 
     'plugins' => [
+        'TempusDominusBs4' => [
+            'active' => false,
+            'files' => [
+                [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => 'vendor/moment/moment.min.js',
+                ],
+                [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => 'vendor/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js',
+                ],
+                [
+                    'type' => 'css',
+                    'asset' => true,
+                    'location' => 'vendor/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css',
+                ],
+            ],
+        ],
         'Datatables' => [
             'active' => false,
             'files' => [
                 [
                     'type' => 'js',
-                    'asset' => false,
-                    'location' => '//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js',
+                    'asset' => true,
+                    'location' => 'vendor/datatables/js/jquery.dataTables.min.js',
                 ],
                 [
                     'type' => 'js',
-                    'asset' => false,
-                    'location' => '//cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js',
+                    'asset' => true,
+                    'location' => 'vendor/datatables/js/dataTables.bootstrap4.min.js',
                 ],
                 [
                     'type' => 'css',
-                    'asset' => false,
-                    'location' => '//cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css',
+                    'asset' => true,
+                    'location' => 'vendor/datatables/css/dataTables.bootstrap4.min.css',
+                ],
+            ],
+        ],
+        'DatatablesPlugins' => [
+            'active' => false,
+            'files' => [
+                [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => 'vendor/datatables-plugins/buttons/js/dataTables.buttons.min.js',
+                ],
+                [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => 'vendor/datatables-plugins/buttons/js/buttons.bootstrap4.min.js',
+                ],
+                [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => 'vendor/datatables-plugins/buttons/js/buttons.html5.min.js',
+                ],
+                [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => 'vendor/datatables-plugins/buttons/js/buttons.print.min.js',
+                ],
+                [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => 'vendor/datatables-plugins/jszip/jszip.min.js',
+                ],
+                [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => 'vendor/datatables-plugins/pdfmake/pdfmake.min.js',
+                ],
+                [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => 'vendor/datatables-plugins/pdfmake/vfs_fonts.js',
+                ],
+                [
+                    'type' => 'css',
+                    'asset' => true,
+                    'location' => 'vendor/datatables-plugins/buttons/css/buttons.bootstrap4.min.css',
                 ],
             ],
         ],
@@ -380,13 +601,18 @@ return [
             'files' => [
                 [
                     'type' => 'js',
-                    'asset' => false,
-                    'location' => '//cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js',
+                    'asset' => true,
+                    'location' => 'vendor/select2/js/select2.full.min.js',
                 ],
                 [
                     'type' => 'css',
-                    'asset' => false,
-                    'location' => '//cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.css',
+                    'asset' => true,
+                    'location' => 'vendor/select2/css/select2.min.css',
+                ],
+                [
+                    'type' => 'css',
+                    'asset' => true,
+                    'location' => 'vendor/select2-bootstrap4-theme/select2-bootstrap4.min.css',
                 ],
             ],
         ],
@@ -405,23 +631,58 @@ return [
             'files' => [
                 [
                     'type' => 'js',
-                    'asset' => false,
-                    'location' => '//cdn.jsdelivr.net/npm/sweetalert2@8',
+                    'asset' => true,
+                    'location' => 'vendor/sweetalert2/sweetalert2.min.js',
+                ],
+                [
+                    'type' => 'css',
+                    'asset' => true,
+                    'location' => 'vendor/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css',
+                ],
+            ],
+        ],
+        'BootstrapSwitch' => [
+            'active' => false,
+            'files' => [
+                [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => 'vendor/bootstrap-switch/js/bootstrap-switch.min.js',
                 ],
             ],
         ],
         'Pace' => [
-            'active' => false,
+            'active' => true,
             'files' => [
                 [
                     'type' => 'css',
-                    'asset' => false,
-                    'location' => '//cdnjs.cloudflare.com/ajax/libs/pace/1.0.2/themes/blue/pace-theme-center-radar.min.css',
+                    'asset' => true,
+                    'location' => 'vendor/pace-progress/themes/blue/pace-theme-flat-top.css'
                 ],
                 [
                     'type' => 'js',
-                    'asset' => false,
-                    'location' => '//cdnjs.cloudflare.com/ajax/libs/pace/1.0.2/pace.min.js',
+                    'asset' => true,
+                    'location' => 'vendor/pace-progress/pace.min.js'
+                ],
+            ],
+        ],
+        'DateRangePicker' => [
+            'active' => false,
+            'files' => [
+                [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' =>  'vendor/moment/moment.min.js',
+                ],
+                [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => 'vendor/daterangepicker/daterangepicker.js',
+                ],
+                [
+                    'type' => 'css',
+                    'asset' => true,
+                    'location' => 'vendor/daterangepicker/daterangepicker.css',
                 ],
             ],
         ],
