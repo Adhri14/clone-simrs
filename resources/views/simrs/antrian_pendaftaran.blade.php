@@ -11,7 +11,6 @@
         <div class="col-12">
             <x-adminlte-card title="Filter Data Antrian" theme="secondary" collapsible>
                 <form action="{{ route('antrian.pendaftaran') }}" method="get">
-                    @csrf
                     <div class="row">
                         <div class="col-md-3">
                             <x-adminlte-input name="user" label="User" readonly value="{{ auth()->user()->name }}" />
