@@ -29,7 +29,6 @@ return new class extends Migration
             $table->string('nomorreferensi')->nullable();
             $table->string('nomorsuratkontrol')->nullable();
             $table->string('nomorsep')->nullable();
-
             $table->string('jenispasien');
             $table->string('namapoli');
             $table->string('pasienbaru');
@@ -42,13 +41,15 @@ return new class extends Migration
             $table->string('kuotajkn')->nullable();
             $table->string('sisakuotanonjkn')->nullable();
             $table->string('kuotanonjkn')->nullable();
-            $table->string('user')->nullable();
-            $table->text('keterangan');
+            $table->string('lantai')->nullable();
+
             $table->string('taskid')->default(0);
-            $table->string('status_api')->default(0);
             $table->string('taskid1')->nullable();
             $table->string('taskid2')->nullable();
             $table->string('taskid3')->nullable();
+            $table->string('status_api')->default(0);
+            $table->text('keterangan');
+            $table->string('user')->nullable();
             $table->timestamps();
         });
     }

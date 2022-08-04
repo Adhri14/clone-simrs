@@ -34,7 +34,6 @@ class AntrianBPJSController extends Controller
 {
     // function WS BPJS
     public $baseUrl = 'https://apijkn-dev.bpjs-kesehatan.go.id/antreanrs_dev/';
-
     public static function signature()
     {
         $cons_id =  env('ANTRIAN_CONS_ID');
@@ -331,7 +330,6 @@ class AntrianBPJSController extends Controller
         $response = json_decode($response);
         return $response;
     }
-
     // function WS RS
     public function token(Request $request)
     {
@@ -367,6 +365,7 @@ class AntrianBPJSController extends Controller
                     // $user = User::where('username', $request->header('x-username'))->first();
                     $credentials = $request->header('x-token');
                     $token = PersonalAccessToken::findToken($credentials);
+                    // token tidak ditemukan
                     if (!$token) {
                         return $response = [
                             "metadata" => [
@@ -374,8 +373,20 @@ class AntrianBPJSController extends Controller
                                 "message" => "Unauthorized (Token Salah)"
                             ]
                         ];
-                    } else {
+                    }
+                    // token ditemukan
+                    else {
                         $user = $token->tokenable;
+                        if (Carbon::now() >  $token->created_at->addMinute(5)) {
+                            $token->delete();
+                            $response = [
+                                "metadata" => [
+                                    "code" => 201,
+                                    "message" => "Token Expired"
+                                ]
+                            ];
+                            return $response;
+                        }
                         if ($user->username != $request->header('x-username')) {
                             return $response = [
                                 "metadata" => [
@@ -1374,5 +1385,87 @@ class AntrianBPJSController extends Controller
             ]
         ];
         return $response;
+    }
+    // function WS RS
+    public function pasien_pendaftaran(Request $request)
+    {
+        // checking request
+        $validator = Validator::make(request()->all(), [
+            "tanggalperiksa" => "required",
+        ]);
+        if ($validator->fails()) {
+            return [
+                'metadata' => [
+                    'code' => 201,
+                    'message' => $validator->errors()->first(),
+                ],
+            ];
+        }
+        $antrians = Antrian::where('tanggalperiksa', $request->tanggalperiksa)
+            ->get();
+        return response()->json($antrians);
+    }
+    public function panggil_pendaftaran($kodebooking, $loket, $lantai, Request $request)
+    {
+        $antrian = Antrian::where('kodebooking', $kodebooking)->first();
+        if ($antrian) {
+            $request['kodebooking'] = $antrian->kodebooking;
+            $request['taskid'] = 2;
+            $now = Carbon::now();
+            $request['waktu'] = Carbon::now()->timestamp * 1000;
+            $vclaim = new AntrianBPJSController();
+            $response = $vclaim->update_antrian($request);
+            $antrian->update([
+                'taskid' => 2,
+                'status_api' => 1,
+                'keterangan' => "Panggilan ke loket pendaftaran",
+                'taskid2' => $now,
+                // 'user' => Auth::user()->name,
+            ]);
+            //panggil urusan mesin antrian
+            try {
+                $tanggal = Carbon::now()->format('Y-m-d');
+                $urutan = $antrian->angkaantrean;
+                $mesin_antrian = DB::connection('mysql3')->table('tb_counter')
+                    ->where('tgl', $tanggal)
+                    ->where('kategori', 'WA')
+                    ->where('loket', $loket)
+                    ->where('lantai', $lantai)
+                    ->get();
+                if ($mesin_antrian->count() < 1) {
+                    $mesin_antrian = DB::connection('mysql3')->table('tb_counter')->insert([
+                        'tgl' => $tanggal,
+                        'kategori' => 'WA',
+                        'loket' => $loket,
+                        'counterloket' => $urutan,
+                        'lantai' => $lantai,
+                        'mastercount' => $urutan,
+                        'sound' => 'PLAY',
+                    ]);
+                } else {
+                    DB::connection('mysql3')->table('tb_counter')
+                        ->where('tgl', $tanggal)
+                        ->where('kategori', 'WA')
+                        ->where('loket', $loket)
+                        ->where('lantai', $lantai)
+                        ->limit(1)
+                        ->update([
+                            // 'counterloket' => $antrian->first()->mastercount + 1,
+                            'counterloket' => $urutan,
+                            // 'mastercount' => $antrian->first()->mastercount + 1,
+                            'mastercount' => $urutan,
+                            'sound' => 'PLAY',
+                        ]);
+                }
+            } catch (\Throwable $th) {
+                Alert::error('Error', 'Mesin Antrian Tidak Menyala');
+                // return redirect()->back();
+            }
+            Alert::success('Success', 'Panggilan Berhasil ' . $response->metadata->message);
+            return redirect()->back();
+        } else {
+            Alert::error('Error', 'Kode Booking tidak ditemukan');
+            return redirect()->back();
+        }
     }
 }
