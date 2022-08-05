@@ -47,7 +47,7 @@
                         </x-adminlte-alert>
                     @endif
                     @php
-                        $heads = ['Tanggal', 'Kode DPPK', 'Nama Poli', 'Checkin', 'Pendaftaran', 'Tunggu Poli', 'Layanan Poli', 'Tunggu Farmasi', 'Layanan Farmasi',  'Jumlah', 'Insert Date'];
+                        $heads = ['Tanggal', 'Kode DPPK', 'Nama Poli', 'Checkin', 'Pendaftaran', 'Tunggu Poli', 'Layanan Poli', 'Tunggu Farmasi', 'Layanan Farmasi', 'Jumlah', 'Insert Date'];
                         $config['order'] = ['2', 'desc'];
                     @endphp
                     <x-adminlte-datatable id="table1" class="nowrap" :heads="$heads" :config="$config" striped bordered
@@ -57,23 +57,23 @@
                                 <td>{{ $item->tanggal }}</td>
                                 <td>{{ $item->nmppk }}</td>
                                 <td>{{ $item->namapoli }}</td>
-                                <td>{{ $item->waktu_task1 }} s <br>
-                                    {{ $item->avg_waktu_task1 }} s
+                                <td>Total : {{ round($item->waktu_task1 / 60) }} menit <br>
+                                    Rata : {{ round($item->avg_waktu_task1 / 60) }} menit
                                 </td>
-                                <td>{{ $item->waktu_task2 }} <br>
-                                    {{ $item->avg_waktu_task2 }} s
+                                <td>Total : {{ round($item->waktu_task2 / 60) }} menit<br>
+                                    Rata : {{ round($item->avg_waktu_task2 / 60) }} menit
                                 </td>
-                                <td>{{ $item->waktu_task3 }} <br>
-                                    {{ $item->avg_waktu_task3 }} s
+                                <td>Total : {{ round($item->waktu_task3 / 60) }} menit<br>
+                                    Rata : {{ round($item->avg_waktu_task3 / 60) }} menit
                                 </td>
-                                <td>{{ $item->waktu_task4 }}<br>
-                                    {{ $item->avg_waktu_task4 }} s
+                                <td>Total : {{ round($item->waktu_task4 / 60) }} menit<br>
+                                    Rata : {{ round($item->avg_waktu_task4 / 60) }} menit
                                 </td>
-                                <td>{{ $item->waktu_task5 }} <br>
-                                    {{ $item->avg_waktu_task5 }} s
+                                <td>Total : {{ round($item->waktu_task5 / 60) }} menit<br>
+                                    Rata : {{ round($item->avg_waktu_task5 / 60) }} menit
                                 </td>
-                                <td>{{ $item->waktu_task6 }} <br>
-                                    {{ $item->avg_waktu_task6 }} s
+                                <td>Total : {{ round($item->waktu_task6 / 60) }} menit<br>
+                                    Rata : {{ round($item->avg_waktu_task6 / 60) }} menit
                                 </td>
                                 <td>{{ $item->jumlah_antrean }}</td>
                                 <td>{{ date('d/m/Y H:i:s', $item->insertdate / 1000) }}</td>

@@ -717,17 +717,17 @@
                             enable-old-support>
                             <x-slot name="bottomSlot">
                                 <span class="text-sm text-danger">
-                                    Masukan jika kunjungan anda menggunakan BPJS/JKN
+                                    Isi jika menggunakan JKN / BPJS
                                 </span>
                             </x-slot>
                         </x-adminlte-input>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <x-adminlte-input name="nomorreferensiOn" label="Nomor Rujukan" placeholder="Nomor Rujukan"
                             enable-old-support>
                             <x-slot name="bottomSlot">
                                 <span class="text-sm text-danger">
-                                    Masukan jika kunjungan anda menggunakan BPJS/JKN
+                                    Isi jika menggunakan JKN / BPJS
                                 </span>
                             </x-slot>
                         </x-adminlte-input>

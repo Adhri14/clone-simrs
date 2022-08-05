@@ -57,25 +57,25 @@
                                 <td>{{ $item->tanggal }}</td>
                                 <td>{{ $item->nmppk }}</td>
                                 <td>{{ $item->namapoli }}</td>
-                                <td>{{ $item->waktu_task1 }} detik <br>
-                                    {{ $item->avg_waktu_task1 }} detik
+                                <td>Total : {{ round($item->waktu_task1 / 60) }} menit <br>
+                                    Rata : {{ round($item->avg_waktu_task1 / 60) }} menit
                                 </td>
-                                <td>{{ $item->waktu_task2 }} detik<br>
-                                    {{ $item->avg_waktu_task2 }} detik
+                                <td>Total : {{ round($item->waktu_task2 / 60) }} menit<br>
+                                    Rata : {{ round($item->avg_waktu_task2 / 60) }} menit
                                 </td>
-                                <td>{{ $item->waktu_task3 }} detik<br>
-                                    {{ $item->avg_waktu_task3 }} detik
+                                <td>Total : {{ round($item->waktu_task3 / 60) }} menit<br>
+                                    Rata : {{ round($item->avg_waktu_task3 / 60) }} menit
                                 </td>
-                                <td>{{ $item->waktu_task4 }} detik<br>
-                                    {{ $item->avg_waktu_task4 }} detik
+                                <td>Total : {{ round($item->waktu_task4 / 60) }} menit<br>
+                                    Rata : {{ round($item->avg_waktu_task4 / 60) }} menit
                                 </td>
-                                <td>{{ $item->waktu_task5 }} detik<br>
-                                    {{ $item->avg_waktu_task5 }} detik
+                                <td>Total : {{ round($item->waktu_task5 / 60) }} menit<br>
+                                    Rata : {{ round($item->avg_waktu_task5 / 60) }} menit
                                 </td>
-                                <td>{{ $item->waktu_task6 }} detik<br>
-                                    {{ $item->avg_waktu_task6 }} detik
+                                <td>Total : {{ round($item->waktu_task6 / 60) }} menit<br>
+                                    Rata : {{ round($item->avg_waktu_task6 / 60) }} menit
                                 </td>
-                                <td>{{ $item->jumlah_antrean }}</td>
+                                <td> {{ $item->jumlah_antrean }}</td>
                                 <td>{{ date('d/m/Y H:i:s', $item->insertdate / 1000) }}</td>
                             </tr>
                         @endforeach

@@ -448,14 +448,12 @@ class AntrianController extends Controller
             'antrianidOn' => 'required',
             'statuspasienOn' => 'required',
             'nikOn' => 'required',
-            'nomorkkOn' => 'required',
-            'nomorkkOn' => 'required',
             'namaOn' => 'required',
             'nohpOn' => 'required',
             'jeniskelaminOn' => 'required',
             'tanggallahirOn' => 'required',
-            'alamatOn' => 'required',
-            'kodepropOn' => 'required',
+            // 'alamatOn' => 'required',
+            // 'kodepropOn' => 'required',
         ]);
         // init
         $antrian = Antrian::firstWhere('id', $request->antrianidOn);
@@ -659,20 +657,25 @@ class AntrianController extends Controller
     public function racik_farmasi($kodebooking, Request $request)
     {
         $antrian = Antrian::where('kodebooking', $kodebooking)->first();
-        $request['kodebooking'] = $antrian->kodebooking;
-        $request['taskid'] = 6;
-        $request['keterangan'] = "Proses peracikan obat";
-        $request['waktu'] = Carbon::now()->timestamp * 1000;
-        $vclaim = new AntrianBPJSController();
-        $response = $vclaim->update_antrian($request);
-        $antrian->update([
-            'taskid' => $request->taskid,
-            'status_api' => 1,
-            'keterangan' => $request->keterangan,
-            // 'user' => Auth::user()->name,
-        ]);
-        Alert::success('Proses', 'Proses Peracikan Obat ' . $response->metadata->message);
-        return redirect()->back();
+        if ($antrian) {
+            $request['kodebooking'] = $antrian->kodebooking;
+            $request['taskid'] = 6;
+            $request['keterangan'] = "Proses peracikan obat";
+            $request['waktu'] = Carbon::now()->timestamp * 1000;
+            $vclaim = new AntrianBPJSController();
+            $response = $vclaim->update_antrian($request);
+            $antrian->update([
+                'taskid' => $request->taskid,
+                'status_api' => 1,
+                'keterangan' => $request->keterangan,
+                // 'user' => Auth::user()->name,
+            ]);
+            Alert::success('Proses', 'Proses Peracikan Obat ' . $response->metadata->message);
+            return redirect()->back();
+        }else{
+            Alert::error('Error', 'Kodebooking tidak ditemukan');
+            return redirect()->back();
+        }
     }
     public function selesai_farmasi($kodebooking, Request $request)
     {
@@ -810,67 +813,67 @@ class AntrianController extends Controller
     }
 
 
-    public function baru_online($kodebooking)
-    {
-        $antrian = Antrian::firstWhere('kodebooking', $kodebooking);
-        $poli = Poliklinik::get();
-        $api = new VclaimBPJSController();
-        $provinsis = $api->ref_provinsi()->response->list;
-        return view('simrs.antrian_baru_online', [
-            'poli' => $poli,
-            'antrian' => $antrian,
-            'provinsis' => $provinsis,
-        ]);
-    }
-    public function simpan_baru_online($kodebooking, Request $request)
-    {
-        $request->validate([
-            'nomorkartu' => 'required',
-            'nik' => 'required',
-            'nomorkk' => 'required',
-            'nama' => 'required',
-            'jeniskelamin' => 'required',
-            'tanggallahir' => 'required',
-            'nohp' => 'required',
-            'alamat' => 'required',
-            'kodeprop' => 'required',
-        ]);
+    // public function baru_online($kodebooking)
+    // {
+    //     $antrian = Antrian::firstWhere('kodebooking', $kodebooking);
+    //     $poli = Poliklinik::get();
+    //     $api = new VclaimBPJSController();
+    //     $provinsis = $api->ref_provinsi()->response->list;
+    //     return view('simrs.antrian_baru_online', [
+    //         'poli' => $poli,
+    //         'antrian' => $antrian,
+    //         'provinsis' => $provinsis,
+    //     ]);
+    // }
+    // public function simpan_baru_online($kodebooking, Request $request)
+    // {
+    //     $request->validate([
+    //         'nomorkartu' => 'required',
+    //         'nik' => 'required',
+    //         'nomorkk' => 'required',
+    //         'nama' => 'required',
+    //         'jeniskelamin' => 'required',
+    //         'tanggallahir' => 'required',
+    //         'nohp' => 'required',
+    //         'alamat' => 'required',
+    //         'kodeprop' => 'required',
+    //     ]);
 
-        $api = new AntrianBPJSController();
-        $request['taskid'] = 3;
-        $request['waktu'] = Carbon::now()->timestamp * 1000;
-        $request['kodebooking'] = $kodebooking;
-        $response = $api->update_antrian($request);
-        if ($response->metadata->code == 200) {
-            $pasien = Pasien::count();
-            $request['norm'] =  Carbon::now()->format('Y') . str_pad($pasien + 1, 4, '0', STR_PAD_LEFT);
-            Pasien::create($request->except('_token'));
-            $antrian = Antrian::firstWhere('kodebooking', $kodebooking);
-            $antrian->update([
-                'taskid' => 3,
-                'norm' => $pasien->norm,
-                'nama' => $pasien->nama,
-                // 'user' => Auth::user()->name,
-            ]);
-        } else {
-            Alert::error('Error', "Error Message " . $response->metadata->message);
-        }
-        return redirect()->route('antrian.pendaftaran');
-    }
-    public function baru_offline($kodebooking)
-    {
-        $antrian = Antrian::firstWhere('kodebooking', $kodebooking);
-        $poli = Poliklinik::get();
-        return view('simrs.antrian_baru_offline', [
-            'poli' => $poli,
-            'antrian' => $antrian,
-        ]);
-    }
-    public function tambah()
-    {
-        $poli = Poliklinik::get();
-        return view('simrs.antrian_tambah', [
-            'poli' => $poli,
-        ]);
-    }
+    //     $api = new AntrianBPJSController();
+    //     $request['taskid'] = 3;
+    //     $request['waktu'] = Carbon::now()->timestamp * 1000;
+    //     $request['kodebooking'] = $kodebooking;
+    //     $response = $api->update_antrian($request);
+    //     if ($response->metadata->code == 200) {
+    //         $pasien = Pasien::count();
+    //         $request['norm'] =  Carbon::now()->format('Y') . str_pad($pasien + 1, 4, '0', STR_PAD_LEFT);
+    //         Pasien::create($request->except('_token'));
+    //         $antrian = Antrian::firstWhere('kodebooking', $kodebooking);
+    //         $antrian->update([
+    //             'taskid' => 3,
+    //             'norm' => $pasien->norm,
+    //             'nama' => $pasien->nama,
+    //             // 'user' => Auth::user()->name,
+    //         ]);
+    //     } else {
+    //         Alert::error('Error', "Error Message " . $response->metadata->message);
+    //     }
+    //     return redirect()->route('antrian.pendaftaran');
+    // }
+    // public function baru_offline($kodebooking)
+    // {
+    //     $antrian = Antrian::firstWhere('kodebooking', $kodebooking);
+    //     $poli = Poliklinik::get();
+    //     return view('simrs.antrian_baru_offline', [
+    //         'poli' => $poli,
+    //         'antrian' => $antrian,
+    //     ]);
+    // }
+    // public function tambah()
+    // {
+    //     $poli = Poliklinik::get();
+    //     return view('simrs.antrian_tambah', [
+    //         'poli' => $poli,
+    //     ]);
+    // }
 }
