@@ -28,8 +28,8 @@
                             'locale' => ['format' => 'DD-MM-YYYY'],
                         ];
                     @endphp
-                    <x-adminlte-date-range name="periode" label="Periode" :config="$config"
-                        value="{{ $request->periode }}" enable-default-ranges>
+                    <x-adminlte-date-range name="periode" label="Periode" :config="$config" value="{{ $request->periode }}"
+                        enable-default-ranges>
                         <x-slot name="prependSlot">
                             <div class="input-group-text bg-primary">
                                 <i class="fas fa-calendar-alt"></i>
@@ -70,25 +70,25 @@
                     <div class="row">
                         <div class="col-md-12">
                             @php
-                                $heads = ['Kode Kunjungan', 'Kode RM', 'Nama Pasien', 'Unit', 'Penjamin', 'Tgl Masuk', 'Tgl Keluar', 'Alasan Masuk', 'Status', 'Action'];
+                                $heads = ['Tgl Masuk', 'Tgl Keluar', 'Kode Kunjungan', 'Kode RM', 'Nama Pasien', 'Unit', 'Penjamin', 'Alasan Masuk', 'Status', 'Action'];
                                 $config['paging'] = false;
                                 $config['lengthMenu'] = false;
                                 $config['searching'] = false;
                                 $config['info'] = false;
                                 $config['order'] = [[5, 'desc']];
                             @endphp
-                            <x-adminlte-datatable id="table1" class="nowrap" :heads="$heads" :config="$config" hoverable bordered
-                                compressed>
+                            <x-adminlte-datatable id="table1" class="nowrap" :heads="$heads" :config="$config"
+                                hoverable bordered compressed>
                                 @foreach ($kunjungans as $item)
                                     <tr>
-                                        <td>{{ $item->kode_kunjungan }}</td>
-                                        <td>{{ $item->no_rm }}</td>
-                                        <td>{{ $item->pasien->nama_px }}</td>
-                                        <td>{{ $item->unit->nama_unit }}</td>
-                                        <td>{{ $item->penjamin->nama_penjamin }}</td>
                                         <td>{{ $item->tgl_masuk }}</td>
                                         <td>{{ $item->tgl_keluar }}</td>
-                                        <td>{{ $alasan_masuk[$item->id_alasan_masuk] }}</td>
+                                        <td>{{ $item->kode_kunjungan }}</td>
+                                        <td>{{ $item->no_rm }}</td>
+                                        <td>{{ $item->pasien->nama_px ?? '-' }}</td>
+                                        <td>{{ $item->unit->nama_unit ?? '-'}}</td>
+                                        <td>{{ $item->penjamin->nama_penjamin ?? '-' }}</td>
+                                        <td>{{ $alasan_masuk[$item->id_alasan_masuk] ?? '-' }}</td>
                                         <td>{{ $status_kunjungan[$item->status_kunjungan] }}</td>
                                         <td>
                                             <x-adminlte-button class="btn-xs" theme="warning" icon="fas fa-edit"
