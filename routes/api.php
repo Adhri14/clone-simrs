@@ -49,6 +49,9 @@ Route::prefix('wsrs')->group(function () {
     Route::post('jadwal_operasi_pasien', [AntrianBPJSController::class, 'jadwal_operasi_pasien']);
 
     Route::post('pasien_pendaftaran', [AntrianBPJSController::class, 'pasien_pendaftaran']);
+    Route::post('panggil_pendaftaran', [AntrianBPJSController::class, 'panggil_pendaftaran']);
+    Route::post('update_pendaftaran_offline', [AntrianBPJSController::class, 'update_pendaftaran_offline']);
+    Route::post('update_pendaftaran_online', [AntrianBPJSController::class, 'update_pendaftaran_online']);
 });
 
 Route::prefix('vclaim')->group(function () {
