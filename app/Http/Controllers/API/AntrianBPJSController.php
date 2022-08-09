@@ -1762,76 +1762,82 @@ class AntrianBPJSController extends Controller
             ];
         }
     }
-    // public function update_pendaftaran_online(Request $request)
-    // {
-    //     // validation
-    //     $request->validate([
-    //         'antrianidOn' => 'required',
-    //         'statuspasienOn' => 'required',
-    //         'nikOn' => 'required',
-    //         'namaOn' => 'required',
-    //         'nohpOn' => 'required',
-    //         'jeniskelaminOn' => 'required',
-    //         'tanggallahirOn' => 'required',
-    //         // 'alamatOn' => 'required',
-    //         // 'kodepropOn' => 'required',
-    //     ]);
-    //     // init
-    //     $antrian = Antrian::firstWhere('id', $request->antrianidOn);
-    //     // update antrian bpjs
-    //     $request['kodebooking'] = $antrian->kodebooking;
-    //     $request['taskid'] = 3;
-    //     if ($antrian->jenispasien == "JKN") {
-    //         $request['status_api'] = 1;
-    //         $request['keterangan'] = "Silahkan melakukan menunggu di poliklinik untuk dilayani";
-    //     } else {
-    //         $request['status_api'] = 0;
-    //         $request['keterangan'] = "Silahkan melakukan pembayaran pendaftaran ke loket pembayaran";
-    //     }
-    //     $request['waktu'] = Carbon::now()->timestamp * 1000;;
-    //     $vclaim = new AntrianBPJSController();
-    //     $response = $vclaim->update_antrian($request);
-    //     if ($response->metadata->code == 200) {
-    //         // update pasien
-    //         $pasien = PasienDB::firstWhere('nik_bpjs', $request->nikOn);
-    //         $pasien->update(
-    //             [
-    //                 "no_Bpjs" => $request->nomorkartuOn,
-    //                 "nik_bpjs" => $request->nikOn,
-    //                 "no_rm" => $request->normOn,
-    //                 // "nomorkk" => $request->nomorkk,
-    //                 "nama_px" => $request->namaOn,
-    //                 "jenis_kelamin" => $request->jeniskelaminOn,
-    //                 "tgl_lahir" => $request->tanggallahirOn,
-    //                 "no_tlp" => $request->nohpOn,
-    //                 "alamat" => $request->alamatOn,
-    //                 "kode_propinsi" => $request->kodepropOn,
-    //                 // "namaprop" => $request->namaprop,
-    //                 "kode_kabupaten" => $request->kodedati2On,
-    //                 // "namadati2" => $request->namadati2,
-    //                 "kode_kecamatan" => $request->kodekecOn,
-    //                 // "namakec" => $request->namakec,
-    //                 "kode_desa" => $request->kodekelOn,
-    //                 // "namakel" => $request->namakel,
-    //                 // "rw" => $request->rw,
-    //                 // "rt" => $request->rt,
-    //                 // "status" => $request->status,
-    //             ]
-    //         );
-    //         // update antrian simrs
-    //         $antrian->update([
-    //             'taskid' => 3,
-    //             'status_api' => $request->status_api,
-    //             'keterangan' => $request->keterangan,
-    //             // 'user' => Auth::user()->name,
-    //         ]);
-    //         Alert::success('Success', "Pendaftaran Berhasil. " . $request->keterangan . " " . $response->metadata->message);
-    //         return redirect()->back();
-    //     }
-    //     // jika gagal update antrian bpjs
-    //     else {
-    //         Alert::error('Error', "Pendaftaran Gagal.\n" . $response->metadata->message);
-    //         return redirect()->back();
-    //     }
-    // }
+    public function update_pendaftaran_online(Request $request)
+    {
+        // checking request
+        $validator = Validator::make(request()->all(), [
+            'antrianidOn' => 'required',
+            'statuspasienOn' => 'required',
+            'nikOn' => 'required',
+            'namaOn' => 'required',
+            'nohpOn' => 'required',
+            'jeniskelaminOn' => 'required',
+            'tanggallahirOn' => 'required',
+        ]);
+        if ($validator->fails()) {
+            return [
+                'metadata' => [
+                    'code' => 201,
+                    'message' => $validator->errors()->first(),
+                ],
+            ];
+        }
+        // init
+        $antrian = Antrian::firstWhere('id', $request->antrianidOn);
+        // update antrian bpjs
+        $request['kodebooking'] = $antrian->kodebooking;
+        $request['taskid'] = 3;
+        if ($antrian->jenispasien == "JKN") {
+            $request['status_api'] = 1;
+            $request['keterangan'] = "Silahkan melakukan menunggu di poliklinik untuk dilayani";
+        } else {
+            $request['status_api'] = 0;
+            $request['keterangan'] = "Silahkan melakukan pembayaran pendaftaran ke loket pembayaran";
+        }
+        $request['waktu'] = Carbon::now()->timestamp * 1000;;
+        $vclaim = new AntrianBPJSController();
+        $response = $vclaim->update_antrian($request);
+        if ($response->metadata->code == 200) {
+            // update pasien
+            $pasien = PasienDB::firstWhere('nik_bpjs', $request->nikOn);
+            $pasien->update(
+                [
+                    "no_Bpjs" => $request->nomorkartuOn,
+                    "nik_bpjs" => $request->nikOn,
+                    "no_rm" => $request->normOn,
+                    // "nomorkk" => $request->nomorkk,
+                    "nama_px" => $request->namaOn,
+                    "jenis_kelamin" => $request->jeniskelaminOn,
+                    "tgl_lahir" => $request->tanggallahirOn,
+                    "no_tlp" => $request->nohpOn,
+                    "alamat" => $request->alamatOn,
+                    "kode_propinsi" => $request->kodepropOn,
+                    // "namaprop" => $request->namaprop,
+                    "kode_kabupaten" => $request->kodedati2On,
+                    // "namadati2" => $request->namadati2,
+                    "kode_kecamatan" => $request->kodekecOn,
+                    // "namakec" => $request->namakec,
+                    "kode_desa" => $request->kodekelOn,
+                    // "namakel" => $request->namakel,
+                    // "rw" => $request->rw,
+                    // "rt" => $request->rt,
+                    // "status" => $request->status,
+                ]
+            );
+            // update antrian simrs
+            $antrian->update([
+                'taskid' => 3,
+                'status_api' => $request->status_api,
+                'keterangan' => $request->keterangan,
+                // 'user' => Auth::user()->name,
+            ]);
+            Alert::success('Success', "Pendaftaran Berhasil. " . $request->keterangan . " " . $response->metadata->message);
+            return redirect()->back();
+        }
+        // jika gagal update antrian bpjs
+        else {
+            Alert::error('Error', "Pendaftaran Gagal.\n" . $response->metadata->message);
+            return redirect()->back();
+        }
+    }
 }

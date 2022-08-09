@@ -127,6 +127,7 @@ class AntrianController extends Controller
         // checking request
         $validator = Validator::make(request()->all(), [
             "kodebooking" => "required",
+            "waktu" => "required|numeric",
         ]);
         if ($validator->fails()) {
             $response = [

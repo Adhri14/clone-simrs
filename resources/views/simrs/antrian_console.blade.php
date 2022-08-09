@@ -74,6 +74,7 @@
                     var url = "{{ route('antrian.checkin_update') }}";
                     var formData = {
                         kodebooking: sCode,
+                        waktu: "{{ \Carbon\Carbon::now()->timestamp * 1000 }}",
                     };
                     $('#kodebooking').val(sCode);
                     $.get(url, formData, function(data) {
@@ -106,6 +107,7 @@
                 var url = "{{ route('antrian.checkin_update') }}";
                 var formData = {
                     kodebooking: kodebooking,
+                    waktu: "{{ \Carbon\Carbon::now()->timestamp * 1000 }}",
                 };
                 $('#kodebooking').val(kodebooking);
                 $.get(url, formData, function(data) {
