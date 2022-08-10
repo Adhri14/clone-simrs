@@ -167,7 +167,7 @@
                                         @endif
                                         {{-- panggil ulang --}}
                                         @if ($item->taskid == 2)
-                                            <x-adminlte-button class="btn-xs" label="Panggil Ulang" theme="primary"
+                                            <x-adminlte-button class="btn-xs withLoad" label="Panggil Ulang" theme="primary"
                                                 icon="fas fa-volume-down" data-toggle="tooltip" title=""
                                                 onclick="window.location='{{ route('antrian.panggil_pendaftaran', [$item->kodebooking, $request->loket, $request->lantai]) }}'" />
                                             @if ($item->pasienbaru == 1)
