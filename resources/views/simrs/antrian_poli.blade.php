@@ -192,10 +192,10 @@
                         @endforeach
                     </x-adminlte-datatable>
                 </x-adminlte-card>
-                {{-- modal pelayanan --}}
                 @if ($antrians->count() > 0)
-                    <x-adminlte-modal id="modalPelayanan" title="Pembayaran Antrian Pasien" size="xl"
-                        theme="success" icon="fas fa-user-plus" v-centered>
+                    {{-- modal pelayanan --}}
+                    <x-adminlte-modal id="modalPelayanan" title="Pelayanan Pasien Poliklinik" size="xl"
+                        theme="success" icon="fas fa-user-plus" v-centered static-backdrop scrollable>
                         <form name="formLayanan" id="formLayanan" action="{{ route('antrian.pendaftaran') }}"
                             method="post">
                             @csrf
@@ -245,8 +245,15 @@
                                     </div>
                                 </div>
                             </x-adminlte-card>
+                            <x-adminlte-card theme="primary" title="E-Rekam Medis Pasien" collapsible="collapsed">
+                                <div class="row">
+                                    Kosong
+                                </div>
+                            </x-adminlte-card>
                             <x-slot name="footerSlot">
-                                <x-adminlte-button class="mr-auto" label="Lanjut Farmasi" theme="warning"
+                                <x-adminlte-button class="mr-auto btnKPO" label="KPO Farmasi" theme="primary"
+                                    icon="fas fa-prescription-bottle-alt" />
+                                <x-adminlte-button label="Lanjut Farmasi" theme="warning"
                                     icon="fas fa-prescription-bottle-alt"
                                     onclick=" window.location='{{ route('antrian.lanjut_farmasi', $item->kodebooking ?? 0) }}'" />
                                 <x-adminlte-button label="Selesai" theme="success" icon="fas fa-check"
@@ -254,6 +261,11 @@
                                 <x-adminlte-button theme="danger" label="Dismiss" data-dismiss="modal" />
                             </x-slot>
                         </form>
+                    </x-adminlte-modal>
+
+                    {{-- modal KPO --}}
+                    <x-adminlte-modal id="modalKPO" name="modalKPO" title="KPO Farmasi Rawat Jalan" size="xl"
+                        theme="warning" icon="fas fa-prescription-bottle-alt" v-centered static-backdrop>
                     </x-adminlte-modal>
                 @endif
                 {{-- poli belum dan sudah dilayani --}}
@@ -368,6 +380,7 @@
                         @endforeach
                     </x-adminlte-datatable>
                 </x-adminlte-card>
+
             @endif
         </div>
     </div>
@@ -394,20 +407,17 @@
                     $('#angkaantrean').html(data.angkaantrean);
                     $('#nomorantrean').html(data.nomorantrean);
                     $('#tanggalperiksa').html(data.tanggalperiksa);
-
                     $('#norm').html(data.norm);
                     $('#nik').html(data.nik);
                     $('#nomorkartu').html(data.nomorkartu);
                     $('#nama').html(data.nama);
                     $('#nohp').html(data.nohp);
-
                     $('#nomorreferensi').html(data.nomorreferensi);
                     $('#jenispasien').html(data.jenispasien);
                     $('#namapoli').html(data.namapoli);
                     $('#namadokter').html(data.namadokter);
                     $('#jampraktek').html(data.jampraktek);
                     $('#jeniskunjungan').html(data.jeniskunjungan);
-
                     $('#user').html(data.user);
                     $('#antrianid').val(antrianid);
                     $('#namapoli').val(data.namapoli);
@@ -420,6 +430,10 @@
                     $.LoadingOverlay("hide", true);
                 })
             });
+            $('.btnKPO').click(function() {
+                $('#modalKPO').modal('show');
+            });
+
         });
     </script>
 @endsection
