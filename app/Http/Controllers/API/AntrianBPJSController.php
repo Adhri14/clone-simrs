@@ -733,9 +733,9 @@ class AntrianBPJSController extends Controller
             $request['kodebooking'] = strtoupper(uniqid());
             // estimasi
             $request['estimasidilayani'] = 0;
-            $request['sisakuotajkn'] = $jadwal->kapasitaspasien * 80 / 100 -  $antrianjkn;
+            $request['sisakuotajkn'] = $jadwal->kapasitaspasien * 80 / 100 -  $antrianjkn - 1;
             $request['kuotajkn'] = $jadwal->kapasitaspasien * 80 / 100;
-            $request['sisakuotanonjkn'] = ($jadwal->kapasitaspasien * 20 / 100) - $antriannonjkn;
+            $request['sisakuotanonjkn'] = ($jadwal->kapasitaspasien * 20 / 100) - $antriannonjkn - 1;
             $request['kuotanonjkn'] = $jadwal->kapasitaspasien  * 20 / 100;
             $request['keterangan'] = "Antrian berhasil dibuat";
             //tambah antrian bpjs
