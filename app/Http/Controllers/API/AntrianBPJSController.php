@@ -4,23 +4,18 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Models\Antrian;
-use App\Models\Dokter;
 use App\Models\JadwalDokter;
 use App\Models\JadwalOperasi;
 use App\Models\KunjunganDB;
 use App\Models\LayananDB;
 use App\Models\LayananDetailDB;
-use App\Models\Pasien;
 use App\Models\PasienDB;
 use App\Models\Poliklinik;
-use App\Models\SuratKontrol;
 // use App\Models\SEP;
-use App\Models\TarifLayananDB;
 use App\Models\TarifLayananDetailDB;
 use App\Models\TracerDB;
 use App\Models\TransaksiDB;
 use App\Models\UnitDB;
-use App\Models\User;
 use Carbon\Carbon;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
@@ -31,6 +26,7 @@ use Illuminate\Support\Facades\Validator;
 use Laravel\Sanctum\PersonalAccessToken;
 use Mike42\Escpos\PrintConnectors\WindowsPrintConnector;
 use Mike42\Escpos\Printer;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class AntrianBPJSController extends Controller
 {
@@ -508,6 +504,7 @@ class AntrianBPJSController extends Controller
         if ($auth['metadata']['code'] != 200) {
             return $auth;
         }
+
         // checking request
         $validator = Validator::make(request()->all(), [
             "nik" => "required|numeric|digits:16",
@@ -738,6 +735,10 @@ class AntrianBPJSController extends Controller
             $request['sisakuotanonjkn'] = ($jadwal->kapasitaspasien * 20 / 100) - $antriannonjkn - 1;
             $request['kuotanonjkn'] = $jadwal->kapasitaspasien  * 20 / 100;
             $request['keterangan'] = "Antrian berhasil dibuat";
+            // QR Code
+            QrCode::format('png')->generate($request->kodebooking, "../public/storage/" . $request->kodebooking . ".png");
+            $request['file'] = asset("storage/" . $request->kodebooking . ".png");
+            dd($request->file);
             //tambah antrian bpjs
             $response = $this->tambah_antrian($request);
             if ($response->metadata->code == 200) {
@@ -774,6 +775,12 @@ class AntrianBPJSController extends Controller
                     "user" => "System Antrian",
                     "nama" => $request->nama,
                 ]);
+                // kirim notif wa
+                $wa = new WhatsappController();
+
+                $request['caption'] = "Antrian berhasil didaftarkan melalui JKN Mobile dengan data sebagai berikut : \n\n*Kode Antrian :* " . $request->kodebooking .  "\n*Angka Antrian :* " . $request->angkaantrean .  "\n*Nomor Antrian :* " . $request->nomorantrean .  "\n*Nama :* " . $request->nama . "\n*Poli :* " . $request->namapoli  .  "\n*Tanggal Berobat :* " . $request->tanggalperiksa .  "\n\nSilahkan lakukan checkin dimesin antrian pendaftaran untuk mendapatkan karcis antrian ditanggal tersebut.";
+                $request['number'] = $request->nohp;
+                $wa->send_image($request);
                 $response = [
                     "response" => [
                         "nomorantrean" => $request->nomorantrean,
@@ -999,6 +1006,11 @@ class AntrianBPJSController extends Controller
         // cari antrian
         if ($antrian) {
             $response = $this->batal_antrian_bpjs($request);
+            // kirim notif wa
+            $wa = new WhatsappController();
+            $request['message'] = "Kode antrian " . $antrian->kodebooking . " telah dibatakan karena :\n" . $request->keterangan;
+            $request['number'] = $antrian->nohp;
+            $wa->send_message($request);
             $antrian->update([
                 "taskid" => 99,
                 "status_api" => 1,
@@ -1019,9 +1031,19 @@ class AntrianBPJSController extends Controller
     public function checkin_antrian(Request $request)
     {
         // cek printer
-        $connector = new WindowsPrintConnector("smb://PRINTER:qweqwe@192.168.2.133/Printer Receipt");
-        $printer = new Printer($connector);
-        $printer->close();
+        try {
+            $connector = new WindowsPrintConnector("smb://PRINTER:qweqwe@192.168.2.133/Printer Receipt");
+            $printer = new Printer($connector);
+            $printer->close();
+        } catch (\Throwable $th) {
+            $response = [
+                "metadata" => [
+                    "message" => "Printer mesin antrian mati",
+                    "code" => 201,
+                ],
+            ];
+            return $response;
+        }
         // auth token
         $auth = $this->auth_token($request);
         if ($auth['metadata']['code'] != 200) {
@@ -1043,6 +1065,13 @@ class AntrianBPJSController extends Controller
         $antrian = Antrian::firstWhere('kodebooking', $request->kodebooking);
         // jika antrian ditemukan
         if (isset($antrian)) {
+
+            $wa = new WhatsappController();
+            $request['message'] = "Antrian berhasil didaftarkan melalui JKN Mobile dengan data sebagai berikut : \n\n*Kode Antrian :* " . $request->kodebooking .  "\n*Angka Antrian :* " . $request->angkaantrean .  "\n*Nomor Antrian :* " . $request->nomorantrean .  "\n*Nama :* " . $request->nama . "\n*Poli :* " . $request->namapoli  .  "\n*Tanggal Berobat :* " . $request->tanggalperiksa .  "\n\nSilahkan lakukan checkin dimesin antrian pendaftaran untuk mendapatkan karcis antrian ditanggal tersebut.";
+            $request['number'] = $request->nohp;
+            $wa->send_message($request);
+            dd($request->all());
+
             $unit = UnitDB::firstWhere('KDPOLI', $antrian->kodepoli);
             $tarifkarcis = TarifLayananDetailDB::firstWhere('KODE_TARIF_DETAIL', $unit->kode_tarif_karcis);
             $tarifadm = TarifLayananDetailDB::firstWhere('KODE_TARIF_DETAIL', $unit->kode_tarif_adm);
