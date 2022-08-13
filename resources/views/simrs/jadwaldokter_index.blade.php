@@ -67,6 +67,7 @@
                                     @endforeach
                                 </td>
                             @endfor
+                            <td></td>
                         </tr>
                     @endforeach
                 </x-adminlte-datatable>

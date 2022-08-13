@@ -736,9 +736,7 @@ class AntrianBPJSController extends Controller
             $request['kuotanonjkn'] = $jadwal->kapasitaspasien  * 20 / 100;
             $request['keterangan'] = "Antrian berhasil dibuat";
             // QR Code
-            QrCode::format('png')->generate($request->kodebooking, "../public/storage/" . $request->kodebooking . ".png");
-            $request['file'] = asset("storage/" . $request->kodebooking . ".png");
-            dd($request->file);
+            QrCode::format('png')->generate($request->kodebooking, "public/storage/" . $request->kodebooking . ".png");
             //tambah antrian bpjs
             $response = $this->tambah_antrian($request);
             if ($response->metadata->code == 200) {
@@ -777,7 +775,7 @@ class AntrianBPJSController extends Controller
                 ]);
                 // kirim notif wa
                 $wa = new WhatsappController();
-
+                $request['file'] = asset("public/storage/" . $request->kodebooking . ".png");
                 $request['caption'] = "Antrian berhasil didaftarkan melalui JKN Mobile dengan data sebagai berikut : \n\n*Kode Antrian :* " . $request->kodebooking .  "\n*Angka Antrian :* " . $request->angkaantrean .  "\n*Nomor Antrian :* " . $request->nomorantrean .  "\n*Nama :* " . $request->nama . "\n*Poli :* " . $request->namapoli  .  "\n*Tanggal Berobat :* " . $request->tanggalperiksa .  "\n\nSilahkan lakukan checkin dimesin antrian pendaftaran untuk mendapatkan karcis antrian ditanggal tersebut.";
                 $request['number'] = $request->nohp;
                 $wa->send_image($request);
@@ -1045,10 +1043,10 @@ class AntrianBPJSController extends Controller
             return $response;
         }
         // auth token
-        $auth = $this->auth_token($request);
-        if ($auth['metadata']['code'] != 200) {
-            return $auth;
-        }
+        // $auth = $this->auth_token($request);
+        // if ($auth['metadata']['code'] != 200) {
+        //     return $auth;
+        // }
         // checking request
         $validator = Validator::make(request()->all(), [
             "kodebooking" => "required",
@@ -1065,12 +1063,11 @@ class AntrianBPJSController extends Controller
         $antrian = Antrian::firstWhere('kodebooking', $request->kodebooking);
         // jika antrian ditemukan
         if (isset($antrian)) {
-
+// notif wa
             $wa = new WhatsappController();
-            $request['message'] = "Antrian berhasil didaftarkan melalui JKN Mobile dengan data sebagai berikut : \n\n*Kode Antrian :* " . $request->kodebooking .  "\n*Angka Antrian :* " . $request->angkaantrean .  "\n*Nomor Antrian :* " . $request->nomorantrean .  "\n*Nama :* " . $request->nama . "\n*Poli :* " . $request->namapoli  .  "\n*Tanggal Berobat :* " . $request->tanggalperiksa .  "\n\nSilahkan lakukan checkin dimesin antrian pendaftaran untuk mendapatkan karcis antrian ditanggal tersebut.";
+            $request['message'] = "Antrian dengan kode booking ".$antrian->kodebooking." telah melakukan checkin.";
             $request['number'] = $request->nohp;
             $wa->send_message($request);
-            dd($request->all());
 
             $unit = UnitDB::firstWhere('KDPOLI', $antrian->kodepoli);
             $tarifkarcis = TarifLayananDetailDB::firstWhere('KODE_TARIF_DETAIL', $unit->kode_tarif_karcis);
