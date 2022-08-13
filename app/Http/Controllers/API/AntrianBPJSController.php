@@ -504,7 +504,6 @@ class AntrianBPJSController extends Controller
         if ($auth['metadata']['code'] != 200) {
             return $auth;
         }
-
         // checking request
         $validator = Validator::make(request()->all(), [
             "nik" => "required|numeric|digits:16",
@@ -736,7 +735,7 @@ class AntrianBPJSController extends Controller
             $request['kuotanonjkn'] = $jadwal->kapasitaspasien  * 20 / 100;
             $request['keterangan'] = "Antrian berhasil dibuat";
             // QR Code
-            QrCode::format('png')->generate($request->kodebooking, "public/storage/" . $request->kodebooking . ".png");
+            QrCode::format('png')->generate($request->kodebooking, "../public/storage/" . $request->kodebooking . ".png");
             //tambah antrian bpjs
             $response = $this->tambah_antrian($request);
             if ($response->metadata->code == 200) {
@@ -1063,9 +1062,9 @@ class AntrianBPJSController extends Controller
         $antrian = Antrian::firstWhere('kodebooking', $request->kodebooking);
         // jika antrian ditemukan
         if (isset($antrian)) {
-// notif wa
+            // notif wa
             $wa = new WhatsappController();
-            $request['message'] = "Antrian dengan kode booking ".$antrian->kodebooking." telah melakukan checkin.";
+            $request['message'] = "Antrian dengan kode booking " . $antrian->kodebooking . " telah melakukan checkin.";
             $request['number'] = $request->nohp;
             $wa->send_message($request);
 
