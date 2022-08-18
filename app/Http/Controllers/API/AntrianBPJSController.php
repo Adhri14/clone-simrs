@@ -31,7 +31,8 @@ use SimpleSoftwareIO\QrCode\Facades\QrCode;
 class AntrianBPJSController extends Controller
 {
     // function WS BPJS
-    public $baseUrl = 'https://apijkn-dev.bpjs-kesehatan.go.id/antreanrs_dev/';
+    // public $baseUrl = 'https://apijkn-dev.bpjs-kesehatan.go.id/antreanrs_dev/';
+    public $baseUrl = 'https://apijkn.bpjs-kesehatan.go.id/antreanrs/';
     public static function signature()
     {
         $cons_id =  env('ANTRIAN_CONS_ID');
@@ -774,10 +775,14 @@ class AntrianBPJSController extends Controller
                 ]);
                 // kirim notif wa
                 $wa = new WhatsappController();
-                $request['file'] = asset("public/storage/" . $request->kodebooking . ".png");
-                $request['caption'] = "Antrian berhasil didaftarkan melalui JKN Mobile dengan data sebagai berikut : \n\n*Kode Antrian :* " . $request->kodebooking .  "\n*Angka Antrian :* " . $request->angkaantrean .  "\n*Nomor Antrian :* " . $request->nomorantrean .  "\n*Nama :* " . $request->nama . "\n*Poli :* " . $request->namapoli  .  "\n*Tanggal Berobat :* " . $request->tanggalperiksa .  "\n\nSilahkan lakukan checkin dimesin antrian pendaftaran untuk mendapatkan karcis antrian ditanggal tersebut.";
-                $request['number'] = $request->nohp;
-                $wa->send_image($request);
+                try {
+                    $request['file'] = asset("public/storage/" . $request->kodebooking . ".png");
+                    $request['caption'] = "Antrian berhasil didaftarkan melalui JKN Mobile dengan data sebagai berikut : \n\n*Kode Antrian :* " . $request->kodebooking .  "\n*Angka Antrian :* " . $request->angkaantrean .  "\n*Nomor Antrian :* " . $request->nomorantrean .  "\n*Nama :* " . $request->nama . "\n*Poli :* " . $request->namapoli  .  "\n*Tanggal Berobat :* " . $request->tanggalperiksa .  "\n\nSilahkan lakukan checkin dimesin antrian pendaftaran untuk mendapatkan karcis antrian ditanggal tersebut.";
+                    $request['number'] = $request->nohp;
+                    $wa->send_image($request);
+                } catch (\Throwable $th) {
+                    //throw $th;
+                }
                 $response = [
                     "response" => [
                         "nomorantrean" => $request->nomorantrean,

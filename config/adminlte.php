@@ -439,6 +439,20 @@ return [
                     'shift'   => 'ml-2',
                     'can' => 'rekam-medis',
                 ],
+                [
+                    'text' => 'Diagnosa',
+                    'icon'    => 'fas fa-user-injured',
+                    'url'  => 'diagnosa',
+                    'shift'   => 'ml-2',
+                    'can' => 'rekam-medis',
+                ],
+                [
+                    'text' => 'Tindankan Prosedur',
+                    'icon'    => 'fas fa-user-injured',
+                    'url'  => 'tindakan',
+                    'shift'   => 'ml-2',
+                    'can' => 'rekam-medis',
+                ],
             ],
         ],
         // USER ACCESS CONTROLL
