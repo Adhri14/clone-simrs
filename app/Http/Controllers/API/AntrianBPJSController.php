@@ -736,7 +736,7 @@ class AntrianBPJSController extends Controller
             $request['kuotanonjkn'] = $jadwal->kapasitaspasien  * 20 / 100;
             $request['keterangan'] = "Antrian berhasil dibuat";
             // QR Code
-            QrCode::format('png')->generate($request->kodebooking, "../public/storage/" . $request->kodebooking . ".png");
+            $qr = QrCode::format('png')->generate($request->kodebooking, "public/storage/" . $request->kodebooking . ".png");
             //tambah antrian bpjs
             $response = $this->tambah_antrian($request);
             if ($response->metadata->code == 200) {
