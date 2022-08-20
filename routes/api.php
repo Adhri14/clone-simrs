@@ -83,4 +83,6 @@ Route::prefix('vclaim')->group(function () {
 Route::prefix('wa')->group(function () {
     Route::get('index', [WhatsappController::class, 'index']);
     Route::post('send_message', [WhatsappController::class, 'send_message']);
+    Route::post('callback', [WhatsappController::class, 'callback']);
+    Route::post('daftar_antrian', [WhatsappController::class, 'daftar_antrian']);
 });

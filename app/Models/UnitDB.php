@@ -13,4 +13,21 @@ class UnitDB extends Model
     protected $primaryKey = 'kode_unit';
     public $incrementing = false;
     protected $keyType = 'string';
+    public $timestamps = false;
+
+    protected $fillable = [
+        'kode_unit',
+        'nama_unit',
+        'nama_panggil',
+        'kuota_total',
+        'kuota_online',
+    ];
+    public function jadwals()
+    {
+        return $this->hasMany(JadwalPoliDB::class, 'kode_unit', 'kode_unit');
+    }
+    public function antrians()
+    {
+        return $this->hasMany(AntrianDB::class, 'kode_poli', 'kode_unit');
+    }
 }

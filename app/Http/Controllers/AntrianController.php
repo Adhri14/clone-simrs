@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\API\AntrianBPJSController;
 use App\Http\Controllers\API\VclaimBPJSController;
 use App\Models\Antrian;
+use App\Models\AntrianDB;
 use App\Models\Dokter;
 use App\Models\Pasien;
 use App\Models\PasienDB;
@@ -673,7 +674,7 @@ class AntrianController extends Controller
             ]);
             Alert::success('Proses', 'Proses Peracikan Obat ' . $response->metadata->message);
             return redirect()->back();
-        }else{
+        } else {
             Alert::error('Error', 'Kodebooking tidak ditemukan');
             return redirect()->back();
         }

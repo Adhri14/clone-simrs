@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AntrianController;
+use App\Http\Controllers\AntrianWAController;
 use App\Http\Controllers\API\VclaimBPJSController;
 use App\Http\Controllers\DokterController;
 use App\Http\Controllers\JadwalDokterController;
@@ -92,6 +93,20 @@ Route::prefix('antrian')->name('antrian.')->middleware(['auth', 'verified'])->gr
 
     Route::get('baru_offline/{kodebooking}', [AntrianController::class, 'baru_offline'])->name('baru_offline');
 });
+
+Route::prefix('antrianwa')->name('antrian.')->middleware(['auth'])->group(function () {
+    Route::get('/', [AntrianWAController::class, 'index'])->name('index');
+    Route::get('poliklinik', [AntrianWAController::class, 'poliklinik'])->name('poliklinik');
+    Route::get('{tanggal}/panggil/{urutan}/{loket}/{lantai}', [AntrianWAController::class, 'panggil'])->name('panggil');
+    Route::get('{tanggal}/panggil_ulang/{urutan}//{loket}/{lantai}', [AntrianWAController::class, 'panggil_ulang'])->name('panggil_ulang');
+    Route::get('{tanggal}/selesai/{urutan}', [AntrianWAController::class, 'selesai'])->name('selesai');
+    Route::get('{tanggal}/batal/{urutan}', [AntrianWAController::class, 'batal'])->name('batal');
+    Route::get('daftar', [AntrianWAController::class, 'daftar'])->name('daftar');
+    Route::post('store', [AntrianWAController::class, 'store'])->name('store');
+    Route::get('tampil', [AntrianWAController::class, 'tampil'])->name('antrian.tampil');
+    Route::get('jadwal_poli', [AntrianWAController::class, 'jadwal_poli']);
+    Route::get('jadwal_poli_libur', [AntrianWAController::class, 'jadwal_poli_libur']);
+});
 // admin user role permission
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified', 'permission:admin'])->group(function () {
     Route::resource('user', UserController::class);
@@ -105,7 +120,6 @@ Route::prefix('vclaim')->name('vclaim.')->middleware(['auth', 'verified', 'permi
     Route::get('data_surat_kontrol', [VclaimController::class, 'data_surat_kontrol'])->name('data_surat_kontrol');
     Route::delete('delete_surat_kontrol/{noSurat}', [VclaimController::class, 'delete_surat_kontrol'])->name('delete_surat_kontrol');
 });
-
 Route::resource('poli', PoliklinikController::class)->only(['index', 'create', 'edit'])->middleware('permission:pelayanan-medis');
 Route::resource('dokter', DokterController::class)->only(['index', 'create'])->middleware('permission:pelayanan-medis');
 Route::resource('jadwaldokter', JadwalDokterController::class)->only(['index', 'store', 'edit'])->middleware('permission:pelayanan-medis');
