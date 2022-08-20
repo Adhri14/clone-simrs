@@ -588,7 +588,7 @@ class AntrianBPJSController extends Controller
             // cek jika jkn
             if (isset($request->nomorreferensi)) {
                 $request['jenispasien'] = 'JKN';
-                // cek keaktifan peserta
+                // // cek keaktifan peserta
                 try {
                     $response = $vclaim->peserta_nik($request);
                     $peserta = $response;
@@ -619,52 +619,52 @@ class AntrianBPJSController extends Controller
                 } catch (\Throwable $th) {
                     return $response;
                 }
-                // pembuatan surat kontrol
-                try {
-                    $response = $vclaim->rujukan_nomor($request);
-                    $rujukan = $response;
-                    $request['jenisrujukan'] = $rujukan->response->asalFaskes;
-                    $response = $vclaim->rujukan_jumlah_sep($request);
-                    $jumlah_sep_rujukan = $response->response->jumlahSEP;
-                    // jika jenis kunjungan "kontrol(3)" dan jumlah sep rujukan lebih dari 0
-                    if ($jumlah_sep_rujukan != null) {
-                        if ($jumlah_sep_rujukan != 0) {
-                            // cek hari ini
-                            if ($time->isToday()) {
-                                return [
-                                    "metadata" => [
-                                        "code" => 201,
-                                        "message" => "Tanggal periksa tidak bisa untuk hari ini untuk membuat surat kontrol"
-                                    ]
-                                ];
-                            }
-                            if ($request->jeniskunjungan == 3) {
-                                // buat surat control
-                                $response = $vclaim->insert_rencana_kontrol($request);
-                                // jika gagal buat surat kontrol
-                                if ($response->metaData->code == 200) {
-                                    $suratkontrol = $response->response;
-                                } else {
-                                    return $response;
-                                }
-                            } else {
-                                // dd($jumlah_sep_rujukan);
-                                return [
-                                    "metadata" => [
-                                        "message" => "Rujukan anda sudah digunakan untuk kunjungan pertama, untuk kunjungan berikutnya silahkan pilih jenis kunjungan Kontrol(3)",
-                                        "code" => 201,
-                                    ],
-                                ];
-                            }
-                        }
-                    }
-                    // error jika jenis kunjungan bukan "kontrol(3)" dan jumlah sep rujukan lebih dari 0
-                    // else if ($request->jeniskunjungan != 3 && ($jumlah_sep_rujukan != null ||  $jumlah_sep_rujukan != 0)) {
+                // // pembuatan surat kontrol
+                // try {
+                //     $response = $vclaim->rujukan_nomor($request);
+                //     $rujukan = $response;
+                //     $request['jenisrujukan'] = $rujukan->response->asalFaskes;
+                //     $response = $vclaim->rujukan_jumlah_sep($request);
+                //     $jumlah_sep_rujukan = $response->response->jumlahSEP;
+                //     // jika jenis kunjungan "kontrol(3)" dan jumlah sep rujukan lebih dari 0
+                //     if ($jumlah_sep_rujukan != null) {
+                //         if ($jumlah_sep_rujukan != 0) {
+                //             // cek hari ini
+                //             if ($time->isToday()) {
+                //                 return [
+                //                     "metadata" => [
+                //                         "code" => 201,
+                //                         "message" => "Tanggal periksa tidak bisa untuk hari ini untuk membuat surat kontrol"
+                //                     ]
+                //                 ];
+                //             }
+                //             if ($request->jeniskunjungan == 3) {
+                //                 // buat surat control
+                //                 $response = $vclaim->insert_rencana_kontrol($request);
+                //                 // jika gagal buat surat kontrol
+                //                 if ($response->metaData->code == 200) {
+                //                     $suratkontrol = $response->response;
+                //                 } else {
+                //                     return $response;
+                //                 }
+                //             } else {
+                //                 // dd($jumlah_sep_rujukan);
+                //                 return [
+                //                     "metadata" => [
+                //                         "message" => "Rujukan anda sudah digunakan untuk kunjungan pertama, untuk kunjungan berikutnya silahkan pilih jenis kunjungan Kontrol(3)",
+                //                         "code" => 201,
+                //                     ],
+                //                 ];
+                //             }
+                //         }
+                //     }
+                //     // error jika jenis kunjungan bukan "kontrol(3)" dan jumlah sep rujukan lebih dari 0
+                //     // else if ($request->jeniskunjungan != 3 && ($jumlah_sep_rujukan != null ||  $jumlah_sep_rujukan != 0)) {
 
-                    // }
-                } catch (\Throwable $th) {
-                    return $response;
-                }
+                //     // }
+                // } catch (\Throwable $th) {
+                //     return $response;
+                // }
             }
             // jika non-jkn harus pilih jenis kunjungan kontrol(3)
             else {
