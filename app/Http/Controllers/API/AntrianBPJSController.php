@@ -736,7 +736,7 @@ class AntrianBPJSController extends Controller
             $request['kuotanonjkn'] = $jadwal->kapasitaspasien  * 20 / 100;
             $request['keterangan'] = "Antrian berhasil dibuat";
             // QR Code
-            $qr = QrCode::format('png')->generate($request->kodebooking, "public/storage/" . $request->kodebooking . ".png");
+            // $qr = QrCode::format('png')->generate($request->kodebooking, "public/storage/" . $request->kodebooking . ".png");
             //tambah antrian bpjs
             $response = $this->tambah_antrian($request);
             if ($response->metadata->code == 200) {
@@ -774,15 +774,15 @@ class AntrianBPJSController extends Controller
                     "nama" => $request->nama,
                 ]);
                 // kirim notif wa
-                $wa = new WhatsappController();
-                try {
-                    $request['file'] = asset("public/storage/" . $request->kodebooking . ".png");
-                    $request['caption'] = "Antrian berhasil didaftarkan melalui JKN Mobile dengan data sebagai berikut : \n\n*Kode Antrian :* " . $request->kodebooking .  "\n*Angka Antrian :* " . $request->angkaantrean .  "\n*Nomor Antrian :* " . $request->nomorantrean .  "\n*Nama :* " . $request->nama . "\n*Poli :* " . $request->namapoli  .  "\n*Tanggal Berobat :* " . $request->tanggalperiksa .  "\n\nSilahkan lakukan checkin dimesin antrian pendaftaran untuk mendapatkan karcis antrian ditanggal tersebut.";
-                    $request['number'] = $request->nohp;
-                    $wa->send_image($request);
-                } catch (\Throwable $th) {
-                    //throw $th;
-                }
+                // $wa = new WhatsappController();
+                // try {
+                //     $request['file'] = asset("public/storage/" . $request->kodebooking . ".png");
+                //     $request['caption'] = "Antrian berhasil didaftarkan melalui JKN Mobile dengan data sebagai berikut : \n\n*Kode Antrian :* " . $request->kodebooking .  "\n*Angka Antrian :* " . $request->angkaantrean .  "\n*Nomor Antrian :* " . $request->nomorantrean .  "\n*Nama :* " . $request->nama . "\n*Poli :* " . $request->namapoli  .  "\n*Tanggal Berobat :* " . $request->tanggalperiksa .  "\n\nSilahkan lakukan checkin dimesin antrian pendaftaran untuk mendapatkan karcis antrian ditanggal tersebut.";
+                //     $request['number'] = $request->nohp;
+                //     $wa->send_image($request);
+                // } catch (\Throwable $th) {
+                //     //throw $th;
+                // }
                 $response = [
                     "response" => [
                         "nomorantrean" => $request->nomorantrean,
