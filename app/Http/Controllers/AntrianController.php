@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\API\AntrianBPJSController;
 use App\Http\Controllers\API\VclaimBPJSController;
+use App\Http\Controllers\API\WhatsappController;
 use App\Models\Antrian;
 use App\Models\AntrianDB;
 use App\Models\Dokter;
