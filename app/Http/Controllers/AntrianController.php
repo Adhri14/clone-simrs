@@ -117,7 +117,6 @@ class AntrianController extends Controller
         $api = new AntrianBPJSController();
         if ($request->kodebooking) {
             $response = $api->list_waktu_task($request);
-            dd($response);
         }
         return view('simrs.antrian_task_id', [
             'request' => $request,
@@ -189,8 +188,15 @@ class AntrianController extends Controller
                 'taskid2' => $now,
                 // 'user' => Auth::user()->name,
             ]);
+
             //panggil urusan mesin antrian
             try {
+                            // notif wa
+                            $wa = new WhatsappController();
+                            $request['message'] = "Panggilan kepada Antrian dengan kode booking " . $antrian->kodebooking . " untuk melakukan pendaftaran di Loket pendaftaran.";
+                            $request['number'] = $antrian->nohp;
+                            $wa->send_message($request);
+
                 $tanggal = Carbon::now()->format('Y-m-d');
                 $urutan = $antrian->angkaantrean;
                 $mesin_antrian = DB::connection('mysql3')->table('tb_counter')
@@ -224,9 +230,11 @@ class AntrianController extends Controller
                             'sound' => 'PLAY',
                         ]);
                 }
+
+
             } catch (\Throwable $th) {
-                Alert::error('Error', 'Mesin Antrian Tidak Menyala');
-                // return redirect()->back();
+                Alert::error('Error', $th->getMessage);
+                return redirect()->back();
             }
             Alert::success('Success', 'Panggilan Berhasil ' . $response->metadata->message);
             return redirect()->back();

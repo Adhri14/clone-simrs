@@ -773,7 +773,7 @@ class AntrianBPJSController extends Controller
                 ]);
                 // kirim notif wa
                 try {
-                    $qr = QrCode::format('png')->generate($request->kodebooking, "public/storage/antrian" . $request->kodebooking . ".png");
+                    $qr = QrCode::backgroundColor(255, 255, 51)->format('png')->generate($request->kodebooking, "public/storage/antrian" . $request->kodebooking . ".png");
                     $wa = new WhatsappController();
                     $request['file'] = asset("storage/antrian" . $request->kodebooking . ".png");
                     $request['caption'] = "Antrian berhasil didaftarkan melalui JKN Mobile dengan data sebagai berikut : \n\n*Kode Antrian :* " . $request->kodebooking .  "\n*Angka Antrian :* " . $request->angkaantrean .  "\n*Nomor Antrian :* " . $request->nomorantrean .  "\n*Nama :* " . $request->nama . "\n*Poli :* " . $request->namapoli  .  "\n*Tanggal Berobat :* " . $request->tanggalperiksa .   "\n*Keterangan :* " . $request->keterangan  .  "\n\nTerima kasih. Semoga sehat selalu.";
@@ -1229,14 +1229,14 @@ class AntrianBPJSController extends Controller
             //     //throw $th;
             // }
             // notif wa
-            // $wa = new WhatsappController();
-            // $request['message'] = "Antrian dengan kode booking " . $antrian->kodebooking . " telah melakukan checkin.";
-            // $request['number'] = $antrian->nohp;
-            // $wa->send_message($request);
+            $wa = new WhatsappController();
+            $request['message'] = "Antrian dengan kode booking " . $antrian->kodebooking . " telah melakukan checkin.";
+            $request['number'] = $antrian->nohp;
+            $wa->send_message($request);
             // update antrian bpjs
-            // $response = $this->update_antrian($request);
+            $response = $this->update_antrian($request);
             // jika antrian berhasil diupdate di bpjs
-            // if ($response->metadata->code == 200) {
+            if ($response->metadata->code == 200) {
                 $request['waktu'] = Carbon::createFromTimestamp($request->waktu / 1000)->toDateTimeString();
                 $request['waktu'] = Carbon::parse($request->waktu);
                 // insert simrs
@@ -1353,11 +1353,11 @@ class AntrianBPJSController extends Controller
                         "code" => 200,
                     ],
                 ];
-            // }
+            }
             // // jika antrian gagal diupdate di bpjs
-            // else {
-            //     return $response;
-            // }
+            else {
+                return $response;
+            }
         }
         // jika antrian tidak ditemukan
         else {
