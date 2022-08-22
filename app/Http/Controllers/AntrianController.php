@@ -191,11 +191,11 @@ class AntrianController extends Controller
 
             //panggil urusan mesin antrian
             try {
-                            // notif wa
-                            $wa = new WhatsappController();
-                            $request['message'] = "Panggilan kepada Antrian dengan kode booking " . $antrian->kodebooking . " untuk melakukan pendaftaran di Loket pendaftaran.";
-                            $request['number'] = $antrian->nohp;
-                            $wa->send_message($request);
+                // notif wa
+                $wa = new WhatsappController();
+                $request['message'] = "Panggilan kepada Antrian dengan kode booking " . $antrian->kodebooking . " untuk melakukan pendaftaran di Loket pendaftaran.";
+                $request['number'] = $antrian->nohp;
+                $wa->send_message($request);
 
                 $tanggal = Carbon::now()->format('Y-m-d');
                 $urutan = $antrian->angkaantrean;
@@ -230,10 +230,8 @@ class AntrianController extends Controller
                             'sound' => 'PLAY',
                         ]);
                 }
-
-
             } catch (\Throwable $th) {
-                Alert::error('Error', $th->getMessage);
+                Alert::error('Error', $th->getMessage());
                 return redirect()->back();
             }
             Alert::success('Success', 'Panggilan Berhasil ' . $response->metadata->message);
