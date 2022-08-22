@@ -274,9 +274,8 @@
                     theme="primary" icon="fas fa-info-circle" collapsible>
                     @php
                         $heads = ['No', 'Kode', 'Tanggal', 'No RM / NIK', 'Jenis / Pasien', 'No Kartu / Rujukan', 'Poliklinik / Dokter', 'Status', 'Action'];
-                        $config['order'] = ['7', 'asc'];
                     @endphp
-                    <x-adminlte-datatable id="table2" class="nowrap" :heads="$heads" :config="$config" striped
+                    <x-adminlte-datatable id="table2" class="nowrap" :heads="$heads" striped
                         bordered hoverable compressed>
                         @foreach ($antrians->where('taskid', '!=', 4) as $item)
                             <tr>
@@ -288,7 +287,6 @@
                                 <td>
                                     {{ $item->norm }} <br>
                                     {{ $item->nik }}
-
                                 </td>
                                 <td>
                                     {{ $item->nama }}<br>
@@ -380,7 +378,6 @@
                         @endforeach
                     </x-adminlte-datatable>
                 </x-adminlte-card>
-
             @endif
         </div>
     </div>

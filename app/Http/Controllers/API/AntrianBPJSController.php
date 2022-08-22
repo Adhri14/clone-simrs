@@ -431,10 +431,10 @@ class AntrianBPJSController extends Controller
     public function status_antrian(Request $request)
     {
         // auth token
-        $auth = $this->auth_token($request);
-        if ($auth['metadata']['code'] != 200) {
-            return $auth;
-        }
+        // $auth = $this->auth_token($request);
+        // if ($auth['metadata']['code'] != 200) {
+        //     return $auth;
+        // }
         // check tanggal
         $time = Carbon::parse($request->tanggalperiksa)->endOfDay();
         if ($time->isPast()) {
@@ -935,11 +935,10 @@ class AntrianBPJSController extends Controller
     public function sisa_antrian(Request $request)
     {
         // auth token
-        $auth = $this->auth_token($request);
-        if ($auth['metadata']['code'] != 200) {
-            return $auth;
-        }
-        // end auth token
+        // $auth = $this->auth_token($request);
+        // if ($auth['metadata']['code'] != 200) {
+        //     return $auth;
+        // }
         $antrian = Antrian::firstWhere('kodebooking', $request->kodebooking);
         // antrian ditermukan
         if ($antrian) {
@@ -1241,105 +1240,105 @@ class AntrianBPJSController extends Controller
                 $request['waktu'] = Carbon::createFromTimestamp($request->waktu / 1000)->toDateTimeString();
                 $request['waktu'] = Carbon::parse($request->waktu);
                 // insert simrs
-                try {
-                    // hitung counter kunjungan
-                    $kunjungan = KunjunganDB::where('no_rm', $antrian->norm)->orderBy('counter', 'DESC')->first();
-                    if (empty($kunjungan)) {
-                        $counter = 1;
-                    } else {
-                        $counter = $kunjungan->counter + 1;
-                    }
-                    // insert ts kunjungan
-                    $kunjunganbaru = KunjunganDB::create(
-                        [
-                            'counter' => $counter,
-                            'no_rm' => $antrian->norm,
-                            'kode_unit' => $unit->kode_unit,
-                            'tgl_masuk' => $request->waktu,
-                            'kode_paramedis' => $antrian->kodedokter,
-                            'status_kunjungan' => 1,
-                        ]
-                    );
-                    // insert layanan header dan detail karcis admin konsul 25 + 5 = 30
-                    $kunjungan = KunjunganDB::where('no_rm', $antrian->norm)->where('counter', $kunjunganbaru->counter)->first();
-                    $trx_lama = TransaksiDB::where('unit', $unit->kode_unit)
-                        ->whereBetween('tgl', [Carbon::now()->startOfDay(), [Carbon::now()->endOfDay()]])
-                        ->count();
-                    $kodelayanan = $unit->KDPOLI . $request->waktu->format('y') . $request->waktu->format('m') . $request->waktu->format('d')  . str_pad($trx_lama + 1, 6, '0', STR_PAD_LEFT);
-                    $trx_baru = TransaksiDB::create([
-                        'tgl' => $request->waktu->format('Y-m-d'),
-                        'no_trx_layanan' => $kodelayanan,
-                        'unit' => $unit->kode_unit,
-                    ]);
-                    // insert layanan header
-                    $layananbaru = LayananDB::create(
-                        [
-                            'kode_layanan_header' => $kodelayanan,
-                            'tgl_entry' => $request->waktu,
-                            'kode_kunjungan' => $kunjungan->kode_kunjungan,
-                            'kode_unit' => $unit->kode_unit,
-                            'kode_tipe_transaksi' => $tipetransaksi,
-                            'status_layanan' => $statuslayanan,
-                            'pic' => '1271',
-                            'keterangan' => 'Layanan header melalui antrian sistem',
-                        ]
-                    );
-                    // insert layanan detail karcis
-                    $karcis = LayananDetailDB::create(
-                        [
-                            'id_layanan_detail' => "DET" . $request->waktu->yearIso . $request->waktu->month . $request->waktu->day .  "001",
-                            'row_id_header' => $layananbaru->id,
-                            'kode_layanan_header' => $layananbaru->kode_layanan_header,
-                            'kode_tarif_detail' => $tarifkarcis->KODE_TARIF_DETAIL,
-                            'total_tarif' => $tarifkarcis->TOTAL_TARIF_NEW,
-                            'jumlah_layanan' => 1,
-                            'tagihan_pribadi' => $tagihanpribadi,
-                            'tagihan_penjamin' => $tagihanpenjamin,
-                            'total_layanan' => $tarifkarcis->TOTAL_TARIF_NEW,
-                            'grantotal_layanan' => $tarifkarcis->TOTAL_TARIF_NEW,
-                            'kode_dokter1' => $antrian->kodedokter, // ambil dari mt paramdeis
-                            'tgl_layanan_detail' =>  $request->waktu,
-                        ]
-                    );
-                    // insert layanan detail admin
-                    $adm = LayananDetailDB::create(
-                        [
-                            'id_layanan_detail' => "DET" . $request->waktu->yearIso . $request->waktu->month . $request->waktu->day .  "01",
-                            'row_id_header' => $layananbaru->id,
-                            'kode_layanan_header' => $layananbaru->kode_layanan_header,
-                            'kode_tarif_detail' => $tarifadm->KODE_TARIF_DETAIL,
-                            'total_tarif' => $tarifadm->TOTAL_TARIF_NEW,
-                            'jumlah_layanan' => 1,
-                            'tagihan_pribadi' => $tagihanpribadi,
-                            'tagihan_penjamin' => $tagihanpenjamin,
-                            'total_layanan' => $tarifadm->TOTAL_TARIF_NEW,
-                            'grantotal_layanan' => $tarifadm->TOTAL_TARIF_NEW,
-                            'kode_dokter1' => 0,
-                            'tgl_layanan_detail' =>  $request->waktu,
-                        ]
-                    );
-                    // update layanan header total tagihan
-                    $layananbaru->update([
-                        'total_layanan' => $tarifkarcis->TOTAL_TARIF_NEW + $tarifadm->TOTAL_TARIF_NEW,
-                        'tagihan_pribadi' => $totalpribadi,
-                        'tagihan_penjamin' => $totalpenjamin,
-                    ]);
-                    // insert tracer tc_tracer_header
-                    $tracerbaru = TracerDB::create([
-                        'kode_kunjungan' => $kunjungan->kode_kunjungan,
-                        'tgl_tracer' => Carbon::now()->format('Y-m-d'),
-                        'id_status_tracer' => 1,
-                        'cek_tracer' => "N",
-                    ]);
-                } catch (\Throwable $th) {
-                    //throw $th;
-                    return [
-                        "metadata" => [
-                            "message" => $th->getMessage,
-                            "code" => 201,
-                        ],
-                    ];
-                }
+                // try {
+                //     // hitung counter kunjungan
+                //     $kunjungan = KunjunganDB::where('no_rm', $antrian->norm)->orderBy('counter', 'DESC')->first();
+                //     if (empty($kunjungan)) {
+                //         $counter = 1;
+                //     } else {
+                //         $counter = $kunjungan->counter + 1;
+                //     }
+                //     // insert ts kunjungan
+                //     $kunjunganbaru = KunjunganDB::create(
+                //         [
+                //             'counter' => $counter,
+                //             'no_rm' => $antrian->norm,
+                //             'kode_unit' => $unit->kode_unit,
+                //             'tgl_masuk' => $request->waktu,
+                //             'kode_paramedis' => $antrian->kodedokter,
+                //             'status_kunjungan' => 1,
+                //         ]
+                //     );
+                //     // insert layanan header dan detail karcis admin konsul 25 + 5 = 30
+                //     $kunjungan = KunjunganDB::where('no_rm', $antrian->norm)->where('counter', $kunjunganbaru->counter)->first();
+                //     $trx_lama = TransaksiDB::where('unit', $unit->kode_unit)
+                //         ->whereBetween('tgl', [Carbon::now()->startOfDay(), [Carbon::now()->endOfDay()]])
+                //         ->count();
+                //     $kodelayanan = $unit->KDPOLI . $request->waktu->format('y') . $request->waktu->format('m') . $request->waktu->format('d')  . str_pad($trx_lama + 1, 6, '0', STR_PAD_LEFT);
+                //     $trx_baru = TransaksiDB::create([
+                //         'tgl' => $request->waktu->format('Y-m-d'),
+                //         'no_trx_layanan' => $kodelayanan,
+                //         'unit' => $unit->kode_unit,
+                //     ]);
+                //     // insert layanan header
+                //     $layananbaru = LayananDB::create(
+                //         [
+                //             'kode_layanan_header' => $kodelayanan,
+                //             'tgl_entry' => $request->waktu,
+                //             'kode_kunjungan' => $kunjungan->kode_kunjungan,
+                //             'kode_unit' => $unit->kode_unit,
+                //             'kode_tipe_transaksi' => $tipetransaksi,
+                //             'status_layanan' => $statuslayanan,
+                //             'pic' => '1271',
+                //             'keterangan' => 'Layanan header melalui antrian sistem',
+                //         ]
+                //     );
+                //     // insert layanan detail karcis
+                //     $karcis = LayananDetailDB::create(
+                //         [
+                //             'id_layanan_detail' => "DET" . $request->waktu->yearIso . $request->waktu->month . $request->waktu->day .  "001",
+                //             'row_id_header' => $layananbaru->id,
+                //             'kode_layanan_header' => $layananbaru->kode_layanan_header,
+                //             'kode_tarif_detail' => $tarifkarcis->KODE_TARIF_DETAIL,
+                //             'total_tarif' => $tarifkarcis->TOTAL_TARIF_NEW,
+                //             'jumlah_layanan' => 1,
+                //             'tagihan_pribadi' => $tagihanpribadi,
+                //             'tagihan_penjamin' => $tagihanpenjamin,
+                //             'total_layanan' => $tarifkarcis->TOTAL_TARIF_NEW,
+                //             'grantotal_layanan' => $tarifkarcis->TOTAL_TARIF_NEW,
+                //             'kode_dokter1' => $antrian->kodedokter, // ambil dari mt paramdeis
+                //             'tgl_layanan_detail' =>  $request->waktu,
+                //         ]
+                //     );
+                //     // insert layanan detail admin
+                //     $adm = LayananDetailDB::create(
+                //         [
+                //             'id_layanan_detail' => "DET" . $request->waktu->yearIso . $request->waktu->month . $request->waktu->day .  "01",
+                //             'row_id_header' => $layananbaru->id,
+                //             'kode_layanan_header' => $layananbaru->kode_layanan_header,
+                //             'kode_tarif_detail' => $tarifadm->KODE_TARIF_DETAIL,
+                //             'total_tarif' => $tarifadm->TOTAL_TARIF_NEW,
+                //             'jumlah_layanan' => 1,
+                //             'tagihan_pribadi' => $tagihanpribadi,
+                //             'tagihan_penjamin' => $tagihanpenjamin,
+                //             'total_layanan' => $tarifadm->TOTAL_TARIF_NEW,
+                //             'grantotal_layanan' => $tarifadm->TOTAL_TARIF_NEW,
+                //             'kode_dokter1' => 0,
+                //             'tgl_layanan_detail' =>  $request->waktu,
+                //         ]
+                //     );
+                //     // update layanan header total tagihan
+                //     $layananbaru->update([
+                //         'total_layanan' => $tarifkarcis->TOTAL_TARIF_NEW + $tarifadm->TOTAL_TARIF_NEW,
+                //         'tagihan_pribadi' => $totalpribadi,
+                //         'tagihan_penjamin' => $totalpenjamin,
+                //     ]);
+                //     // insert tracer tc_tracer_header
+                //     $tracerbaru = TracerDB::create([
+                //         'kode_kunjungan' => $kunjungan->kode_kunjungan,
+                //         'tgl_tracer' => Carbon::now()->format('Y-m-d'),
+                //         'id_status_tracer' => 1,
+                //         'cek_tracer' => "N",
+                //     ]);
+                // } catch (\Throwable $th) {
+                //     //throw $th;
+                //     return [
+                //         "metadata" => [
+                //             "message" => $th->getMessage,
+                //             "code" => 201,
+                //         ],
+                //     ];
+                // }
                 // update antrian
                 Antrian::where('kodebooking', $request->kodebooking)->update([
                     "taskid" => $request->taskid,

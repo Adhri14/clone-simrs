@@ -277,7 +277,7 @@
                     title="Antrian Pendaftaran Belum Checkin ({{ $antrians->where('taskid', 0)->count() }} Orang)"
                     theme="secondary" icon="fas fa-info-circle" collapsible="collapsed">
                     @php
-                        $heads = ['No', 'Nomor', 'Tanggal', 'No RM / NIK', 'Jenis / Pasien', 'No Kartu / Rujukan', 'Kunjungan', 'Poliklinik', 'Jam Praktek', 'Status'];
+                        $heads = ['No', 'Nomor', 'Tanggal', 'No RM / NIK', 'Jenis / Pasien', 'No Kartu / Rujukan', 'Kunjungan', 'Poliklinik', 'Status'];
                     @endphp
                     <x-adminlte-datatable id="table2" class="nowrap" :heads="$heads" striped bordered hoverable
                         compressed>
@@ -291,14 +291,16 @@
                                 <td>
                                     {{ $item->norm }} <br>
                                     {{ $item->nik }}
-
                                 </td>
                                 <td>
+                                    {{ $item->nama }}<br>
                                     {{ $item->jenispasien }}
-                                    @isset($item->pasien)
-                                        <br>
-                                        {{ $item->pasien->nama }}
-                                    @endisset
+                                    @if ($item->pasienbaru == 1)
+                                        <span class="badge bg-secondary">{{ $item->pasienbaru }}. Baru</span>
+                                    @endif
+                                    @if ($item->pasienbaru == 0)
+                                        <span class="badge bg-secondary">{{ $item->pasienbaru }}. Lama</span>
+                                    @endif
                                 </td>
                                 <td>
                                     @isset($item->nomorkartu)
@@ -309,8 +311,9 @@
                                     @endisset
                                 </td>
                                 <td>{{ $item->jeniskunjungan }}</td>
-                                <td>{{ $item->namapoli }}</td>
-                                <td>{{ $item->jampraktek }}</td>
+                                <td>{{ $item->namapoli }} {{ $item->jampraktek }}<br>
+                                    {{ $item->namadokter }}
+                                </td>
                                 <td>
                                     @if ($item->taskid == 0)
                                         <span class="badge bg-secondary">{{ $item->taskid }}. Belum Checkin</span>
@@ -797,7 +800,6 @@
 @section('plugins.Select2', true)
 @section('plugins.Datatables', true)
 @section('plugins.TempusDominusBs4', true)
-
 @section('js')
     <script>
         $(function() {
