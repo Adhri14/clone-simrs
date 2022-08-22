@@ -679,6 +679,27 @@ class AntrianBPJSController extends Controller
                     ];
                 }
             }
+            $response = [
+                "response"=>[
+                    "nomorantrean"=> "A-12",
+                    "angkaantrean"=> 12,
+                    "kodebooking"=> "16032021A001",
+                    "norm"=> "123345",
+                    "namapoli"=> "Anak",
+                    "namadokter"=> "Dr. Hendra",
+                    "estimasidilayani"=> 1615869169000,
+                    "sisakuotajkn"=> 5,
+                    "kuotajkn"=> 30,
+                    "sisakuotanonjkn"=> 5,
+                    "kuotanonjkn"=> 30,
+                    "keterangan"=> "Peserta harap 60 menit lebih awal guna pencatatan administrasi."
+                ],
+                "metadata" => [
+                    "message" => "Berhasil",
+                    "code" => 200
+                ]
+            ];
+            return $response;
             // ambil data pasien
             $request['norm'] = $pasien->no_rm;
             $request['nama'] = $pasien->nama_px;
@@ -803,7 +824,7 @@ class AntrianBPJSController extends Controller
                         "code" => 200
                     ]
                 ];
-                return json_decode(json_encode($response));
+                return $response;
             } else {
                 return $response;
             }

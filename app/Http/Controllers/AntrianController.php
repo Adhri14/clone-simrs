@@ -117,6 +117,7 @@ class AntrianController extends Controller
         $api = new AntrianBPJSController();
         if ($request->kodebooking) {
             $response = $api->list_waktu_task($request);
+            dd($response);
         }
         return view('simrs.antrian_task_id', [
             'request' => $request,
