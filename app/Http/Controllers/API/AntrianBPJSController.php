@@ -1236,7 +1236,7 @@ class AntrianBPJSController extends Controller
             // update antrian bpjs
             $response = $this->update_antrian($request);
             // jika antrian berhasil diupdate di bpjs
-            if ($response->metadata->code == 200) {
+            // if ($response->metadata->code == 200) {
                 $request['waktu'] = Carbon::createFromTimestamp($request->waktu / 1000)->toDateTimeString();
                 $request['waktu'] = Carbon::parse($request->waktu);
                 // insert simrs
@@ -1353,7 +1353,7 @@ class AntrianBPJSController extends Controller
                         "code" => 200,
                     ],
                 ];
-            }
+            // }
             // // jika antrian gagal diupdate di bpjs
             else {
                 return $response;
