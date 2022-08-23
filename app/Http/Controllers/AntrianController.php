@@ -593,11 +593,11 @@ class AntrianController extends Controller
             $vclaim = new AntrianBPJSController();
             $response = $vclaim->update_antrian($request);
             try {
-                                // notif wa
-                                $wa = new WhatsappController();
-                                $request['message'] = "Panggilan kepada Antrian dengan kode booking " . $antrian->kodebooking . " di Poliklinik Dalam.";
-                                $request['number'] = $antrian->nohp;
-                                $wa->send_message($request);
+                // notif wa
+                $wa = new WhatsappController();
+                $request['message'] = "Panggilan antrian atas nama pasien " . $antrian->nama . " dengan nomor antrean " . $antrian->nomorantrean . " untuk segera dilayani di POLIKLINIK " . $antrian->namapoli;
+                $request['number'] = $antrian->nohp;
+                $wa->send_message($request);
             } catch (\Throwable $th) {
                 //throw $th;
             }

@@ -94,7 +94,7 @@ Route::prefix('antrian')->name('antrian.')->middleware(['auth', 'verified'])->gr
     Route::get('baru_offline/{kodebooking}', [AntrianController::class, 'baru_offline'])->name('baru_offline');
 });
 
-Route::prefix('antrianwa')->name('antrian.')->middleware(['auth'])->group(function () {
+Route::prefix('antrianwa')->name('antrianwa.')->middleware(['auth'])->group(function () {
     Route::get('/', [AntrianWAController::class, 'index'])->name('index');
     Route::get('poliklinik', [AntrianWAController::class, 'poliklinik'])->name('poliklinik');
     Route::get('{tanggal}/panggil/{urutan}/{loket}/{lantai}', [AntrianWAController::class, 'panggil'])->name('panggil');
