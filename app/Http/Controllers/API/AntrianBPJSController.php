@@ -1044,11 +1044,6 @@ class AntrianBPJSController extends Controller
             ];
             return $response;
         }
-        // auth token
-        // $auth = $this->auth_token($request);
-        // if ($auth['metadata']['code'] != 200) {
-        //     return $auth;
-        // }
         // checking request
         $validator = Validator::make(request()->all(), [
             "kodebooking" => "required",
@@ -1074,12 +1069,12 @@ class AntrianBPJSController extends Controller
                 // jika pasien lama
                 if ($antrian->pasienbaru == 0) {
                     $request['taskid'] = 3;
-                    $request['keterangan'] = "Silahkan menunggu panggilan di poliklinik";
+                    $request['keterangan'] = "Untuk pasien peserta JKN silahkan dapat langsung menunju ke POLIKINIK " . $antrian->namapoli;
                 }
                 // jika pasien baru
                 else if ($antrian->pasienbaru == 1) {
                     $request['taskid'] = 1;
-                    $request['keterangan'] = "Silahkan menunggu panggilan di loket pendaftaran pasien baru";
+                    $request['keterangan'] = "Untuk pasien peserta JKN BARU silahkan menunggu panggilan di Loket Pendaftaran";
                 }
                 // api vclaim
                 $vclaim = new VclaimBPJSController();
@@ -1176,7 +1171,8 @@ class AntrianBPJSController extends Controller
             else {
                 $request['taskid'] = 1;
                 $request['status_api'] = 0;
-                $request['keterangan'] = "Silahkan menunggu panggilan di loket pendaftaran pasien baru";
+                $request['keterangan'] = "Untuk pasien peserta NON-JKN silahkan menunggu panggilan di Loket Pendaftaran";
+
                 // rj umum tipe transaki 1 status layanan 1 status layanan detail opn
                 $tipetransaksi = 1;
                 $statuslayanan = 1;
@@ -1187,50 +1183,50 @@ class AntrianBPJSController extends Controller
                 $totalpribadi = $tarifkarcis->TOTAL_TARIF_NEW + $tarifadm->TOTAL_TARIF_NEW;
             }
             // print antrian
-            // try {
-            //     if ($antrian->pasienbaru == 1) {
-            //         $pasienbaru = "BARU";
-            //     } else {
-            //         $pasienbaru = "LAMA";
-            //     }
-            //     $printer = new Printer($connector);
-            //     $printer->setFont(1);
-            //     $printer->setJustification(Printer::JUSTIFY_CENTER);
-            //     $printer->setEmphasis(true);
-            //     $printer->text("RSUD Waled\n");
-            //     $printer->setEmphasis(false);
-            //     $printer->text("Melayani Dengan Sepenuh Hati\n");
-            //     $printer->text("------------------------------------------------\n");
-            //     $printer->text("Karcis Antrian Rawat Jalan\n");
-            //     $printer->text("Nomor / Angka /Jenis Pasien :\n");
-            //     $printer->setTextSize(2, 2);
-            //     $printer->text($antrian->nomorantrean . "/" . $antrian->angkaantrean . "/" . $antrian->jenispasien . " " . $pasienbaru . "\n");
-            //     $printer->setTextSize(1, 1);
-            //     $printer->text("Kode Booking : " . $antrian->kodebooking . "\n\n");
-            //     $printer->setJustification(Printer::JUSTIFY_LEFT);
-            //     $printer->text("No RM : " . $antrian->norm . "\n");
-            //     $printer->text("NIK : " . $antrian->nik . "\n");
-            //     if ($antrian->nomorkartu != "") {
-            //         $printer->text("No Peserta : " . $antrian->nomorkartu . "\n");
-            //     }
-            //     if ($antrian->nomorreferensi != "") {
-            //         $printer->text("No Rujukan : " . $antrian->nomorreferensi . "\n");
-            //     }
-            //     $printer->text("Nama : " . $antrian->nama . "\n\n");
-            //     $printer->text("Poliklinik : " . $antrian->namapoli . "\n");
-            //     $printer->text("Kunjungan : " . $antrian->jeniskunjungan . "\n");
-            //     $printer->text("Dokter : " . $antrian->namadokter . "\n");
-            //     $printer->text("Tanggal : " . Carbon::parse($antrian->tanggalperiksa)->format('d M Y') . "\n");
-            //     $printer->text("Print : " . Carbon::now() . "\n\n");
-            //     $printer->text("Terima kasih atas kepercayaan anda. \n");
-            //     $printer->cut();
-            //     $printer->close();
-            // } catch (\Throwable $th) {
-            //     //throw $th;
-            // }
+            try {
+                if ($antrian->pasienbaru == 1) {
+                    $pasienbaru = "BARU";
+                } else {
+                    $pasienbaru = "LAMA";
+                }
+                $printer = new Printer($connector);
+                $printer->setFont(1);
+                $printer->setJustification(Printer::JUSTIFY_CENTER);
+                $printer->setEmphasis(true);
+                $printer->text("RSUD Waled\n");
+                $printer->setEmphasis(false);
+                $printer->text("Melayani Dengan Sepenuh Hati\n");
+                $printer->text("------------------------------------------------\n");
+                $printer->text("Karcis Antrian Rawat Jalan\n");
+                $printer->text("Nomor / Angka /Jenis Pasien :\n");
+                $printer->setTextSize(2, 2);
+                $printer->text($antrian->nomorantrean . "/" . $antrian->angkaantrean . "/" . $antrian->jenispasien . " " . $pasienbaru . "\n");
+                $printer->setTextSize(1, 1);
+                $printer->text("Kode Booking : " . $antrian->kodebooking . "\n\n");
+                $printer->setJustification(Printer::JUSTIFY_LEFT);
+                $printer->text("No RM : " . $antrian->norm . "\n");
+                $printer->text("NIK : " . $antrian->nik . "\n");
+                if ($antrian->nomorkartu != "") {
+                    $printer->text("No Peserta : " . $antrian->nomorkartu . "\n");
+                }
+                if ($antrian->nomorreferensi != "") {
+                    $printer->text("No Rujukan : " . $antrian->nomorreferensi . "\n");
+                }
+                $printer->text("Nama : " . $antrian->nama . "\n\n");
+                $printer->text("Poliklinik : " . $antrian->namapoli . "\n");
+                $printer->text("Kunjungan : " . $antrian->jeniskunjungan . "\n");
+                $printer->text("Dokter : " . $antrian->namadokter . "\n");
+                $printer->text("Tanggal : " . Carbon::parse($antrian->tanggalperiksa)->format('d M Y') . "\n");
+                $printer->text("Print : " . Carbon::now() . "\n\n");
+                $printer->text("Terima kasih atas kepercayaan anda. \n");
+                $printer->cut();
+                $printer->close();
+            } catch (\Throwable $th) {
+                //throw $th;
+            }
             // notif wa
             $wa = new WhatsappController();
-            $request['message'] = "Antrian dengan kode booking " . $antrian->kodebooking . " telah melakukan checkin.";
+            $request['message'] = "Antrian dengan kode booking " . $antrian->kodebooking . " telah melakukan checkin.\n\n" . $request->keterangan;
             $request['number'] = $antrian->nohp;
             $wa->send_message($request);
             // update antrian bpjs
@@ -1354,7 +1350,7 @@ class AntrianBPJSController extends Controller
                     ],
                 ];
             }
-            // // jika antrian gagal diupdate di bpjs
+            // jika antrian gagal diupdate di bpjs
             else {
                 return $response;
             }

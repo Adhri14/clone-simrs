@@ -109,6 +109,7 @@
                                     {{ $item->nik }}
                                 </td>
                                 <td>
+                                    {{ $item->nama }}<br>
                                     {{ $item->jenispasien }}
                                     @if ($item->pasienbaru == 1)
                                         <span class="badge bg-secondary">{{ $item->pasienbaru }}. Baru</span>
@@ -116,10 +117,6 @@
                                     @if ($item->pasienbaru == 0)
                                         <span class="badge bg-secondary">{{ $item->pasienbaru }}. Lama</span>
                                     @endif
-                                    @isset($item->pasien)
-                                        <br>
-                                        {{ $item->pasien->nama }}
-                                    @endisset
                                 </td>
                                 <td>
                                     @isset($item->nomorkartu)

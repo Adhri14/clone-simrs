@@ -19,7 +19,7 @@
                 </x-adminlte-alert>
             @endif
             <x-adminlte-card title="Filter Data Antrian" theme="secondary" collapsible>
-                <form action="{{ route('antrian.index') }}" method="get">
+                <form action="{{ route('antrianwa.index') }}" method="get">
                     @php
                         $config = ['format' => 'DD-MM-YYYY'];
                     @endphp
@@ -49,7 +49,7 @@
                 </form>
             </x-adminlte-card>
             @isset($request->loket)
-                <div class="row">
+                {{-- <div class="row">
                     <div class="col-md-3">
                         <x-adminlte-small-box title="{{ $antrians->where('status', 2)->first()->no_urut ?? '0' }}"
                             text="Antrian Saat Ini" theme="primary" class="withLoad" icon="fas fa-sign-in-alt"
@@ -70,7 +70,7 @@
                         <x-adminlte-small-box title="{{ $antrians->count() }}" text="Total Antrian" theme="success"
                             icon="fas fa-sign-in-alt" />
                     </div>
-                </div>
+                </div> --}}
                 <x-adminlte-card title="Tabel Antrian Dalam Proses" theme="primary" collapsible>
                     <div class="dataTables_wrapper dataTable">
                         <div class="row">

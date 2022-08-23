@@ -289,7 +289,7 @@ class AntrianController extends Controller
         // jika pasien jkn
         if (isset($request->nomorreferensi)) {
             $jenispasien = 'JKN';
-            $request['keterangan'] = "Silahkan menunggu diruang tunggu poliklinik";
+            $request['keterangan'] = "Untuk pasien JKN silahkan menunggu diruang tunggu poliklinik";
             $request['status_api'] = 1;
             // insert sep
             // $vclaim = new VclaimBPJSController();
@@ -353,7 +353,7 @@ class AntrianController extends Controller
         // jika pasien non-jkn
         else {
             $jenispasien = 'NON JKN';
-            $request['keterangan'] = "Silahkan untuk membayar biaya pendaftaran diloket pembayaran";
+            $request['keterangan'] = "Untuk pasien NON-JKN silahkan untuk membayar biaya pendaftaran diloket pembayaran";
             $request['status_api'] = 0;
         }
         $antrian = Antrian::find($request->antrianid);
@@ -444,6 +444,10 @@ class AntrianController extends Controller
                 // "user" => Auth::user()->name,
                 "status_api" => $request->status_api,
             ]);
+            $wa = new WhatsappController();
+            $request['message'] = "Pasien antrian atas nama " . $antrian->nama . " dengan kode booking " . $antrian->kodebooking . " telah didaftarkan.\n\n" . $request->keterangan;
+            $request['number'] = $antrian->nohp;
+            $wa->send_message($request);
             Alert::success('Success', 'Success Message : ' . $request->keterangan);
             return redirect()->back();
         } else {
@@ -472,10 +476,10 @@ class AntrianController extends Controller
         $request['taskid'] = 3;
         if ($antrian->jenispasien == "JKN") {
             $request['status_api'] = 1;
-            $request['keterangan'] = "Silahkan melakukan menunggu di poliklinik untuk dilayani";
+            $request['keterangan'] = "Untuk pasien JKN silahkan melakukan menunggu di poliklinik untuk dilayani";
         } else {
             $request['status_api'] = 0;
-            $request['keterangan'] = "Silahkan melakukan pembayaran pendaftaran ke loket pembayaran";
+            $request['keterangan'] = "Untuk pasien NON-JKN silahkan melakukan pembayaran pendaftaran ke loket pembayaran";
         }
         $request['waktu'] = Carbon::now()->timestamp * 1000;;
         $vclaim = new AntrianBPJSController();
@@ -514,6 +518,11 @@ class AntrianController extends Controller
                 'keterangan' => $request->keterangan,
                 // 'user' => Auth::user()->name,
             ]);
+            // notif wa
+            $wa = new WhatsappController();
+            $request['message'] = "Pasien antrian atas nama " . $antrian->nama . " dengan kode booking " . $antrian->kodebooking . " telah didaftarkan.\n\n" . $request->keterangan;
+            $request['number'] = $antrian->nohp;
+            $wa->send_message($request);
             Alert::success('Success', "Pendaftaran Berhasil. " . $request->keterangan . " " . $response->metadata->message);
             return redirect()->back();
         }

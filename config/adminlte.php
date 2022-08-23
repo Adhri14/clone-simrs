@@ -317,7 +317,7 @@ return [
                     // 'can' => 'admin',
                 ],
                 [
-                    'text' => 'Jadwal Opersasi',
+                    'text' => 'Jadwal Operasi',
                     'icon'    => 'fas fa-calendar-alt',
                     'shift'   => 'ml-2',
                     'url'  => 'jadwaloperasi',
