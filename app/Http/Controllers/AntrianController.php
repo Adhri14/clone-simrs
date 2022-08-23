@@ -592,6 +592,15 @@ class AntrianController extends Controller
             $request['waktu'] = Carbon::now()->timestamp * 1000;
             $vclaim = new AntrianBPJSController();
             $response = $vclaim->update_antrian($request);
+            try {
+                                // notif wa
+                                $wa = new WhatsappController();
+                                $request['message'] = "Panggilan kepada Antrian dengan kode booking " . $antrian->kodebooking . " di Poliklinik Dalam.";
+                                $request['number'] = $antrian->nohp;
+                                $wa->send_message($request);
+            } catch (\Throwable $th) {
+                //throw $th;
+            }
             $antrian->update([
                 'taskid' => $request->taskid,
                 'status_api' => 1,
