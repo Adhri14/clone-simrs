@@ -329,10 +329,10 @@
                                         <span class="badge bg-success">{{ $item->taskid }}. Periksa Poli</span>
                                     @endif
                                     @if ($item->taskid == 5)
-                                        @if ($item->status_api == 1)
+                                        @if ($item->status_api == 0)
                                             <span class="badge bg-success">{{ $item->taskid }}. Tunggu Farmasi</span>
                                         @endif
-                                        @if ($item->status_api == 2)
+                                        @if ($item->status_api == 1)
                                             <span class="badge bg-success">{{ $item->taskid }}. Selesai</span>
                                         @endif
                                     @endif

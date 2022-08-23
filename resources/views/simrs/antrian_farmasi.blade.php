@@ -57,7 +57,7 @@
                     </div>
                     <div class="col-md-3">
                         <x-adminlte-small-box
-                            title="{{ $antrians->where('taskid', '<', 7)->where('taskid', '>=', 5)->count() }}"
+                            title="{{ $antrians->where('taskid', '<', 7)->where('taskid', '>=', 5)->where('status_api', '=', 0)->count() }}"
                             text="Sisa Antrian" theme="warning" icon="fas fa-sign-in-alt" />
                     </div>
                     <div class="col-md-3">

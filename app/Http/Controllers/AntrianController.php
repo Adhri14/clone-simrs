@@ -633,7 +633,7 @@ class AntrianController extends Controller
         $antrian = Antrian::where('kodebooking', $kodebooking)->first();
         $request['kodebooking'] = $antrian->kodebooking;
         $request['taskid'] = 5;
-        $request['keterangan'] = "Silahkan tunggu di farmasi";
+        $request['keterangan'] = "Silahkan tunggu di farmasi untuk pengambilan obat.";
         $request['waktu'] = Carbon::now()->timestamp * 1000;
         $vclaim = new AntrianBPJSController();
         $response = $vclaim->update_antrian($request);
@@ -643,6 +643,15 @@ class AntrianController extends Controller
             'keterangan' => $request->keterangan,
             // 'user' => Auth::user()->name,
         ]);
+        try {
+            // notif wa
+            $wa = new WhatsappController();
+            $request['message'] = "Pelayanan di poliklinik atas nama pasien " . $antrian->nama . " dengan nomor antrean " . $antrian->nomorantrean . " telah selesai. ".$request->keterangan;
+            $request['number'] = $antrian->nohp;
+            $wa->send_message($request);
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
         Alert::success('Success', "Antrian Berhasil Dilanjutkan ke Farmasi.\n" . $response->metadata->message);
         return redirect()->back();
     }
@@ -651,7 +660,7 @@ class AntrianController extends Controller
         $antrian = Antrian::where('kodebooking', $kodebooking)->first();
         $request['kodebooking'] = $antrian->kodebooking;
         $request['taskid'] = 5;
-        $request['keterangan'] = "Antrian selesai, semoga cepat sembuh";
+        $request['keterangan'] = "Semoga cepat sembuh";
         $request['waktu'] = Carbon::now()->timestamp * 1000;
         $vclaim = new AntrianBPJSController();
         $response = $vclaim->update_antrian($request);
@@ -661,6 +670,15 @@ class AntrianController extends Controller
             'keterangan' => $request->keterangan,
             // 'user' => Auth::user()->name,
         ]);
+        try {
+            // notif wa
+            $wa = new WhatsappController();
+            $request['message'] = "Pelayanan di poliklinik atas nama pasien " . $antrian->nama . " dengan nomor antrean " . $antrian->nomorantrean . " telah selesai. ".$request->keterangan;
+            $request['number'] = $antrian->nohp;
+            $wa->send_message($request);
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
         Alert::success('Success', "Antrian Selesai. Semoga cepat sembuh.\n" . $response->metadata->message);
         return redirect()->back();
     }
@@ -698,6 +716,15 @@ class AntrianController extends Controller
                 'keterangan' => $request->keterangan,
                 // 'user' => Auth::user()->name,
             ]);
+            try {
+                // notif wa
+                $wa = new WhatsappController();
+                $request['message'] = "Resep obat atas nama pasien " . $antrian->nama . " dengan nomor antrean " . $antrian->nomorantrean . " telah diterima farmasi. Silahkan menunggu peracikan obat.";
+                $request['number'] = $antrian->nohp;
+                $wa->send_message($request);
+            } catch (\Throwable $th) {
+                //throw $th;
+            }
             Alert::success('Proses', 'Proses Peracikan Obat ' . $response->metadata->message);
             return redirect()->back();
         } else {
@@ -720,6 +747,15 @@ class AntrianController extends Controller
             'keterangan' => $request->keterangan,
             // 'user' => Auth::user()->name,
         ]);
+        try {
+            // notif wa
+            $wa = new WhatsappController();
+            $request['message'] = "Resep obat atas nama pasien " . $antrian->nama . " dengan nomor antrean " . $antrian->nomorantrean . " telah telah selesai diracik. Silahkan diambil di farmasi.";
+            $request['number'] = $antrian->nohp;
+            $wa->send_message($request);
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
         Alert::success('Success', 'Selesai Peracikan Obat ' . $response->metadata->message);
         return redirect()->back();
     }
