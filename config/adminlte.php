@@ -247,6 +247,37 @@ return [
             'url'         => 'home',
             'icon'        => 'fas fa-home',
         ],
+                //MENU INFO
+                [
+                    'text'        => 'Menu Informasi Umum',
+                    'icon'        => 'fas fa-info-circle',
+                    'submenu' => [
+                        [
+                            'text' => 'Status Antrian',
+                            'icon'    => 'fas fa-sign-in-alt',
+                            'url'  => 'info/antrian',
+                            'shift'   => 'ml-2',
+                        ],
+                        [
+                            'text' => 'Info Poliklinik',
+                            'icon'    => 'fas fa-clinic-medical',
+                            'shift'   => 'ml-2',
+                            'url'  => 'info/poliklinik',
+                        ],
+                        [
+                            'text' => 'Jadwal Poliklinik',
+                            'icon'    => 'fas fa-calendar-alt',
+                            'url'  => 'info/jadwal_poliklinik',
+                            'shift'   => 'ml-2',
+                        ],
+                        [
+                            'text' => 'Jadwal Libur Poliklinik',
+                            'icon'    => 'fas fa-calendar-times',
+                            'shift'   => 'ml-2',
+                            'url'  => 'info/jadwal_poli_libur',
+                        ],
+                    ]
+                ],
         // MENU APLIKASI ANTRIAN
         [
             'text'    => 'Aplikasi Antrian',

@@ -47,7 +47,7 @@
                         </x-adminlte-alert>
                     @endif
                     @php
-                        $heads = ['Tanggal', 'Kode DPPK', 'Nama Poli', 'Checkin', 'Pendaftaran', 'Tunggu Poli', 'Layanan Poli', 'Tunggu Farmasi', 'Layanan Farmasi', 'Jumlah', 'Insert Date'];
+                        $heads = ['Tanggal', 'Kode DPPK', 'Nama Poli', 'Checkin', 'Pendaftaran', 'Tunggu Poli', 'Layanan Poli', 'Tunggu Farmasi', 'Layanan Farmasi', 'Jumlah'];
                         $config['order'] = ['2', 'desc'];
                     @endphp
                     <x-adminlte-datatable id="table1" class="nowrap" :heads="$heads" :config="$config" striped bordered
@@ -76,7 +76,7 @@
                                     Rata : {{ round($item->avg_waktu_task6 / 60) }} menit
                                 </td>
                                 <td> {{ $item->jumlah_antrean }}</td>
-                                <td>{{ date('d/m/Y H:i:s', $item->insertdate / 1000) }}</td>
+                                {{-- <td>{{ date('d/m/Y H:i:s', $item->insertdate / 1000) }}</td> --}}
                             </tr>
                         @endforeach
                     </x-adminlte-datatable>

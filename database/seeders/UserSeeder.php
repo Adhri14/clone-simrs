@@ -50,7 +50,7 @@ class UserSeeder extends Seeder
             "name" => "Admin Pendaftaran",
             "email" => "adminpendaftaran@gmail.com",
             "username" => "adminpendaftaran",
-            'password' => bcrypt('123456'),
+            'password' => bcrypt('adminpendaftaran'),
             'email_verified_at' => Carbon::now()
         ]);
         $user->assignRole('Pendaftaran');
@@ -68,7 +68,7 @@ class UserSeeder extends Seeder
             "name" => "Admin Kasir",
             "email" => "adminkasir@gmail.com",
             "username" => "adminkasir",
-            'password' => bcrypt('123456'),
+            'password' => bcrypt('adminkasir'),
             'email_verified_at' => Carbon::now()
         ]);
         $user->assignRole('Kasir');
@@ -77,7 +77,7 @@ class UserSeeder extends Seeder
             "name" => "Admin Poliklinik",
             "email" => "adminpoliklinik@gmail.com",
             "username" => "adminpoliklinik",
-            'password' => bcrypt('123456'),
+            'password' => bcrypt('adminpoliklinik'),
             'email_verified_at' => Carbon::now()
         ]);
         $user->assignRole('Poliklinik');
@@ -86,7 +86,7 @@ class UserSeeder extends Seeder
             "name" => "Admin Farmasi",
             "email" => "adminfarmasi@gmail.com",
             "username" => "adminfarmasi",
-            'password' => bcrypt('123456'),
+            'password' => bcrypt('adminfarmasi'),
             'email_verified_at' => Carbon::now()
         ]);
         $user->assignRole('Farmasi');
@@ -95,7 +95,7 @@ class UserSeeder extends Seeder
             "name" => "Admin Pelayanan Medis",
             "email" => "adminyanmed@gmail.com",
             "username" => "adminyanmed",
-            'password' => bcrypt('123456'),
+            'password' => bcrypt('adminyanmed'),
             'email_verified_at' => Carbon::now()
         ]);
         $user->assignRole('Pelayanan Medis');
@@ -104,7 +104,7 @@ class UserSeeder extends Seeder
             "name" => "Admin Rekam Medis",
             "email" => "adminrekammedis@gmail.com",
             "username" => "adminrekammedis",
-            'password' => bcrypt('123456'),
+            'password' => bcrypt('adminrekammedis'),
             'email_verified_at' => Carbon::now()
         ]);
         $user->assignRole('Rekam Medis');

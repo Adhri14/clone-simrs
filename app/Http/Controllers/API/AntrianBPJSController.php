@@ -1030,12 +1030,6 @@ class AntrianBPJSController extends Controller
     }
     public function checkin_antrian(Request $request)
     {
-        return [
-            'metadata' => [
-                'code' => 200,
-                'message' =>"Ok",
-            ],
-        ];
         // cek printer
         try {
             $connector = new WindowsPrintConnector("smb://PRINTER:qweqwe@192.168.2.133/Printer Receipt");
