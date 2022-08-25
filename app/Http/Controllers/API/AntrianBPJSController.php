@@ -562,10 +562,6 @@ class AntrianBPJSController extends Controller
         $pasien = PasienDB::where('nik_Bpjs', $request->nik)->first();
         // cek pasien baru hit info pasien baru
         if (empty($pasien)) {
-            // $pasienbaru = $this->info_pasien_baru($request);
-            // $request['norm'] = $pasienbaru->response->norm;
-            // $request['pasienbaru'] = 1;
-            // $request['nama'] = "Belum Didaftarkan";
             return $response = [
                 "metadata" => [
                     "message" => "Pasien Baru",
