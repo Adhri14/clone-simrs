@@ -31,8 +31,8 @@ use SimpleSoftwareIO\QrCode\Facades\QrCode;
 class AntrianBPJSController extends Controller
 {
     // function WS BPJS
-    // public $baseUrl = 'https://apijkn-dev.bpjs-kesehatan.go.id/antreanrs_dev/';
-    public $baseUrl = 'https://apijkn.bpjs-kesehatan.go.id/antreanrs/';
+    public $baseUrl = 'https://apijkn-dev.bpjs-kesehatan.go.id/antreanrs_dev/';
+    // public $baseUrl = 'https://apijkn.bpjs-kesehatan.go.id/antreanrs/';
     public static function signature()
     {
         $cons_id =  env('ANTRIAN_CONS_ID');
@@ -545,20 +545,19 @@ class AntrianBPJSController extends Controller
             ];
         }
         // cek duplikasi nik antrian
-        $antrian_nik = Antrian::where('tanggalperiksa', $request->tanggalperiksa)
-            ->where('nik', $request->nik)
-            ->where('taskid', '<=', 4)
-            ->count();
-        if ($antrian_nik) {
-            return $response = [
-                "metadata" => [
-                    "message" => "Terdapat antrian dengan nomor NIK yang sama pada tanggal tersebut yang belum selesai.",
-                    "code" => 201,
-                ],
-            ];
-        }
+        // $antrian_nik = Antrian::where('tanggalperiksa', $request->tanggalperiksa)
+        //     ->where('nik', $request->nik)
+        //     ->where('taskid', '<=', 4)
+        //     ->count();
+        // if ($antrian_nik) {
+        //     return $response = [
+        //         "metadata" => [
+        //             "message" => "Terdapat antrian dengan nomor NIK yang sama pada tanggal tersebut yang belum selesai.",
+        //             "code" => 201,
+        //         ],
+        //     ];
+        // }
         // proses ambil antrian
-        $vclaim = new VclaimBPJSController();
         $pasien = PasienDB::where('nik_Bpjs', $request->nik)->first();
         // cek pasien baru hit info pasien baru
         if (empty($pasien)) {
@@ -582,37 +581,54 @@ class AntrianBPJSController extends Controller
         else {
             // cek jika jkn
             if (isset($request->nomorreferensi)) {
+                $vclaim = new VclaimBPJSController();
                 $request['jenispasien'] = 'JKN';
-                // // cek keaktifan peserta
-                try {
-                    $response = $vclaim->peserta_nik($request);
-                    $peserta = $response;
-                    $peserta_aktif = $peserta->response->peserta->statusPeserta->kode;
-                    $peserta_nomorkartu = $peserta->response->peserta->noKartu;
-                    // jika data pasien salah / berbeda
-                    if ($peserta_nomorkartu != $request->nomorkartu) {
-                        return $response = [
+                // kunjungan kontrol
+                if ($request->jeniskunjungan == 3) {
+                    $request['nomorsuratkontrol'] = $request->nomorreferensi;
+                    $response =  $vclaim->surat_kontrol_nomor($request);
+                    if ($response->metaData->code == 200) {
+                        $request['nomorrujukan'] = $response->response->sep->provPerujuk->noRujukan;
+                        // cek surat kontrol orang lain
+                        if ($request->nomorkartu != $response->response->sep->peserta->noKartu) {
+                            return [
+                                "metadata" => [
+                                    "code" => 201,
+                                    "message" => "Nomor peserta tidak sesuai dengan surat kontrol."
+                                ]
+                            ];
+                        }
+                    } else {
+                        return [
                             "metadata" => [
-                                "message" => "NIK dan nomor kartu peserta tidak sesuai",
                                 "code" => 201,
-                            ],
+                                "message" => $response->metaData->message
+                            ]
                         ];
                     }
-                    // jika peserta jkn tidak aktif nilai 0
-                    else if ($peserta_aktif != 0) {
-                        return $response = [
+                }
+                // kunjungan rujukan
+                else {
+                    $request['nomorrujukan'] = $request->nomorreferensi;
+                    $response =  $vclaim->rujukan_nomor($request);
+                    if ($response->metaData->code == 200) {
+                        // cek rujukan orang lain
+                        if ($request->nomorkartu != $response->response->rujukan->peserta->noKartu) {
+                            return [
+                                "metadata" => [
+                                    "code" => 201,
+                                    "message" => "Nomor peserta tidak sesuai dengan rujukan."
+                                ]
+                            ];
+                        }
+                    } else {
+                        return [
                             "metadata" => [
-                                "message" => $peserta->response->peserta->statusPeserta->keterangan,
                                 "code" => 201,
-                            ],
+                                "message" => $response->metaData->message
+                            ]
                         ];
                     }
-                    // jika peserta jkn aktif dan sesuai
-                    else if ($peserta_aktif == 0) {
-                        $request['jenispasien'] = 'JKN';
-                    }
-                } catch (\Throwable $th) {
-                    return $response;
                 }
                 // // pembuatan surat kontrol
                 // try {
@@ -738,7 +754,7 @@ class AntrianBPJSController extends Controller
                 if (isset($suratkontrol)) {
                     $request["nomorsuratkontrol"] = $suratkontrol->noSuratKontrol;
                 }
-                $antrian = Antrian::create([
+                Antrian::create([
                     "kodebooking" => $request->kodebooking,
                     "nomorkartu" => $request->nomorkartu,
                     "nik" => $request->nik,
@@ -751,6 +767,8 @@ class AntrianBPJSController extends Controller
                     "jampraktek" => $request->jampraktek,
                     "jeniskunjungan" => $request->jeniskunjungan,
                     "nomorreferensi" => $request->nomorreferensi,
+                    // surat kontrol
+                    "nomorrujukan" => $request->nomorrujukan,
                     "nomorsuratkontrol" => $request->nomorsuratkontrol,
                     "jenispasien" => $request->jenispasien,
                     "namapoli" => $request->namapoli,

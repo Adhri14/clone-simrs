@@ -45,7 +45,6 @@ class VclaimBPJSController extends Controller
         $output = \LZCompressor\LZString::decompressFromEncodedURIComponent($output);
         return $output;
     }
-
     public function ref_provinsi()
     {
         $url = $this->baseUrl . "referensi/propinsi";
@@ -335,6 +334,31 @@ class VclaimBPJSController extends Controller
             ]);
         }
 
+        return $response;
+    }
+    public function surat_kontrol_nomor(Request $request)
+    {
+        // checking request
+        $validator = Validator::make(request()->all(), [
+            "nomorreferensi" => "required",
+        ]);
+        if ($validator->fails()) {
+            $response = [
+                'metaData' => [
+                    'code' => 400,
+                    'message' => $validator->errors()->first(),
+                ],
+            ];
+            return json_decode(json_encode($response));
+        }
+        $url = $this->baseUrl . "RencanaKontrol/noSuratKontrol/" . $request->nomorreferensi;
+        $signature = $this->signature();
+        $response = Http::withHeaders($signature)->get($url);
+        $response = json_decode($response);
+        if ($response->metaData->code == 200) {
+            $decrypt = $this->stringDecrypt($signature['decrypt_key'], $response->response);
+            $response->response = json_decode($decrypt);
+        }
         return $response;
     }
     public function data_surat_kontrol(Request $request)

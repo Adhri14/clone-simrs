@@ -27,6 +27,7 @@ return new class extends Migration
             $table->string('jampraktek');
             $table->string('jeniskunjungan');
             $table->string('nomorreferensi')->nullable();
+            $table->string('nomorrujukan')->nullable();
             $table->string('nomorsuratkontrol')->nullable();
             $table->string('nomorsep')->nullable();
             $table->string('jenispasien');
