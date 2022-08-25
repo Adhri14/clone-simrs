@@ -64,14 +64,13 @@ class AntrianWAController extends Controller
             ->where('no_urut', $urutan)->first();
         if (empty($antrian)) {
             Alert::error('Error', 'Belum ada antrian berikutnya');
-            return redirect()->route('antrian.index', [
+            return redirect()->route('antrianwa.index', [
                 'tanggal' => $tanggal,
                 'loket' => $loket,
                 'lantai' => $lantai
             ]);
         } else {
             //panggil urusan mesin antrian
-
             try {
                 $mesin_antrian = DB::connection('mysql3')->table('tb_counter')
                     ->where('tgl', $tanggal)
@@ -106,7 +105,7 @@ class AntrianWAController extends Controller
                 }
             } catch (\Throwable $th) {
                 Alert::error('Error', 'Mesin Antrian Tidak Menyala');
-                return redirect()->route('antrian.index', [
+                return redirect()->route('antrianwa.index', [
                     'tanggal' => $tanggal,
                     'loket' => $loket,
                     'lantai' => $lantai
@@ -123,14 +122,14 @@ class AntrianWAController extends Controller
                 $api->send_message($request);
             } catch (\Throwable $th) {
                 Alert::error('Error', 'Pesan Whatsapp Gagal Dikirim');
-                return redirect()->route('antrian.index', [
+                return redirect()->route('antrianwa.index', [
                     'tanggal' => $tanggal,
                     'loket' => $loket,
                     'lantai' => $lantai
                 ]);
             }
             Alert::success('Success', 'Pengirimiman pesan panggilan antrian berhasil');
-            return redirect()->route('antrian.index', [
+            return redirect()->route('antrianwa.index', [
                 'tanggal' => $tanggal,
                 'loket' => $loket,
                 'lantai' => $lantai
@@ -145,7 +144,7 @@ class AntrianWAController extends Controller
             ->where('no_urut', $urutan)->first();
         if (empty($antrian)) {
             Alert::error('Error', 'Belum ada antrian berikutnya');
-            return redirect()->route('antrian.index');
+            return redirect()->route('antrianwa.index');
         } else {
             //panggil ulang urusan mesin antrian
             try {
@@ -161,7 +160,7 @@ class AntrianWAController extends Controller
                     ]);
             } catch (\Throwable $th) {
                 Alert::error('Error', 'Mesin Antrian Tidak Menyala');
-                return redirect()->route('antrian.index', [
+                return redirect()->route('antrianwa.index', [
                     'tanggal' => $tanggal,
                     'loket' => $loket,
                     'lantai' => $lantai
@@ -178,14 +177,14 @@ class AntrianWAController extends Controller
                 $api->send_message($request);
             } catch (\Throwable $th) {
                 Alert::error('Error', 'Pesan Whatsapp Gagal Dikirim');
-                return redirect()->route('antrian.index', [
+                return redirect()->route('antrianwa.index', [
                     'tanggal' => $tanggal,
                     'loket' => $loket,
                     'lantai' => $lantai
                 ]);
             }
             Alert::success('Success', 'Pengirimiman pesan panggilan antrian berhasil');
-            return redirect()->route('antrian.index', [
+            return redirect()->route('antrianwa.index', [
                 'tanggal' => $tanggal,
                 'loket' => $loket,
                 'lantai' => $lantai
@@ -198,7 +197,7 @@ class AntrianWAController extends Controller
             ->where('no_urut', $urutan)->first();
         if (empty($antrian)) {
             Alert::error('Error', 'Antrian tidak ditemukan');
-            return redirect()->route('antrian.index');
+            return redirect()->route('antrianwa.index');
         } else {
             $antrian->update([
                 'status' => 3
@@ -220,7 +219,7 @@ class AntrianWAController extends Controller
             ->where('no_urut', $urutan)->first();
         if (empty($antrian)) {
             Alert::error('Error', 'Antrian tidak ditemukan');
-            return redirect()->route('antrian.index');
+            return redirect()->route('antrianwa.index');
         } else {
             $antrian->update([
                 'status' => 98
@@ -263,7 +262,7 @@ class AntrianWAController extends Controller
         ]);
 
         Alert::success('Success Info', 'Success Message');
-        return redirect()->route('antrian.index');
+        return redirect()->route('antrianwa.index');
     }
     public function daftar(Request $request)
     {

@@ -49,17 +49,17 @@
                 </form>
             </x-adminlte-card>
             @isset($request->loket)
-                {{-- <div class="row">
+                <div class="row">
                     <div class="col-md-3">
                         <x-adminlte-small-box title="{{ $antrians->where('status', 2)->first()->no_urut ?? '0' }}"
                             text="Antrian Saat Ini" theme="primary" class="withLoad" icon="fas fa-sign-in-alt"
-                            url="{{ route('antrian.batal', [$request->tanggal, $antrians->where('status', 2)->first()->no_urut ?? '0']) }}"
+                            url="{{ route('antrianwa.batal', [$request->tanggal, $antrians->where('status', 2)->first()->no_urut ?? '0']) }}"
                             url-text="Batalkan Antrian" />
                     </div>
                     <div class="col-md-3">
                         <x-adminlte-small-box title="{{ $antrians->where('status', 1)->first()->no_urut ?? '0' }}"
                             class="withLoad" text="Antrian Selanjutnya" theme="success" icon="fas fa-sign-in-alt"
-                            url="{{ route('antrian.panggil', [$request->tanggal,$antrians->where('status', 1)->first()->no_urut ?? '0',$request->loket,$request->lantai]) }}"
+                            url="{{ route('antrianwa.panggil', [$request->tanggal,$antrians->where('status', 1)->first()->no_urut ?? '0',$request->loket,$request->lantai]) }}"
                             url-text="Panggil Antrian Selanjutnya" />
                     </div>
                     <div class="col-md-3">
@@ -70,7 +70,7 @@
                         <x-adminlte-small-box title="{{ $antrians->count() }}" text="Total Antrian" theme="success"
                             icon="fas fa-sign-in-alt" />
                     </div>
-                </div> --}}
+                </div>
                 <x-adminlte-card title="Tabel Antrian Dalam Proses" theme="primary" collapsible>
                     <div class="dataTables_wrapper dataTable">
                         <div class="row">
@@ -134,14 +134,14 @@
                                                 <x-adminlte-button class="btn-xs withLoad" label="Selesai" theme="success"
                                                     icon="fas fa-check" data-toggle="tooltop"
                                                     title="Antrian selesai dan panggil antrian berikutnya"
-                                                    onclick="window.location='{{ route('antrian.selesai', [$request->tanggal, $antrian->no_urut]) }}'" />
+                                                    onclick="window.location='{{ route('antrianwa.selesai', [$request->tanggal, $antrian->no_urut]) }}'" />
                                                 <x-adminlte-button class="btn-xs withLoad" label="Panggil Ulang" theme="warning"
                                                     icon="fas fa-check" data-toggle="tooltop" title="Panggil Ulang Antrian"
-                                                    onclick="window.location='{{ route('antrian.panggil_ulang', [$request->tanggal, $antrian->no_urut, $request->loket, $request->lantai]) }}'" />
+                                                    onclick="window.location='{{ route('antrianwa.panggil_ulang', [$request->tanggal, $antrian->no_urut, $request->loket, $request->lantai]) }}'" />
                                                 <x-adminlte-button class="btn-xs withLoad" label="Konfirmasi" theme="danger"
                                                     icon="fas fa-times" data-toggle="tooltop"
                                                     title="Antrian dibatalkan dan panggil antrian berikutnya"
-                                                    onclick="window.location='{{ route('antrian.batal', [$request->tanggal, $antrian->no_urut]) }}'" />
+                                                    onclick="window.location='{{ route('antrianwa.batal', [$request->tanggal, $antrian->no_urut]) }}'" />
                                             </td>
                                         </tr>
                                     @endforeach
@@ -280,7 +280,6 @@
         </x-slot>
     </x-adminlte-modal> --}}
 @stop
-
 @section('plugins.Datatables', true)
-@section('plugins.Select2', true)
+{{-- @section('plugins.Select2', true) --}}
 @section('plugins.TempusDominusBs4', true)
