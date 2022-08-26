@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\API\VclaimBPJSController;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use RealRashid\SweetAlert\Facades\Alert;
 
@@ -44,8 +45,11 @@ class VclaimController extends Controller
     {
         $suratkontrols = null;
         $api = new VclaimBPJSController();
-
         if (isset($request->tanggalsuratkontrol)) {
+            $tanggal = explode('-', $request->tanggalsuratkontrol);
+           $request['tanggal_awal'] =  Carbon::parse($tanggal[0])->format('Y-m-d');
+           $request['tanggal_akhir'] =  Carbon::parse($tanggal[1])->format('Y-m-d');
+            // dd();
             try {
                 $response = $api->data_surat_kontrol($request);
                 $suratkontrols = collect($response->response->list);

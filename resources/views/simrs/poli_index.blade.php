@@ -12,13 +12,15 @@
             <x-adminlte-card title="Poliklinik Aktif RSUD Waled" theme="info" icon="fas fa-info-circle" collapsible
                 maximizable>
                 @php
-                    $heads = ['Kode Poli', 'Nama Poli', 'Subspesialis', 'Kode Subspesialis', 'Nama Subpesialis', 'Lokasi', 'Daftar', 'Status'];
+                    $heads = ['Kode Subspesialis', 'Nama Subpesialis', 'Subspesialis', 'Lokasi', 'Daftar', 'Status'];
                 @endphp
                 <x-adminlte-datatable id="table1" :heads="$heads" striped bordered hoverable compressed>
                     @foreach ($polis->where('status', 1) as $item)
                         <tr>
-                            <td>{{ $item->kodepoli }}</td>
-                            <td>{{ $item->namapoli }}</td>
+                            {{-- <td>{{ $item->kodepoli }}</td> --}}
+                            {{-- <td>{{ $item->namapoli }}</td> --}}
+                            <td>{{ $item->kodesubspesialis }}</td>
+                            <td>{{ $item->namasubspesialis }}</td>
                             <td>
                                 @if ($item->subspesialis)
                                     Ya <i class="fas fa-check-circle text-success"></i>
@@ -26,8 +28,6 @@
                                     Bukan <i class="fas fa-times-circle text-danger"></i>
                                 @endif
                             </td>
-                            <td>{{ $item->kodesubspesialis }}</td>
-                            <td>{{ $item->namasubspesialis }}</td>
                             <td>{{ $item->lokasi }}</td>
                             <td>{{ $item->lantaipendaftaran }}</td>
                             <td>

@@ -365,7 +365,8 @@ class VclaimBPJSController extends Controller
     {
         // checking request
         $validator = Validator::make(request()->all(), [
-            "tanggalsuratkontrol" => "required",
+            "tanggal_awal" => "required",
+            "tanggal_akhir" => "required",
         ]);
         if ($validator->fails()) {
             $response = [
@@ -376,11 +377,7 @@ class VclaimBPJSController extends Controller
             ];
             return json_decode(json_encode($response));
         }
-        $time = Carbon::parse($request->tanggalsuratkontrol);
-        $tanggal_akhir = $time->format('Y-m-d');
-        $tanggal_awal = $time->subDays(29)->format('Y-m-d');
-
-        $url = $this->baseUrl . "RencanaKontrol/ListRencanaKontrol/tglAwal/" . $tanggal_awal . "/tglAkhir/" . $tanggal_akhir . "/filter/2";
+        $url = $this->baseUrl . "RencanaKontrol/ListRencanaKontrol/tglAwal/" . $request->tanggal_awal . "/tglAkhir/" . $request->tanggal_akhir . "/filter/2";
         // dd($url);
         $signature = $this->signature();
         $response = Http::withHeaders($signature)->get($url);
