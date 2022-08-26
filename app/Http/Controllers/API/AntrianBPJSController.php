@@ -598,6 +598,14 @@ class AntrianBPJSController extends Controller
                                 ]
                             ];
                         }
+                        if (Carbon::parse($response->response->tglRencanaKontrol) != Carbon::parse($request->tanggalperiksa)) {
+                            return [
+                                "metadata" => [
+                                    "code" => 201,
+                                    "message" => "Tanggal periksa tidak sesuai dengan surat kontrol. Silahkan pengajuan perubahan tanggal surat kontrol terlebih dahulu."
+                                ]
+                            ];
+                        }
                     } else {
                         return [
                             "metadata" => [
@@ -787,10 +795,13 @@ class AntrianBPJSController extends Controller
                 ]);
                 // kirim notif wa
                 try {
-                    $qr = QrCode::backgroundColor(255, 255, 51)->format('png')->generate($request->kodebooking, "public/storage/antrian" . $request->kodebooking . ".png");
                     $wa = new WhatsappController();
+                    $request['message'] = "Antrian berhasil didaftarkan melalui JKN Mobile dengan data sebagai berikut : \n\n*Kode Antrian :* " . $request->kodebooking .  "\n*Angka Antrian :* " . $request->angkaantrean .  "\n*Nomor Antrian :* " . $request->nomorantrean .  "\n\n*Nama :* " . $request->nama . "\n*Poliklinik :* " . $request->namapoli  . "\n*Dokter :* " . $request->namadokter  .  "\n*Tanggal Berobat :* " . $request->tanggalperiksa .  "\n*Jam Praktek :* " . $request->jampraktek  . "\n\n*Keterangan :* " . $request->keterangan  .  "\nTerima kasih. Semoga sehat selalu.\nUntuk pertanyaan & pengaduan silahkan hubungi :\n*Humas RSUD Waled 08983311118*";
+                    $request['number'] = $request->nohp;
+                    $wa->send_message($request);
+                    $qr = QrCode::backgroundColor(255, 255, 51)->format('png')->generate($request->kodebooking, "public/storage/antrian" . $request->kodebooking . ".png");
                     $request['file'] = asset("storage/antrian" . $request->kodebooking . ".png");
-                    $request['caption'] = "Antrian berhasil didaftarkan melalui JKN Mobile dengan data sebagai berikut : \n\n*Kode Antrian :* " . $request->kodebooking .  "\n*Angka Antrian :* " . $request->angkaantrean .  "\n*Nomor Antrian :* " . $request->nomorantrean .  "\n*Nama :* " . $request->nama . "\n*Poli :* " . $request->namapoli  .  "\n*Tanggal Berobat :* " . $request->tanggalperiksa .   "\n*Keterangan :* " . $request->keterangan  .  "\n\nTerima kasih. Semoga sehat selalu.";
+                    $request['caption'] = "";
                     $request['number'] = $request->nohp;
                     $wa->send_image($request);
                 } catch (\Throwable $th) {
@@ -1080,98 +1091,159 @@ class AntrianBPJSController extends Controller
             // jika pasien jkn
             if ($antrian->jenispasien == "JKN") {
                 $request['status_api'] = 1;
-                // jika pasien lama
-                if ($antrian->pasienbaru == 0) {
-                    $request['taskid'] = 3;
-                    $request['keterangan'] = "Untuk pasien peserta JKN silahkan dapat langsung menunju ke POLIKINIK " . $antrian->namapoli;
-                }
-                // jika pasien baru
-                else if ($antrian->pasienbaru == 1) {
-                    $request['taskid'] = 1;
-                    $request['keterangan'] = "Untuk pasien peserta JKN BARU silahkan menunggu panggilan di Loket Pendaftaran";
-                }
-                // api vclaim
-                $vclaim = new VclaimBPJSController();
-                // rujukan
+                $request['taskid'] = 3;
+                $request['keterangan'] = "Untuk pasien peserta JKN silahkan dapat langsung menunggu ke POLIKINIK " . $antrian->namapoli;
+                // // jika pasien lama
+                // if ($antrian->pasienbaru == 0) {
+                // }
+                // // jika pasien baru
+                // else if ($antrian->pasienbaru == 1) {
+                //     $request['taskid'] = 1;
+                //     $request['keterangan'] = "Untuk pasien peserta JKN BARU silahkan menunggu panggilan di Loket Pendaftaran";
+                // }
                 $request['noKartu'] = $antrian->nomorkartu;
-                $request['tglSep'] = Carbon::now()->format('Y-m-d');
+                $request['tglSep'] = Carbon::createFromTimestamp($request->waktu / 1000)->format('Y-m-d');
                 $request['noMR'] = $antrian->norm;
                 $request['nik'] = $antrian->nik;
                 $request['nohp'] = $antrian->nohp;
                 $request['kodedokter'] = $antrian->kodedokter;
-                $request['nomorreferensi'] = $antrian->nomorreferensi;
-                $data = $vclaim->rujukan_nomor($request);
-                if ($data->metaData->code == 200) {
-                    $rujukan = $data->response->rujukan;
-                    $peserta = $rujukan->peserta;
-                    $diganosa = $rujukan->diagnosa;
-                    $tujuan = $rujukan->poliRujukan;
-                    // tujuan rujukan
-                    $request['ppkPelayanan'] = "1018R001";
-                    $request['jnsPelayanan'] = "2";
-                    // peserta
-                    $request['klsRawatHak'] = $peserta->hakKelas->kode;
-                    $request['klsRawatNaik'] = "";
-                    // $request['pembiayaan'] = $peserta->jenisPeserta->kode;
-                    // $request['penanggungJawab'] =  $peserta->jenisPeserta->keterangan;
-                    // asal rujukan
-                    $request['asalRujukan'] = $data->response->asalFaskes;
-                    $request['tglRujukan'] = $rujukan->tglKunjungan;
-                    $request['noRujukan'] =   $antrian->nomorreferensi;
-                    $request['ppkRujukan'] = $rujukan->provPerujuk->kode;
-                    // diagnosa
-                    $request['catatan'] =  $diganosa->nama;
-                    $request['diagAwal'] =  $diganosa->kode;
-                    // poli tujuan
-                    $request['tujuan'] =  $tujuan->kode;
-                    $request['eksekutif'] =  0;
-                    // dpjp
-                    $request['dpjpLayan'] =  $antrian->kodedokter;
+                $vclaim = new VclaimBPJSController();
+                // insert sep surat kontrol
+                if ($antrian->jeniskunjungan == 3) {
+                    $request['nomorreferensi'] = $antrian->nomorreferensi;
+                    $suratkontrol = $vclaim->surat_kontrol_nomor($request);
+                    $request['nomorrujukan'] = $antrian->nomorrujukan;
+                    $request['nomorsuratkontrol'] = $antrian->nomorsuratkontrol;
+                    $request['nomorreferensi'] = $antrian->nomorrujukan;
+                    $data = $vclaim->rujukan_nomor($request);
+                    if ($data->metaData->code == 200) {
+                        $rujukan = $data->response->rujukan;
+                        $peserta = $rujukan->peserta;
+                        $diganosa = $rujukan->diagnosa;
+                        $tujuan = $rujukan->poliRujukan;
+                        // tujuan rujukan
+                        $request['ppkPelayanan'] = "1018R001";
+                        $request['jnsPelayanan'] = "2";
+                        // peserta
+                        $request['klsRawatHak'] = $peserta->hakKelas->kode;
+                        $request['klsRawatNaik'] = "";
+                        // $request['pembiayaan'] = $peserta->jenisPeserta->kode;
+                        // $request['penanggungJawab'] =  $peserta->jenisPeserta->keterangan;
+                        // asal rujukan
+                        $request['asalRujukan'] = $data->response->asalFaskes;
+                        $request['tglRujukan'] = $rujukan->tglKunjungan;
+                        $request['noRujukan'] =   $rujukan->noKunjungan;
+                        $request['ppkRujukan'] = $rujukan->provPerujuk->kode;
+                        // diagnosa
+                        $request['catatan'] =  $diganosa->nama;
+                        $request['diagAwal'] =  $diganosa->kode;
+                        // poli tujuan
+                        $request['tujuan'] =  $tujuan->kode;
+                        $request['eksekutif'] =  0;
+                        // dpjp
+                        // dd($suratkontrol->response->kodeDokter);
+                        $request['tujuanKunj'] = "2";
+                        $request['flagProcedure'] = "";
+                        $request['kdPenunjang'] = "";
+                        $request['assesmentPel'] = "5";
+                        $request['noSurat'] = $request->nomorsuratkontrol;
+                        $request['kodeDPJP'] = $suratkontrol->response->kodeDokter;
+                        $request['dpjpLayan'] =  $suratkontrol->response->kodeDokter;
+                    } else {
+                        return [
+                            "metadata" => [
+                                "message" => $data->metaData->message,
+                                "code" => 201,
+                            ],
+                        ];
+                    }
+                    $sep = $vclaim->insert_sep($request);
                 }
-                // insert sep
-                // $vclaim = new VclaimBPJSController();
-                // $request['nomorsuratkontrol'] = $antrian->nomorsuratkontrol;
-                // $sep = $vclaim->insert_sep($request);
-                // // dd($sep);
-                // if ($sep->metaData->code == 200) {
-                //     $printer = new Printer($connector);
-                //     $sep = $sep->response;
-                //     $printer->setFont(1);
-                //     $request["nomorsep"] = $sep->sep->noSep;
-                //     $printer->setJustification(Printer::JUSTIFY_CENTER);
-                //     $printer->setEmphasis(true);
-                //     $printer->text("KARTU SEP BPJS\n");
-                //     $printer->text("BADAN RUSUD WALED\n");
-                //     $printer->setEmphasis(false);
-                //     $printer->text("---------------------------------------------\n");
-                //     $printer->setJustification(Printer::JUSTIFY_LEFT);
-                //     $printer->text("No SEP : " . $sep->sep->noSep . "\n");
-                //     $printer->text("Tgl SEP : " . $sep->sep->tglSep . "\n");
-                //     $printer->text("No Kartu : " . $sep->sep->peserta->noKartu . "\n");
-                //     $printer->text("Nama Peserta : " . $sep->sep->peserta->nama . "\n");
-                //     $printer->text("Tgl Lahir : " . $sep->sep->peserta->tglLahir . "\n");
-                //     $printer->text("Telepon : \n");
-                //     $printer->text("Jenis Peserta : " . $sep->sep->peserta->jnsPeserta . "\n");
-                //     $printer->text("COB : -\n");
-                //     $printer->text("Jenis Pelayanan : " . $sep->sep->jnsPelayanan . "\n");
-                //     $printer->text("Kelas Rawat : " . $sep->sep->kelasRawat . "\n");
-                //     $printer->text("Poli / Spesialis : " . $sep->sep->poli . "\n");
-                //     $printer->text("Faskes Perujuk : -\n");
-                //     $printer->text("Diagnosa Awal : " . $sep->sep->diagnosa . "\n");
-                //     $printer->text("Catatan : " . $sep->sep->catatan . "\n\n");
-                //     $printer->text("Cetakan : " . Carbon::now() . "\n");
-                //     $printer->cut();
-                //     $printer->close();
-                // }
-                // // gagal buat sep
-                // else {
-                //     return [
-                //         "metadata" => [
-                //             "message" => $sep->metaData->message,
-                //             "code" => 201,
-                //         ],
-                //     ];
-                // }
+                // insert sep rujukan
+                else {
+                    $request['nomorreferensi'] = $antrian->nomorrujukan;
+                    $data = $vclaim->rujukan_nomor($request);
+                    if ($data->metaData->code == 200) {
+                        $rujukan = $data->response->rujukan;
+                        $peserta = $rujukan->peserta;
+                        $diganosa = $rujukan->diagnosa;
+                        $tujuan = $rujukan->poliRujukan;
+                        // tujuan rujukan
+                        $request['ppkPelayanan'] = "1018R001";
+                        $request['jnsPelayanan'] = "2";
+                        // peserta
+                        $request['klsRawatHak'] = $peserta->hakKelas->kode;
+                        $request['klsRawatNaik'] = "";
+                        // $request['pembiayaan'] = $peserta->jenisPeserta->kode;
+                        // $request['penanggungJawab'] =  $peserta->jenisPeserta->keterangan;
+                        // asal rujukan
+                        $request['asalRujukan'] = $data->response->asalFaskes;
+                        $request['tglRujukan'] = $rujukan->tglKunjungan;
+                        $request['noRujukan'] =   $antrian->nomorreferensi;
+                        $request['ppkRujukan'] = $rujukan->provPerujuk->kode;
+                        // diagnosa
+                        $request['catatan'] =  $diganosa->nama;
+                        $request['diagAwal'] =  $diganosa->kode;
+                        // poli tujuan
+                        $request['tujuan'] =  $tujuan->kode;
+                        $request['eksekutif'] =  0;
+                        // dpjp
+                        $request['tujuanKunj'] = "0";
+                        $request['flagProcedure'] = "";
+                        $request['kdPenunjang'] = "";
+                        $request['assesmentPel'] = "";
+                        $request['noSurat'] = "";
+                        $request['kodeDPJP'] = "";
+                        $request['dpjpLayan'] = $request->kodedokter;
+                    } else {
+                        return [
+                            "metadata" => [
+                                "message" => $data->metaData->message,
+                                "code" => 201,
+                            ],
+                        ];
+                    }
+                    $sep = $vclaim->insert_sep($request);
+                }
+                if ($sep->metaData->code == 200) {
+                    $request["nomorsep"] = $sep->response->sep->noSep;
+                    $printer = new Printer($connector);
+                    $sep = $sep->response;
+                    $printer->setFont(1);
+                    $printer->setJustification(Printer::JUSTIFY_CENTER);
+                    $printer->setEmphasis(true);
+                    $printer->text("KARTU SEP BPJS\n");
+                    $printer->text("BADAN RUSUD WALED\n");
+                    $printer->setEmphasis(false);
+                    $printer->text("---------------------------------------------\n");
+                    $printer->setJustification(Printer::JUSTIFY_LEFT);
+                    $printer->text("No SEP : " . $sep->sep->noSep . "\n");
+                    $printer->text("Tgl SEP : " . $sep->sep->tglSep . "\n");
+                    $printer->text("No Kartu : " . $sep->sep->peserta->noKartu . "\n");
+                    $printer->text("Nama Peserta : " . $sep->sep->peserta->nama . "\n");
+                    $printer->text("Tgl Lahir : " . $sep->sep->peserta->tglLahir . "\n");
+                    $printer->text("Telepon : \n");
+                    $printer->text("Jenis Peserta : " . $sep->sep->peserta->jnsPeserta . "\n");
+                    $printer->text("COB : -\n");
+                    $printer->text("Jenis Pelayanan : " . $sep->sep->jnsPelayanan . "\n");
+                    $printer->text("Kelas Rawat : " . $sep->sep->kelasRawat . "\n");
+                    $printer->text("Poli / Spesialis : " . $sep->sep->poli . "\n");
+                    $printer->text("Faskes Perujuk : -\n");
+                    $printer->text("Diagnosa Awal : " . $sep->sep->diagnosa . "\n");
+                    $printer->text("Catatan : " . $sep->sep->catatan . "\n\n");
+                    $printer->text("Cetakan : " . Carbon::now() . "\n");
+                    $printer->cut();
+                    $printer->close();
+                }
+                // gagal buat sep
+                else {
+                    return [
+                        "metadata" => [
+                            "message" => $sep->metaData->message,
+                            "code" => 201,
+                        ],
+                    ];
+                }
                 // rj jkn tipe transaki 2 status layanan 2 status layanan detail opn
                 $tipetransaksi = 2;
                 $statuslayanan = 2;

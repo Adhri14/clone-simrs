@@ -426,23 +426,23 @@ class VclaimBPJSController extends Controller
     }
     public function insert_sep(Request $request)
     {
-        if ($request->nomorsuratkontrol) {
-            $request['tujuanKunj'] = "2";
-            $request['flagProcedure'] = "";
-            $request['kdPenunjang'] = "";
-            $request['assesmentPel'] = "5";
-            $request['noSurat'] = $request->nomorsuratkontrol;
-            $request['kodeDPJP'] = $request->kodedokter;
-            $request['dpjpLayan'] = $request->kodedokter;
-        } else {
-            $request['tujuanKunj'] = "0";
-            $request['flagProcedure'] = "";
-            $request['kdPenunjang'] = "";
-            $request['assesmentPel'] = "";
-            $request['noSurat'] = "";
-            $request['kodeDPJP'] = "";
-            $request['dpjpLayan'] = $request->kodedokter;
-        }
+        // if ($request->nomorsuratkontrol) {
+        //     $request['tujuanKunj'] = "2";
+        //     $request['flagProcedure'] = "";
+        //     $request['kdPenunjang'] = "";
+        //     $request['assesmentPel'] = "5";
+        //     $request['noSurat'] = $request->nomorsuratkontrol;
+        //     // $request['kodeDPJP'] = $request->kodedokter;
+        //     // $request['dpjpLayan'] = $request->kodedokter;
+        // } else {
+        //     $request['tujuanKunj'] = "0";
+        //     $request['flagProcedure'] = "";
+        //     $request['kdPenunjang'] = "";
+        //     $request['assesmentPel'] = "";
+        //     $request['noSurat'] = "";
+        //     $request['kodeDPJP'] = "";
+        //     $request['dpjpLayan'] = $request->kodedokter;
+        // }
         $url = $this->baseUrl . "SEP/2.0/insert";
         $signature = $this->signature();
         $client = new Client();
@@ -513,7 +513,6 @@ class VclaimBPJSController extends Controller
             ]),
         ]);
         $response = json_decode($response->getBody());
-        dd($response);
         if ($response->metaData->code == 200) {
             $decrypt = $this->stringDecrypt($signature['decrypt_key'], $response->response);
             $response->response = json_decode($decrypt);
