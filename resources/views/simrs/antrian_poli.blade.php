@@ -75,9 +75,9 @@
                             url="" url-text="Batalkan Antrian" />
                     </div>
                     <div class="col-md-3">
-                        <x-adminlte-small-box title="{{ $antrians->where('taskid', 3)->first()->angkaantrean ?? '0' }}"
+                        <x-adminlte-small-box title="{{ $antrians->where('taskid', 3)->where('status_api', 1)->first()->angkaantrean ?? '0' }}"
                             class="withLoad" text="Antrian Selanjutnya" theme="success" icon="fas fa-sign-in-alt"
-                            url="{{ route('antrian.panggil_poli', $antrians->where('taskid', 3)->first()->kodebooking ?? '0') }}"
+                            url="{{ route('antrian.panggil_poli', $antrians->where('taskid', 3)->where('status_api', 1)->first()->kodebooking ?? '0') }}"
                             url-text="Panggil Antrian Selanjutnya" />
                     </div>
                     <div class="col-md-3">

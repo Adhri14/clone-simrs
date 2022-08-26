@@ -36,6 +36,7 @@ return new class extends Migration
             $table->string('namadokter');
             $table->string('nomorantrean');
             $table->string('angkaantrean');
+            $table->string('lantaipendaftaran')->nullable();
 
             $table->string('estimasidilayani')->nullable();
             $table->string('sisakuotajkn')->nullable();

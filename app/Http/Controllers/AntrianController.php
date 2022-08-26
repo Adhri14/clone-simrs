@@ -74,6 +74,7 @@ class AntrianController extends Controller
             "jeniskunjungan" => 'Offline',
             "jenispasien" => 'Offline',
             "namapoli" =>  $poli->namasubspesialis,
+            "lantaipendaftaran" =>  $poli->lantaipendaftaran,
             "namadokter" => $dokter->namadokter,
             "nomorantrean" =>  $nomorantrean,
             "angkaantrean" =>  $angkaantrean,
@@ -95,14 +96,21 @@ class AntrianController extends Controller
             $printer->setEmphasis(false);
             $printer->text("Melayani Dengan Sepenuh Hati\n");
             $printer->text("------------------------------------------------\n");
-            $printer->text("Karcis Antrian Pendaftaran Offline\n");
+            $printer->text("Karcis Antrian Rawat Jalan Offline\n");
             $printer->text("Antrian Pendaftaran / Antrian Poliklinik :\n");
             $printer->setTextSize(2, 2);
             $printer->text($antrian->angkaantrean . " / " .  $antrian->nomorantrean . "\n");
             $printer->setTextSize(1, 1);
             $printer->text("Kode Booking : " . $antrian->kodebooking . "\n\n");
             $printer->setJustification(Printer::JUSTIFY_LEFT);
-            $printer->text("Silahkan menunggu di Loket Pendaftaran\n");
+            $printer->text("Lantai Pendaftaran : " . $poli->lantaipendaftaran . "\n");
+            $printer->text("Nama Dokter : " . $dokter->namadokter . "\n");
+            $printer->text("Jam Praktek : " . $jadwal->jadwal . "\n");
+            $printer->text("Nama Poli : " . $poli->namapoli . "\n");
+            $printer->text("Lantai Poli : " . $poli->lokasi . "\n");
+            $printer->text("Print : " . Carbon::now() . "\n\n");
+            $printer->text("Silahkan menunggu di Loket Pendaftaran.\n");
+            $printer->text("Semoga lekas sembuh.\n");
             $printer->cut();
             $printer->close();
         } catch (Exception $e) {
@@ -163,6 +171,7 @@ class AntrianController extends Controller
         $antrians = [];
         if ($request->tanggal) {
             $antrians = Antrian::where('tanggalperiksa', $request->tanggal)
+                ->where('lantaipendaftaran',  $request->lantai)
                 ->get();
         }
         $provinsis = Provinsi::get();
@@ -646,7 +655,7 @@ class AntrianController extends Controller
         try {
             // notif wa
             $wa = new WhatsappController();
-            $request['message'] = "Pelayanan di poliklinik atas nama pasien " . $antrian->nama . " dengan nomor antrean " . $antrian->nomorantrean . " telah selesai. ".$request->keterangan;
+            $request['message'] = "Pelayanan di poliklinik atas nama pasien " . $antrian->nama . " dengan nomor antrean " . $antrian->nomorantrean . " telah selesai. " . $request->keterangan;
             $request['number'] = $antrian->nohp;
             $wa->send_message($request);
         } catch (\Throwable $th) {
@@ -673,7 +682,7 @@ class AntrianController extends Controller
         try {
             // notif wa
             $wa = new WhatsappController();
-            $request['message'] = "Pelayanan di poliklinik atas nama pasien " . $antrian->nama . " dengan nomor antrean " . $antrian->nomorantrean . " telah selesai. ".$request->keterangan;
+            $request['message'] = "Pelayanan di poliklinik atas nama pasien " . $antrian->nama . " dengan nomor antrean " . $antrian->nomorantrean . " telah selesai. " . $request->keterangan;
             $request['number'] = $antrian->nohp;
             $wa->send_message($request);
         } catch (\Throwable $th) {

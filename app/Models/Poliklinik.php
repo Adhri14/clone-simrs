@@ -15,7 +15,9 @@ class Poliklinik extends Model
         'kodesubspesialis',
         'namasubspesialis',
         'subspesialis',
-        'status'
+        'status',
+        'lokasi',
+        'lantaipendaftaran',
     ];
 
     public function antrians()

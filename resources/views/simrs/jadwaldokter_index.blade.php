@@ -154,10 +154,10 @@
                     $('#kapasitaspasien').val(data.kapasitaspasien);
                     $('#jadwal').val(data.jadwal);
                     $('.idjadwal').val(data.id);
-                    $.LoadingOverlay("hide", true);
                     if (data.libur == 1) {
                         $('#libur').prop('checked', true).trigger('change');
                     }
+                    $.LoadingOverlay("hide", true);
                     $('#modalJadwal').modal('show');
                 })
 

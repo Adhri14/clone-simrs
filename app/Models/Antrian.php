@@ -30,6 +30,7 @@ class Antrian extends Model
         "namadokter",
         "nomorantrean",
         "angkaantrean",
+        "lantaipendaftaran",
         "estimasidilayani",
         "sisakuotajkn",
         "kuotajkn",

@@ -60,4 +60,25 @@ class PoliklinikController extends Controller
         Alert::success('Success', 'Poliklinik ' . $poli->namasubspesialis . ' Telah Di ' . $keterangan);
         return redirect()->route('poli.index');
     }
+    public function show($id)
+    {
+        $poli = Poliklinik::find($id);
+        return response()->json($poli);
+    }
+    public function store(Request $request)
+    {
+        $poli = Poliklinik::find($request->idpoli);
+        if ($request->status == "true") {
+            $request['status'] = 1;
+        } else {
+            $request['status'] = 0;
+        }
+        $poli->update([
+            'lokasi' => $request->lokasi,
+            'lantaipendaftaran' => $request->lantaipendaftaran,
+            'status' => $request->status,
+        ]);
+        Alert::success('Success', 'Poliklinik ' . $poli->namasubspesialis . ' telah diperbaharui');
+        return redirect()->route('poli.index');
+    }
 }

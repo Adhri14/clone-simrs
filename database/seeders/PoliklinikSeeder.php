@@ -33,6 +33,8 @@ class PoliklinikSeeder extends Seeder
                     'namapoli' => $value->nmpoli,
                     'namasubspesialis' => $value->nmsubspesialis,
                     'subspesialis' => $subpesialis,
+                    'lokasi' => 1,
+                    'lantaipendaftaran' => 1,
                 ]
             );
         }
