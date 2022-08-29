@@ -211,7 +211,7 @@ class AntrianController extends Controller
                 $urutan = $antrian->angkaantrean;
                 $mesin_antrian = DB::connection('mysql3')->table('tb_counter')
                     ->where('tgl', $tanggal)
-                    ->where('kategori', 'WA')
+                    ->where('kategori', 'JKN')
                     ->where('loket', $loket)
                     ->where('lantai', $lantai)
                     ->get();
@@ -228,7 +228,7 @@ class AntrianController extends Controller
                 } else {
                     DB::connection('mysql3')->table('tb_counter')
                         ->where('tgl', $tanggal)
-                        ->where('kategori', 'WA')
+                        ->where('kategori', 'JKN')
                         ->where('loket', $loket)
                         ->where('lantai', $lantai)
                         ->limit(1)

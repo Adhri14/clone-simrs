@@ -28,6 +28,7 @@ class DokterController extends Controller
                 ],
                 [
                     'namadokter' => $value->namadokter,
+                    'status' => 1,
                 ]
             );
         }

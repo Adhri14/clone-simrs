@@ -88,10 +88,6 @@
                                     @if ($item->pasienbaru == 0)
                                         <span class="badge bg-secondary">{{ $item->pasienbaru }}. Lama</span>
                                     @endif
-                                    @isset($item->pasien)
-                                        <br>
-                                        {{ $item->pasien->nama }}
-                                    @endisset
                                 </td>
                                 <td>{{ $item->namapoli }} {{ $item->jampraktek }}<br>{{ $item->namadokter }}
                                 </td>
@@ -174,10 +170,6 @@
                                     @if ($item->pasienbaru == 0)
                                         <span class="badge bg-secondary">{{ $item->pasienbaru }}. Lama</span>
                                     @endif
-                                    @isset($item->pasien)
-                                        <br>
-                                        {{ $item->pasien->nama }}
-                                    @endisset
                                 </td>
                                 <td>{{ $item->namapoli }} {{ $item->jampraktek }}<br>{{ $item->namadokter }}
                                 </td>

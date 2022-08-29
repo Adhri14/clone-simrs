@@ -9,6 +9,9 @@ class Poliklinik extends Model
 {
     use HasFactory;
 
+    protected $connection = 'mysql2';
+    protected $table = 'jkn_poli';
+
     protected $fillable = [
         'kodepoli',
         'namapoli',

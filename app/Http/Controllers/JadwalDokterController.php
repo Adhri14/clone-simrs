@@ -30,13 +30,11 @@ class JadwalDokterController extends Controller
             $jadwals = $api->ref_jadwal_dokter($request);
             if (isset($jadwals->response)) {
                 foreach ($jadwals->response as  $jadwal) {
-                    JadwalDokter::updateOrCreate(
+                    JadwalDokter::create(
                         [
                             'kodesubspesialis' => $jadwal->kodesubspesialis,
                             'kodedokter' => $jadwal->kodedokter,
                             'hari' => $jadwal->hari,
-                        ],
-                        [
                             'kodepoli' => $jadwal->kodepoli,
                             'namapoli' => $jadwal->namapoli,
                             'namasubspesialis' => $jadwal->namasubspesialis,
@@ -79,6 +77,13 @@ class JadwalDokterController extends Controller
                 'kapasitaspasien' => $request->kapasitaspasien,
             ]);
             Alert::success('Success', 'Jadwal Telah Diperbarui');
+            return redirect()->route('jadwaldokter.index');
+        }
+        if ($request->method == "DELETE") {
+            $jadwal = JadwalDokter::find($request->idjadwal);
+            // dd($jadwal);
+            $jadwal->delete();
+            Alert::success('Success', 'Jadwal Telah Dihapus');
             return redirect()->route('jadwaldokter.index');
         }
     }

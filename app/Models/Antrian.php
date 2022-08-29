@@ -9,6 +9,9 @@ class Antrian extends Model
 {
     use HasFactory;
 
+    protected $connection = 'mysql2';
+    protected $table = 'jkn_antrian';
+
     protected $fillable = [
         "kodebooking",
         "nomorkartu",

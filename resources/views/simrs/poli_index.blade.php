@@ -8,7 +8,7 @@
 
 @section('content')
     <div class="row">
-        <div class="col-md-8">
+        <div class="col-md-7">
             <x-adminlte-card title="Poliklinik Aktif RSUD Waled" theme="info" icon="fas fa-info-circle" collapsible
                 maximizable>
                 @php
@@ -50,7 +50,7 @@
                 </x-adminlte-datatable>
             </x-adminlte-card>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-5">
             <x-adminlte-card title="Data Semua Poliklinik" theme="info" icon="fas fa-info-circle" collapsible maximizable>
                 @php
                     $heads = ['Kode Poli', 'Nama Poli', 'Spesialis', 'Status'];

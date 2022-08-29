@@ -43,9 +43,11 @@
                 maximizable>
                 @php
                     $heads = ['Nama Poliklinik', 'Kode Poli', 'Dokter', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+                    $config['paging'] = false;
                 @endphp
-                <x-adminlte-datatable id="table1" class="nowrap" :heads="$heads" striped bordered hoverable compressed>
-                    @foreach ($jadwals->groupby('namadokter') as $item)
+                <x-adminlte-datatable id="table1" class="nowrap" :heads="$heads" :config="$config" striped bordered
+                    hoverable compressed>
+                    @foreach ($jadwals->groupby('kodedokter') as $item)
                         <tr>
                             <td>{{ $item->first()->namasubspesialis }}</td>
                             <td>{{ $item->first()->kodesubspesialis }}</td>
@@ -67,7 +69,6 @@
                                     @endforeach
                                 </td>
                             @endfor
-                            <td></td>
                         </tr>
                     @endforeach
                 </x-adminlte-datatable>
@@ -80,6 +81,7 @@
             @csrf
             <input type="hidden" name="method" value="UPDATE">
             <input type="hidden" class="idjadwal" name="idjadwal" id="idjadwal">
+            <label id="labeljadwal">Jadwal ID : 1</label>
             <x-adminlte-select2 name="kodesubspesialis" id="kodesubspesialis" label="Poliklinik">
                 @foreach ($poli as $item)
                     <option value="{{ $item->kodesubspesialis }}">{{ $item->kodesubspesialis }} -
@@ -152,6 +154,7 @@
                     $('#kodedokter').val(data.kodedokter).trigger('change');
                     $('#hari').val(data.hari).trigger('change');
                     $('#kapasitaspasien').val(data.kapasitaspasien);
+                    $('#labeljadwal').html("Jadwal ID : " + data.id);
                     $('#jadwal').val(data.jadwal);
                     $('.idjadwal').val(data.id);
                     if (data.libur == 1) {
