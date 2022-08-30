@@ -734,7 +734,6 @@ class AntrianBPJSController extends Controller
             }
             //  cek nik
             $poli = Poliklinik::where('kodepoli',$request->kodepoli)->first();
-            dd($poli);
             $antrians = Antrian::where('tanggalperiksa', $request->tanggalperiksa)
                 ->count();
             $antrian_poli = Antrian::where('tanggalperiksa', $request->tanggalperiksa)
@@ -786,6 +785,8 @@ class AntrianBPJSController extends Controller
                     "nomorantrean" => $request->nomorantrean,
                     "angkaantrean" => $request->angkaantrean,
                     "estimasidilayani" => $request->estimasidilayani,
+                    "lokasi" => $poli->lokasi,
+                    "lantaipendaftaran" => $poli->lantaipendaftaran,
                     "sisakuotajkn" => $request->sisakuotajkn,
                     "kuotajkn" => $request->kuotajkn,
                     "sisakuotanonjkn" => $request->sisakuotanonjkn,
