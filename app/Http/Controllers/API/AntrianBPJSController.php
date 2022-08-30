@@ -30,7 +30,7 @@ use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class AntrianBPJSController extends Controller
 {
-    // function WS BPJS
+    // function WS BPJSam
     // public $baseUrl = 'https://apijkn-dev.bpjs-kesehatan.go.id/antreanrs_dev/';
     public $baseUrl = 'https://apijkn.bpjs-kesehatan.go.id/antreanrs/';
     public static function signature()
@@ -545,18 +545,18 @@ class AntrianBPJSController extends Controller
             ];
         }
         // cek duplikasi nik antrian
-        // $antrian_nik = Antrian::where('tanggalperiksa', $request->tanggalperiksa)
-        //     ->where('nik', $request->nik)
-        //     ->where('taskid', '<=', 4)
-        //     ->count();
-        // if ($antrian_nik) {
-        //     return $response = [
-        //         "metadata" => [
-        //             "message" => "Terdapat antrian dengan nomor NIK yang sama pada tanggal tersebut yang belum selesai.",
-        //             "code" => 201,
-        //         ],
-        //     ];
-        // }
+        $antrian_nik = Antrian::where('tanggalperiksa', $request->tanggalperiksa)
+            ->where('nik', $request->nik)
+            ->where('taskid', '<=', 4)
+            ->count();
+        if ($antrian_nik) {
+            return $response = [
+                "metadata" => [
+                    "message" => "Terdapat antrian dengan nomor NIK yang sama pada tanggal tersebut yang belum selesai.",
+                    "code" => 201,
+                ],
+            ];
+        }
         // proses ambil antrian
         $pasien = PasienDB::where('nik_Bpjs', $request->nik)->first();
         // cek pasien baru hit info pasien baru
@@ -733,6 +733,8 @@ class AntrianBPJSController extends Controller
                 return $response;
             }
             //  cek nik
+            $poli = Poliklinik::where('kodepoli',$request->kodepoli)->first();
+            dd($poli);
             $antrians = Antrian::where('tanggalperiksa', $request->tanggalperiksa)
                 ->count();
             $antrian_poli = Antrian::where('tanggalperiksa', $request->tanggalperiksa)
@@ -790,6 +792,7 @@ class AntrianBPJSController extends Controller
                     "kuotanonjkn" => $request->kuotanonjkn,
                     "keterangan" => $request->keterangan,
                     "status_bpjs" => 1,
+                    "taskid" => 0,
                     "user" => "System Antrian",
                     "nama" => $request->nama,
                 ]);

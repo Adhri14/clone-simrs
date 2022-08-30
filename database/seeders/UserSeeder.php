@@ -113,6 +113,7 @@ class UserSeeder extends Seeder
             'dalam',
             'tht',
             'mata',
+            'onkologi',
         ];
         foreach ($adminpoli as  $value) {
             $user = User::create([

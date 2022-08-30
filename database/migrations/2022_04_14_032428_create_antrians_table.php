@@ -43,7 +43,7 @@ return new class extends Migration
             $table->string('kuotajkn')->nullable();
             $table->string('sisakuotanonjkn')->nullable();
             $table->string('kuotanonjkn')->nullable();
-            $table->string('lantai')->nullable();
+            $table->string('lokasi')->nullable();
 
             $table->string('taskid')->default(0);
             $table->string('taskid1')->nullable();

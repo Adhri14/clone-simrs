@@ -49,7 +49,7 @@
                     hoverable compressed>
                     @foreach ($jadwals->groupby('kodedokter') as $item)
                         <tr>
-                            <td>{{ $item->first()->namasubspesialis }}</td>
+                            <td> {{ strtoupper($item->first()->namasubspesialis) }}</td>
                             <td>{{ $item->first()->kodesubspesialis }}</td>
                             <td>{{ $item->first()->kodedokter }} {{ $item->first()->namadokter }}</td>
                             @for ($i = 1; $i <= 6; $i++)

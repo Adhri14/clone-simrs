@@ -3,7 +3,7 @@
 @section('title', 'Referensi Poliklinik')
 
 @section('content_header')
-    <h1>Referensi Poliklinik</h1>
+    <h1>Referensi Polikliniask</h1>
 @stop
 
 @section('content')
@@ -13,8 +13,10 @@
                 maximizable>
                 @php
                     $heads = ['Kode Subspesialis', 'Nama Subpesialis', 'Subspesialis', 'Lokasi', 'Daftar', 'Status'];
+                    $config['paging'] = false;
                 @endphp
-                <x-adminlte-datatable id="table1" :heads="$heads" striped bordered hoverable compressed>
+                <x-adminlte-datatable id="table1" :heads="$heads" :config="$config" striped bordered hoverable
+                    compressed>
                     @foreach ($polis->where('status', 1) as $item)
                         <tr>
                             {{-- <td>{{ $item->kodepoli }}</td> --}}
