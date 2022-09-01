@@ -31,8 +31,8 @@ use SimpleSoftwareIO\QrCode\Facades\QrCode;
 class AntrianBPJSController extends Controller
 {
     // function WS BPJSam
-    // public $baseUrl = 'https://apijkn-dev.bpjs-kesehatan.go.id/antreanrs_dev/';
-    public $baseUrl = 'https://apijkn.bpjs-kesehatan.go.id/antreanrs/';
+    public $baseUrl = 'https://apijkn-dev.bpjs-kesehatan.go.id/antreanrs_dev/';
+    // public $baseUrl = 'https://apijkn.bpjs-kesehatan.go.id/antreanrs/';
     public static function signature()
     {
         $cons_id =  env('ANTRIAN_CONS_ID');
@@ -501,10 +501,10 @@ class AntrianBPJSController extends Controller
     public function ambil_antrian(Request $request)
     {
         // auth token
-        $auth = $this->auth_token($request);
-        if ($auth['metadata']['code'] != 200) {
-            return $auth;
-        }
+        // $auth = $this->auth_token($request);
+        // if ($auth['metadata']['code'] != 200) {
+        //     return $auth;
+        // }
         // checking request
         $validator = Validator::make(request()->all(), [
             "nik" => "required|numeric|digits:16",

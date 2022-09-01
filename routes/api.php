@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AntrianController;
 use App\Http\Controllers\API\AntrianBPJSController;
 use App\Http\Controllers\API\VclaimBPJSController;
 use App\Http\Controllers\API\WhatsappController;
@@ -35,6 +36,7 @@ Route::prefix('antrian')->group(function () {
     Route::post('listtask', [AntrianBPJSController::class, 'list_waktu_task']);
     Route::get('dashboard_tanggal', [AntrianBPJSController::class, 'dashboard_tanggal']);
     Route::get('dashboard_bulan', [AntrianBPJSController::class, 'dashboard_bulan']);
+    Route::post('store_offline', [AntrianController::class, 'store_offline'])->name('api.store_offline');
 });
 
 Route::get('token', [AntrianBPJSController::class, 'token']);
@@ -62,8 +64,8 @@ Route::prefix('vclaim')->group(function () {
     // monitoring
     Route::get('monitoring_pelayanan_peserta', [VclaimBPJSController::class, 'monitoring_pelayanan_peserta']);
     // peserta cek
-    Route::get('peserta_nomorkartu', [VclaimBPJSController::class, 'peserta_nomorkartu']);
-    Route::get('peserta_nik', [VclaimBPJSController::class, 'peserta_nik']);
+    Route::get('peserta_nomorkartu', [VclaimBPJSController::class, 'peserta_nomorkartu'])->name('api.cek_nomorkartu');
+    Route::get('peserta_nik', [VclaimBPJSController::class, 'peserta_nik'])->name('api.cek_nik');
     // rujukan
     Route::get('rujukan_jumlah_sep', [VclaimBPJSController::class, 'rujukan_jumlah_sep'])->name('api.rujukan_jumlah_sep');
     Route::get('rujukan_nomor', [VclaimBPJSController::class, 'rujukan_nomor'])->name('api.rujukan_nomor');

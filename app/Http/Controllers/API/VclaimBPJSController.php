@@ -190,7 +190,6 @@ class VclaimBPJSController extends Controller
             ];
             return json_decode(json_encode($response));
         }
-
         $url = $this->baseUrl . "Rujukan/JumlahSEP/" . $request->jenisrujukan . "/" . $request->nomorreferensi;
         $signature = $this->signature();
         $response = Http::withHeaders($signature)->get($url);
