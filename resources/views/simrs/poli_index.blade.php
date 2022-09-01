@@ -12,7 +12,7 @@
             <x-adminlte-card title="Poliklinik Aktif RSUD Waled" theme="info" icon="fas fa-info-circle" collapsible
                 maximizable>
                 @php
-                    $heads = ['Kode Subspesialis', 'Nama Subpesialis', 'Subspesialis', 'Lokasi', 'Daftar', 'Status'];
+                    $heads = ['Nama Poliklinik',  'Subspesialis', 'Lokasi', 'Daftar', 'Status'];
                     $config['paging'] = false;
                 @endphp
                 <x-adminlte-datatable id="table1" :heads="$heads" :config="$config" striped bordered hoverable
@@ -21,8 +21,7 @@
                         <tr>
                             {{-- <td>{{ $item->kodepoli }}</td> --}}
                             {{-- <td>{{ $item->namapoli }}</td> --}}
-                            <td>{{ $item->kodesubspesialis }}</td>
-                            <td>{{ $item->namasubspesialis }}</td>
+                            <td>{{ $item->kodesubspesialis }} - {{ $item->namasubspesialis }}</td>
                             <td>
                                 @if ($item->subspesialis)
                                     Ya <i class="fas fa-check-circle text-success"></i>

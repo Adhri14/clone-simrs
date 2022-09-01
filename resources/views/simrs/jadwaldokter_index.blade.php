@@ -42,16 +42,15 @@
             <x-adminlte-card title="Data Informasi Jadwal Dokter" theme="info" icon="fas fa-info-circle" collapsible
                 maximizable>
                 @php
-                    $heads = ['Nama Poliklinik', 'Kode Poli', 'Dokter', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+                    $heads = ['Nama Poliklinik', 'Dokter', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
                     $config['paging'] = false;
                 @endphp
                 <x-adminlte-datatable id="table1" class="nowrap" :heads="$heads" :config="$config" striped bordered
                     hoverable compressed>
                     @foreach ($jadwals->groupby('kodedokter') as $item)
                         <tr>
-                            <td> {{ strtoupper($item->first()->namasubspesialis) }}</td>
-                            <td>{{ $item->first()->kodesubspesialis }}</td>
-                            <td>{{ $item->first()->kodedokter }} {{ $item->first()->namadokter }}</td>
+                            <td>{{ $item->first()->kodesubspesialis }} - {{ strtoupper($item->first()->namasubspesialis) }}</td>
+                            <td>{{ $item->first()->kodedokter }} - {{ $item->first()->namadokter }}</td>
                             @for ($i = 1; $i <= 6; $i++)
                                 <td>
                                     @foreach ($item as $jadwal)

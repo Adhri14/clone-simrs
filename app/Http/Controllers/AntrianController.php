@@ -67,6 +67,7 @@ class AntrianController extends Controller
             "nohp" => 'Offline',
             "kodepoli" => $poli->kodesubspesialis,
             "norm" => 'Offline',
+            "nama" => 'Offline',
             "pasienbaru" => 2,
             "tanggalperiksa" => Carbon::now()->format('Y-m-d'),
             "kodedokter" => $dokter->kodedokter,
@@ -218,7 +219,7 @@ class AntrianController extends Controller
                 if ($mesin_antrian->count() < 1) {
                     $mesin_antrian = DB::connection('mysql3')->table('tb_counter')->insert([
                         'tgl' => $tanggal,
-                        'kategori' => 'WA',
+                        'kategori' => 'JKN',
                         'loket' => $loket,
                         'counterloket' => $urutan,
                         'lantai' => $lantai,
