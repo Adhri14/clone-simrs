@@ -136,6 +136,16 @@ class AntrianController extends Controller
         $request['nohp'] = $request->nohp;
         $request['kodedokter'] = $request->kodedokter;
 
+        // cek duplikasi nik antrian
+        $antrian_nik = Antrian::where('tanggalperiksa', $request->tanggalperiksa)
+            ->where('nik', $request->nik)
+            ->where('taskid', '<=', 4)
+            ->count();
+        if ($antrian_nik) {
+            Alert::error('Error',  'Terdapat antrian dengan nomor NIK yang sama pada tanggal tersebut yang belum selesai. ' . $request->nik);
+            return redirect()->route('antrian.console');
+        }
+
         // $connector = new WindowsPrintConnector("smb://PRINTER:qweqwe@192.168.2.133/Printer Receipt");
         $connector = new WindowsPrintConnector("Printer Receipt");
         // pasien jkn
@@ -150,7 +160,7 @@ class AntrianController extends Controller
             }
             // daftar pake rujukan
             else {
-                $request['norujukan'] = $request->nomorreferensi;
+                $request['nomorrujukan'] = $request->nomorreferensi;
                 $vclaim = new VclaimBPJSController();
                 // cek rujukan
                 $data = $vclaim->rujukan_nomor($request);
@@ -300,8 +310,9 @@ class AntrianController extends Controller
                 $printer->text("No RM : " . $request->norm . "\n");
                 $printer->text("NIK : " . $request->nik . "\n");
                 $printer->text("Nama : " . $request->nama . "\n");
-                $printer->text("No Rujukan : " . $request->norujukan . "\n");
-                $printer->text("No Surat Kontrol : " . $request->nosuratkontrol . "\n\n");
+                $printer->text("No Rujukan : " . $request->nomorrujukan . "\n");
+                $printer->text("No Surat Kontrol : " . $request->nomorsuratkontrol . "\n");
+                $printer->text("No SEP : " . $request->nomorsep . "\n\n");
 
                 $printer->text("Poliklinik : " . $request->namapoli . "\n");
                 $printer->text("Kunjungan : " . $request->jeniskunjungan . "\n");
@@ -332,6 +343,7 @@ class AntrianController extends Controller
                 // surat kontrol
                 "nomorrujukan" => $request->nomorrujukan,
                 "nomorsuratkontrol" => $request->nomorsuratkontrol,
+                "nomorsep" => $request->nomorsep,
                 "jenispasien" => $request->jenispasien,
                 "namapoli" => $request->namapoli,
                 "namadokter" => $request->namadokter,

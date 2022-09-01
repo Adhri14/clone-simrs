@@ -4,6 +4,7 @@ use App\Http\Controllers\AntrianController;
 use App\Http\Controllers\API\AntrianBPJSController;
 use App\Http\Controllers\API\VclaimBPJSController;
 use App\Http\Controllers\API\WhatsappController;
+use App\Http\Controllers\VclaimController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -80,6 +81,7 @@ Route::prefix('vclaim')->group(function () {
 
     // surat kontrol
     Route::post('insert_rencana_kontrol', [VclaimBPJSController::class, 'insert_rencana_kontrol']);
+    Route::post('buat_surat_kontrol', [VclaimController::class, 'buat_surat_kontrol'])->name('api.buat_surat_kontrol');
 });
 
 Route::prefix('wa')->group(function () {

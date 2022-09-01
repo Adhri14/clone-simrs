@@ -47,8 +47,8 @@ class VclaimController extends Controller
         $api = new VclaimBPJSController();
         if (isset($request->tanggalsuratkontrol)) {
             $tanggal = explode('-', $request->tanggalsuratkontrol);
-           $request['tanggal_awal'] =  Carbon::parse($tanggal[0])->format('Y-m-d');
-           $request['tanggal_akhir'] =  Carbon::parse($tanggal[1])->format('Y-m-d');
+            $request['tanggal_awal'] =  Carbon::parse($tanggal[0])->format('Y-m-d');
+            $request['tanggal_akhir'] =  Carbon::parse($tanggal[1])->format('Y-m-d');
             // dd();
             try {
                 $response = $api->data_surat_kontrol($request);
@@ -75,5 +75,16 @@ class VclaimController extends Controller
             Alert::error('Error', 'Data gagal dihapus. ' .  $response->metaData->message);
         }
         return redirect()->back();
+    }
+
+    public function buat_surat_kontrol(Request $request)
+    {
+
+        $request['kodepoli'] = $request->kodepoli_suratkontrol;
+        $request['tanggalperiksa'] = $request->tanggal_suratkontrol;
+        $request['kodedokter'] = $request->kodedokter_suratkontrol;
+        $vclaim = new VclaimBPJSController();
+        $sk = $vclaim->insert_rencana_kontrol($request);
+        dd($sk);
     }
 }

@@ -332,7 +332,6 @@ class VclaimBPJSController extends Controller
                 "user" => "System Ambil Antrian",
             ]);
         }
-
         return $response;
     }
     public function surat_kontrol_nomor(Request $request)

@@ -232,6 +232,7 @@
                                             'Data Rujukan Ditemukan',
                                             'success'
                                         );
+                                        $.LoadingOverlay("hide");
                                     }
                                     // pasien baru
                                     else {
@@ -267,10 +268,7 @@
                             'error'
                         );
                     }
-                    $.LoadingOverlay("hide");
                 });
-
-
             });
         });
     </script>

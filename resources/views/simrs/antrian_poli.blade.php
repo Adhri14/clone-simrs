@@ -75,9 +75,10 @@
                             url="" url-text="Batalkan Antrian" />
                     </div>
                     <div class="col-md-3">
-                        <x-adminlte-small-box title="{{ $antrians->where('taskid', 3)->where('status_api', 1)->first()->angkaantrean ?? '0' }}"
+                        <x-adminlte-small-box
+                            title="{{ $antrians->where('taskid', 3)->where('status_api', 1)->first()->angkaantrean ?? '0' }}"
                             class="withLoad" text="Antrian Selanjutnya" theme="success" icon="fas fa-sign-in-alt"
-                            url="{{ route('antrian.panggil_poli', $antrians->where('taskid', 3)->where('status_api', 1)->first()->kodebooking ?? '0') }}"
+                            url="{{ route('antrian.panggil_poli',$antrians->where('taskid', 3)->where('status_api', 1)->first()->kodebooking ?? '0') }}"
                             url-text="Panggil Antrian Selanjutnya" />
                     </div>
                     <div class="col-md-3">
@@ -225,14 +226,18 @@
                                             <dd class="col-sm-8">: <span id="nama"></span></dd>
                                             <dt class="col-sm-4">No HP</dt>
                                             <dd class="col-sm-8">: <span id="nohp"></span></dd>
+                                            <dt class="col-sm-4">Jenis Pasien</dt>
+                                            <dd class="col-sm-8">: <span id="jenispasien"></span></dd>
                                         </dl>
                                     </div>
                                     <div class="col-md-7">
                                         <dl class="row">
                                             <dt class="col-sm-4">No Rujukan</dt>
-                                            <dd class="col-sm-8">: <span id="nomorreferensi"></span></dd>
-                                            <dt class="col-sm-4">Jenis Pasien</dt>
-                                            <dd class="col-sm-8">: <span id="jenispasien"></span></dd>
+                                            <dd class="col-sm-8">: <span id="nomorrujukan"></span></dd>
+                                            <dt class="col-sm-4">No Surat Kontrol</dt>
+                                            <dd class="col-sm-8">: <span id="nomorsuratkontrol"></span></dd>
+                                            <dt class="col-sm-4">No SEP</dt>
+                                            <dd class="col-sm-8">: <span id="nomorsep"></span></dd>
                                             <dt class="col-sm-4">Poliklinik</dt>
                                             <dd class="col-sm-8">: <span id="namapoli"></span></dd>
                                             <dt class="col-sm-4">Dokter</dt>
@@ -251,8 +256,8 @@
                                 </div>
                             </x-adminlte-card>
                             <x-slot name="footerSlot">
-                                <x-adminlte-button class="mr-auto btnKPO" label="KPO Farmasi" theme="primary"
-                                    icon="fas fa-prescription-bottle-alt" />
+                                <x-adminlte-button class="mr-auto btnSuratKontrol" label="Buat Surat Kontrol"
+                                    theme="primary" icon="fas fa-prescription-bottle-alt" />
                                 <x-adminlte-button label="Lanjut Farmasi" theme="warning"
                                     icon="fas fa-prescription-bottle-alt"
                                     onclick=" window.location='{{ route('antrian.lanjut_farmasi', $item->kodebooking ?? 0) }}'" />
@@ -264,8 +269,48 @@
                     </x-adminlte-modal>
 
                     {{-- modal KPO --}}
-                    <x-adminlte-modal id="modalKPO" name="modalKPO" title="KPO Farmasi Rawat Jalan" size="xl"
-                        theme="warning" icon="fas fa-prescription-bottle-alt" v-centered static-backdrop>
+                    <x-adminlte-modal id="modalKPO" name="modalKPO" title="Buat Surat Kontrol Rawat Jalan"
+                        size="lg" theme="warning" icon="fas fa-prescription-bottle-alt" v-centered>
+
+                        <form action="{{ route('api.buat_surat_kontrol') }}" id="formSuratKontrol" method="post">
+                            @csrf
+                            @php
+                                $config = [
+                                    'format' => 'YYYY-MM-DD',
+                                    'dayViewHeaderFormat' => 'MMM YYYY',
+                                    'minDate' => "js:moment().startOf('month')",
+                                    'maxDate' => "js:moment().endOf('month')",
+                                    'daysOfWeekDisabled' => [0],
+                                ];
+                            @endphp
+                            <x-adminlte-input name="nomorsep_suratkontrol" placeholder="Nomor SEP" label="Nomor SEP"
+                                readonly />
+                            <x-adminlte-input name="namapoli_suratkontrol" placeholder="Nama Poliklinik"
+                                label="Poliklinik" readonly />
+                            <x-adminlte-input-date name="tanggal_suratkontrol" label="Tanggal Surat Kontrol"
+                                :config="$config" placeholder="Pilih Tanggal Surat Kontrol ..."
+                                value="{{ Carbon\Carbon::now()->format('Y-m-d') }}">
+                                <x-slot name="prependSlot">
+                                    <div class="input-group-text bg-primary">
+                                        <i class="fas fa-calendar-alt"></i>
+                                    </div>
+                                </x-slot>
+                            </x-adminlte-input-date>
+                            <input type="hidden" name="kodepoli_suratkontrol" id="kodepoli_suratkontrol">
+                            <x-adminlte-select2 name="kodedokter_suratkontrol" label="DPJP Surat Kontrol">
+                                @foreach ($dokters as $item)
+                                    <option value="{{ $item->kodedokter }}">
+                                        {{ $item->kodedokter }} -
+                                        {{ $item->namadokter }}
+                                    </option>
+                                @endforeach
+                            </x-adminlte-select2>
+                            <x-slot name="footerSlot">
+                                <button type="submit" form="formSuratKontrol" value="Submit" class="mr-auto btn btn-success">Buat Surat Kontrol</button>
+                                <x-adminlte-button theme="danger" label="Dismiss" data-dismiss="modal" />
+                            </x-slot>
+                        </form>
+
                     </x-adminlte-modal>
                 @endif
                 {{-- poli belum dan sudah dilayani --}}
@@ -275,8 +320,8 @@
                     @php
                         $heads = ['No', 'Kode', 'Tanggal', 'No RM / NIK', 'Jenis / Pasien', 'No Kartu / Rujukan', 'Poliklinik / Dokter', 'Status', 'Action'];
                     @endphp
-                    <x-adminlte-datatable id="table2" class="nowrap" :heads="$heads" striped
-                        bordered hoverable compressed>
+                    <x-adminlte-datatable id="table2" class="nowrap" :heads="$heads" striped bordered hoverable
+                        compressed>
                         @foreach ($antrians->where('taskid', '!=', 4) as $item)
                             <tr>
                                 <td>{{ $item->angkaantrean }}</td>
@@ -372,7 +417,6 @@
                                             data-toggle="tooltop" title="Batal Antrian {{ $item->nomorantrean }}"
                                             onclick="window.location='{{ route('antrian.batal_antrian', $item->kodebooking) }}'" />
                                     @endif
-
                                 </td>
                             </tr>
                         @endforeach
@@ -409,7 +453,10 @@
                     $('#nomorkartu').html(data.nomorkartu);
                     $('#nama').html(data.nama);
                     $('#nohp').html(data.nohp);
-                    $('#nomorreferensi').html(data.nomorreferensi);
+                    // $('#nomorreferensi').html(data.nomorreferensi);
+                    $('#nomorrujukan').html(data.nomorrujukan);
+                    $('#nomorsuratkontrol').html(data.nomorsuratkontrol);
+                    $('#nomorsep').html(data.nomorsep);
                     $('#jenispasien').html(data.jenispasien);
                     $('#namapoli').html(data.namapoli);
                     $('#namadokter').html(data.namadokter);
@@ -418,19 +465,22 @@
                     $('#user').html(data.user);
                     $('#antrianid').val(antrianid);
                     $('#namapoli').val(data.namapoli);
+                    $('#namap').val(data.kodepoli);
                     $('#namadokter').val(data.namadokter);
                     $('#kodepoli').val(data.kodepoli);
                     $('#kodedokter').val(data.kodedokter);
                     $('#jampraktek').val(data.jampraktek);
                     // $('#kodepoli').val(data.kodepoli).trigger('change');
+                    $('#nomorsep_suratkontrol').val(data.nomorsep);
+                    $('#kodepoli_suratkontrol').val(data.kodepoli);
+                    $('#namapoli_suratkontrol').val(data.namapoli);
                     $('#modalPelayanan').modal('show');
                     $.LoadingOverlay("hide", true);
                 })
             });
-            $('.btnKPO').click(function() {
+            $('.btnSuratKontrol').click(function() {
                 $('#modalKPO').modal('show');
             });
-
         });
     </script>
 @endsection
