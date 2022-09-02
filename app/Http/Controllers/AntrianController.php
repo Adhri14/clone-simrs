@@ -6,17 +6,11 @@ use App\Http\Controllers\API\AntrianBPJSController;
 use App\Http\Controllers\API\VclaimBPJSController;
 use App\Http\Controllers\API\WhatsappController;
 use App\Models\Antrian;
-use App\Models\AntrianDB;
 use App\Models\Dokter;
 use App\Models\JadwalDokter;
-use App\Models\KunjunganDB;
-use App\Models\Pasien;
 use App\Models\PasienDB;
 use App\Models\Poliklinik;
 use App\Models\Provinsi;
-use App\Models\Sep;
-use App\Models\TracerDB;
-use App\Models\UnitDB;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 // use Illuminate\Support\Facades\Auth;
@@ -36,6 +30,13 @@ class AntrianController extends Controller
         return view('simrs.antrian_console', [
             'poliklinik' => $poliklinik,
         ]);
+    }
+    public function cek_post()
+    {
+        Alert::success('Error', 'Kode Booking tidak ditemukan');
+        // ComponentsAlert::error('Error', 'Kode Booking tidak ditemukan');
+        return redirect()->route('antrian.console');
+        // return redirect()->back();
     }
     public function console_jadwaldokter($poli, $tanggal)
     {
@@ -326,7 +327,7 @@ class AntrianController extends Controller
         $request['kuotajkn'] = $jadwal->kapasitaspasien * 80 / 100;
         $request['sisakuotanonjkn'] = ($jadwal->kapasitaspasien * 20 / 100) - $antriannonjkn - 1;
         $request['kuotanonjkn'] = $jadwal->kapasitaspasien  * 20 / 100;
-        // tambah antrian
+
         $antrian = new AntrianBPJSController();
         $tambah_antrian = $antrian->tambah_antrian($request);
         if ($tambah_antrian->metadata->code == 200) {

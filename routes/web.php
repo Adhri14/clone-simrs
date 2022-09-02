@@ -37,12 +37,14 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 // antrian routes
 Route::prefix('antrian')->name('antrian.')->group(function () {
     Route::get('console', [AntrianController::class, 'console'])->name('console');
+    Route::get('cek_post', [AntrianController::class, 'cek_post'])->name('cek_post');
+    Route::post('store_offline', [AntrianController::class, 'store_offline'])->name('store_offline');
     Route::get('console_jadwaldokter/{poli}/{tanggal}', [AntrianController::class, 'console_jadwaldokter'])->name('console_jadwaldokter');
     Route::get('tambah_offline/{poli}/{dokter}/{jam}', [AntrianController::class, 'tambah_offline'])->name('tambah_offline');
     Route::get('checkin_update', [AntrianController::class, 'checkin_update'])->name('checkin_update');
 });
 
-Route::prefix('antrian')->name('antrian.')->middleware(['auth', 'verified'])->group(function () {
+Route::prefix('antrian')->name('antrian.')->group(function () {
     // console
     Route::get('laporan', [AntrianController::class, 'laporan'])->name('laporan');
     Route::get('laporan_tanggal', [AntrianController::class, 'laporan_tanggal'])->name('laporan_tanggal');

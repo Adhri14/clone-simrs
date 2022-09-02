@@ -37,7 +37,6 @@ Route::prefix('antrian')->group(function () {
     Route::post('listtask', [AntrianBPJSController::class, 'list_waktu_task']);
     Route::get('dashboard_tanggal', [AntrianBPJSController::class, 'dashboard_tanggal']);
     Route::get('dashboard_bulan', [AntrianBPJSController::class, 'dashboard_bulan']);
-    Route::post('store_offline', [AntrianController::class, 'store_offline'])->name('api.store_offline');
 });
 
 Route::get('token', [AntrianBPJSController::class, 'token']);
