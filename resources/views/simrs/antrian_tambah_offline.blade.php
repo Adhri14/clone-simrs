@@ -38,6 +38,13 @@
                                 label="Cek" />
                         </x-slot>
                     </x-adminlte-input>
+                    <x-adminlte-input name="suratkontrol_cek" label="Nomor Surat Kontrol"
+                        placeholder="Masukan Nomor Surat Kontrol">
+                        <x-slot name="appendSlot">
+                            <x-adminlte-button name="btn_cek_suratkontrol" id="btn_cek_suratkontrol" theme="success"
+                                label="Cek" />
+                        </x-slot>
+                    </x-adminlte-input>
                     <a href="{{ route('antrian.console') }}" class="btn btn-danger btn-lg">Kembali</a>
                 </x-adminlte-card>
             </div>
@@ -258,6 +265,7 @@
                                 'Rujukan telah digunakan untuk membuat SEP sebelumnya. Silahkan daftar menggunakan Surat Kontrol.',
                                 'error'
                             );
+                            $.LoadingOverlay("hide");
                         }
                     }
                     // error
@@ -270,9 +278,106 @@
                     }
                 });
             });
+            $('#btn_cek_suratkontrol').click(function() {
+                $('.dataPasien').hide();
+                var nomorreferensi = $('#suratkontrol_cek').val();
+                alert(nomorreferensi);
+                $.LoadingOverlay("show", {
+                    text: "Cek Rujukan Pasien..."
+                });
+                var formData = {
+                    nomorreferensi: nomorreferensi,
+                };
+                $.get("{{ route('api.surat_kontrol_nomor') }}", formData, function(suratkontrol) {
+                    console.log(suratkontrol);
+                    if (suratkontrol.metaData.code == 200) {
+                        var formRujukan = {
+                            nomorreferensi: suratkontrol.response.sep.provPerujuk.noRujukan,
+                            jenisrujukan: 1,
+                        };
+                        $.get("{{ route('api.rujukan_nomor') }}", formRujukan, function(data) {
+                            // console.log(data);
+                            if (data.metaData.code == 200) {
+                                // pasien lama
+                                if (data.response.rujukan.peserta.mr.noMR) {
+                                    $('#nama_noform').html(data.response.rujukan.peserta
+                                        .nama);
+                                    $('#nik_noform').html(data.response.rujukan.peserta
+                                        .nik);
+                                    $('#nomorkartu_noform').html(data.response.rujukan
+                                        .peserta.noKartu);
+                                    $('#tgllahir').html(data.response.rujukan.peserta
+                                        .tglLahir);
+                                    $('#kelamin').html(data.response.rujukan.peserta
+                                        .sex);
+                                    $('#umur').html(data.response.rujukan.peserta.umur
+                                        .umurSaatPelayanan);
+                                    $('#hakkelas').html(data.response.rujukan.peserta
+                                        .hakKelas
+                                        .keterangan);
+                                    $('#jenispeserta').html(data.response.rujukan
+                                        .peserta.jenisPeserta
+                                        .keterangan);
+                                    $('#faskes1').html(data.response.rujukan.peserta
+                                        .provUmum
+                                        .nmProvider);
+                                    $('#nohp').val(data.response.rujukan.peserta.mr
+                                        .noTelepon);
+                                    $('#keaktifan').html(data.response.rujukan.peserta
+                                        .statusPeserta
+                                        .keterangan +
+                                        ' NO. RM ' + data.response.rujukan.peserta
+                                        .mr.noMR);
+                                    $('.dataPasien').show();
+                                    // form
+                                    $('#nomorkartu').val(data.response.rujukan.peserta
+                                        .noKartu);
+                                    $('#nik').val(data.response.rujukan.peserta.nik);
+                                    $('#nomorreferensi').val(suratkontrol.response
+                                        .noSuratKontrol);
+                                    $('#jeniskunjungan').val(3);
+                                    $('#norm').val(data.response.rujukan.peserta.mr
+                                        .noMR);
+                                    $('#nama').val(data.response.rujukan.peserta.nama);
+                                    swal.fire(
+                                        'Success',
+                                        'Data Rujukan Ditemukan',
+                                        'success'
+                                    );
+                                    $.LoadingOverlay("hide");
+                                }
+                                // pasien baru
+                                else {
+                                    swal.fire(
+                                        'Error !',
+                                        data.metaData.message,
+                                        'error'
+                                    );
+                                }
+                            }
+                            // error
+                            else {
+                                swal.fire(
+                                    'Error !',
+                                    data.metaData.message,
+                                    'error'
+                                );
+                            }
+                        });
+                    }
+                    // // error
+                    else {
+                        swal.fire(
+                            'Error !',
+                            suratkontrol.metaData.message,
+                            'error'
+                        );
+                    }
+                    $.LoadingOverlay("hide");
+                });
+            });
         });
     </script>
-
     {{-- withLoad --}}
     <script>
         $(function() {

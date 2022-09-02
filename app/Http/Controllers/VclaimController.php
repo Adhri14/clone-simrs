@@ -83,8 +83,15 @@ class VclaimController extends Controller
         $request['kodepoli'] = $request->kodepoli_suratkontrol;
         $request['tanggalperiksa'] = $request->tanggal_suratkontrol;
         $request['kodedokter'] = $request->kodedokter_suratkontrol;
+        $request['nomorsep'] = $request->nomorsep_suratkontrol;
         $vclaim = new VclaimBPJSController();
         $sk = $vclaim->insert_rencana_kontrol($request);
-        dd($sk);
+        if ($sk->metaData->code == 200) {
+            Alert::success('Success', 'Pembuatan Surat Kontrol Berhasil ' .  $sk->response->noSuratKontrol);
+            return redirect()->back();
+        } else {
+            Alert::error('Error', 'Pembuatan Surat Kontrol Gagal karena ' .  $sk->metaData->message);
+            return redirect()->back();
+        }
     }
 }

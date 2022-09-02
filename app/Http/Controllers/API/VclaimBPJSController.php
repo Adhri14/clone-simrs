@@ -264,7 +264,7 @@ class VclaimBPJSController extends Controller
             "kodepoli" => "required",
             "tanggalperiksa" => "required",
             "kodedokter" => "required",
-            "nomorkartu" => "required|numeric",
+            "nomorsep" => "required",
         ]);
         if ($validator->fails()) {
             return $response = [
@@ -274,17 +274,7 @@ class VclaimBPJSController extends Controller
                 ],
             ];
         }
-        // cek monitoring peserta untuk get sep terakhir
-        try {
-            $response = $this->monitoring_pelayanan_peserta($request);
-            $sep = collect($response->response->histori);
-            $sep_last = $sep->where('noRujukan', $request->nomorreferensi)->first();
-            $sep = $sep_last;
-            $nomorSepTerakhir =  $sep->noSep;
-        } catch (\Throwable $th) {
-            //throw $th;
-            return $response;
-        }
+
         // insert surat kontrol
         $url = $this->baseUrl . "RencanaKontrol/insert";
         $signature = $this->signature();
@@ -293,7 +283,7 @@ class VclaimBPJSController extends Controller
             'headers' => $signature,
             'body' => json_encode([
                 "request" => [
-                    "noSEP" => $nomorSepTerakhir,
+                    "noSEP" => $request->nomorsep,
                     "kodeDokter" => $request->kodedokter,
                     "poliKontrol" => $request->kodepoli,
                     "tglRencanaKontrol" => $request->tanggalperiksa,
@@ -307,29 +297,28 @@ class VclaimBPJSController extends Controller
             $response->response = json_decode($decrypt);
             // insert database surat kontrol
             $surat_kontrol = $response->response;
-            $db = SuratKontrol::create([
+             SuratKontrol::create([
                 "noSuratKontrol" => $surat_kontrol->noSuratKontrol,
-                "noRujukan" => $request->nomorreferensi,
-                "jnsPelayanan" => $sep->jnsPelayanan,
-                // "jnsKontrol" => $surat_kontrol->noSuratKontrol,
-                // "namaJnsKontrol" => $surat_kontrol->noSuratKontrol,
-                "tglRencanaKontrol" => $surat_kontrol->tglRencanaKontrol,
                 "tglTerbitKontrol" => Carbon::now()->format("Y-m-d"),
-                "noSepAsalKontrol" => $sep->noSep,
-                // "poliAsal" => $surat_kontrol->noSuratKontrol,
-                "namaPoliAsal" => $sep->poli,
-                "poliTujuan" => $request->kodepoli,
-                // "namaPoliTujuan" => $surat_kontrol->noSuratKontrol,
-                "tglSEP" => $sep->tglSep,
-                "kodeDokter" => $request->kodedokter,
+                "tglRencanaKontrol" => $surat_kontrol->tglRencanaKontrol,
+                "noRujukan" => $request->nomorreferensi,
                 "namaDokter" => $surat_kontrol->namaDokter,
                 "noKartu" => $surat_kontrol->noKartu,
                 "nama" => $surat_kontrol->nama,
                 "kelamin" => $surat_kontrol->kelamin,
                 "tglLahir" => $surat_kontrol->tglLahir,
                 "namaDiagnosa" => $surat_kontrol->namaDiagnosa,
-                "terbitSEP" => "Sudah",
+                "poliTujuan" => $request->kodepoli,
+                "kodeDokter" => $request->kodedokter,
                 "user" => "System Ambil Antrian",
+                "noSepAsalKontrol" => $request->nomorsep,
+                // "jnsPelayanan" => $sep->jnsPelayanan,
+                // "jnsKontrol" => $surat_kontrol->noSuratKontrol,
+                // "namaJnsKontrol" => $surat_kontrol->noSuratKontrol,
+                // "poliAsal" => $surat_kontrol->noSuratKontrol,
+                // "namaPoliAsal" => $sep->poli,
+                // "namaPoliTujuan" => $surat_kontrol->noSuratKontrol,
+                // "tglSEP" => $sep->tglSep,
             ]);
         }
         return $response;
