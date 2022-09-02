@@ -4,7 +4,6 @@
 
 @section('title', 'Antrian QR Code')
 @section('body')
-
     <div class="wrapper">
         <div class="row p-3">
             <div class="col-md-4">
@@ -46,6 +45,7 @@
                         </x-slot>
                     </x-adminlte-input>
                     <a href="{{ route('antrian.console') }}" class="btn btn-danger btn-lg">Kembali</a>
+                    {{-- <a href="{{ route('antrian.store_offline') }}" class="btn btn-success">Cek</a> --}}
                 </x-adminlte-card>
             </div>
             <div class="col-md-4 dataPasien">
@@ -80,7 +80,7 @@
                         </div>
                     </div>
 
-                    <form action="{{ route('api.store_offline') }}" method="post">
+                    <form action="{{ route('antrian.store_offline') }}" method="post">
                         @csrf
                         <input type="hidden" id="nomorkartu" name="nomorkartu">
                         <input type="hidden" id="nik" name="nik">
@@ -106,11 +106,13 @@
         <div id="btnDokter">
         </div>
     </x-adminlte-modal>
+    @include('sweetalert::alert')
 @stop
-@section('plugins.Sweetalert2', true);
-@include('sweetalert::alert')
+{{-- @section('plugins.Sweetalert2', true); --}}
 @section('adminlte_js')
     <script src="{{ asset('vendor/loading-overlay/loadingoverlay.min.js') }}"></script>
+    <script src="{{ asset('vendor/sweetalert2/sweetalert2.all.min.js') }}"></script>
+    <script src="{{ asset('vendor/sweetalert/sweetalert.all.js') }}"></script>
     {{-- cek nik --}}
     <script>
         $(function() {
@@ -386,5 +388,4 @@
             });
         })
     </script>
-
 @stop

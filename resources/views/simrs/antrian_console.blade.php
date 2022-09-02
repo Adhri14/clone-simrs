@@ -49,6 +49,7 @@
                         </div>
                     </div>
                     <x-adminlte-button icon="fas fa-sync" class="withLoad reload" theme="success" label="Reload" />
+                    {{-- <a href="{{ route('antrian.store_offline') }}" class="btn btn-success">Cek</a> --}}
                 </x-adminlte-card>
             </div>
         </div>
@@ -58,11 +59,14 @@
         <div id="btnDokter">
         </div>
     </x-adminlte-modal>
+    @include('sweetalert::alert')
 @stop
-@section('plugins.Sweetalert2', true);
+{{-- @section('plugins.Sweetalert2', true); --}}
 @section('adminlte_js')
     <script src="{{ asset('vendor/loading-overlay/loadingoverlay.min.js') }}"></script>
     <script src="{{ asset('vendor/onscan.js/onscan.min.js') }}"></script>
+    <script src="{{ asset('vendor/sweetalert/sweetalert.all.js') }}"></script>
+    <script src="{{ asset('vendor/sweetalert2/sweetalert2.all.min.js') }}"></script>
     {{-- scan --}}
     <script>
         $(function() {
@@ -180,5 +184,4 @@
             location.reload();
         });
     </script>
-    @include('sweetalert::alert')
 @stop
