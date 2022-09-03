@@ -280,34 +280,58 @@ class AntrianController extends Controller
                 } else {
                     $pasienbaru = "LAMA";
                 }
+                if ($request->jeniskunjungan == 3) {
+                    $jeniskunjungan = "KONTROL";
+                } else {
+                    $jeniskunjungan = "RUJUKAN";
+                }
                 $printer = new Printer($connector);
                 // $printer->setFont();
-                $printer->setJustification(Printer::JUSTIFY_CENTER);
+                // $printer->setJustification(Printer::JUSTIFY_CENTER);
                 $printer->setEmphasis(true);
-                $printer->text("RSUD Waled\n");
+                $printer->text("RSUD WALED KAB. CIREBON\n");
                 $printer->setEmphasis(false);
                 $printer->text("Melayani Dengan Sepenuh Hati\n");
-                $printer->text("------------------------------------------------\n");
-                $printer->text("Karcis Antrian Rawat Jalan\n");
-                $printer->text("Nomor / Angka /Jenis Pasien :\n");
-                $printer->setTextSize(2, 2);
-                $printer->text($request->nomorantrean . "/" . $request->angkaantrean . "/" . $request->jenispasien . " " . $pasienbaru . "\n");
-                $printer->setTextSize(1, 1);
-                $printer->text("Kode Booking : " . $request->kodebooking . "\n\n");
-                $printer->setJustification(Printer::JUSTIFY_LEFT);
+                // $printer->text("------------------------------------------------\n");
+                $printer->text("================================================\n");
+                $printer->text("ANTRIAN RAWAT JALAN\n");
+                $printer->text("================================================\n");
                 $printer->text("No RM : " . $request->norm . "\n");
                 $printer->text("NIK : " . $request->nik . "\n");
                 $printer->text("Nama : " . $request->nama . "\n");
                 $printer->text("No Rujukan : " . $request->nomorrujukan . "\n");
                 $printer->text("No Surat Kontrol : " . $request->nomorsuratkontrol . "\n");
-                $printer->text("No SEP : " . $request->nomorsep . "\n\n");
-
+                $printer->text("No SEP : " . $request->nomorsep . "\n");
+                $printer->text("================================================\n");
+                $printer->text("Jenis Kunj. : " . $jeniskunjungan . "\n");
                 $printer->text("Poliklinik : " . $request->namapoli . "\n");
-                $printer->text("Kunjungan : " . $request->jeniskunjungan . "\n");
                 $printer->text("Dokter : " . $request->namadokter . "\n");
+                $printer->text("Jam Praktek : " . $request->jampraktek . "\n");
                 $printer->text("Tanggal : " . Carbon::parse($request->tanggalperiksa)->format('d M Y') . "\n");
-                $printer->text("Print : " . Carbon::now() . "\n\n");
                 $printer->text("Keterangan : " . $request->keterangan . "\n");
+                $printer->text("================================================\n");
+                $printer->setJustification(Printer::JUSTIFY_CENTER);
+                $printer->text("Jenis Pasien :\n");
+                $printer->setTextSize(2, 2);
+                $printer->text($request->jenispasien . " " . $pasienbaru . "\n");
+                $printer->setTextSize(1, 1);
+                $printer->text("Kode Booking : " . $request->kodebooking . "\n");
+                $printer->text("================================================\n");
+                $printer->text("Nomor Antrian Poliklinik :\n");
+                $printer->setTextSize(2, 2);
+                $printer->text($request->nomorantrean . "\n");
+                $printer->setTextSize(1, 1);
+                $printer->text("================================================\n");
+                $printer->text("Angka Antrian :\n");
+                $printer->setTextSize(2, 2);
+                $printer->text($request->angkaantrean . "\n");
+                $printer->setTextSize(1, 1);
+                $printer->text("================================================\n");
+                $printer->setJustification(Printer::JUSTIFY_LEFT);
+                $printer->text("Print : " . Carbon::now() . "\n");
+                // $printer->text("Nomor / Angka /Jenis Pasien :\n");
+                // $printer->text($request->nomorantrean . "/" . $request->angkaantrean . "/" . $request->jenispasien . " " . $pasienbaru . "\n");
+                // $printer->setJustification(Printer::JUSTIFY_LEFT);
                 $printer->cut();
                 $printer->close();
             } catch (\Throwable $th) {
