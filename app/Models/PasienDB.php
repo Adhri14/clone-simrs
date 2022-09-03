@@ -23,6 +23,7 @@ class PasienDB extends Model
         "jenis_kelamin",
         "tgl_lahir",
         "no_tlp",
+        "no_hp",
         "alamat",
         "kode_propinsi",
         "kode_kabupaten",

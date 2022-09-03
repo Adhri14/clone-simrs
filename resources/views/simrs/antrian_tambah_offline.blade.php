@@ -18,8 +18,8 @@
                         <dt class="col-sm-3">Hari Waktu</dt>
                         <dd class="col-sm-8">: {{ $tanggal }}</dd>
                     </dl>
-                    <x-adminlte-input name="nik_cek" label="Nomor Induk Keluarga (NIK / KTP)"
-                        placeholder="Masukan Nomor Induk Keluarga (NIK / KTP)">
+                    <x-adminlte-input name="nik_cek" label="Pasien NON-JKN"
+                        placeholder="Masukan Nomor NIK / KTP atau Kartu JKN">
                         <x-slot name="appendSlot">
                             <x-adminlte-button name="btn_check_nik" id="btn_check_nik" theme="success" label="Cek" />
                         </x-slot>
@@ -31,13 +31,13 @@
                                 label="Cek" />
                         </x-slot>
                     </x-adminlte-input> --}}
-                    <x-adminlte-input name="norujukan" label="Nomor Rujukan" placeholder="Masukan Nomor Rujukan">
+                    <x-adminlte-input name="norujukan" label="Pasien JKN Pakai Rujukan" placeholder="Masukan Nomor Rujukan">
                         <x-slot name="appendSlot">
                             <x-adminlte-button name="btn_check_rujukan" id="btn_check_rujukan" theme="success"
                                 label="Cek" />
                         </x-slot>
                     </x-adminlte-input>
-                    <x-adminlte-input name="suratkontrol_cek" label="Nomor Surat Kontrol"
+                    <x-adminlte-input name="suratkontrol_cek" label="Pasien JKN Pakai Surat Kontrol"
                         placeholder="Masukan Nomor Surat Kontrol">
                         <x-slot name="appendSlot">
                             <x-adminlte-button name="btn_cek_suratkontrol" id="btn_cek_suratkontrol" theme="success"
@@ -123,11 +123,10 @@
                 $.LoadingOverlay("show", {
                     text: "Cek NIK Pasien..."
                 });
-                var url = "{{ route('api.cek_nik') }}";
                 var formData = {
                     nik: nik,
                 };
-                $.get(url, formData, function(data) {
+                $.get("{{ route('api.cek_nik') }}", formData, function(data) {
                     console.log(data);
                     if (data.metaData.code == 200) {
                         // pasien lama
@@ -167,16 +166,69 @@
                             );
                         }
                     }
-                    // error
+                    // pakai kartu
                     else {
-                        swal.fire(
-                            'Error !',
-                            data.metaData.message,
-                            'error'
-                        );
+                        var formData = {
+                            nomorkartu: nik,
+                        };
+                        $.get("{{ route('api.cek_nomorkartu') }}", formData, function(data) {
+                            if (data.metaData.code == 200) {
+                                // pasien lama
+                                if (data.response.peserta.mr.noMR) {
+                                    $('#nama_noform').html(data.response.peserta.nama);
+                                    $('#nik_noform').html(data.response.peserta.nik);
+                                    $('#nomorkartu_noform').html(data.response.peserta
+                                        .noKartu);
+                                    $('#tgllahir').html(data.response.peserta.tglLahir);
+                                    $('#kelamin').html(data.response.peserta.sex);
+                                    $('#umur').html(data.response.peserta.umur
+                                        .umurSaatPelayanan);
+                                    $('#hakkelas').html(data.response.peserta.hakKelas
+                                        .keterangan);
+                                    $('#jenispeserta').html(data.response.peserta
+                                        .jenisPeserta.keterangan);
+                                    $('#faskes1').html(data.response.peserta.provUmum
+                                        .nmProvider);
+                                    $('#nohp').val(data.response.peserta.mr.noTelepon);
+                                    $('#keaktifan').html(data.response.peserta.statusPeserta
+                                        .keterangan +
+                                        ' NO. RM ' + data.response.peserta.mr.noMR);
+                                    $('.dataPasien').show();
+                                    // form
+                                    $('#nomorkartu').val(data.response.peserta.noKartu);
+                                    $('#nik').val(data.response.peserta.nik);
+                                    $('#jeniskunjungan').val(3);
+                                    $('#norm').val(data.response.peserta.mr.noMR);
+                                    $('#nama').val(data.response.peserta.nama);
+
+                                    swal.fire(
+                                        'Success',
+                                        'Data NIK Pasien Ditemukan',
+                                        'success'
+                                    );
+                                }
+                                // pasien baru
+                                else {
+                                    swal.fire(
+                                        'Error !',
+                                        'Anda Belum Terdaftar Di RSUD Waled. Silahkan Daftar Menggunakan Antrian Offline.',
+                                        'error'
+                                    );
+                                }
+                            } else {
+                                swal.fire(
+                                    'Error !',
+                                    data.metaData.message,
+                                    'error'
+                                );
+                            }
+                            $.LoadingOverlay("hide");
+                        });
                     }
                     $.LoadingOverlay("hide");
                 });
+
+
             });
             $('#btn_check_rujukan').click(function() {
                 $('.dataPasien').hide();
