@@ -91,8 +91,8 @@ class AntrianController extends Controller
         //     return redirect()->route('antrian.console');
         // }
         // cek printer
-        // $connector = new WindowsPrintConnector("smb://PRINTER:qweqwe@192.168.2.133/Printer Receipt");
-        $connector = new WindowsPrintConnector("Printer Receipt");
+        $connector = new WindowsPrintConnector("smb://PRINTER:qweqwe@192.168.2.133/Printer Receipt");
+        // $connector = new WindowsPrintConnector("Printer Receipt");
         $printer = new Printer($connector);
         $printer->close();
         // pasien jkn
