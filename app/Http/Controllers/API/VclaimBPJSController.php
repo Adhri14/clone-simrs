@@ -260,6 +260,7 @@ class VclaimBPJSController extends Controller
     public function insert_rencana_kontrol(Request $request)
     {
         // checking request
+
         $validator = Validator::make(request()->all(), [
             "kodepoli" => "required",
             "tanggalperiksa" => "required",
@@ -268,12 +269,13 @@ class VclaimBPJSController extends Controller
         ]);
         if ($validator->fails()) {
             return $response = [
-                'metaData' => [
+                'metadata' => [
                     'code' => 201,
                     'message' => $validator->errors()->first(),
                 ],
             ];
         }
+        dd($request->all());
 
         // insert surat kontrol
         $url = $this->baseUrl . "RencanaKontrol/insert";
@@ -297,7 +299,7 @@ class VclaimBPJSController extends Controller
             $response->response = json_decode($decrypt);
             // insert database surat kontrol
             $surat_kontrol = $response->response;
-             SuratKontrol::create([
+            SuratKontrol::create([
                 "noSuratKontrol" => $surat_kontrol->noSuratKontrol,
                 "tglTerbitKontrol" => Carbon::now()->format("Y-m-d"),
                 "tglRencanaKontrol" => $surat_kontrol->tglRencanaKontrol,

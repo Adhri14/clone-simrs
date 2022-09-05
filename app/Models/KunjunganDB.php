@@ -16,13 +16,22 @@ class KunjunganDB extends Model
 
     protected $fillable = [
         'counter',
-        // 'kode_kunjungan',
         'no_rm',
         'kode_unit',
         'tgl_masuk',
-        'tgl_keluar',
         'kode_paramedis',
         'status_kunjungan',
+        'prefix_kunjungan',
+        'kode_penjamin',
+        'pic',
+        'id_alasan_masuk',
+        'pic2',
+        'kelas',
+        'hak_kelas',
+        'no_sep',
+        'no_rujukan',
+        'diagx',
+        'created_at',
     ];
     public function pasien()
     {

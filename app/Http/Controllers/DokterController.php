@@ -20,8 +20,9 @@ class DokterController extends Controller
     public function create()
     {
         $api = new AntrianBPJSController();
-        $poli = $api->ref_dokter()->response;
-        foreach ($poli as $value) {
+        $dokters = $api->ref_dokter()->response;
+        dd($dokters);
+        foreach ($dokters as $value) {
             Dokter::updateOrCreate(
                 [
                     'kodedokter' => $value->kodedokter,

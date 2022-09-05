@@ -128,7 +128,7 @@ class AntrianBPJSController extends Controller
     {
         $validator = Validator::make(request()->all(), [
             "kodebooking" => "required",
-            // "nomorkartu" =>  "required",
+            "nomorkartu" =>  "required",
             // "nomorreferensi" =>  "required",
             "nik" =>  "required",
             "nohp" => "required",
@@ -162,10 +162,6 @@ class AntrianBPJSController extends Controller
         }
         $url = $this->baseUrl . "antrean/add";
         $signature = $this->signature();
-        if (is_null($request->nomorkartu) || is_null($request->nomorreferensi)) {
-            $request->nomorkartu = "";
-            $request->nomorreferensi = "";
-        }
         $client = new Client();
         $response = $client->request('POST', $url, [
             'headers' => $signature,

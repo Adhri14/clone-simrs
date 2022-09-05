@@ -45,7 +45,7 @@
                         </x-slot>
                     </x-adminlte-input>
                     <a href="{{ route('antrian.console') }}" class="btn btn-danger btn-lg">Kembali</a>
-                    {{-- <a href="{{ route('antrian.store_offline') }}" class="btn btn-success">Cek</a> --}}
+                    <a href="{{ route('antrian.cek_post') }}" class="btn btn-success">Cek</a>
                 </x-adminlte-card>
             </div>
             <div class="col-md-4 dataPasien">
@@ -71,7 +71,7 @@
                                 <dt class="col-sm-4">Kartu JKN</dt>
                                 <dd class="col-sm-8"><span id="nomorkartu_noform"></span></dd>
                                 <dt class="col-sm-4">Hak Kelas</dt>
-                                <dd class="col-sm-8"><span id="hakkelas"></dd>
+                                <dd class="col-sm-8"><span id="hakkelas_nofrom"></dd>
                                 <dt class="col-sm-4">Jenis</dt>
                                 <dd class="col-sm-8"><span id="jenispeserta"></dd>
                                 <dt class="col-sm-4">Faskes 1</dt>
@@ -79,7 +79,6 @@
                             </dl>
                         </div>
                     </div>
-
                     <form action="{{ route('antrian.store_offline') }}" method="post">
                         @csrf
                         <input type="hidden" id="nomorkartu" name="nomorkartu">
@@ -93,6 +92,7 @@
                         <input type="hidden" id="jampraktek" name="jampraktek" value="{{ $jadwal->jadwal }}">
                         <input type="hidden" id="jeniskunjungan" name="jeniskunjungan">
                         <input type="hidden" id="nomorreferensi" name="nomorreferensi">
+                        <input type="hidden" id="hakkelas" name="hakkelas">
                         <button type="submit" class="btn btn-primary btn-lg withLoad">Daftar Antrian</button>
                     </form>
                 </x-adminlte-card>
@@ -137,7 +137,7 @@
                             $('#tgllahir').html(data.response.peserta.tglLahir);
                             $('#kelamin').html(data.response.peserta.sex);
                             $('#umur').html(data.response.peserta.umur.umurSaatPelayanan);
-                            $('#hakkelas').html(data.response.peserta.hakKelas.keterangan);
+                            $('#hakkelas_noform').html(data.response.peserta.hakKelas.keterangan);
                             $('#jenispeserta').html(data.response.peserta.jenisPeserta.keterangan);
                             $('#faskes1').html(data.response.peserta.provUmum.nmProvider);
                             $('#nohp').val(data.response.peserta.mr.noTelepon);
@@ -150,7 +150,7 @@
                             $('#jeniskunjungan').val(3);
                             $('#norm').val(data.response.peserta.mr.noMR);
                             $('#nama').val(data.response.peserta.nama);
-
+                            $('#hakkelas').val(data.response.peserta.hakKelas.kode);
                             swal.fire(
                                 'Success',
                                 'Data NIK Pasien Ditemukan',
@@ -183,7 +183,8 @@
                                     $('#kelamin').html(data.response.peserta.sex);
                                     $('#umur').html(data.response.peserta.umur
                                         .umurSaatPelayanan);
-                                    $('#hakkelas').html(data.response.peserta.hakKelas
+                                    $('#hakkelas_noform').html(data.response.peserta
+                                        .hakKelas
                                         .keterangan);
                                     $('#jenispeserta').html(data.response.peserta
                                         .jenisPeserta.keterangan);
@@ -200,7 +201,7 @@
                                     $('#jeniskunjungan').val(3);
                                     $('#norm').val(data.response.peserta.mr.noMR);
                                     $('#nama').val(data.response.peserta.nama);
-
+                                    $('#hakkelas').val(data.response.peserta.hakKelas.kode);
                                     swal.fire(
                                         'Success',
                                         'Data NIK Pasien Ditemukan',
@@ -261,7 +262,8 @@
                                             .sex);
                                         $('#umur').html(data.response.rujukan.peserta.umur
                                             .umurSaatPelayanan);
-                                        $('#hakkelas').html(data.response.rujukan.peserta
+                                        $('#hakkelas_noform').html(data.response.rujukan
+                                            .peserta
                                             .hakKelas
                                             .keterangan);
                                         $('#jenispeserta').html(data.response.rujukan
@@ -335,7 +337,6 @@
             $('#btn_cek_suratkontrol').click(function() {
                 $('.dataPasien').hide();
                 var nomorreferensi = $('#suratkontrol_cek').val();
-                alert(nomorreferensi);
                 $.LoadingOverlay("show", {
                     text: "Cek Rujukan Pasien..."
                 });
@@ -366,7 +367,7 @@
                                         .sex);
                                     $('#umur').html(data.response.rujukan.peserta.umur
                                         .umurSaatPelayanan);
-                                    $('#hakkelas').html(data.response.rujukan.peserta
+                                    $('#hakkelas_noform').html(data.response.rujukan.peserta
                                         .hakKelas
                                         .keterangan);
                                     $('#jenispeserta').html(data.response.rujukan
