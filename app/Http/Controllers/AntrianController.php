@@ -101,7 +101,7 @@ class AntrianController extends Controller
     }
     function print_sep(Request $request, $sep)
     {
-        $for_sep = ['POLIKLINIK', 'FARMASI'];
+        $for_sep = ['POLIKLINIK', 'FARMASI', 'ARSIP'];
         $sep = $sep->response;
         foreach ($for_sep as  $value) {
             $connector = new WindowsPrintConnector($this->printer_antrian);
@@ -112,13 +112,13 @@ class AntrianController extends Controller
             $printer->setEmphasis(false);
             $printer->text("================================================\n");
             $printer->setJustification(Printer::JUSTIFY_CENTER);
-            $printer->text("SEP untuk " . $value . "\n");
             $printer->text("Nomor SEP :\n");
             $printer->setTextSize(2, 2);
             $printer->text($sep->sep->noSep . "\n");
             $printer->setTextSize(1, 1);
             $printer->qrCode($sep->sep->noSep, Printer::QR_ECLEVEL_L, 10, Printer::QR_MODEL_2);
             $printer->text("Tgl SEP : " . $sep->sep->tglSep . " \n");
+            $printer->text("SEP untuk " . $value . "\n");
             $printer->setJustification(Printer::JUSTIFY_LEFT);
             $printer->text("================================================\n");
             $printer->text("Nama Pasien : " . $sep->sep->peserta->nama . " \n");
@@ -195,6 +195,7 @@ class AntrianController extends Controller
         // cek printer
         // $connector = new WindowsPrintConnector("smb://PRINTER:qweqwe@192.168.2.133/Printer Receipt");
         // pasien jkn
+        // dd($request->jenispenjamin);
         if (isset($request->nomorreferensi)) {
             $request['jenispasien'] = "JKN";
             $request['taskid'] = "3";
@@ -305,7 +306,6 @@ class AntrianController extends Controller
                 $request["nomorsep"] = $sep->response->sep->noSep;
                 $this->print_sep($request, $sep);
             } else {
-                dd('error cetak sep');
                 Alert::error('Error',  'Tidak bisa membuat SEP karena ' . $sep->metaData->message);
                 return redirect()->route('antrian.console');
             }
@@ -425,9 +425,9 @@ class AntrianController extends Controller
                             'status_kunjungan' => 1,
                             'prefix_kunjungan' => $unit->prefix_unit,
                             'kode_penjamin' => $request->kodepenjamin,
-                            'pic' => 0,
+                            'pic' => 1319,
                             'id_alasan_masuk' => 1,
-                            'kelas' => $request->hakkelas,
+                            'kelas' => 3,
                             'hak_kelas' => $request->hakkelas,
                             'no_sep' =>  $request->nomorsep,
                             'no_rujukan' => $request->nomorrujukan,

@@ -469,7 +469,7 @@ class AntrianBPJSController extends Controller
                     ->where('jenispasien', "JKN")->count();
                 $antriannonjkn = Antrian::where('kodepoli', $request->kodepoli)
                     ->where('tanggalperiksa', $request->tanggalperiksa)
-                    ->where('jenispasien', "NON JKN")->count();
+                    ->where('jenispasien', "NON-JKN")->count();
                 $response = [
                     "response" => [
                         "namapoli" => $jadwal->namapoli,
@@ -634,56 +634,10 @@ class AntrianBPJSController extends Controller
                         ];
                     }
                 }
-                // // pembuatan surat kontrol
-                // try {
-                //     $response = $vclaim->rujukan_nomor($request);
-                //     $rujukan = $response;
-                //     $request['jenisrujukan'] = $rujukan->response->asalFaskes;
-                //     $response = $vclaim->rujukan_jumlah_sep($request);
-                //     $jumlah_sep_rujukan = $response->response->jumlahSEP;
-                //     // jika jenis kunjungan "kontrol(3)" dan jumlah sep rujukan lebih dari 0
-                //     if ($jumlah_sep_rujukan != null) {
-                //         if ($jumlah_sep_rujukan != 0) {
-                //             // cek hari ini
-                //             if ($time->isToday()) {
-                //                 return [
-                //                     "metadata" => [
-                //                         "code" => 201,
-                //                         "message" => "Tanggal periksa tidak bisa untuk hari ini untuk membuat surat kontrol"
-                //                     ]
-                //                 ];
-                //             }
-                //             if ($request->jeniskunjungan == 3) {
-                //                 // buat surat control
-                //                 $response = $vclaim->insert_rencana_kontrol($request);
-                //                 // jika gagal buat surat kontrol
-                //                 if ($response->metaData->code == 200) {
-                //                     $suratkontrol = $response->response;
-                //                 } else {
-                //                     return $response;
-                //                 }
-                //             } else {
-                //                 // dd($jumlah_sep_rujukan);
-                //                 return [
-                //                     "metadata" => [
-                //                         "message" => "Rujukan anda sudah digunakan untuk kunjungan pertama, untuk kunjungan berikutnya silahkan pilih jenis kunjungan Kontrol(3)",
-                //                         "code" => 201,
-                //                     ],
-                //                 ];
-                //             }
-                //         }
-                //     }
-                //     // error jika jenis kunjungan bukan "kontrol(3)" dan jumlah sep rujukan lebih dari 0
-                //     // else if ($request->jeniskunjungan != 3 && ($jumlah_sep_rujukan != null ||  $jumlah_sep_rujukan != 0)) {
-
-                //     // }
-                // } catch (\Throwable $th) {
-                //     return $response;
-                // }
             }
             // jika non-jkn harus pilih jenis kunjungan kontrol(3)
             else {
-                $request['jenispasien'] = 'NON JKN';
+                $request['jenispasien'] = 'NON-JKN';
                 // error harus harus pilih jenis kunjungan kontrol(3)
                 if ($request->jeniskunjungan != 3) {
                     return [
@@ -729,7 +683,7 @@ class AntrianBPJSController extends Controller
                 return $response;
             }
             //  cek nik
-            $poli = Poliklinik::where('kodepoli',$request->kodepoli)->first();
+            $poli = Poliklinik::where('kodepoli', $request->kodepoli)->first();
             $antrians = Antrian::where('tanggalperiksa', $request->tanggalperiksa)
                 ->count();
             $antrian_poli = Antrian::where('tanggalperiksa', $request->tanggalperiksa)
@@ -740,17 +694,17 @@ class AntrianBPJSController extends Controller
                 ->where('jenispasien', "JKN")->count();
             $antriannonjkn = Antrian::where('kodepoli', $request->kodepoli)
                 ->where('tanggalperiksa', $request->tanggalperiksa)
-                ->where('jenispasien', "NON JKN")->count();
+                ->where('jenispasien', "NON-JKN")->count();
             $request['nomorantrean'] = $request->kodepoli . "-" .  str_pad($antrian_poli + 1, 3, '0', STR_PAD_LEFT);
             $request['angkaantrean'] = $antrians + 1;
             $request['kodebooking'] = strtoupper(uniqid());
             // estimasi
             $jadwalbuka = Carbon::parse($request->tanggalperiksa . ' ' . explode('-', $request->jampraktek)[0])->addMinutes(5 * ($antrian_poli + 1));
             $request['estimasidilayani'] = $jadwalbuka->timestamp * 1000;
-            $request['sisakuotajkn'] = $jadwal->kapasitaspasien * 80 / 100 -  $antrianjkn - 1;
-            $request['kuotajkn'] = $jadwal->kapasitaspasien * 80 / 100;
-            $request['sisakuotanonjkn'] = ($jadwal->kapasitaspasien * 20 / 100) - $antriannonjkn - 1;
-            $request['kuotanonjkn'] = $jadwal->kapasitaspasien  * 20 / 100;
+            $request['sisakuotajkn'] = round($jadwal->kapasitaspasien * 80 / 100)  -  $antrianjkn - 1;
+            $request['kuotajkn'] = round($jadwal->kapasitaspasien * 80 / 100);
+            $request['sisakuotanonjkn'] = round($jadwal->kapasitaspasien * 20 / 100) - $antriannonjkn - 1;
+            $request['kuotanonjkn'] = round($jadwal->kapasitaspasien * 20 / 100);
             $request['keterangan'] = "Peserta harap 60 menit lebih awal dari jadwal untuk checkin dekat mesin antrian untuk mencetak tiket antrian.";
             //tambah antrian bpjs
             $response = $this->tambah_antrian($request);
@@ -788,7 +742,7 @@ class AntrianBPJSController extends Controller
                     "sisakuotanonjkn" => $request->sisakuotanonjkn,
                     "kuotanonjkn" => $request->kuotanonjkn,
                     "keterangan" => $request->keterangan,
-                    "status_bpjs" => 1,
+                    "status_api" => 1,
                     "taskid" => 0,
                     "user" => "System Antrian",
                     "nama" => $request->nama,

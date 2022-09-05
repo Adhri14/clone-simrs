@@ -275,7 +275,6 @@ class VclaimBPJSController extends Controller
                 ],
             ];
         }
-        dd($request->all());
 
         // insert surat kontrol
         $url = $this->baseUrl . "RencanaKontrol/insert";

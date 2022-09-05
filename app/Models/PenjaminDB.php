@@ -10,7 +10,7 @@ class PenjaminDB extends Model
     use HasFactory;
 
     protected $connection = 'mysql2';
-    protected $table = 'mt_penjamin';
+    protected $table = 'mt_penjamin_bpjs';
     protected $primaryKey = 'kode_penjamin';
     public $incrementing = false;
     protected $keyType = 'string';

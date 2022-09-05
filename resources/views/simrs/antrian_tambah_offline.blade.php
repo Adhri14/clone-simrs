@@ -92,6 +92,7 @@
                         <input type="hidden" id="jampraktek" name="jampraktek" value="{{ $jadwal->jadwal }}">
                         <input type="hidden" id="jeniskunjungan" name="jeniskunjungan">
                         <input type="hidden" id="nomorreferensi" name="nomorreferensi">
+                        <input type="hidden" id="jenispenjamin" name="jenispenjamin">
                         <input type="hidden" id="hakkelas" name="hakkelas">
                         <button type="submit" class="btn btn-primary btn-lg withLoad">Daftar Antrian</button>
                     </form>
@@ -139,6 +140,7 @@
                             $('#umur').html(data.response.peserta.umur.umurSaatPelayanan);
                             $('#hakkelas_noform').html(data.response.peserta.hakKelas.keterangan);
                             $('#jenispeserta').html(data.response.peserta.jenisPeserta.keterangan);
+                            $('#jenispenjamin').val(data.response.peserta.jenisPeserta.keterangan);
                             $('#faskes1').html(data.response.peserta.provUmum.nmProvider);
                             $('#nohp').val(data.response.peserta.mr.noTelepon);
                             $('#keaktifan').html(data.response.peserta.statusPeserta.keterangan +
@@ -187,6 +189,8 @@
                                         .hakKelas
                                         .keterangan);
                                     $('#jenispeserta').html(data.response.peserta
+                                        .jenisPeserta.keterangan);
+                                    $('#jenispenjamin').val(data.response.peserta
                                         .jenisPeserta.keterangan);
                                     $('#faskes1').html(data.response.peserta.provUmum
                                         .nmProvider);
@@ -269,6 +273,8 @@
                                         $('#jenispeserta').html(data.response.rujukan
                                             .peserta.jenisPeserta
                                             .keterangan);
+                                        $('#jenispenjamin').val(data.response.rujukan.peserta
+                                            .jenisPeserta.keterangan);
                                         $('#faskes1').html(data.response.rujukan.peserta
                                             .provUmum
                                             .nmProvider);
@@ -373,6 +379,8 @@
                                     $('#jenispeserta').html(data.response.rujukan
                                         .peserta.jenisPeserta
                                         .keterangan);
+                                    $('#jenispenjamin').val(data.response.rujukan.peserta
+                                        .jenisPeserta.keterangan);
                                     $('#faskes1').html(data.response.rujukan.peserta
                                         .provUmum
                                         .nmProvider);
