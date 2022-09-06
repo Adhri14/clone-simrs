@@ -206,14 +206,16 @@
                             title="Antrian Pendaftaran Belum Dilayani ({{ $antrians->where('taskid', 1)->count() }} Orang)"
                             theme="warning" icon="fas fa-info-circle" collapsible="collapsed">
                             @php
-                                $heads = ['No', 'Nama', 'Poliklinik / Dokter', 'Status', 'Action'];
+                                $heads = ['No', 'Kodebooking', 'Nama', 'Poliklinik / Dokter', 'Status', 'Action'];
                             @endphp
                             <x-adminlte-datatable id="table1" class="nowrap" :heads="$heads" striped bordered
                                 hoverable compressed>
                                 @foreach ($antrians->where('taskid', '==', 1) as $item)
                                     <tr>
                                         <td>{{ $item->angkaantrean }}</td>
-                                        <td>{{ $item->nama }}</td>
+                                        <td>{{ $item->kodebooking }}</td>
+                                        <td>{{ $item->nama }} <span
+                                            class="badge bg-secondary">{{ $item->jenispasien }}</span></td>
                                         <td>{{ $item->namapoli }}</td>
                                         <td>
                                             {{-- {{ $item->taskid }} --}}
@@ -261,14 +263,16 @@
                             title="Antrian Pendaftaran Belum Checkin ({{ $antrians->where('taskid', 0)->count() }} Orang)"
                             theme="secondary" icon="fas fa-info-circle" collapsible="collapsed">
                             @php
-                                $heads = ['No', 'Nama', 'Poliklinik', 'Status'];
+                                $heads = ['No', 'Kodebooking', 'Nama', 'Poliklinik', 'Status'];
                             @endphp
                             <x-adminlte-datatable id="table2" class="nowrap" :heads="$heads" striped bordered
                                 hoverable compressed>
                                 @foreach ($antrians->where('taskid', 0) as $item)
                                     <tr>
                                         <td>{{ $item->angkaantrean }}</td>
-                                        <td>{{ $item->nama }}</td>
+                                        <td>{{ $item->kodebooking }}</td>
+                                        <td>{{ $item->nama }} <span
+                                                class="badge bg-secondary">{{ $item->jenispasien }}</span></td>
                                         <td>{{ $item->namapoli }}</td>
                                         <td>
                                             @if ($item->taskid == 0)
@@ -277,7 +281,6 @@
                                             @if ($item->taskid == 1)
                                                 <span class="badge bg-warning">{{ $item->taskid }}. Checkin</span>
                                             @endif
-
                                             @if ($item->taskid == 99)
                                                 <span class="badge bg-danger">{{ $item->taskid }}. Batal</span>
                                             @endif
@@ -779,11 +782,11 @@
 @section('js')
     <script>
         $(function() {
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
+            // $.ajaxSetup({
+            //     headers: {
+            //         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            //     }
+            // });
             // klim daftar pasien offline
             $('.btnDaftarOfflineJKN').click(function() {
                 var antrianid = $(this).data('id');

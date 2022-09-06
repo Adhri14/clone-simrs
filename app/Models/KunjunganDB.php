@@ -32,6 +32,7 @@ class KunjunganDB extends Model
         'no_rujukan',
         'diagx',
         'created_at',
+        'keterangan2',
     ];
     public function pasien()
     {
