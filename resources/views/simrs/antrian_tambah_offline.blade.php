@@ -45,7 +45,7 @@
                         </x-slot>
                     </x-adminlte-input>
                     <a href="{{ route('antrian.console') }}" class="btn btn-danger btn-lg">Kembali</a>
-                    <a href="{{ route('antrian.cek_post') }}" class="btn btn-success">Cek</a>
+                    {{-- <a href="{{ route('antrian.cek_post') }}" class="btn btn-success">Cek</a> --}}
                 </x-adminlte-card>
             </div>
             <div class="col-md-3 dataPasien">

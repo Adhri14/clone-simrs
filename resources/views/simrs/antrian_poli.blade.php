@@ -50,12 +50,12 @@
                                         </option>
                                     @endforeach
                                 </x-adminlte-select2>
+                            @else
+                                @can('poliklinik')
+                                    <x-adminlte-input name="kodepoli" label="Poliklinik" readonly
+                                        value="{{ Auth::user()->username }}" />
+                                @endcan
                             @endcan
-                            @can('poliklinik')
-                                <x-adminlte-input name="kodepoli" label="Poliklinik" readonly
-                                    value="{{ Auth::user()->username }}" />
-                            @endcan
-
                         </div>
                         <div class="col-md-3">
                             <x-adminlte-select2 name="kodedokter" label="Dokter">

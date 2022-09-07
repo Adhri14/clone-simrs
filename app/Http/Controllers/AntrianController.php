@@ -34,7 +34,6 @@ class AntrianController extends Controller
 {
     // public $printer_antrian = 'smb://PRINTER:qweqwe@192.168.2.133/Printer Receipt';
     public $printer_antrian = 'smb://PRINTER:qweqwe@192.168.2.129/Printer Receipt';
-    // public $printer_antrian = 'Printer Receipt';
     // console antrian
     public function console()
     {
@@ -45,16 +44,20 @@ class AntrianController extends Controller
     }
     public function cek_post()
     {
-        $connector = new WindowsPrintConnector($this->printer_antrian);
-        $printer = new Printer($connector);
-        $printer->setEmphasis(true);
-        $printer->text("SURAT ELEGTABILITAS PASIEN (SEP)\n");
-        $printer->text("RSUD WALED KAB. CIREBON\n");
-        $printer->setEmphasis(false);
-        $printer->text("================================================\n");
-        $printer->cut();
-        $printer->close();
-        dd($this->printer_antrian);
+        try {
+            $connector = new WindowsPrintConnector($this->printer_antrian);
+            $printer = new Printer($connector);
+            $printer->text("Connector Printer :\n");
+            $printer->text($this->printer_antrian . "\n");
+            $printer->cut();
+            $printer->close();
+            Alert::success('Success', 'Mesin menyala dan siap digunakan.');
+            return redirect()->route('antrian.console');
+        } catch (\Throwable $th) {
+            //throw $th;
+            Alert::error('Error', 'Mesin antrian tidak menyala. Silahkan hubungi admin.');
+            return redirect()->route('antrian.console');
+        }
     }
     function print_karcis(Request $request,  $kunjungan)
     {
@@ -187,6 +190,17 @@ class AntrianController extends Controller
     }
     public function store_offline(Request $request)
     {
+        // cek printer dulu
+        try {
+            $connector = new WindowsPrintConnector($this->printer_antrian);
+            $printer = new Printer($connector);
+            $printer->close();
+        } catch (\Throwable $th) {
+            //throw $th;
+            Alert::error('Error', 'Mesin antrian tidak menyala. Silahkan hubungi admin.');
+            return redirect()->route('antrian.console');
+        }
+        // get pasien
         $pasien = PasienDB::where('no_rm', 'like', '%' . $request->norm)->first();
         $unit = UnitDB::firstWhere('KDPOLI', $request->kodepoli);
         $now = Carbon::now();
