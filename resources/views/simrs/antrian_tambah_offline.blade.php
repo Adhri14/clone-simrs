@@ -65,7 +65,7 @@
                         <input type="hidden" id="nomorreferensi" name="nomorreferensi">
                         <input type="hidden" id="jenispenjamin" name="jenispenjamin">
                         <input type="hidden" id="hakkelas" name="hakkelas">
-                        <button type="submit" class="btn btn-primary btn-lg withLoad">Daftar Antrianx</button><br><br>
+                        <button type="submit" class="btn btn-primary btn-lg withLoad">Daftar Antrian</button><br><br>
                     </form>
                     <button class="btn btn-success col-md-12" id="keaktifan">XXXXX XXXXX</button><br><br>
                     <div class="row">

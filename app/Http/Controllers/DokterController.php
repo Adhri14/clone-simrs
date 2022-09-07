@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\API\AntrianBPJSController;
 use App\Models\Dokter;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class DokterController extends Controller
@@ -21,7 +23,6 @@ class DokterController extends Controller
     {
         $api = new AntrianBPJSController();
         $dokters = $api->ref_dokter()->response;
-        dd($dokters);
         foreach ($dokters as $value) {
             Dokter::updateOrCreate(
                 [
@@ -32,6 +33,14 @@ class DokterController extends Controller
                     'status' => 1,
                 ]
             );
+            User::updateOrCreate([
+                'email' => $value->kodedokter . '@gmail.com',
+                'username' => $value->kodedokter,
+            ], [
+                'name' => $value->namadokter,
+                'phone' => $value->kodedokter,
+                'password' => bcrypt($value->kodedokter),
+            ]);
         }
         Alert::success('Success', 'Refresh Data Dokter Berhasil');
         return redirect()->route('dokter.index');
