@@ -46,7 +46,6 @@ class AntrianController extends Controller
     public function cek_post()
     {
         $connector = new WindowsPrintConnector($this->printer_antrian);
-        // $connector = new NetworkPrintConnector("192.168.2.129", 9100);
         $printer = new Printer($connector);
         $printer->setEmphasis(true);
         $printer->text("SURAT ELEGTABILITAS PASIEN (SEP)\n");
@@ -62,11 +61,9 @@ class AntrianController extends Controller
         $connector = new WindowsPrintConnector($this->printer_antrian);
         $printer = new Printer($connector);
         $printer->setEmphasis(true);
+        $printer->text("ANTRIAN RAWAT JALAN\n");
         $printer->text("RSUD WALED KAB. CIREBON\n");
         $printer->setEmphasis(false);
-        $printer->text("Melayani Dengan Sepenuh Hati\n");
-        $printer->text("================================================\n");
-        $printer->text("ANTRIAN RAWAT JALAN\n");
         $printer->text("================================================\n");
         $printer->text("No. RM : " . $request->norm . "\n");
         $printer->text("Nama : " . $request->nama . "\n");
@@ -85,7 +82,10 @@ class AntrianController extends Controller
         $printer->text("================================================\n");
         $printer->text("Keterangan : \n" . $request->keterangan . "\n");
         if (empty($request->nomorreferensi)) {
-            $printer->text("Biaya Karcis Pendaftaran : " . money(35000, 'IDR') . "\n");
+            $printer->text("================================================\n");
+            $printer->setJustification(Printer::JUSTIFY_RIGHT);
+            $printer->text("Biaya Karcis Poli : " . money($request->tarifkarcis, 'IDR') . "\n");
+            $printer->text("Biaya Administrasi : " . money($request->tarifadm, 'IDR') . "\n");
         }
         $printer->text("================================================\n");
         $printer->setJustification(Printer::JUSTIFY_CENTER);
@@ -116,8 +116,8 @@ class AntrianController extends Controller
     }
     function print_sep(Request $request, $sep)
     {
-        // $for_sep = ['POLIKLINIK', 'FARMASI', 'ARSIP'];
-        $for_sep = ['PERCOBAAN'];
+        $for_sep = ['POLIKLINIK', 'FARMASI', 'ARSIP'];
+        // $for_sep = ['PERCOBAAN'];
         $sep = $sep->response;
         foreach ($for_sep as  $value) {
             $connector = new WindowsPrintConnector($this->printer_antrian);
@@ -353,7 +353,7 @@ class AntrianController extends Controller
             $request['jeniskunjungan_print'] = "KUNJUNGAN UMUM";
             // rj umum tipe transaki 1 status layanan 1 status layanan detail opn
             $tipetransaksi = 1;
-            $statuslayanan = 2;
+            $statuslayanan = 1;
             // rj umum masuk ke tagihan pribadi
             $tagihanpenjamin = 0;
             $totalpenjamin =  0;
@@ -457,6 +457,8 @@ class AntrianController extends Controller
                             'kode_unit' => $unit->kode_unit,
                             'kode_tipe_transaksi' => $tipetransaksi,
                             'status_layanan' => $statuslayanan,
+                            'status_pembayaran' => 'OPN',
+                            'status_retur' => 'OPN',
                             'pic' => '1319',
                             'keterangan' => 'Layanan header melalui antrian sistem untuk pasien ' . $request->jenispasien,
                         ]
@@ -502,6 +504,8 @@ class AntrianController extends Controller
                         'tagihan_pribadi' => $totalpribadi,
                         'tagihan_penjamin' => $totalpenjamin,
                     ]);
+                    $request['tarifkarcis'] = $tarifkarcis->TOTAL_TARIF_NEW;
+                    $request['tarifadm'] = $tarifadm->TOTAL_TARIF_NEW;
                     // insert tracer tc_tracer_header
                     $tracerbaru = TracerDB::create([
                         'kode_kunjungan' => $kunjungan->kode_kunjungan,
@@ -1347,69 +1351,4 @@ class AntrianController extends Controller
             }
         }
     }
-
-
-    // public function baru_online($kodebooking)
-    // {
-    //     $antrian = Antrian::firstWhere('kodebooking', $kodebooking);
-    //     $poli = Poliklinik::get();
-    //     $api = new VclaimBPJSController();
-    //     $provinsis = $api->ref_provinsi()->response->list;
-    //     return view('simrs.antrian_baru_online', [
-    //         'poli' => $poli,
-    //         'antrian' => $antrian,
-    //         'provinsis' => $provinsis,
-    //     ]);
-    // }
-    // public function simpan_baru_online($kodebooking, Request $request)
-    // {
-    //     $request->validate([
-    //         'nomorkartu' => 'required',
-    //         'nik' => 'required',
-    //         'nomorkk' => 'required',
-    //         'nama' => 'required',
-    //         'jeniskelamin' => 'required',
-    //         'tanggallahir' => 'required',
-    //         'nohp' => 'required',
-    //         'alamat' => 'required',
-    //         'kodeprop' => 'required',
-    //     ]);
-
-    //     $api = new AntrianBPJSController();
-    //     $request['taskid'] = 3;
-    //     $request['waktu'] = Carbon::now()->timestamp * 1000;
-    //     $request['kodebooking'] = $kodebooking;
-    //     $response = $api->update_antrian($request);
-    //     if ($response->metadata->code == 200) {
-    //         $pasien = Pasien::count();
-    //         $request['norm'] =  Carbon::now()->format('Y') . str_pad($pasien + 1, 4, '0', STR_PAD_LEFT);
-    //         Pasien::create($request->except('_token'));
-    //         $antrian = Antrian::firstWhere('kodebooking', $kodebooking);
-    //         $antrian->update([
-    //             'taskid' => 3,
-    //             'norm' => $pasien->norm,
-    //             'nama' => $pasien->nama,
-    //             // 'user' => Auth::user()->name,
-    //         ]);
-    //     } else {
-    //         Alert::error('Error', "Error Message " . $response->metadata->message);
-    //     }
-    //     return redirect()->route('antrian.pendaftaran');
-    // }
-    // public function baru_offline($kodebooking)
-    // {
-    //     $antrian = Antrian::firstWhere('kodebooking', $kodebooking);
-    //     $poli = Poliklinik::get();
-    //     return view('simrs.antrian_baru_offline', [
-    //         'poli' => $poli,
-    //         'antrian' => $antrian,
-    //     ]);
-    // }
-    // public function tambah()
-    // {
-    //     $poli = Poliklinik::get();
-    //     return view('simrs.antrian_tambah', [
-    //         'poli' => $poli,
-    //     ]);
-    // }
 }

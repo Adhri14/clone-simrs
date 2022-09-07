@@ -38,17 +38,24 @@
                             </x-adminlte-input-date>
                         </div>
                         <div class="col-md-3">
-                            <x-adminlte-select2 name="kodepoli" label="Poliklinik">
-                                <option value="">00000 - SEMUA POLIKLINIK</option>
-                                @foreach ($polis as $item)
-                                    <option value="{{ $item->kodesubspesialis }}"
-                                        {{ $item->kodesubspesialis == $request->kodepoli ? 'selected' : null }}>
-                                        {{ $item->kodesubspesialis }}
-                                        -
-                                        {{ $item->namasubspesialis }}
-                                    </option>
-                                @endforeach
-                            </x-adminlte-select2>
+                            @can('admin')
+                                <x-adminlte-select2 name="kodepoli" label="Poliklinik">
+                                    <option value="">00000 - SEMUA POLIKLINIK</option>
+                                    @foreach ($polis as $item)
+                                        <option value="{{ $item->kodesubspesialis }}"
+                                            {{ $item->kodesubspesialis == $request->kodepoli ? 'selected' : null }}>
+                                            {{ $item->kodesubspesialis }}
+                                            -
+                                            {{ $item->namasubspesialis }}
+                                        </option>
+                                    @endforeach
+                                </x-adminlte-select2>
+                            @endcan
+                            @can('poliklinik')
+                                <x-adminlte-input name="kodepoli" label="Poliklinik" readonly
+                                    value="{{ Auth::user()->username }}" />
+                            @endcan
+
                         </div>
                         <div class="col-md-3">
                             <x-adminlte-select2 name="kodedokter" label="Dokter">
@@ -305,7 +312,8 @@
                                 @endforeach
                             </x-adminlte-select2>
                             <x-slot name="footerSlot">
-                                <button type="submit" form="formSuratKontrol" value="Submit" class="mr-auto btn btn-success">Buat Surat Kontrol</button>
+                                <button type="submit" form="formSuratKontrol" value="Submit"
+                                    class="mr-auto btn btn-success">Buat Surat Kontrol</button>
                                 <x-adminlte-button theme="danger" label="Dismiss" data-dismiss="modal" />
                             </x-slot>
                         </form>
@@ -320,8 +328,8 @@
                         $heads = ['No', 'Kode', 'Tanggal', 'No RM / NIK', 'Jenis / Pasien', 'No Kartu / Rujukan', 'Poliklinik / Dokter', 'Status', 'Action'];
                         $config['order'] = ['7', 'asc'];
                     @endphp
-                    <x-adminlte-datatable id="table2" class="nowrap" :heads="$heads" :config="$config" striped bordered hoverable
-                        compressed>
+                    <x-adminlte-datatable id="table2" class="nowrap" :heads="$heads" :config="$config" striped
+                        bordered hoverable compressed>
                         @foreach ($antrians->where('taskid', '!=', 4) as $item)
                             <tr>
                                 <td>{{ $item->angkaantrean }}</td>
