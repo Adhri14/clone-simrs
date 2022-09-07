@@ -484,10 +484,10 @@ class AntrianBPJSController extends Controller
                         "totalantrean" => $antrians,
                         "sisaantrean" => $jadwal->kapasitaspasien - $antrians,
                         "antreanpanggil" => $nomorantean,
-                        "sisakuotajkn" => $jadwal->kapasitaspasien * 80 / 100 -  $antrianjkn,
-                        "kuotajkn" => $jadwal->kapasitaspasien * 80 / 100,
-                        "sisakuotanonjkn" => ($jadwal->kapasitaspasien * 20 / 100) - $antriannonjkn,
-                        "kuotanonjkn" =>  $jadwal->kapasitaspasien  * 20 / 100,
+                        "sisakuotajkn" => round($jadwal->kapasitaspasien * 80 / 100) -  $antrianjkn,
+                        "kuotajkn" => round($jadwal->kapasitaspasien * 80 / 100),
+                        "sisakuotanonjkn" => round($jadwal->kapasitaspasien * 20 / 100) - $antriannonjkn,
+                        "kuotanonjkn" =>  round($jadwal->kapasitaspasien * 20 / 100),
                         "keterangan" => "Informasi antrian poliklinik",
                     ],
                     "metadata" => [
@@ -548,18 +548,18 @@ class AntrianBPJSController extends Controller
             ];
         }
         // cek duplikasi nik antrian
-        $antrian_nik = Antrian::where('tanggalperiksa', $request->tanggalperiksa)
-            ->where('nik', $request->nik)
-            ->where('taskid', '<=', 4)
-            ->count();
-        if ($antrian_nik) {
-            return $response = [
-                "metadata" => [
-                    "message" => "Terdapat antrian dengan nomor NIK yang sama pada tanggal tersebut yang belum selesai.",
-                    "code" => 201,
-                ],
-            ];
-        }
+        // $antrian_nik = Antrian::where('tanggalperiksa', $request->tanggalperiksa)
+        //     ->where('nik', $request->nik)
+        //     ->where('taskid', '<=', 4)
+        //     ->count();
+        // if ($antrian_nik) {
+        //     return $response = [
+        //         "metadata" => [
+        //             "message" => "Terdapat antrian dengan nomor NIK yang sama pada tanggal tersebut yang belum selesai.",
+        //             "code" => 201,
+        //         ],
+        //     ];
+        // }
         // proses ambil antrian
         $pasien = PasienDB::where('nik_Bpjs', $request->nik)->first();
         // cek pasien baru hit info pasien baru
@@ -706,7 +706,8 @@ class AntrianBPJSController extends Controller
             $request['angkaantrean'] = $antrians + 1;
             $request['kodebooking'] = strtoupper(uniqid());
             // estimasi
-            $jadwalbuka = Carbon::parse($request->tanggalperiksa . ' ' . explode('-', $request->jampraktek)[0])->addMinutes(5 * ($antrian_poli + 1));
+            $timestamp = $request->tanggalperiksa . ' ' . explode('-', $request->jampraktek)[0] . ':00';
+            $jadwalbuka = Carbon::createFromFormat('Y-m-d H:i:s', $timestamp, 'Asia/Jakarta')->addMinutes(10 * ($antrian_poli + 1));
             $request['estimasidilayani'] = $jadwalbuka->timestamp * 1000;
             $request['sisakuotajkn'] = round($jadwal->kapasitaspasien * 80 / 100)  -  $antrianjkn - 1;
             $request['kuotajkn'] = round($jadwal->kapasitaspasien * 80 / 100);
