@@ -2,7 +2,6 @@
 
 use App\Http\Controllers\AntrianController;
 use App\Http\Controllers\AntrianWAController;
-use App\Http\Controllers\API\VclaimBPJSController;
 use App\Http\Controllers\DokterController;
 use App\Http\Controllers\JadwalDokterController;
 use App\Http\Controllers\JadwalOperasiController;
@@ -34,6 +33,8 @@ Route::get('/', function () {
 Auth::routes();
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
+Route::get('info_jadwaldokter', [JadwalDokterController::class, 'index'])->name('info_jadwaldokter');
+Route::get('info_jadwaloperasi', [JadwalOperasiController::class, 'index'])->name('info_jadwaloperasi');
 // antrian routes
 Route::prefix('antrian')->name('antrian.')->group(function () {
     Route::get('console', [AntrianController::class, 'console'])->name('console');

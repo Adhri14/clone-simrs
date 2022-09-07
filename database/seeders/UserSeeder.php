@@ -100,30 +100,30 @@ class UserSeeder extends Seeder
         ]);
         $user->assignRole('Rekam Medis');
 
-        $adminpoli = [
-            'obgyn',
-            'kulit',
-            'pari',
-            'mcu',
-            'orthopedi',
-            'urologi',
-            'jantung',
-            'bedahsaraf',
-            'saraf',
-            'dalam',
-            'tht',
-            'mata',
-            'onkologi',
-        ];
-        foreach ($adminpoli as  $value) {
-            $user = User::create([
-                "name" => "Admin " . $value,
-                "email" => $value . "@gmail.com",
-                "username" => $value,
-                'password' => bcrypt($value),
-                'email_verified_at' => Carbon::now()
-            ]);
-            $user->assignRole('Poliklinik');
-        }
+        // $adminpoli = [
+        //     'obgyn',
+        //     'kulit',
+        //     'pari',
+        //     'mcu',
+        //     'orthopedi',
+        //     'urologi',
+        //     'jantung',
+        //     'bedahsaraf',
+        //     'saraf',
+        //     'dalam',
+        //     'tht',
+        //     'mata',
+        //     'onkologi',
+        // ];
+        // foreach ($adminpoli as  $value) {
+        //     $user = User::create([
+        //         "name" => "Admin " . $value,
+        //         "email" => $value . "@gmail.com",
+        //         "username" => $value,
+        //         'password' => bcrypt($value),
+        //         'email_verified_at' => Carbon::now()
+        //     ]);
+        //     $user->assignRole('Poliklinik');
+        // }
     }
 }

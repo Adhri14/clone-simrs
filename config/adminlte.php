@@ -247,37 +247,51 @@ return [
             'url'         => 'home',
             'icon'        => 'fas fa-home',
         ],
-                //MENU INFO
+        //MENU INFO
+        [
+            'text'        => 'Menu Informasi Umum',
+            'icon'        => 'fas fa-info-circle',
+            'submenu' => [
                 [
-                    'text'        => 'Menu Informasi Umum',
-                    'icon'        => 'fas fa-info-circle',
-                    'submenu' => [
-                        [
-                            'text' => 'Status Antrian',
-                            'icon'    => 'fas fa-sign-in-alt',
-                            'url'  => 'info/antrian',
-                            'shift'   => 'ml-2',
-                        ],
-                        [
-                            'text' => 'Info Poliklinik',
-                            'icon'    => 'fas fa-clinic-medical',
-                            'shift'   => 'ml-2',
-                            'url'  => 'info/poliklinik',
-                        ],
-                        [
-                            'text' => 'Jadwal Poliklinik',
-                            'icon'    => 'fas fa-calendar-alt',
-                            'url'  => 'info/jadwal_poliklinik',
-                            'shift'   => 'ml-2',
-                        ],
-                        [
-                            'text' => 'Jadwal Libur Poliklinik',
-                            'icon'    => 'fas fa-calendar-times',
-                            'shift'   => 'ml-2',
-                            'url'  => 'info/jadwal_poli_libur',
-                        ],
-                    ]
+                    'text' => 'Jadwal Dokter Poliklinik',
+                    'icon'    => 'fas fa-calendar-alt',
+                    'shift'   => 'ml-2',
+                    'url'  => 'info_jadwaldokter',
+                    // 'can' => 'admin',
                 ],
+                [
+                    'text' => 'Jadwal Operasi',
+                    'icon'    => 'fas fa-calendar-alt',
+                    'shift'   => 'ml-2',
+                    'url'  => 'info_jadwaloperasi',
+                    // 'can' => 'admin',
+                ],
+                // [
+                //     'text' => 'Status Antrian',
+                //     'icon'    => 'fas fa-sign-in-alt',
+                //     'url'  => 'info/antrian',
+                //     'shift'   => 'ml-2',
+                // ],
+                // [
+                //     'text' => 'Info Poliklinik',
+                //     'icon'    => 'fas fa-clinic-medical',
+                //     'shift'   => 'ml-2',
+                //     'url'  => 'info/poliklinik',
+                // ],
+                // [
+                //     'text' => 'Jadwal Poliklinik',
+                //     'icon'    => 'fas fa-calendar-alt',
+                //     'url'  => 'info/jadwal_poliklinik',
+                //     'shift'   => 'ml-2',
+                // ],
+                // [
+                //     'text' => 'Jadwal Libur Poliklinik',
+                //     'icon'    => 'fas fa-calendar-times',
+                //     'shift'   => 'ml-2',
+                //     'url'  => 'info/jadwal_poli_libur',
+                // ],
+            ]
+        ],
         // MENU APLIKASI ANTRIAN
         [
             'text'    => 'Aplikasi Antrian',
@@ -289,14 +303,14 @@ return [
                     'icon'    => 'fas fa-desktop',
                     'url'  => 'antrian/console',
                     'shift'   => 'ml-2',
-                    'can' => 'pendaftaran',
+                    'can' => 'admin',
                 ],
                 [
                     'text' => 'Status TaskId Antrian',
                     'icon'    => 'fas fa-desktop',
                     'url'  => 'antrian/taskid',
                     'shift'   => 'ml-2',
-                    'can' => 'pendaftaran',
+                    'can' => 'admin',
                 ],
                 [
                     'text' => 'Antrian Pendaftaran WA',
@@ -340,20 +354,6 @@ return [
                 //     'shift'   => 'ml-2',
                 //     'can' => 'admin',
                 // ],
-                [
-                    'text' => 'Jadwal Dokter Poliklinik',
-                    'icon'    => 'fas fa-calendar-alt',
-                    'shift'   => 'ml-2',
-                    'url'  => 'info_jadwaldokter',
-                    // 'can' => 'admin',
-                ],
-                [
-                    'text' => 'Jadwal Operasi',
-                    'icon'    => 'fas fa-calendar-alt',
-                    'shift'   => 'ml-2',
-                    'url'  => 'inFo_jadwaloperasi',
-                    // 'can' => 'admin',
-                ],
                 [
                     'text' => 'Laporan Antrian',
                     'icon'    => 'fas fa-chart-line',

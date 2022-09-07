@@ -33,7 +33,7 @@ class DokterController extends Controller
                     'status' => 1,
                 ]
             );
-            User::updateOrCreate([
+            $user = User::updateOrCreate([
                 'email' => $value->kodedokter . '@gmail.com',
                 'username' => $value->kodedokter,
             ], [
@@ -41,6 +41,7 @@ class DokterController extends Controller
                 'phone' => $value->kodedokter,
                 'password' => bcrypt($value->kodedokter),
             ]);
+            $user->assignRole('Dokter');
         }
         Alert::success('Success', 'Refresh Data Dokter Berhasil');
         return redirect()->route('dokter.index');

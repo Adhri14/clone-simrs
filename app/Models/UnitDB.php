@@ -30,4 +30,8 @@ class UnitDB extends Model
     {
         return $this->hasMany(AntrianDB::class, 'kode_poli', 'kode_unit');
     }
+    public function lokasi()
+    {
+        return $this->hasOne(LokasiUnitDB::class, 'kode_unit', 'kode_unit');
+    }
 }

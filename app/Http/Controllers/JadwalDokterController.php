@@ -27,29 +27,33 @@ class JadwalDokterController extends Controller
     {
         if ($request->method == 'GET') {
             $api = new AntrianBPJSController();
-            $jadwals = $api->ref_jadwal_dokter($request);
-            if (isset($jadwals->response)) {
-                foreach ($jadwals->response as  $jadwal) {
-                    JadwalDokter::create(
-                        [
-                            'kodesubspesialis' => $jadwal->kodesubspesialis,
-                            'kodedokter' => $jadwal->kodedokter,
-                            'hari' => $jadwal->hari,
-                            'kodepoli' => $jadwal->kodepoli,
-                            'namapoli' => $jadwal->namapoli,
-                            'namasubspesialis' => $jadwal->namasubspesialis,
-                            'namadokter' => $jadwal->namadokter,
-                            'namahari' => $jadwal->namahari,
-                            'jadwal' => $jadwal->jadwal,
-                            'libur' => $jadwal->libur,
-                            'kapasitaspasien' => $jadwal->kapasitaspasien,
-                        ]
-                    );
+            $polis = Poliklinik::where('status', 1)->get('kodesubspesialis');
+            $jumlah_jadwal = 0;
+            foreach ($polis as $value) {
+                $request['kodepoli'] = $value->kodesubspesialis;
+                $jadwals = $api->ref_jadwal_dokter($request);
+                if (isset($jadwals->response)) {
+                    foreach ($jadwals->response as  $jadwal) {
+                        JadwalDokter::create(
+                            [
+                                'kodesubspesialis' => $jadwal->kodesubspesialis,
+                                'kodedokter' => $jadwal->kodedokter,
+                                'hari' => $jadwal->hari,
+                                'kodepoli' => $jadwal->kodepoli,
+                                'namapoli' => $jadwal->namapoli,
+                                'namasubspesialis' => $jadwal->namasubspesialis,
+                                'namadokter' => $jadwal->namadokter,
+                                'namahari' => $jadwal->namahari,
+                                'jadwal' => $jadwal->jadwal,
+                                'libur' => $jadwal->libur,
+                                'kapasitaspasien' => $jadwal->kapasitaspasien,
+                            ]
+                        );
+                    }
+                    $jumlah_jadwal++;
                 }
-                Alert::success('Success', 'Jadwal Telah Ditambahkan');
-            } else {
-                Alert::error('Error', 'Error Message : ' . $jadwals->metadata->message);
             }
+            Alert::success('Success', 'Jadwal Telah Ditambahkan berjumlah ' . $jumlah_jadwal . ' Poliklinik');
             return redirect()->route('jadwaldokter.index');
         }
         if ($request->method == "UPDATE") {

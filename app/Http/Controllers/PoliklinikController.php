@@ -6,6 +6,8 @@ use App\Http\Controllers\API\AntrianBPJSController;
 use App\Models\Dokter;
 use App\Models\JadwalPoli;
 use App\Models\Poliklinik;
+use App\Models\UnitDB;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use RealRashid\SweetAlert\Facades\Alert;
@@ -23,6 +25,7 @@ class PoliklinikController extends Controller
     {
         $api = new AntrianBPJSController();
         $poli = $api->ref_poli()->response;
+        $poliDB = UnitDB::where('KDPOLI', '!=', null)->get(['kode_unit', 'nama_unit', 'KDPOLI',]);
         foreach ($poli as $value) {
             if ($value->kdpoli == $value->kdsubspesialis) {
                 $subpesialis = 0;
@@ -43,6 +46,35 @@ class PoliklinikController extends Controller
                     'status' => 0,
                 ]
             );
+        }
+        // update aktif
+        $poli_jkn = Poliklinik::get();
+        foreach ($poli_jkn as $poli) {
+            foreach ($poliDB as $unit) {
+                if ($poli->kodesubspesialis ==  $unit->KDPOLI) {
+                    if (isset($unit->lokasi)) {
+                        $lokasi = $unit->lokasi->lokasi;
+                        $loket = $unit->lokasi->loket;
+                    } else {
+                        $lokasi = 0;
+                        $loket = 0;
+                    }
+                    $poli->update([
+                        'status' => 1,
+                        'lokasi' => $lokasi,
+                        'lantaipendaftaran' => $loket,
+                    ]);
+                    $user = User::updateOrCreate([
+                        'email' => $poli->kodesubspesialis . '@gmail.com',
+                        'username' => $poli->kodesubspesialis,
+                    ], [
+                        'name' => 'ADMIN POLI ' . $poli->namasubspesialis,
+                        'phone' => '089529909036',
+                        'password' => bcrypt('adminpoli'),
+                    ]);
+                    $user->assignRole('Poliklinik');
+                }
+            }
         }
         Alert::success('Success', 'Refresh Poliklinik Berhasil');
         return redirect()->route('poli.index');

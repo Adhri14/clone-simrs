@@ -21,6 +21,7 @@ class RoleSeeder extends Seeder
             'Admin',
             'Pendaftaran',
             'Poliklinik',
+            'Dokter',
             'Kasir',
             'BPJS',
             'Farmasi',

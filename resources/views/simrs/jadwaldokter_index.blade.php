@@ -3,42 +3,44 @@
 @section('title', 'Referensi Jadwal Dokter')
 
 @section('content_header')
-    <h1>Referensi Jadwal Dokters</h1>
+    <h1>Referensi Jadwal Dokter</h1>
 @stop
 
 @section('content')
     <div class="row">
         <div class="col-12">
-            <x-adminlte-card title="Informasi Referensi Jadwal Dokter" theme="info" icon="fas fa-info-circle" collapsible
-                maximizable>
-                <form name="formJadwalHafiz" id="formJadwalHafiz" action="{{ route('jadwaldokter.store') }}" method="post">
-                    @csrf
-                    <input type="hidden" name="method" value="GET">
-                    @php
-                        $config = ['format' => 'YYYY-MM-DD'];
-                    @endphp
-                    <x-adminlte-input-date name="tanggalperiksa" value="{{ Carbon\Carbon::now()->format('Y-m-d') }}"
-                        label="Tanggal Periksa" :config="$config" />
-                    <x-adminlte-select2 name="kodepoli" id="kodepoli" label="Poliklinik">
-                        @foreach ($poli as $item)
-                            @if ($item->kodedpoli == $item->kodesubspesialis)
-                                <option value="{{ $item->kodedpoli }}">{{ $item->kodedpoli }} -
-                                    {{ $item->namapoli }}
-                                </option>
-                            @endif
-                        @endforeach
-                        @foreach ($poli as $item)
-                            @if ($item->kodedpoli != $item->kodesubspesialis)
-                                <option value="{{ $item->kodesubspesialis }}">{{ $item->kodesubspesialis }} -
-                                    {{ $item->namasubspesialis }}
-                                </option>
-                            @endif
-                        @endforeach
-                    </x-adminlte-select2>
-                    <x-adminlte-button label="Get Jadwal Dokter" form="formJadwalHafiz" class="mr-auto" type="submit"
-                        theme="success" icon="fas fa-download" />
-                </form>
-            </x-adminlte-card>
+            @can('pelayanan-medis')
+                <x-adminlte-card title="Informasi Referensi Jadwal Dokter" theme="info" icon="fas fa-info-circle" collapsible
+                    maximizable>
+                    <form name="formJadwalHafiz" id="formJadwalHafiz" action="{{ route('jadwaldokter.store') }}" method="post">
+                        @csrf
+                        <input type="hidden" name="method" value="GET">
+                        @php
+                            $config = ['format' => 'YYYY-MM-DD'];
+                        @endphp
+                        <x-adminlte-input-date name="tanggalperiksa" value="{{ Carbon\Carbon::now()->format('Y-m-d') }}"
+                            label="Tanggal Periksa" :config="$config" />
+                        <x-adminlte-select2 name="kodepoli" id="kodepoli" label="Poliklinik">
+                            @foreach ($poli as $item)
+                                @if ($item->kodedpoli == $item->kodesubspesialis)
+                                    <option value="{{ $item->kodedpoli }}">{{ $item->kodedpoli }} -
+                                        {{ $item->namapoli }}
+                                    </option>
+                                @endif
+                            @endforeach
+                            @foreach ($poli as $item)
+                                @if ($item->kodedpoli != $item->kodesubspesialis)
+                                    <option value="{{ $item->kodesubspesialis }}">{{ $item->kodesubspesialis }} -
+                                        {{ $item->namasubspesialis }}
+                                    </option>
+                                @endif
+                            @endforeach
+                        </x-adminlte-select2>
+                        <x-adminlte-button label="Get Jadwal Dokter" form="formJadwalHafiz" class="mr-auto" type="submit"
+                            theme="success" icon="fas fa-download" />
+                    </form>
+                </x-adminlte-card>
+            @endcan
             <x-adminlte-card title="Data Informasi Jadwal Dokter" theme="info" icon="fas fa-info-circle" collapsible
                 maximizable>
                 @php
@@ -49,21 +51,27 @@
                     hoverable compressed>
                     @foreach ($jadwals->groupby('kodedokter') as $item)
                         <tr>
-                            <td>{{ $item->first()->kodesubspesialis }} - {{ strtoupper($item->first()->namasubspesialis) }}</td>
+                            <td>{{ $item->first()->kodesubspesialis }} - {{ strtoupper($item->first()->namasubspesialis) }}
+                            </td>
                             <td>{{ $item->first()->kodedokter }} - {{ $item->first()->namadokter }}</td>
                             @for ($i = 1; $i <= 6; $i++)
                                 <td>
                                     @foreach ($item as $jadwal)
                                         @if ($jadwal->hari == $i)
-                                            @if ($jadwal->libur == 1)
-                                                <x-adminlte-button label="{{ $jadwal->jadwal }}"
-                                                    class="btn-xs mb-1 btnJadwal" theme="danger" data-toggle="tooltip"
-                                                    title="Jadwal Dokter" data-id="{{ $jadwal->id }}" />
+                                            @can('pelayanan-medis')
+                                                @if ($jadwal->libur == 1)
+                                                    <x-adminlte-button label="{{ $jadwal->jadwal }}"
+                                                        class="btn-xs mb-1 btnJadwal" theme="danger" data-toggle="tooltip"
+                                                        title="Jadwal Dokter" data-id="{{ $jadwal->id }}" />
+                                                @else
+                                                    <x-adminlte-button label="{{ $jadwal->jadwal }}"
+                                                        class="btn-xs mb-1 btnJadwal" theme="warning" data-toggle="tooltip"
+                                                        title="Jadwal Dokter" data-id="{{ $jadwal->id }}" />
+                                                @endif
                                             @else
-                                                <x-adminlte-button label="{{ $jadwal->jadwal }}"
-                                                    class="btn-xs mb-1 btnJadwal" theme="warning" data-toggle="tooltip"
-                                                    title="Jadwal Dokter" data-id="{{ $jadwal->id }}" />
-                                            @endif
+                                                <x-adminlte-button label="{{ $jadwal->jadwal }}" class="btn-xs mb-1"
+                                                    theme="warning" data-toggle="tooltip" title="Jadwal Dokter" />
+                                            @endcan
                                         @endif
                                     @endforeach
                                 </td>
