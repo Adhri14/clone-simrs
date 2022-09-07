@@ -970,11 +970,17 @@ class AntrianBPJSController extends Controller
     }
     public function batal_antrian(Request $request)
     {
+        // return $response = [
+        //     'metadata' => [
+        //         'code' => 200,
+        //         'message' => 'Ok',
+        //     ],
+        // ];
         // auth token
-        $auth = $this->auth_token($request);
-        if ($auth['metadata']['code'] != 200) {
-            return $auth;
-        }
+        // $auth = $this->auth_token($request);
+        // if ($auth['metadata']['code'] != 200) {
+        //     return $auth;
+        // }
         // cek request
         $validator = Validator::make(request()->all(), [
             "kodebooking" => "required",
@@ -1199,7 +1205,7 @@ class AntrianBPJSController extends Controller
             }
             // jika pasien non jkn
             else {
-                $request['taskid'] = 1;
+                $request['taskid'] = 3;
                 $request['status_api'] = 0;
                 $request['kodepenjamin'] = "P01";
                 $request['jeniskunjungan_print'] = 'KUNJUNGAN UMUM';
@@ -1252,7 +1258,7 @@ class AntrianBPJSController extends Controller
                     $kunjungan = KunjunganDB::where('no_rm', $antrian->norm)->where('counter', $counter)->first();
                     // get transaksi sebelumnya
                     $trx_lama = TransaksiDB::where('unit', $unit->kode_unit)
-                        ->whereBetween('tgl', [$now->startOfDay(), [$now->endOfDay()]])
+                        ->whereBetween('tgl', [Carbon::now()->startOfDay(), [Carbon::now()->endOfDay()]])
                         ->count();
                     // get kode layanan
                     // PDD2209030-kodetransaksi
@@ -1317,6 +1323,7 @@ class AntrianBPJSController extends Controller
                         'tagihan_pribadi' => $totalpribadi,
                         'tagihan_penjamin' => $totalpenjamin,
                     ]);
+
                     // insert tracer tc_tracer_header
                     $tracerbaru = TracerDB::create([
                         'kode_kunjungan' => $kunjungan->kode_kunjungan,
@@ -1326,6 +1333,8 @@ class AntrianBPJSController extends Controller
                     ]);
                     // print antrian
                     $print_karcis = new AntrianController();
+                    $request['tarifkarcis'] = $tarifkarcis->TOTAL_TARIF_NEW;
+                    $request['tarifadm'] = $tarifadm->TOTAL_TARIF_NEW;
                     $request['norm'] = $antrian->norm;
                     $request['nama'] = $antrian->nama;
                     $request['nik'] = $antrian->nik;
