@@ -13,6 +13,7 @@ use App\Models\LayananDB;
 use App\Models\LayananDetailDB;
 use App\Models\ParamedisDB;
 use App\Models\PasienDB;
+use App\Models\PenjaminDB;
 use App\Models\Poliklinik;
 use App\Models\Provinsi;
 use App\Models\TarifLayananDetailDB;
@@ -32,7 +33,8 @@ use Mike42\Escpos\PrintConnectors\WindowsPrintConnector;
 class AntrianController extends Controller
 {
     // public $printer_antrian = 'smb://PRINTER:qweqwe@192.168.2.133/Printer Receipt';
-    public $printer_antrian = 'Printer Receipt';
+    public $printer_antrian = 'smb://PRINTER:qweqwe@192.168.2.129/Printer Receipt';
+    // public $printer_antrian = 'Printer Receipt';
     // console antrian
     public function console()
     {
@@ -43,6 +45,16 @@ class AntrianController extends Controller
     }
     public function cek_post()
     {
+        $connector = new WindowsPrintConnector($this->printer_antrian);
+        // $connector = new NetworkPrintConnector("192.168.2.129", 9100);
+        $printer = new Printer($connector);
+        $printer->setEmphasis(true);
+        $printer->text("SURAT ELEGTABILITAS PASIEN (SEP)\n");
+        $printer->text("RSUD WALED KAB. CIREBON\n");
+        $printer->setEmphasis(false);
+        $printer->text("================================================\n");
+        $printer->cut();
+        $printer->close();
         dd($this->printer_antrian);
     }
     function print_karcis(Request $request,  $kunjungan)
@@ -206,7 +218,8 @@ class AntrianController extends Controller
             $request['jenispasien'] = "JKN";
             $request['taskid'] = "3";
             $request['status_api'] = "1";
-            $request['kodepenjamin'] = "P13";
+            $penjamin = PenjaminDB::where('nama_penjamin_bpjs', $request->jenispenjamin)->first();
+            $request['kodepenjamin'] = $penjamin->kode_penjamin_simrs;
             $request['keterangan'] = "Silahkan menunggu panggilan dipoliklinik.";
             // rj jkn tipe transaki 2 status layanan 2 status layanan detail opn
             $tipetransaksi = 2;
@@ -340,7 +353,7 @@ class AntrianController extends Controller
             $request['jeniskunjungan_print'] = "KUNJUNGAN UMUM";
             // rj umum tipe transaki 1 status layanan 1 status layanan detail opn
             $tipetransaksi = 1;
-            $statuslayanan = 1;
+            $statuslayanan = 2;
             // rj umum masuk ke tagihan pribadi
             $tagihanpenjamin = 0;
             $totalpenjamin =  0;
@@ -445,7 +458,7 @@ class AntrianController extends Controller
                             'kode_tipe_transaksi' => $tipetransaksi,
                             'status_layanan' => $statuslayanan,
                             'pic' => '1319',
-                            'keterangan' => 'Layanan header melalui antrian sistem',
+                            'keterangan' => 'Layanan header melalui antrian sistem untuk pasien ' . $request->jenispasien,
                         ]
                     );
                     //  insert layanan header dan detail karcis admin konsul 25 + 5 = 30

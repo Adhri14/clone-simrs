@@ -79,7 +79,6 @@ class VclaimController extends Controller
 
     public function buat_surat_kontrol(Request $request)
     {
-
         $request['kodepoli'] = $request->kodepoli_suratkontrol;
         $request['tanggalperiksa'] = $request->tanggal_suratkontrol;
         $request['kodedokter'] = $request->kodedokter_suratkontrol;

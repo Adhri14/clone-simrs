@@ -313,13 +313,6 @@ class VclaimBPJSController extends Controller
                 "kodeDokter" => $request->kodedokter,
                 "user" => "System Ambil Antrian",
                 "noSepAsalKontrol" => $request->nomorsep,
-                // "jnsPelayanan" => $sep->jnsPelayanan,
-                // "jnsKontrol" => $surat_kontrol->noSuratKontrol,
-                // "namaJnsKontrol" => $surat_kontrol->noSuratKontrol,
-                // "poliAsal" => $surat_kontrol->noSuratKontrol,
-                // "namaPoliAsal" => $sep->poli,
-                // "namaPoliTujuan" => $surat_kontrol->noSuratKontrol,
-                // "tglSEP" => $sep->tglSep,
             ]);
         }
         return $response;

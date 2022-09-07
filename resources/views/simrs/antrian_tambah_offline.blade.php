@@ -48,37 +48,8 @@
                     <a href="{{ route('antrian.cek_post') }}" class="btn btn-success">Cek</a>
                 </x-adminlte-card>
             </div>
-            <div class="col-md-4 dataPasien">
+            <div class="col-md-3 dataPasien">
                 <x-adminlte-card title="Data Pasien" theme="primary" icon="fas fa-qrcode">
-                    <button class="btn btn-success col-md-12" id="keaktifan">XXXXX XXXXX</button> <br><br>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <dl class="row">
-                                <dt class="col-sm-4">Nama</dt>
-                                <dd class="col-sm-8"><span id="nama_noform"></span></dd>
-                                <dt class="col-sm-4">NIK</dt>
-                                <dd class="col-sm-8"><span id="nik_noform"></span></dd>
-                                <dt class="col-sm-4">Kelamin</dt>
-                                <dd class="col-sm-8"><span id="kelamin"></dd>
-                                <dt class="col-sm-4">Tgl Lahir</dt>
-                                <dd class="col-sm-8"><span id="tgllahir"></span></dd>
-                                <dt class="col-sm-4">Umur</dt>
-                                <dd class="col-sm-8"><span id="umur"></span></dd>
-                            </dl>
-                        </div>
-                        <div class="col-md-6">
-                            <dl class="row">
-                                <dt class="col-sm-4">Kartu JKN</dt>
-                                <dd class="col-sm-8"><span id="nomorkartu_noform"></span></dd>
-                                <dt class="col-sm-4">Hak Kelas</dt>
-                                <dd class="col-sm-8"><span id="hakkelas_nofrom"></dd>
-                                <dt class="col-sm-4">Jenis</dt>
-                                <dd class="col-sm-8"><span id="jenispeserta"></dd>
-                                <dt class="col-sm-4">Faskes 1</dt>
-                                <dd class="col-sm-8"><span id="faskes1"> </dd>
-                            </dl>
-                        </div>
-                    </div>
                     <form action="{{ route('antrian.store_offline') }}" method="post">
                         @csrf
                         <input type="hidden" id="nomorkartu" name="nomorkartu">
@@ -94,8 +65,33 @@
                         <input type="hidden" id="nomorreferensi" name="nomorreferensi">
                         <input type="hidden" id="jenispenjamin" name="jenispenjamin">
                         <input type="hidden" id="hakkelas" name="hakkelas">
-                        <button type="submit" class="btn btn-primary btn-lg withLoad">Daftar Antrian</button>
+                        <button type="submit" class="btn btn-primary btn-lg withLoad">Daftar Antrianx</button><br><br>
                     </form>
+                    <button class="btn btn-success col-md-12" id="keaktifan">XXXXX XXXXX</button><br><br>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <dl class="row">
+                                <dt class="col-sm-4">Nama</dt>
+                                <dd class="col-sm-8"><span id="nama_noform"></span></dd>
+                                <dt class="col-sm-4">NIK</dt>
+                                <dd class="col-sm-8"><span id="nik_noform"></span></dd>
+                                <dt class="col-sm-4">Kelamin</dt>
+                                <dd class="col-sm-8"><span id="kelamin"></dd>
+                                <dt class="col-sm-4">Tgl Lahir</dt>
+                                <dd class="col-sm-8"><span id="tgllahir"></span></dd>
+                                <dt class="col-sm-4">Umur</dt>
+                                <dd class="col-sm-8"><span id="umur"></span></dd>
+                                <dt class="col-sm-4">Kartu JKN</dt>
+                                <dd class="col-sm-8"><span id="nomorkartu_noform"></span></dd>
+                                <dt class="col-sm-4">Hak Kelas</dt>
+                                <dd class="col-sm-8"><span id="hakkelas_noform"></dd>
+                                <dt class="col-sm-4">Jenis</dt>
+                                <dd class="col-sm-8"><span id="jenispeserta"></dd>
+                                <dt class="col-sm-4">Faskes 1</dt>
+                                <dd class="col-sm-8"><span id="faskes1"> </dd>
+                            </dl>
+                        </div>
+                    </div>
                 </x-adminlte-card>
             </div>
         </div>
@@ -273,7 +269,8 @@
                                         $('#jenispeserta').html(data.response.rujukan
                                             .peserta.jenisPeserta
                                             .keterangan);
-                                        $('#jenispenjamin').val(data.response.rujukan.peserta
+                                        $('#jenispenjamin').val(data.response.rujukan
+                                            .peserta
                                             .jenisPeserta.keterangan);
                                         $('#faskes1').html(data.response.rujukan.peserta
                                             .provUmum
@@ -404,7 +401,7 @@
                                     $('#nama').val(data.response.rujukan.peserta.nama);
                                     swal.fire(
                                         'Success',
-                                        'Data Rujukan Ditemukan',
+                                        'Data Surat Kontrol Ditemukan',
                                         'success'
                                     );
                                     $.LoadingOverlay("hide");

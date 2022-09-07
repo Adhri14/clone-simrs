@@ -1059,7 +1059,6 @@ class AntrianBPJSController extends Controller
             if ($antrian->jenispasien == "JKN") {
                 $request['status_api'] = 1;
                 $request['taskid'] = 3;
-                $request['kodepenjamin'] = "P13";
                 $request['keterangan'] = "Untuk pasien peserta JKN silahkan dapat langsung menunggu ke POLIKINIK " . $antrian->namapoli;
                 $request['noKartu'] = $antrian->nomorkartu;
                 $request['tglSep'] = Carbon::createFromTimestamp($request->waktu / 1000)->format('Y-m-d');

@@ -128,9 +128,6 @@
                                         <x-adminlte-button class="btn-xs btnBayar withLoad" label="Bayar" theme="success"
                                             icon="fas fa-hand-holding-medical" data-toggle="tooltop" title="Bayar"
                                             data-id="{{ $item->id }}" />
-                                    @else
-                                        <x-adminlte-button class="btn-xs" label="Print Karcis" theme="warning"
-                                            icon="fas fa-print" data-toggle="tooltip" title="Print Karcis" />
                                     @endif
                                     <x-adminlte-button class="btn-xs" theme="danger" icon="fas fa-times"
                                         data-toggle="tooltop" title="Batal Antrian {{ $item->nomorantrean }}"
@@ -188,10 +185,10 @@
                                         <span class="badge bg-success">{{ $item->taskid }}. Periksa Poli</span>
                                     @endif
                                     @if ($item->taskid == 5)
-                                        @if ($item->status_api == 1)
+                                        @if ($item->status_api == 0)
                                             <span class="badge bg-success">{{ $item->taskid }}. Tunggu Farmasi</span>
                                         @endif
-                                        @if ($item->status_api == 2)
+                                        @if ($item->status_api == 1)
                                             <span class="badge bg-success">{{ $item->taskid }}. Selesai</span>
                                         @endif
                                     @endif
@@ -210,9 +207,6 @@
                                         <x-adminlte-button class="btn-xs btnBayar withLoad" label="Bayar" theme="success"
                                             icon="fas fa-hand-holding-medical" data-toggle="tooltop" title="Bayar"
                                             data-id="{{ $item->id }}" />
-                                    @else
-                                        <x-adminlte-button class="btn-xs" label="Print Karcis" theme="warning"
-                                            icon="fas fa-print" data-toggle="tooltip" title="Print Karcis" />
                                     @endif
                                     <x-adminlte-button class="btn-xs" theme="danger" icon="fas fa-times"
                                         data-toggle="tooltop" title="Batal Antrian {{ $item->nomorantrean }}"

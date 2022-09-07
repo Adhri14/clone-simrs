@@ -38,7 +38,7 @@
                         <h6>{{ \Carbon\Carbon::now()->formatLocalized('%A, %d %B %Y') }}</h6>
                         <div class="row">
                             @foreach ($poliklinik as $poli)
-                                <div class="col-md-4">
+                                <div class="col-md-3">
                                     <x-adminlte-info-box
                                         text="{{ $poli->antrians->where('tanggalperiksa', \Carbon\Carbon::now()->format('Y-m-d'))->count() }} / {{ $poli->jadwals->where('hari', \Carbon\Carbon::now()->dayOfWeek)->where('kodesubspesialis', $poli->kodesubspesialis)->sum('kapasitaspasien') }}"
                                         title="{{ $poli->namasubspesialis }} " class="tombolPoli"
