@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Models\AntrianDB;
 use App\Models\JadwalLiburPoliDB;
 use App\Models\PasienDB;
+use App\Models\Poliklinik;
 use App\Models\UnitDB;
 use Carbon\Carbon;
 use GuzzleHttp\Client;
@@ -18,21 +19,23 @@ use Image;
 
 class WhatsappController extends Controller
 {
-    public $baseUrl = 'https://rsudwaled.ruangwa.id/api/';
+    public $baseUrl = "192.168.2.10:3000/";
     protected $except = [
         'callback',
     ];
     public function index(Request $request)
     {
-        $request['message'] = 'cek cek';
-        $request['number'] = '089529909036';
-        return $this->send_message($request);
+        $poliklinik = Poliklinik::where('status', 1)->get('namapoli');
+        $rows = null;
+        foreach ($poliklinik as  $value) {
+            $rows = $rows . $value->namapoli . ',';
+        }
+        dd($rows);
     }
     public function send_message(Request $request)
     {
-        $url = $this->baseUrl . "send_message";
-        $response = Http::asForm()->post($url, [
-            'token' => env('TOKEN_SERVICE_WA'),
+        $url = $this->baseUrl . "send-message";
+        $response = Http::post($url, [
             'number' => $request->number,
             'message' => $request->message,
         ]);
@@ -41,27 +44,29 @@ class WhatsappController extends Controller
     }
     public function send_button(Request $request)
     {
-        $url = $this->baseUrl . "send_button";
-        $response = Http::asForm()->post($url, [
-            'token' => env('TOKEN_SERVICE_WA'),
+        $url = $this->baseUrl . "send-button";
+        $response = Http::post($url, [
             'number' => $request->number,
             'contenttext' => $request->contenttext,
             'footertext' => $request->footertext,
-            'buttonid' => $request->buttonid, #'id1,id2',
-            'buttontext' => $request->buttontext, #'UMUM,BPJS'
+            'titletext' => $request->titletext,
+            'buttontext' => $request->buttontext, // 'UMUM,BPJS'
         ]);
         $response = json_decode($response->getBody());
         return $response;
     }
-    public function send_button_link(Request $request)
+    public function send_list(Request $request)
     {
-        $url = $this->baseUrl . "send_buttonurl";
-        $response = Http::asForm()->post($url, [
-            'token' => env('TOKEN_SERVICE_WA'),
+        $url = $this->baseUrl . "send-list";
+        $response = Http::post($url, [
             'number' => $request->number,
-            'text' => $request->text,
-            'buttonlabel' => $request->buttonlabel,
-            'buttonurl' => $request->buttonurl,
+            'contenttext' => $request->contenttext,
+            'footertext' => $request->footertext,
+            'titletext' => $request->titletext,
+            'buttontext' => $request->buttontext, #wajib
+            'titlesection' => $request->titlesection,
+            'rowtitle' => $request->rowtitle, #wajib
+            'rowdescription' => $request->rowdescription,
         ]);
         $response = json_decode($response->getBody());
         return $response;
@@ -85,138 +90,181 @@ class WhatsappController extends Controller
     public function callback(Request $request)
     {
         $pesan = strtoupper($request->message);
-        // $pesan = $request->message;
         switch ($pesan) {
-            case 'DAFTAR':
-                $request['contenttext'] = "Selamat datang dilayanan Antrian Online via Whatsapp RSUD Waled. Silahkan pilih tipe pasien yang akan didaftarkan :";
-                $request['footertext'] = 'Pilih salah satu dibawah ini';
-                $request['buttonid'] = 'id1, id2';
-                $request['buttontext'] = 'PASIEN UMUM, PASIEN BPJS';
-                return $this->send_button($request);
-                // $request['message'] = "Untuk pendaftaran antrian online Silahkan daftar dengan format: \n\nDAFTAR#UMUM/BPJS#NAMA#NIK#POLI#TANGGAL(DD-MM-YYYY) \n\nContoh : \nDAFTAR#UMUM#BUDI#1234123412341234#GIGI#25-08-2022";
-                // return $this->send_message($request);
+            case 'MESSAGE':
+                $request['message'] = "Test Send Message";
+                return $this->send_message($request);
                 break;
-            case 'DAFTAR ULANG':
-                $request['contenttext'] = "Selamat datang dilayanan Antrian Online via Whatsapp RSUD Waled. Silahkan pilih tipe pasien yang akan didaftarkan :";
-                $request['footertext'] = 'Pilih salah satu dibawah ini';
-                $request['buttonid'] = 'id1,id2';
-                $request['buttontext'] = 'PASIEN UMUM,PASIEN BPJS';
+            case 'BUTTON':
+                $request['contenttext'] = "contenttext";
+                $request['footertext'] = 'footertext';
+                $request['buttontext'] = 'buttontext1,buttontext2,buttontext3';
                 return $this->send_button($request);
                 break;
-            case 'PASIEN UMUM':
-                $request['message'] = "Untuk antrian PASIEN UMUM Silahkan daftar dengan format: \n\nDAFTAR#UMUM#NAMA#NIK#POLI#TANGGAL BEROBAT(DD-MM-YYYY) \n\nContoh : \nDAFTAR#UMUM#BUDI#320902090XXXXXXX#GIGI#25-08-2022";
-                $this->send_message($request);
-                $request['file'] =  asset('vendor/adminlte/dist/img/info poli.jpeg');
-                $request['caption'] = "Daftar poliklinik yang tersedia untuk antrian Online WhatsApp ada di RSUD Waled, silahkan menggunakan *Kode Online Poliklinik* untuk menentukan pilihan.";
-                return $this->send_image($request);
+            case 'LIST':
+                $request['contenttext'] = "contenttext";
+                $request['titletext'] = "titletext";
+                $request['buttontext'] = 'buttontext';
+                $request['rowtitle'] = 'rowtitle1,rowtitle2,rowtitle3';
+                $request['rowdescription'] = 'rowdescription1,rowdescription2,rowdescription3';
+                return $this->send_list($request);
                 break;
-            case 'PASIEN BPJS':
-                $request['message'] = "Untuk antrian PASIEN BPJS Silahkan daftar dengan format: \n\nDAFTAR#BPJS#NAMA#NIK#POLI#TANGGAL BEROBAT(DD-MM-YYYY) \n\nContoh : \nDAFTAR#BPJS#BUDI#320902090XXXXXXX#GIGI#25-08-2022\n\n*Catatan :* untuk pendaftaran pasien BPJS pastikan telah memiliki *Surat Rujukan dari Faskes 1 seusai tertera pada kartu atau Surat Kontrol yang masih berlaku.*";
-                $this->send_message($request);
-                $request['file'] =  asset('vendor/adminlte/dist/img/info poli.jpeg');
-                $request['caption'] = "Daftar poliklinik yang tersedia untuk antrian Online WhatsApp ada di RSUD Waled, silahkan menggunakan *Kode Online Poliklinik* untuk menentukan pilihan.";
-                return $this->send_image($request);
-                break;
-            case 'INFO':
-                $request['message'] = "Silahkan ketikan informasi yang tersedia di Layanan Whatsapp ini. \n\n*INFO* : Melihat informasi yang terdapat dilayanan Whatsapp\n\n*INFO POLI* : Melihat poliklinik dan kodenya yang ada di RSUD Waled\n\n*INFO ANTRIAN* : Melihat infromasi antrian yang sedang berjalan\n\n*INFO JADWAL* : Melihat infromasi jadwal poliklinik yang tersedia di RSUD Waled\n\n*INFO JADWAL LIBUR* : Melihat infromasi jadwal libur poliklinik di RSUD Waled\n\n*INFO PERSYARATAN* : Melihat infromasi persyaratan pasien yang akan berobat di RSUD Waled\n\n*DAFTAR* : Mendaftarkan diri untuk antrian pasien yang akan berobat";
-                return $this->send_message($request);
-                break;
-            case 'INFO POLI':
-                $request['file'] =  asset('vendor/adminlte/dist/img/info poli.jpeg');
-                $request['caption'] = "Daftar poliklinik yang tersedia untuk antrian Online WhatsApp ada di RSUD Waled, silahkan menggunakan *Kode Online Poliklinik* untuk menentukan pilihan.";
-                $this->send_image($request);
-                $request['text'] = "Untuk melihat detail informasi poliklinik silahkan klik tombol dibawah ini";
-                $request['buttonlabel'] = 'Informasi Poliklinik';
-                $request['buttonurl'] = 'http://103.94.5.210/simrs/info/poliklinik';
-                return $this->send_button_link($request);
-                break;
-            case 'INFO ANTRIAN':
-                $request['text'] = "Untuk melihat info antrian silahkan klik tombol dibawah ini";
-                $request['buttonlabel'] = 'Cek Status Antrian';
-                $request['buttonurl'] = 'http://103.94.5.210/simrs/info/antrian';
-                return $this->send_button_link($request);
-                break;
-            case 'INFO JADWAL':
-                $request['text'] = "Untuk melihat info jadwal poliklinik silahkan klik tombol dibawah ini";
-                $request['buttonlabel'] = 'Jadwal Poliklinik';
-                $request['buttonurl'] = 'http://103.94.5.210/simrs/info/jadwal_poliklinik';
-                return $this->send_button_link($request);
-                break;
-            case 'INFO JADWAL LIBUR':
-                $request['text'] = "Untuk melihat info jadwal libur poliklinik silahkan klik tombol dibawah ini";
-                $request['buttonlabel'] = 'Jadwal Libur Poliklinik';
-                $request['buttonurl'] = 'http://103.94.5.210/simrs/info/jadwal_poli_libur';
-                return $this->send_button_link($request);
-                break;
-            case 'INFO PERSYARATAN':
-                $request['contenttext'] = "Untuk melihat informasi persyaratan berobat pasien silahkan pilih tipe pasien yang akan didaftarkan :";
-                $request['footertext'] = 'Pilih salah satu dibawah ini';
-                $request['buttonid'] = 'id1, id2';
-                $request['buttontext'] = 'PERSYARATAN PASIEN UMUM, PERSYARATAN PASIEN BPJS';
-                return $this->send_button($request);
-                break;
-            case 'PERSYARATAN PASIEN UMUM':
-                $request['message'] = "Persyaratan berobat *Pasien Umum yang Baru*\n1. KTP\n2. Kartu Keluarga\n\nPersyaratan berobat *Pasien Umum yang Lama*\n1. KTP\n2. Kartu Keluarga\n3. Kartu Berobat Pasien (bila pernah mendaftar sebelumnya)";
-                return $this->send_message($request);
-                break;
-            case 'PERSYARATAN PASIEN BPJS':
-                $request['message'] = "Persyaratan berobat *Pasien BPJS yang Baru*\n1. KTP\n2. Kartu Keluarga\n3. Surat Rujukan dari Faskes 1 (Puskesmas) yg tertera di kartu BPJS\n4. Menunjukkan Kartu JKN / KIS / BPJS / Askes Asli / KIS Digital yang asli\n\nPersyaratan berobat *Pasien BPJS yang Lama*\n1. Surat Rujukan atau Surat Kontrol yang masih berlaku\n2. Menunjukkan Kartu JKN / KIS / BPJS / Askes Asli / KIS Digital yang asli";
-                return $this->send_message($request);
-                break;
-            case 'SANGAT MEMBANTU':
-                $request['message'] = "Terimakasih atas masukan anda untuk pelayanan RSUD Waled agar lebih baik. Semoga Lekas Sembuh.\n\nRSUD Waled\nMelayani Sepenuh Hati";
-                return $this->send_message($request);
-                break;
-            case 'TOLONG PERBAIKI':
-                $request['message'] = "Terimakasih atas masukan anda untuk pelayanan RSUD Waled agar lebih baik. Semoga Lekas Sembuh.\n\nRSUD Waled\nMelayani Sepenuh Hati";
-                return $this->send_message($request);
-                break;
-            case 'CEK BPJS':
-                // $request['message'] = "Terimakasih atas masukan anda untuk pelayanan RSUD Waled agar lebih baik. Semoga Lekas Sembuh.\n\nRSUD Waled\nMelayani Sepenuh Hati";
-                // return $this->send_message($request);
-                break;
-            case 'QRCODE':
-                try {
-                    QrCode::size(500)
-                        ->format('png')
-                        ->generate('codingdriver.com', storage_path('app/public/images/qrantrian/qrcode.png'));
-                    $img = Image::make(public_path('images/antrian-template.png'));
-                    $img->insert(public_path('images/qrcode.png'), 'center');
-                    $img->text("Tiket Checkin Antrian WhatsApp", 500, 200, function ($font) {
-                        $font->file(public_path('font/tnrbold.ttf'));
-                        $font->align('center');
-                        $font->size(40);
-                    });
-                    $img->text('Scan kode QR ini ke mesin antrian di RSUD Waled untuk checkin antrian.', 500, 780, function ($font) {
-                        $font->file(public_path('font/tnr.ttf'));
-                        $font->align('center');
-                        $font->size(18);
-                    });
-                    $img->save(public_path('images/antrian1.png'));
-                    $request['file'] =  asset('images/antrian1.png');
-                    $request['caption'] = "Antrian berhasil didaftarkan dengan data sebagai berikut : \n\n*Nomor Antrian :* 1\n*Kode Antrian :* PDD0021030123\n*Nama :* Marwan\n*Poli :* PENYAKIT DALAM (KLINIK)\n*Tanggal Berobat :* Minggu, 6 Januari 2022\n\nSilahkan datang pada hari tersebut untuk menunggu giliran antrian pendaftaran di *LOKET ANTRIAN WA Lantai 1 RSUD WALED* dibuka mulai pukul *07.30 WIB* serta membawa persyaratan perobat untuk informasinya ketik *INFO PERSYARATAN* dan anda dapat memantau status antrian dengan klik tombol berikut.";
-                    return $this->send_image($request);
-                } catch (\Throwable $th) {
-                    $request['message'] = "Error : " . $th->getMessage();
-                    return $this->send_message($request);
-                }
+            case 'DAFTAR PASIEN RAWAT JALAN':
+                $request['contenttext'] = "Silahkan pilih poliklinik yang tersedia untuk daftar online dibawah ini.";
+                $request['titletext'] = "Pesan Sistem";
+                $request['buttontext'] = 'PILIH POLIKLINIK';
+                // $poliklinik = Poliklinik::where('status', 1)->get('namapoli');
+                // $rowpoli = null;
+                // foreach ($poliklinik as  $value) {
+                //     $rowpoli = $rowpoli . $value->namapoli . ',';
+                // }
+                $request['rowtitle'] = 'Daftar Pasien Rawat Jalan,MESSAGE,BUTTON,LIST';
+                // $request['rowdescription'] = 'Untuk daftar antrian pasien,Test send message,Test send buttons,Test send list';
+                return $this->send_list($request);
                 break;
             default:
-                $kode = explode('#', $pesan);
-                if ($kode[0] == 'DAFTAR') {
-                    return $this->daftar_antrian($request);
-                } else if ($kode[0] == 'DAFTAR2') {
-                    return $this->daftar_antrian_qr($request);
-                } else if ($kode[0] == 'BATAL-ANTRIAN') {
-                    return $this->batal_antrian($request);
-                } else if ($kode[0] == 'DAFTAR-ULANG') {
-                    return $this->daftar_ulang($request);
-                } else {
-                    $request['message'] = "Maaf, pesan yang anda kirimkan tidak dapat kami proses. \nLayanan ini diatur melalui sistem. \nSilahkan ketik *INFO* untuk melihat informasi yang tersedia.\nSilahkan ketik *DAFTAR* untuk mendaftarkan Antrian Online Layanan Whatsapp ini.\n\nUntuk pertanyaan & pengaduan silahkan hubungi *Humas RSUD Waled 08983311118* ";
-                    return $this->send_message($request);
-                }
+                $request['contenttext'] = "Mohon maaf pesan yang anda masukan tidak dapat diproses oleh sistem.\n\nSilahkan pilih menu yang dapat diproses dibawah ini";
+                $request['titletext'] = "Error System";
+                $request['buttontext'] = 'MENU UTAMA';
+                $request['rowtitle'] = 'Daftar Pasien Rawat Jalan,MESSAGE,BUTTON,LIST';
+                // $request['rowdescription'] = 'Untuk daftar antrian pasien,Test send message,Test send buttons,Test send list';
+                return $this->send_list($request);
                 break;
         }
+
+        // return  $request->chatid;
+
+        // switch ($pesan) {
+        //     case 'DAFTAR':
+        //         $request['contenttext'] = "Selamat datang dilayanan Antrian Online via Whatsapp RSUD Waled. Silahkan pilih tipe pasien yang akan didaftarkan :";
+        //         $request['footertext'] = 'Pilih salah satu dibawah ini';
+        //         $request['buttonid'] = 'id1, id2';
+        //         $request['buttontext'] = 'PASIEN UMUM, PASIEN BPJS';
+        //         return $this->send_button($request);
+        //         // $request['message'] = "Untuk pendaftaran antrian online Silahkan daftar dengan format: \n\nDAFTAR#UMUM/BPJS#NAMA#NIK#POLI#TANGGAL(DD-MM-YYYY) \n\nContoh : \nDAFTAR#UMUM#BUDI#1234123412341234#GIGI#25-08-2022";
+        //         // return $this->send_message($request);
+        //         break;
+        //     case 'DAFTAR ULANG':
+        //         $request['contenttext'] = "Selamat datang dilayanan Antrian Online via Whatsapp RSUD Waled. Silahkan pilih tipe pasien yang akan didaftarkan :";
+        //         $request['footertext'] = 'Pilih salah satu dibawah ini';
+        //         $request['buttonid'] = 'id1,id2';
+        //         $request['buttontext'] = 'PASIEN UMUM,PASIEN BPJS';
+        //         return $this->send_button($request);
+        //         break;
+        //     case 'PASIEN UMUM':
+        //         $request['message'] = "Untuk antrian PASIEN UMUM Silahkan daftar dengan format: \n\nDAFTAR#UMUM#NAMA#NIK#POLI#TANGGAL BEROBAT(DD-MM-YYYY) \n\nContoh : \nDAFTAR#UMUM#BUDI#320902090XXXXXXX#GIGI#25-08-2022";
+        //         $this->send_message($request);
+        //         $request['file'] =  asset('vendor/adminlte/dist/img/info poli.jpeg');
+        //         $request['caption'] = "Daftar poliklinik yang tersedia untuk antrian Online WhatsApp ada di RSUD Waled, silahkan menggunakan *Kode Online Poliklinik* untuk menentukan pilihan.";
+        //         return $this->send_image($request);
+        //         break;
+        //     case 'PASIEN BPJS':
+        //         $request['message'] = "Untuk antrian PASIEN BPJS Silahkan daftar dengan format: \n\nDAFTAR#BPJS#NAMA#NIK#POLI#TANGGAL BEROBAT(DD-MM-YYYY) \n\nContoh : \nDAFTAR#BPJS#BUDI#320902090XXXXXXX#GIGI#25-08-2022\n\n*Catatan :* untuk pendaftaran pasien BPJS pastikan telah memiliki *Surat Rujukan dari Faskes 1 seusai tertera pada kartu atau Surat Kontrol yang masih berlaku.*";
+        //         $this->send_message($request);
+        //         $request['file'] =  asset('vendor/adminlte/dist/img/info poli.jpeg');
+        //         $request['caption'] = "Daftar poliklinik yang tersedia untuk antrian Online WhatsApp ada di RSUD Waled, silahkan menggunakan *Kode Online Poliklinik* untuk menentukan pilihan.";
+        //         return $this->send_image($request);
+        //         break;
+        //     case 'INFO':
+        //         $request['message'] = "Silahkan ketikan informasi yang tersedia di Layanan Whatsapp ini. \n\n*INFO* : Melihat informasi yang terdapat dilayanan Whatsapp\n\n*INFO POLI* : Melihat poliklinik dan kodenya yang ada di RSUD Waled\n\n*INFO ANTRIAN* : Melihat infromasi antrian yang sedang berjalan\n\n*INFO JADWAL* : Melihat infromasi jadwal poliklinik yang tersedia di RSUD Waled\n\n*INFO JADWAL LIBUR* : Melihat infromasi jadwal libur poliklinik di RSUD Waled\n\n*INFO PERSYARATAN* : Melihat infromasi persyaratan pasien yang akan berobat di RSUD Waled\n\n*DAFTAR* : Mendaftarkan diri untuk antrian pasien yang akan berobat";
+        //         return $this->send_message($request);
+        //         break;
+        //     case 'INFO POLI':
+        //         $request['file'] =  asset('vendor/adminlte/dist/img/info poli.jpeg');
+        //         $request['caption'] = "Daftar poliklinik yang tersedia untuk antrian Online WhatsApp ada di RSUD Waled, silahkan menggunakan *Kode Online Poliklinik* untuk menentukan pilihan.";
+        //         $this->send_image($request);
+        //         $request['text'] = "Untuk melihat detail informasi poliklinik silahkan klik tombol dibawah ini";
+        //         $request['buttonlabel'] = 'Informasi Poliklinik';
+        //         $request['buttonurl'] = 'http://103.94.5.210/simrs/info/poliklinik';
+        //         return $this->send_button_link($request);
+        //         break;
+        //     case 'INFO ANTRIAN':
+        //         $request['text'] = "Untuk melihat info antrian silahkan klik tombol dibawah ini";
+        //         $request['buttonlabel'] = 'Cek Status Antrian';
+        //         $request['buttonurl'] = 'http://103.94.5.210/simrs/info/antrian';
+        //         return $this->send_button_link($request);
+        //         break;
+        //     case 'INFO JADWAL':
+        //         $request['text'] = "Untuk melihat info jadwal poliklinik silahkan klik tombol dibawah ini";
+        //         $request['buttonlabel'] = 'Jadwal Poliklinik';
+        //         $request['buttonurl'] = 'http://103.94.5.210/simrs/info/jadwal_poliklinik';
+        //         return $this->send_button_link($request);
+        //         break;
+        //     case 'INFO JADWAL LIBUR':
+        //         $request['text'] = "Untuk melihat info jadwal libur poliklinik silahkan klik tombol dibawah ini";
+        //         $request['buttonlabel'] = 'Jadwal Libur Poliklinik';
+        //         $request['buttonurl'] = 'http://103.94.5.210/simrs/info/jadwal_poli_libur';
+        //         return $this->send_button_link($request);
+        //         break;
+        //     case 'INFO PERSYARATAN':
+        //         $request['contenttext'] = "Untuk melihat informasi persyaratan berobat pasien silahkan pilih tipe pasien yang akan didaftarkan :";
+        //         $request['footertext'] = 'Pilih salah satu dibawah ini';
+        //         $request['buttonid'] = 'id1, id2';
+        //         $request['buttontext'] = 'PERSYARATAN PASIEN UMUM, PERSYARATAN PASIEN BPJS';
+        //         return $this->send_button($request);
+        //         break;
+        //     case 'PERSYARATAN PASIEN UMUM':
+        //         $request['message'] = "Persyaratan berobat *Pasien Umum yang Baru*\n1. KTP\n2. Kartu Keluarga\n\nPersyaratan berobat *Pasien Umum yang Lama*\n1. KTP\n2. Kartu Keluarga\n3. Kartu Berobat Pasien (bila pernah mendaftar sebelumnya)";
+        //         return $this->send_message($request);
+        //         break;
+        //     case 'PERSYARATAN PASIEN BPJS':
+        //         $request['message'] = "Persyaratan berobat *Pasien BPJS yang Baru*\n1. KTP\n2. Kartu Keluarga\n3. Surat Rujukan dari Faskes 1 (Puskesmas) yg tertera di kartu BPJS\n4. Menunjukkan Kartu JKN / KIS / BPJS / Askes Asli / KIS Digital yang asli\n\nPersyaratan berobat *Pasien BPJS yang Lama*\n1. Surat Rujukan atau Surat Kontrol yang masih berlaku\n2. Menunjukkan Kartu JKN / KIS / BPJS / Askes Asli / KIS Digital yang asli";
+        //         return $this->send_message($request);
+        //         break;
+        //     case 'SANGAT MEMBANTU':
+        //         $request['message'] = "Terimakasih atas masukan anda untuk pelayanan RSUD Waled agar lebih baik. Semoga Lekas Sembuh.\n\nRSUD Waled\nMelayani Sepenuh Hati";
+        //         return $this->send_message($request);
+        //         break;
+        //     case 'TOLONG PERBAIKI':
+        //         $request['message'] = "Terimakasih atas masukan anda untuk pelayanan RSUD Waled agar lebih baik. Semoga Lekas Sembuh.\n\nRSUD Waled\nMelayani Sepenuh Hati";
+        //         return $this->send_message($request);
+        //         break;
+        //     case 'CEK BPJS':
+        //         // $request['message'] = "Terimakasih atas masukan anda untuk pelayanan RSUD Waled agar lebih baik. Semoga Lekas Sembuh.\n\nRSUD Waled\nMelayani Sepenuh Hati";
+        //         // return $this->send_message($request);
+        //         break;
+        //     case 'QRCODE':
+        //         try {
+        //             QrCode::size(500)
+        //                 ->format('png')
+        //                 ->generate('codingdriver.com', storage_path('app/public/images/qrantrian/qrcode.png'));
+        //             $img = Image::make(public_path('images/antrian-template.png'));
+        //             $img->insert(public_path('images/qrcode.png'), 'center');
+        //             $img->text("Tiket Checkin Antrian WhatsApp", 500, 200, function ($font) {
+        //                 $font->file(public_path('font/tnrbold.ttf'));
+        //                 $font->align('center');
+        //                 $font->size(40);
+        //             });
+        //             $img->text('Scan kode QR ini ke mesin antrian di RSUD Waled untuk checkin antrian.', 500, 780, function ($font) {
+        //                 $font->file(public_path('font/tnr.ttf'));
+        //                 $font->align('center');
+        //                 $font->size(18);
+        //             });
+        //             $img->save(public_path('images/antrian1.png'));
+        //             $request['file'] =  asset('images/antrian1.png');
+        //             $request['caption'] = "Antrian berhasil didaftarkan dengan data sebagai berikut : \n\n*Nomor Antrian :* 1\n*Kode Antrian :* PDD0021030123\n*Nama :* Marwan\n*Poli :* PENYAKIT DALAM (KLINIK)\n*Tanggal Berobat :* Minggu, 6 Januari 2022\n\nSilahkan datang pada hari tersebut untuk menunggu giliran antrian pendaftaran di *LOKET ANTRIAN WA Lantai 1 RSUD WALED* dibuka mulai pukul *07.30 WIB* serta membawa persyaratan perobat untuk informasinya ketik *INFO PERSYARATAN* dan anda dapat memantau status antrian dengan klik tombol berikut.";
+        //             return $this->send_image($request);
+        //         } catch (\Throwable $th) {
+        //             $request['message'] = "Error : " . $th->getMessage();
+        //             return $this->send_message($request);
+        //         }
+        //         break;
+        //     default:
+        //         $kode = explode('#', $pesan);
+        //         if ($kode[0] == 'DAFTAR') {
+        //             return $this->daftar_antrian($request);
+        //         } else if ($kode[0] == 'DAFTAR2') {
+        //             return $this->daftar_antrian_qr($request);
+        //         } else if ($kode[0] == 'BATAL-ANTRIAN') {
+        //             return $this->batal_antrian($request);
+        //         } else if ($kode[0] == 'DAFTAR-ULANG') {
+        //             return $this->daftar_ulang($request);
+        //         } else {
+        //             $request['message'] = "Maaf, pesan yang anda kirimkan tidak dapat kami proses. \nLayanan ini diatur melalui sistem. \nSilahkan ketik *INFO* untuk melihat informasi yang tersedia.\nSilahkan ketik *DAFTAR* untuk mendaftarkan Antrian Online Layanan Whatsapp ini.\n\nUntuk pertanyaan & pengaduan silahkan hubungi *Humas RSUD Waled 08983311118* ";
+        //             return $this->send_message($request);
+        //         }
+        //         break;
+        // }
     }
     public function daftar_antrian(Request $request)
     {
