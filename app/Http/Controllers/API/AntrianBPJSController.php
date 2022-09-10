@@ -509,6 +509,7 @@ class AntrianBPJSController extends Controller
         //     return $auth;
         // }
         // checking request
+        $request['nohp'] = substr($request->nohp, 0, -5);
         $validator = Validator::make(request()->all(), [
             "nik" => "required|numeric|digits:16",
             "nohp" => "required|numeric",
@@ -758,14 +759,14 @@ class AntrianBPJSController extends Controller
                 // kirim notif wa
                 try {
                     $wa = new WhatsappController();
-                    $request['message'] = "Antrian berhasil didaftarkan melalui JKN Mobile dengan data sebagai berikut : \n\n*Kode Antrian :* " . $request->kodebooking .  "\n*Angka Antrian :* " . $request->angkaantrean .  "\n*Nomor Antrian :* " . $request->nomorantrean .  "\n\n*Nama :* " . $request->nama . "\n*Poliklinik :* " . $request->namapoli  . "\n*Dokter :* " . $request->namadokter  .  "\n*Tanggal Berobat :* " . $request->tanggalperiksa .  "\n*Jam Praktek :* " . $request->jampraktek  . "\n\n*Keterangan :* " . $request->keterangan  .  "\nTerima kasih. Semoga sehat selalu.\nUntuk pertanyaan & pengaduan silahkan hubungi :\n*Humas RSUD Waled 08983311118*";
+                    $request['message'] = "*Antrian Berhasil di Daftarkan*\nAntrian anda berhasil didaftarkan melalui Layanan Whatsapp RSUD Waled dengan data sebagai berikut : \n\n*Kode Antrian :* " . $request->kodebooking .  "\n*Angka Antrian :* " . $request->angkaantrean .  "\n*Nomor Antrian :* " . $request->nomorantrean .  "\n\n*Nama :* " . $request->nama . "\n*Poliklinik :* " . $request->namapoli  . "\n*Dokter :* " . $request->namadokter  .  "\n*Tanggal Berobat :* " . $request->tanggalperiksa .  "\n*Jam Praktek :* " . $request->jampraktek  . "\n\n*Keterangan :* " . $request->keterangan  .  "\nTerima kasih. Semoga sehat selalu.\nUntuk pertanyaan & pengaduan silahkan hubungi :\n*Humas RSUD Waled 08983311118*";
                     $request['number'] = $request->nohp;
                     $wa->send_message($request);
                     $qr = QrCode::backgroundColor(255, 255, 51)->format('png')->generate($request->kodebooking, "public/storage/antrian" . $request->kodebooking . ".png");
-                    $request['file'] = asset("storage/antrian" . $request->kodebooking . ".png");
-                    $request['caption'] = "";
+                    $request['filepath'] = public_path("storage/antrian" . $request->kodebooking . ".png");
+                    $request['caption'] = "Kode booking : " . $request->kodebooking;
                     $request['number'] = $request->nohp;
-                    $wa->send_image($request);
+                    $ress = $wa->send_filepath($request);
                 } catch (\Throwable $th) {
                     //throw $th;
                 }
