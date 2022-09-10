@@ -22,7 +22,7 @@ use App\Models\TransaksiDB;
 use App\Models\UnitDB;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-// use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use RealRashid\SweetAlert\Facades\Alert;
@@ -1016,7 +1016,7 @@ class AntrianController extends Controller
     {
         $antrian = Antrian::where('kodebooking', $kodebooking)->first();
         $request['kodebooking'] = $antrian->kodebooking;
-        $request['keterangan'] = "Dibatalkan oleh sistem admin";
+        $request['keterangan'] = "Dibatalkan dari sisi sistem oleh " . Auth::user()->name;
         $vclaim = new AntrianBPJSController();
         $response = $vclaim->batal_antrian($request);
         Alert::success('Success', "Antrian berhasil dibatalkan. " . $response->metadata->message);
