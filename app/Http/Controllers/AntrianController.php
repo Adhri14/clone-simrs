@@ -49,6 +49,7 @@ class AntrianController extends Controller
             $printer = new Printer($connector);
             $printer->text("Connector Printer :\n");
             $printer->text($this->printer_antrian . "\n");
+            $printer->text("Test Printer Berhasil.\n");
             $printer->cut();
             $printer->close();
             Alert::success('Success', 'Mesin menyala dan siap digunakan.');

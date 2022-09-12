@@ -49,7 +49,7 @@
                         </div>
                     </div>
                     <x-adminlte-button icon="fas fa-sync" class="withLoad reload" theme="success" label="Reload" />
-                    <a href="{{ route('antrian.cek_post') }}" class="btn btn-success">Cek</a>
+                    <a href="{{ route('antrian.cek_post') }}" class="btn btn-success">Test Printer</a>
                 </x-adminlte-card>
             </div>
         </div>

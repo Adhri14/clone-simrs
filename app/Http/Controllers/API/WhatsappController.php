@@ -21,86 +21,15 @@ use SimpleSoftwareIO\QrCode\Facades\QrCode;
 class WhatsappController extends Controller
 {
     public $baseUrl = "192.168.2.10:3000/";
+    public $hari = ["MINGGU", "SENIN", "SELASA", "RABU", "KAMIS", "JUMAT", "SABTU"];
     protected $except = [
         'callback',
     ];
     public function index(Request $request)
     {
-        $pesan = "0125U0120822P000346#DAFTAR_BPJS#233#2022-09-12";
+        $pesan = "3209022805840009#DAFTAR_UMUM#222#2022-09-12";
         $request['number'] = substr('089529909036@c.us', 0, -5);
-        // init
-        try {
-            $request['nomorreferensi'] = explode('#', $pesan)[0];
-            $request['jenisrujukan'] = 1;
-            $tipepasien = explode('#', $pesan)[1];
-            $jadwalid = explode('#', $pesan)[2];
-            $tanggalperiksa = explode('#', $pesan)[3];
-            $jadwaldokter = JadwalDokter::find($jadwalid);
-        } catch (\Throwable $th) {
-            //throw $th;
-            $request['message'] = "Error : " . $th->getMessage() . "\nSilahkan hubungi admin. Terima kasih.";
-            return $this->send_message($request);
-        }
-        $vclaim = new VclaimBPJSController();
-        $jumlah_sep =  $vclaim->rujukan_jumlah_sep($request);
-        // berhasil
-        if ($jumlah_sep->metaData->code == 200) {
-            // daftar pake rujukan
-            if ($jumlah_sep->response->jumlahSEP == 0) {
-                $rujukan  = $vclaim->rujukan_nomor($request);
-                // rujukan 200 code
-                if ($rujukan->metaData->code == 200) {
-                    // pasien lama
-                    if (isset($rujukan->response->rujukan->peserta->mr->noMR)) {
-                        try {
-                            $request['nomorkartu'] = $rujukan->response->rujukan->peserta->noKartu;
-                            $request['nama'] = $rujukan->response->rujukan->peserta->nama;
-                            $request['nik'] = $rujukan->response->rujukan->peserta->nik;
-                            $request['norm'] = $rujukan->response->rujukan->peserta->mr->noMR;
-                            $request['status'] = $rujukan->response->rujukan->peserta->statusPeserta->keterangan;
-                            $request['diagnosa'] = $rujukan->response->rujukan->diagnosa->nama;
-                            $request['polirujukan'] = $rujukan->response->rujukan->poliRujukan->nama;
-                            $request['nohp'] = $request->number;
-                            $request['tanggalperiksa'] = $tanggalperiksa;
-                            $request['kodepoli'] = $jadwaldokter->kodesubspesialis;
-                            $request['kodedokter'] = $jadwaldokter->kodedokter;
-                            $request['jampraktek'] = $jadwaldokter->jadwal;
-                            $request['jeniskunjungan'] = 1;
-
-
-                            $antrian = new AntrianBPJSController();
-                            $response =  $antrian->ambil_antrian($request);
-
-                            $request['message'] =  $response;
-                            return $this->send_message($request);
-                        } catch (\Throwable $th) {
-                            $request['message'] = "Error : " . $th;
-                            return $this->send_message($request);
-                        }
-                    }
-                    // pasien baru
-                    else {
-                        $request['message'] = "Error : Mohon maaf untuk pasien baru tidak bisa daftar melalui whatsapp. Silahkan untuk daftar langsung ke RSUD Waled. Terima kasih.";
-                        return $this->send_message($request);
-                    }
-                }
-                // rujukan error
-                else {
-                    $request['message'] = "Error : " . $rujukan->metaData->message;
-                    return $this->send_message($request);
-                }
-            }
-            // daftar pake surat kontrol
-            else {
-                $request['message'] = "Error : Mohon maaf kunjungan rujukan lebih dari 1. Anda harus mendaftar menggunakan Surat Kontrol. Silahkan hubungi admin. Terima kasih";
-                return $this->send_message($request);
-            }
-        }
-        // gagal rujukan
-        else {
-            $request['message'] = "Error : " . $jumlah_sep->metaData->message;
-            return $this->send_message($request);
-        }
+        $this->daftar_antrian_umum($pesan, $request);
     }
     public function send_message(Request $request)
     {
@@ -185,6 +114,24 @@ class WhatsappController extends Controller
                 $request['rowdescription'] = 'rowdescription1,rowdescription2,rowdescription3';
                 return $this->send_list($request);
                 break;
+            case 'INFO CARA PENDAFTARAN':
+                $request['contenttext'] = "Untuk pendaftaran melalui Layanan Whatsapp RSUD Waled sebagai berikut :\n\n1. Pilih menu utama *DAFTAR PASIEN RAWAT JALAN*. \n2. Pilih *POLIKLINIK* yang akan dikunjungi dan yang tersedia untuk daftar online. \n3. Pilih *TANGGAL* kapan pasien akan berkunjung. \n4. Pilih *JADWAL DOKTER* yang akan dituju oleh pasien. \n5. Pilih *JENIS PASIEN* terdapat pilihan pasien *JKN / UMUM*. \n6. Menuliskan format pendaftaran, untuk pasien JKN memasukan *NOMOR RUJUKAN* dari faskes 1, untuk pasien Umum memasukan *NIK/KTP*. \n7. Konfirmasi pendaftaran lalu berhasil didaftarkan atau batal pendaftaran.\n\nUntuk pertanyaan & pengaduan silahkan hubungi :\n*Humas RSUD Waled 08983311118*";
+                $request['titletext'] = "Info Cara Pendaftaran";
+                $request['buttontext'] = 'MENU UTAMA';
+                $request['rowtitle'] = 'DAFTAR PASIEN RAWAT JALAN,INFO JADWAL POLIKLINIK,INFO CARA PENDAFTARAN,PERTANYAAN DAN PENGADUAN';
+                return $this->send_list($request);
+                break;
+            case 'INFO JADWAL POLIKLINIK':
+                $request['contenttext'] = "Silahkan pilih poliklinik yang tersedia untuk daftar online rawat jalan pasien dibawah ini.";
+                $request['titletext'] = "Info Jadwal Poliklinik";
+                $request['buttontext'] = 'PILIH POLIKLINIK';
+                $rowpoli = null;
+                $poliklinik = Poliklinik::where('status', 1)->get('namasubspesialis');
+                foreach ($poliklinik as  $value) {
+                    $rowpoli =  $rowpoli . 'JADWAL_POLIKLINIK_' . $value->namasubspesialis  . ',';
+                }
+                $request['rowtitle'] = $rowpoli;
+                return $this->send_list($request);
             case 'DAFTAR PASIEN RAWAT JALAN':
                 $request['contenttext'] = "Silahkan pilih poliklinik yang tersedia untuk daftar online rawat jalan pasien dibawah ini.";
                 $request['titletext'] = "Poliklinik Rawat Jalan";
@@ -196,18 +143,10 @@ class WhatsappController extends Controller
                 }
                 $request['rowtitle'] = $rowpoli;
                 return $this->send_list($request);
-                // dd('asd');
-                // $now = Carbon::now();
-                // $rowhari = 'RAWAT JALAN TANGGAL ' . $now->format('Y-m-d');
-                // for ($i = 0; $i < 6; $i++) {
-                //     $rowhari = $rowhari . ',RAWAT JALAN TANGGAL ' . $now->addDay(1)->format('Y-m-d');
-                // }
-                // $request['rowtitle'] = $rowhari;
-                // return $this->send_list($request);
                 break;
             default:
                 // pilih poli terus tanggal
-                if (str_contains($pesan, 'POLIKLINIK_')) {
+                if (substr($pesan, 0, 11) == 'POLIKLINIK_') {
                     $poli = explode('_', $pesan)[1];
                     $now = Carbon::now();
                     $rowtanggal = $poli . '_TANGGAL#' . $now->format('Y-m-d');
@@ -220,6 +159,32 @@ class WhatsappController extends Controller
                     $request['buttontext'] = 'PILIH TANGGAL';
                     $request['rowtitle'] = $rowtanggal;
                     return $this->send_list($request);
+                }
+                // tanggal poli terus pilih jadwal
+                else if (str_contains($pesan, 'JADWAL_POLIKLINIK_')) {
+                    $poli = explode('_', $pesan)[2];
+                    $rowjadwaldokter = null;
+                    $jadwaldokters = JadwalDokter::where('namasubspesialis', $poli)->get();
+                    // if ($jadwaldokters->count() == 0) {
+                    //     $request['contenttext'] = "Mohon maaf tidak ada jadwal dokter poliklinik " . $poli . " di tanggal " . $tanggal->format('Y-m-d') . ".\n\nSilahkan pilih jadwal dokter poliklinik " . $poli . " pada tanggal tanggal yang lain dibawah ini.";
+                    //     $request['titletext'] = "Pilih Tanggal Jadwal Dokter Poliklinik";
+                    //     $request['buttontext'] = 'PILIH JADWAL POLIKLINIK';
+                    //     $now = Carbon::now();
+                    //     $rowhari = $poli . '_TANGGAL#' . $now->format('Y-m-d');
+                    //     for ($i = 0; $i < 6; $i++) {
+                    //         $rowhari = $rowhari . ',' . $poli . '_TANGGAL#' . $now->addDay(1)->format('Y-m-d');
+                    //     }
+                    //     $request['rowtitle'] = $rowhari;
+                    //     return $this->send_list($request);
+                    // }
+                    foreach ($jadwaldokters as  $value) {
+                        $rowjadwaldokter = $rowjadwaldokter . $this->hari[$value->hari] . '  : ' . $value->namadokter . ' ' . $value->jadwal . "\n";
+                    }
+                    $request['contenttext'] = "Jadwal dokter poliklinik " . $poli . " sebagai berikut : \n\n" . $rowjadwaldokter;
+                    $request['titletext'] = "Jadwal Poliklinik " . $poli;
+                    $request['buttontext'] = 'INFO JADWAL POLIKLINIK';
+                    // $request['rowtitle'] = $rowjadwaldokter;
+                    return $this->send_button($request);
                 }
                 // tanggal poli terus pilih jadwal
                 else if (str_contains($pesan, '_TANGGAL#')) {
@@ -391,7 +356,13 @@ class WhatsappController extends Controller
                                         $request['jampraktek'] = $jadwaldokter->jadwal;
                                         $request['jeniskunjungan'] = 1;
                                         $antrian = new AntrianBPJSController();
-                                        return $antrian->ambil_antrian($request);
+                                        $response = json_decode(json_encode($antrian->ambil_antrian($request)));
+                                        if ($response->metadata->code != 200) {
+                                            $request['message'] = "Error Pendaftaran : " .  $response->metadata->message;
+                                            return $this->send_message($request);
+                                        } else {
+                                            return $response;
+                                        }
                                     } catch (\Throwable $th) {
                                         $request['message'] = "Error : " . $th;
                                         return $this->send_message($request);
@@ -477,203 +448,77 @@ class WhatsappController extends Controller
                 }
                 // pilih jenis pasien, masukan nik
                 else if (str_contains($pesan, '#DAFTAR_UMUM#')) {
-                    // init
-                    try {
-                        $request['nik'] = explode('#', $pesan)[0];
-                        $tipepasien = "NON-JKN";
-                        $jadwalid = explode('#', $pesan)[2];
-                        $tanggalperiksa = explode('#', $pesan)[3];
-                        $jadwaldokter = JadwalDokter::find($jadwalid);
-                    } catch (\Throwable $th) {
-                        $request['message'] = "Error format pendaftaran : " . $th->getMessage() . "\nLihat dan sesuaikan kembali format pendaftaran pasien jkn. \n\nUntuk pertanyaan & pengaduan silahkan hubungi :\n*Humas RSUD Waled 08983311118*";
-                        return $this->send_message($request);
-                    }
-                    $vclaim = new VclaimBPJSController();
-                    $peserta =  $vclaim->peserta_nik($request);
-                    // berhasil
-                    if ($peserta->metaData->code == 200) {
-                        // pasien lama
-                        if (isset($peserta->response->peserta->mr->noMR)) {
-                            try {
-                                $request['nomorkartu'] = $peserta->response->peserta->noKartu;
-                                $request['nama'] = $peserta->response->peserta->nama;
-                                $request['nik'] = $peserta->response->peserta->nik;
-                                $request['norm'] = $peserta->response->peserta->mr->noMR;
-                                $request['status'] = $peserta->response->peserta->statusPeserta->keterangan;
-                                // $request['diagnosa'] = $peserta->response->diagnosa->nama;
-                                // $request['polirujukan'] = $peserta->response->poliRujukan->nama;
-                                $request['nohp'] = $request->number;
-                                $request['tanggalperiksa'] = $tanggalperiksa;
-                                $request['kodepoli'] = $jadwaldokter->kodesubspesialis;
-                                $request['kodedokter'] = $jadwaldokter->kodedokter;
-                                $request['jampraktek'] = $jadwaldokter->jadwal;
-                                $request['jeniskunjungan'] = 3;
-                                $antrian = new AntrianBPJSController();
-                                return $antrian->ambil_antrian($request);
-                                // $request['titletext'] = "Konfirmasi Pendaftaran Pasien UMUM / NON-JKN";
-                                // $request['contenttext'] = "Jadwal dokter poliklinik yang dipilih sebagai berikut :\n\n*Poliklinik* : " . strtoupper($jadwaldokter->namasubspesialis) . "\n*Dokter* :  " . $jadwaldokter->namadokter . "\n*Jam Praktek* : " . $jadwaldokter->jadwal . "\n*Tanggal Periksa* :  " . $tanggalperiksa . "\n\n*Nama Pasien* : " . $request->nama . "\n*Status* : *" . $request->status . "*\n*NIK* : " . $request->nik . "\n*No BPJS* : " . $request->nomorkartu . "\n*No RM* : " . $request->norm .  "\n\nSebagai konfirmasi bahwa data yang diatas adalah benar pasien yang akan didaftarkan. Silahakan pilih tombol dibawah ini.";
-                                // $request['buttontext'] =  $request->nik . "#DAFTAR_UMUM#" . $jadwalid . "#" . $request->tanggalperiksa . ',BATAL PENDAFTARAN';
-                                // return $this->send_button($request);
-                            } catch (\Throwable $th) {
-                                $request['message'] = "Error : " . $th;
-                                return $this->send_message($request);
-                            }
-                        }
-                        // pasien baru
-                        else {
-                            $request['message'] = "Error : Mohon maaf untuk pasien baru tidak bisa daftar melalui whatsapp. Silahkan untuk daftar langsung ke RSUD Waled. Terima kasih.";
-                            return $this->send_message($request);
-                        }
-                    }
-                    // gagal
-                    else {
-                        $request['message'] = "Error format pendaftaran : " . $peserta->metaData->message . "\nLihat dan sesuaikan kembali format pendaftaran pasien umum.\n\nUntuk pertanyaan & pengaduan silahkan hubungi :\n*Humas RSUD Waled 08983311118*";
-                        return $this->send_message($request);
-                    }
+                    $this->daftar_antrian_umum($pesan, $request);
                 }
-
                 // default
                 else {
-                    $request['contenttext'] = "Mohon maaf pesan yang anda masukan tidak dapat diproses oleh sistem.\n\nSilahkan pilih menu yang dapat diproses dibawah ini.\n\nUntuk pertanyaan & pengaduan silahkan hubungi :\n*Humas RSUD Waled 08983311118*";
-                    $request['titletext'] = "Error System Sedang Dalam Perbaikan";
+                    $request['contenttext'] = "Mohon maaf pesan yang anda masukan tidak dapat diproses oleh sistem.\n\nSilahkan pilih *MENU UTAMA* yang dapat diproses dibawah ini.\n\nUntuk pertanyaan & pengaduan silahkan hubungi :\n*Humas RSUD Waled 08983311118*";
+                    $request['titletext'] = "Layanan Whatsapp RSUD Waled";
                     $request['buttontext'] = 'MENU UTAMA';
                     $request['rowtitle'] = 'DAFTAR PASIEN RAWAT JALAN,INFO JADWAL POLIKLINIK,INFO CARA PENDAFTARAN,PERTANYAAN DAN PENGADUAN';
                     return $this->send_list($request);
                     break;
                 }
         }
-        // return  $request->chatid;
-        // switch ($pesan) {
-        //     case 'DAFTAR':
-        //         $request['contenttext'] = "Selamat datang dilayanan Antrian Online via Whatsapp RSUD Waled. Silahkan pilih tipe pasien yang akan didaftarkan :";
-        //         $request['footertext'] = 'Pilih salah satu dibawah ini';
-        //         $request['buttonid'] = 'id1, id2';
-        //         $request['buttontext'] = 'PASIEN UMUM, PASIEN BPJS';
-        //         return $this->send_button($request);
-        //         // $request['message'] = "Untuk pendaftaran antrian online Silahkan daftar dengan format: \n\nDAFTAR#UMUM/BPJS#NAMA#NIK#POLI#TANGGAL(DD-MM-YYYY) \n\nContoh : \nDAFTAR#UMUM#BUDI#1234123412341234#GIGI#25-08-2022";
-        //         // return $this->send_message($request);
-        //         break;
-        //     case 'DAFTAR ULANG':
-        //         $request['contenttext'] = "Selamat datang dilayanan Antrian Online via Whatsapp RSUD Waled. Silahkan pilih tipe pasien yang akan didaftarkan :";
-        //         $request['footertext'] = 'Pilih salah satu dibawah ini';
-        //         $request['buttonid'] = 'id1,id2';
-        //         $request['buttontext'] = 'PASIEN UMUM,PASIEN BPJS';
-        //         return $this->send_button($request);
-        //         break;
-        //     case 'PASIEN UMUM':
-        //         $request['message'] = "Untuk antrian PASIEN UMUM Silahkan daftar dengan format: \n\nDAFTAR#UMUM#NAMA#NIK#POLI#TANGGAL BEROBAT(DD-MM-YYYY) \n\nContoh : \nDAFTAR#UMUM#BUDI#320902090XXXXXXX#GIGI#25-08-2022";
-        //         $this->send_message($request);
-        //         $request['file'] =  asset('vendor/adminlte/dist/img/info poli.jpeg');
-        //         $request['caption'] = "Daftar poliklinik yang tersedia untuk antrian Online WhatsApp ada di RSUD Waled, silahkan menggunakan *Kode Online Poliklinik* untuk menentukan pilihan.";
-        //         return $this->send_image($request);
-        //         break;
-        //     case 'PASIEN BPJS':
-        //         $request['message'] = "Untuk antrian PASIEN BPJS Silahkan daftar dengan format: \n\nDAFTAR#BPJS#NAMA#NIK#POLI#TANGGAL BEROBAT(DD-MM-YYYY) \n\nContoh : \nDAFTAR#BPJS#BUDI#320902090XXXXXXX#GIGI#25-08-2022\n\n*Catatan :* untuk pendaftaran pasien BPJS pastikan telah memiliki *Surat Rujukan dari Faskes 1 seusai tertera pada kartu atau Surat Kontrol yang masih berlaku.*";
-        //         $this->send_message($request);
-        //         $request['file'] =  asset('vendor/adminlte/dist/img/info poli.jpeg');
-        //         $request['caption'] = "Daftar poliklinik yang tersedia untuk antrian Online WhatsApp ada di RSUD Waled, silahkan menggunakan *Kode Online Poliklinik* untuk menentukan pilihan.";
-        //         return $this->send_image($request);
-        //         break;
-        //     case 'INFO':
-        //         $request['message'] = "Silahkan ketikan informasi yang tersedia di Layanan Whatsapp ini. \n\n*INFO* : Melihat informasi yang terdapat dilayanan Whatsapp\n\n*INFO POLI* : Melihat poliklinik dan kodenya yang ada di RSUD Waled\n\n*INFO ANTRIAN* : Melihat infromasi antrian yang sedang berjalan\n\n*INFO JADWAL* : Melihat infromasi jadwal poliklinik yang tersedia di RSUD Waled\n\n*INFO JADWAL LIBUR* : Melihat infromasi jadwal libur poliklinik di RSUD Waled\n\n*INFO PERSYARATAN* : Melihat infromasi persyaratan pasien yang akan berobat di RSUD Waled\n\n*DAFTAR* : Mendaftarkan diri untuk antrian pasien yang akan berobat";
-        //         return $this->send_message($request);
-        //         break;
-        //     case 'INFO POLI':
-        //         $request['file'] =  asset('vendor/adminlte/dist/img/info poli.jpeg');
-        //         $request['caption'] = "Daftar poliklinik yang tersedia untuk antrian Online WhatsApp ada di RSUD Waled, silahkan menggunakan *Kode Online Poliklinik* untuk menentukan pilihan.";
-        //         $this->send_image($request);
-        //         $request['text'] = "Untuk melihat detail informasi poliklinik silahkan klik tombol dibawah ini";
-        //         $request['buttonlabel'] = 'Informasi Poliklinik';
-        //         $request['buttonurl'] = 'http://103.94.5.210/simrs/info/poliklinik';
-        //         return $this->send_button_link($request);
-        //         break;
-        //     case 'INFO ANTRIAN':
-        //         $request['text'] = "Untuk melihat info antrian silahkan klik tombol dibawah ini";
-        //         $request['buttonlabel'] = 'Cek Status Antrian';
-        //         $request['buttonurl'] = 'http://103.94.5.210/simrs/info/antrian';
-        //         return $this->send_button_link($request);
-        //         break;
-        //     case 'INFO JADWAL':
-        //         $request['text'] = "Untuk melihat info jadwal poliklinik silahkan klik tombol dibawah ini";
-        //         $request['buttonlabel'] = 'Jadwal Poliklinik';
-        //         $request['buttonurl'] = 'http://103.94.5.210/simrs/info/jadwal_poliklinik';
-        //         return $this->send_button_link($request);
-        //         break;
-        //     case 'INFO JADWAL LIBUR':
-        //         $request['text'] = "Untuk melihat info jadwal libur poliklinik silahkan klik tombol dibawah ini";
-        //         $request['buttonlabel'] = 'Jadwal Libur Poliklinik';
-        //         $request['buttonurl'] = 'http://103.94.5.210/simrs/info/jadwal_poli_libur';
-        //         return $this->send_button_link($request);
-        //         break;
-        //     case 'INFO PERSYARATAN':
-        //         $request['contenttext'] = "Untuk melihat informasi persyaratan berobat pasien silahkan pilih tipe pasien yang akan didaftarkan :";
-        //         $request['footertext'] = 'Pilih salah satu dibawah ini';
-        //         $request['buttonid'] = 'id1, id2';
-        //         $request['buttontext'] = 'PERSYARATAN PASIEN UMUM, PERSYARATAN PASIEN BPJS';
-        //         return $this->send_button($request);
-        //         break;
-        //     case 'PERSYARATAN PASIEN UMUM':
-        //         $request['message'] = "Persyaratan berobat *Pasien Umum yang Baru*\n1. KTP\n2. Kartu Keluarga\n\nPersyaratan berobat *Pasien Umum yang Lama*\n1. KTP\n2. Kartu Keluarga\n3. Kartu Berobat Pasien (bila pernah mendaftar sebelumnya)";
-        //         return $this->send_message($request);
-        //         break;
-        //     case 'PERSYARATAN PASIEN BPJS':
-        //         $request['message'] = "Persyaratan berobat *Pasien BPJS yang Baru*\n1. KTP\n2. Kartu Keluarga\n3. Surat Rujukan dari Faskes 1 (Puskesmas) yg tertera di kartu BPJS\n4. Menunjukkan Kartu JKN / KIS / BPJS / Askes Asli / KIS Digital yang asli\n\nPersyaratan berobat *Pasien BPJS yang Lama*\n1. Surat Rujukan atau Surat Kontrol yang masih berlaku\n2. Menunjukkan Kartu JKN / KIS / BPJS / Askes Asli / KIS Digital yang asli";
-        //         return $this->send_message($request);
-        //         break;
-        //     case 'SANGAT MEMBANTU':
-        //         $request['message'] = "Terimakasih atas masukan anda untuk pelayanan RSUD Waled agar lebih baik. Semoga Lekas Sembuh.\n\nRSUD Waled\nMelayani Sepenuh Hati";
-        //         return $this->send_message($request);
-        //         break;
-        //     case 'TOLONG PERBAIKI':
-        //         $request['message'] = "Terimakasih atas masukan anda untuk pelayanan RSUD Waled agar lebih baik. Semoga Lekas Sembuh.\n\nRSUD Waled\nMelayani Sepenuh Hati";
-        //         return $this->send_message($request);
-        //         break;
-        //     case 'CEK BPJS':
-        //         // $request['message'] = "Terimakasih atas masukan anda untuk pelayanan RSUD Waled agar lebih baik. Semoga Lekas Sembuh.\n\nRSUD Waled\nMelayani Sepenuh Hati";
-        //         // return $this->send_message($request);
-        //         break;
-        //     case 'QRCODE':
-        //         try {
-        //             QrCode::size(500)
-        //                 ->format('png')
-        //                 ->generate('codingdriver.com', storage_path('app/public/images/qrantrian/qrcode.png'));
-        //             $img = Image::make(public_path('images/antrian-template.png'));
-        //             $img->insert(public_path('images/qrcode.png'), 'center');
-        //             $img->text("Tiket Checkin Antrian WhatsApp", 500, 200, function ($font) {
-        //                 $font->file(public_path('font/tnrbold.ttf'));
-        //                 $font->align('center');
-        //                 $font->size(40);
-        //             });
-        //             $img->text('Scan kode QR ini ke mesin antrian di RSUD Waled untuk checkin antrian.', 500, 780, function ($font) {
-        //                 $font->file(public_path('font/tnr.ttf'));
-        //                 $font->align('center');
-        //                 $font->size(18);
-        //             });
-        //             $img->save(public_path('images/antrian1.png'));
-        //             $request['file'] =  asset('images/antrian1.png');
-        //             $request['caption'] = "Antrian berhasil didaftarkan dengan data sebagai berikut : \n\n*Nomor Antrian :* 1\n*Kode Antrian :* PDD0021030123\n*Nama :* Marwan\n*Poli :* PENYAKIT DALAM (KLINIK)\n*Tanggal Berobat :* Minggu, 6 Januari 2022\n\nSilahkan datang pada hari tersebut untuk menunggu giliran antrian pendaftaran di *LOKET ANTRIAN WA Lantai 1 RSUD WALED* dibuka mulai pukul *07.30 WIB* serta membawa persyaratan perobat untuk informasinya ketik *INFO PERSYARATAN* dan anda dapat memantau status antrian dengan klik tombol berikut.";
-        //             return $this->send_image($request);
-        //         } catch (\Throwable $th) {
-        //             $request['message'] = "Error : " . $th->getMessage();
-        //             return $this->send_message($request);
-        //         }
-        //         break;
-        //     default:
-        //         $kode = explode('#', $pesan);
-        //         if ($kode[0] == 'DAFTAR') {
-        //             return $this->daftar_antrian($request);
-        //         } else if ($kode[0] == 'DAFTAR2') {
-        //             return $this->daftar_antrian_qr($request);
-        //         } else if ($kode[0] == 'BATAL-ANTRIAN') {
-        //             return $this->batal_antrian($request);
-        //         } else if ($kode[0] == 'DAFTAR-ULANG') {
-        //             return $this->daftar_ulang($request);
-        //         } else {
-        //             $request['message'] = "Maaf, pesan yang anda kirimkan tidak dapat kami proses. \nLayanan ini diatur melalui sistem. \nSilahkan ketik *INFO* untuk melihat informasi yang tersedia.\nSilahkan ketik *DAFTAR* untuk mendaftarkan Antrian Online Layanan Whatsapp ini.\n\nUntuk pertanyaan & pengaduan silahkan hubungi *Humas RSUD Waled 08983311118* ";
-        //             return $this->send_message($request);
-        //         }
-        //         break;
-        // }
+    }
+
+    public function daftar_antrian_umum($pesan, Request $request)
+    {
+        // init
+        try {
+            $request['nik'] = explode('#', $pesan)[0];
+            $tipepasien = "NON-JKN";
+            $jadwalid = explode('#', $pesan)[2];
+            $tanggalperiksa = explode('#', $pesan)[3];
+            $jadwaldokter = JadwalDokter::find($jadwalid);
+        } catch (\Throwable $th) {
+            $request['message'] = "Error format pendaftaran : " . $th->getMessage() . "\nLihat dan sesuaikan kembali format pendaftaran pasien jkn. \n\nUntuk pertanyaan & pengaduan silahkan hubungi :\n*Humas RSUD Waled 08983311118*";
+            return $this->send_message($request);
+        }
+        $vclaim = new VclaimBPJSController();
+        $peserta =  $vclaim->peserta_nik($request);
+        // berhasil
+        if ($peserta->metaData->code == 200) {
+            // pasien lama
+            if (isset($peserta->response->peserta->mr->noMR)) {
+                try {
+                    $request['nomorkartu'] = $peserta->response->peserta->noKartu;
+                    $request['nama'] = $peserta->response->peserta->nama;
+                    $request['nik'] = $peserta->response->peserta->nik;
+                    $request['norm'] = $peserta->response->peserta->mr->noMR;
+                    $request['status'] = $peserta->response->peserta->statusPeserta->keterangan;
+                    // $request['diagnosa'] = $peserta->response->diagnosa->nama;
+                    // $request['polirujukan'] = $peserta->response->poliRujukan->nama;
+                    $request['nohp'] = $request->number;
+                    $request['tanggalperiksa'] = $tanggalperiksa;
+                    $request['kodepoli'] = $jadwaldokter->kodesubspesialis;
+                    $request['kodedokter'] = $jadwaldokter->kodedokter;
+                    $request['jampraktek'] = $jadwaldokter->jadwal;
+                    $request['jeniskunjungan'] = 3;
+                    $antrian = new AntrianBPJSController();
+                    $response = json_decode(json_encode($antrian->ambil_antrian($request)));
+                    if ($response->metadata->code != 200) {
+                        $request['message'] = "Error Pendaftaran : " .  $response->metadata->message;
+                        return $this->send_message($request);
+                    } else {
+                        return $response;
+                    }
+                } catch (\Throwable $th) {
+                    $request['message'] = "Error : " . $th;
+                    return $this->send_message($request);
+                }
+            }
+            // pasien baru
+            else {
+                $request['message'] = "Error : Mohon maaf untuk pasien baru tidak bisa daftar melalui whatsapp. Silahkan untuk daftar langsung ke RSUD Waled. Terima kasih.";
+                return $this->send_message($request);
+            }
+        }
+        // gagal
+        else {
+            $request['message'] = "Error format pendaftaran : " . $peserta->metaData->message . "\nLihat dan sesuaikan kembali format pendaftaran pasien umum.\n\nUntuk pertanyaan & pengaduan silahkan hubungi :\n*Humas RSUD Waled 08983311118*";
+            return $this->send_message($request);
+        }
     }
     // public function daftar_antrian(Request $request)
     // {

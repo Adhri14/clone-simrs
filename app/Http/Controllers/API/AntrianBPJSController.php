@@ -37,8 +37,8 @@ class AntrianBPJSController extends Controller
     // public $baseUrl = 'https://apijkn-dev.bpjs-kesehatan.go.id/antreanrs_dev/';
     public $baseUrl = 'https://apijkn.bpjs-kesehatan.go.id/antreanrs/';
 
-    // public $printer_antrian = 'smb://PRINTER:qweqwe@192.168.2.133/Printer Receipt';
-    public $printer_antrian = 'Printer Receipt';
+    public $printer_antrian = 'smb://PRINTER:qweqwe@192.168.2.133/Printer Receipt';
+    // public $printer_antrian = 'Printer Receipt';
 
     public static function signature()
     {
@@ -562,7 +562,8 @@ class AntrianBPJSController extends Controller
         //     ];
         // }
         // proses ambil antrian
-        $pasien = PasienDB::where('nik_Bpjs', $request->nik)->first();
+        // dd($request->all());
+        $pasien = PasienDB::where('no_rm', 'LIKE', '%' . $request->norm)->first();
         // cek pasien baru hit info pasien baru
         if (empty($pasien)) {
             return $response = [
@@ -716,6 +717,12 @@ class AntrianBPJSController extends Controller
             $request['kuotanonjkn'] = round($jadwal->kapasitaspasien * 20 / 100);
             $request['keterangan'] = "Peserta harap 60 menit lebih awal dari jadwal untuk checkin dekat mesin antrian untuk mencetak tiket antrian.";
             //tambah antrian bpjs
+            $qr = QrCode::backgroundColor(255, 255, 51)->format('png')->generate($request->kodebooking, "public/storage/antrian" . $request->kodebooking . ".png");
+            $request['filepath'] = public_path("storage/antrian" . $request->kodebooking . ".png");
+            $request['caption'] = "Kode booking : " . $request->kodebooking;
+            $request['number'] = $request->nohp;
+            $wa = new WhatsappController();
+            $wa->send_filepath($request);
             $response = $this->tambah_antrian($request);
             if ($response->metadata->code == 200) {
                 //tambah antrian database
@@ -762,11 +769,6 @@ class AntrianBPJSController extends Controller
                     $request['message'] = "*Antrian Berhasil di Daftarkan*\nAntrian anda berhasil didaftarkan melalui Layanan Whatsapp RSUD Waled dengan data sebagai berikut : \n\n*Kode Antrian :* " . $request->kodebooking .  "\n*Angka Antrian :* " . $request->angkaantrean .  "\n*Nomor Antrian :* " . $request->nomorantrean .  "\n\n*Nama :* " . $request->nama . "\n*Poliklinik :* " . $request->namapoli  . "\n*Dokter :* " . $request->namadokter  .  "\n*Tanggal Berobat :* " . $request->tanggalperiksa .  "\n*Jam Praktek :* " . $request->jampraktek  . "\n\n*Keterangan :* " . $request->keterangan  .  "\nTerima kasih. Semoga sehat selalu.\nUntuk pertanyaan & pengaduan silahkan hubungi :\n*Humas RSUD Waled 08983311118*";
                     $request['number'] = $request->nohp;
                     $wa->send_message($request);
-                    $qr = QrCode::backgroundColor(255, 255, 51)->format('png')->generate($request->kodebooking, "public/storage/antrian" . $request->kodebooking . ".png");
-                    $request['filepath'] = public_path("storage/antrian" . $request->kodebooking . ".png");
-                    $request['caption'] = "Kode booking : " . $request->kodebooking;
-                    $request['number'] = $request->nohp;
-                    $ress = $wa->send_filepath($request);
                 } catch (\Throwable $th) {
                     //throw $th;
                 }
