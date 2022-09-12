@@ -509,10 +509,12 @@ class AntrianBPJSController extends Controller
         //     return $auth;
         // }
         // checking request
-        $request['nohp'] = substr($request->nohp, 0, -5);
+        if (substr($request->nohp, -5) == "@c.us") {
+            $request['nohp'] = substr($request->nohp, 0, -5);
+        }
         $validator = Validator::make(request()->all(), [
             "nik" => "required|numeric|digits:16",
-            "nohp" => "required|numeric",
+            "nohp" => "required",
             "kodepoli" => "required",
             // "norm" => "required",
             "tanggalperiksa" => "required",
@@ -562,7 +564,6 @@ class AntrianBPJSController extends Controller
         //     ];
         // }
         // proses ambil antrian
-        // dd($request->all());
         $pasien = PasienDB::where('no_rm', 'LIKE', '%' . $request->norm)->first();
         // cek pasien baru hit info pasien baru
         if (empty($pasien)) {
@@ -1327,7 +1328,6 @@ class AntrianBPJSController extends Controller
                         'tagihan_pribadi' => $totalpribadi,
                         'tagihan_penjamin' => $totalpenjamin,
                     ]);
-
                     // insert tracer tc_tracer_header
                     $tracerbaru = TracerDB::create([
                         'kode_kunjungan' => $kunjungan->kode_kunjungan,
@@ -1367,6 +1367,7 @@ class AntrianBPJSController extends Controller
                         "status_api" => $request->status_api,
                         "nomorsep" => $request->nomorsep,
                         "keterangan" => $request->keterangan,
+                        "kode_kunjungan" => $kunjungan->kode_kunjungan,
                         "taskid1" => $now,
                     ]);
                 } catch (\Throwable $th) {
@@ -1387,6 +1388,33 @@ class AntrianBPJSController extends Controller
             }
             // jika antrian gagal diupdate di bpjs
             else {
+                // print antrian
+                $print_karcis = new AntrianController();
+                $request['tarifkarcis'] = $tarifkarcis->TOTAL_TARIF_NEW;
+                $request['tarifadm'] = $tarifadm->TOTAL_TARIF_NEW;
+                $request['norm'] = $antrian->norm;
+                $request['nama'] = $antrian->nama;
+                $request['nik'] = $antrian->nik;
+                $request['nomorkartu'] = $antrian->nomorkartu;
+                $request['nohp'] = $antrian->nohp;
+                $request['nomorrujukan'] = $antrian->nomorrujukan;
+                $request['nomorsuratkontrol'] = $antrian->nomorsuratkontrol;
+                $request['namapoli'] = $antrian->namapoli;
+                $request['namadokter'] = $antrian->namadokter;
+                $request['jampraktek'] = $antrian->jampraktek;
+                $request['tanggalperiksa'] = $antrian->tanggalperiksa;
+                $request['jenispasien'] = $antrian->jenispasien;
+                $request['nomorantrean'] = $antrian->nomorantrean;
+                $request['lokasi'] = $antrian->lokasi;
+                $request['angkaantrean'] = $antrian->angkaantrean;
+                $request['lantaipendaftaran'] = $antrian->lantaipendaftaran;
+                $kunjungan = KunjunganDB::where('kode_kunjungan', $antrian->kode_kunjungan)->first();
+                $print_karcis->print_karcis($request, $kunjungan);
+                // notif wa
+                $wa = new WhatsappController();
+                $request['message'] = "Antrian dengan kode booking " . $antrian->kodebooking . " telah melakukan checkin.\n\n" . $request->keterangan;
+                $request['number'] = $antrian->nohp;
+                $wa->send_message($request);
                 return $response;
             }
         }

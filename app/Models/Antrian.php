@@ -14,6 +14,7 @@ class Antrian extends Model
 
     protected $fillable = [
         "kodebooking",
+        "kode_kunjungan",
         "nomorkartu",
         "nik",
         "nohp",
