@@ -149,7 +149,7 @@ class VclaimBPJSController extends Controller
     {
         // checking request
         $validator = Validator::make(request()->all(), [
-            "nik" => "required",
+            "nik" => "required|digits:16",
         ]);
         if ($validator->fails()) {
             $response = [
@@ -194,7 +194,9 @@ class VclaimBPJSController extends Controller
         $signature = $this->signature();
         $response = Http::withHeaders($signature)->get($url);
         $response = json_decode($response);
-        if ($response->metaData->code == 200) {
+        if ($response == null) {
+            return $response;
+        } else if ($response->metaData->code == 200) {
             $decrypt = $this->stringDecrypt($signature['decrypt_key'], $response->response);
             $response->response = json_decode($decrypt);
         } else if ($response->metaData->code == 201) {

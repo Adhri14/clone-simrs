@@ -23,7 +23,6 @@ use Carbon\Carbon;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator;
 use Laravel\Sanctum\PersonalAccessToken;
@@ -38,6 +37,7 @@ class AntrianBPJSController extends Controller
     public $baseUrl = 'https://apijkn.bpjs-kesehatan.go.id/antreanrs/';
 
     public $printer_antrian = 'smb://PRINTER:qweqwe@192.168.2.133/Printer Receipt';
+   // public $printer_antrian = 'smb://PRINTER:qweqwe@192.168.2.129/Printer Receipt';
     // public $printer_antrian = 'Printer Receipt';
 
     public static function signature()
@@ -564,7 +564,7 @@ class AntrianBPJSController extends Controller
         //     ];
         // }
         // proses ambil antrian
-        $pasien = PasienDB::where('no_rm', 'LIKE', '%' . $request->norm)->first();
+        $pasien = PasienDB::where('nik_Bpjs',  $request->nik)->first();
         // cek pasien baru hit info pasien baru
         if (empty($pasien)) {
             return $response = [
@@ -767,7 +767,7 @@ class AntrianBPJSController extends Controller
                 // kirim notif wa
                 try {
                     $wa = new WhatsappController();
-                    $request['message'] = "*Antrian Berhasil di Daftarkan*\nAntrian anda berhasil didaftarkan melalui Layanan Whatsapp RSUD Waled dengan data sebagai berikut : \n\n*Kode Antrian :* " . $request->kodebooking .  "\n*Angka Antrian :* " . $request->angkaantrean .  "\n*Nomor Antrian :* " . $request->nomorantrean .  "\n\n*Nama :* " . $request->nama . "\n*Poliklinik :* " . $request->namapoli  . "\n*Dokter :* " . $request->namadokter  .  "\n*Tanggal Berobat :* " . $request->tanggalperiksa .  "\n*Jam Praktek :* " . $request->jampraktek  . "\n\n*Keterangan :* " . $request->keterangan  .  "\nTerima kasih. Semoga sehat selalu.\nUntuk pertanyaan & pengaduan silahkan hubungi :\n*Humas RSUD Waled 08983311118*";
+                    $request['message'] = "*Antrian Berhasil di Daftarkan*\nAntrian anda berhasil didaftarkan melalui Layanan Online RSUD Waled dengan data sebagai berikut : \n\n*Kode Antrian :* " . $request->kodebooking .  "\n*Angka Antrian :* " . $request->angkaantrean .  "\n*Nomor Antrian :* " . $request->nomorantrean .  "\n\n*Nama :* " . $request->nama . "\n*Poliklinik :* " . $request->namapoli  . "\n*Dokter :* " . $request->namadokter  .  "\n*Jam Praktek :* " . $request->jampraktek  .  "\n*Tanggal Berobat :* " . $request->tanggalperiksa . "\n\n*Keterangan :* " . $request->keterangan  .  "\nTerima kasih. Semoga sehat selalu.\nUntuk pertanyaan & pengaduan silahkan hubungi :\n*Humas RSUD Waled 08983311118*";
                     $request['number'] = $request->nohp;
                     $wa->send_message($request);
                 } catch (\Throwable $th) {
@@ -778,7 +778,7 @@ class AntrianBPJSController extends Controller
                         "nomorantrean" => $request->nomorantrean,
                         "angkaantrean" => $request->angkaantrean,
                         "kodebooking" => $request->kodebooking,
-                        "norm" => $request->norm,
+                        "norm" => (string)substr($request->norm, 2),
                         "namapoli" => $request->namapoli,
                         "namadokter" => $request->namadokter,
                         "estimasidilayani" => $request->estimasidilayani,
@@ -1192,6 +1192,37 @@ class AntrianBPJSController extends Controller
                 }
                 // gagal buat sep
                 else {
+                    // print antrian ulang
+                    try {
+                        $print_karcis = new AntrianController();
+                        $request['tarifkarcis'] = $tarifkarcis->TOTAL_TARIF_NEW;
+                        $request['tarifadm'] = $tarifadm->TOTAL_TARIF_NEW;
+                        $request['norm'] = $antrian->norm;
+                        $request['nama'] = $antrian->nama;
+                        $request['nik'] = $antrian->nik;
+                        $request['nomorkartu'] = $antrian->nomorkartu;
+                        $request['nohp'] = $antrian->nohp;
+                        $request['nomorrujukan'] = $antrian->nomorrujukan;
+                        $request['nomorsuratkontrol'] = $antrian->nomorsuratkontrol;
+                        $request['namapoli'] = $antrian->namapoli;
+                        $request['namadokter'] = $antrian->namadokter;
+                        $request['jampraktek'] = $antrian->jampraktek;
+                        $request['tanggalperiksa'] = $antrian->tanggalperiksa;
+                        $request['jenispasien'] = $antrian->jenispasien;
+                        $request['nomorantrean'] = $antrian->nomorantrean;
+                        $request['lokasi'] = $antrian->lokasi;
+                        $request['angkaantrean'] = $antrian->angkaantrean;
+                        $request['lantaipendaftaran'] = $antrian->lantaipendaftaran;
+                        $kunjungan = KunjunganDB::where('kode_kunjungan', $antrian->kode_kunjungan)->first();
+                        $print_karcis->print_karcis($request, $kunjungan);
+                        // notif wa
+                        $wa = new WhatsappController();
+                        $request['message'] = "Antrian dengan kode booking " . $antrian->kodebooking . " telah melakukan checkin.\n\n" . $request->keterangan;
+                        $request['number'] = $antrian->nohp;
+                        $wa->send_message($request);
+                    } catch (\Throwable $th) {
+                        //throw $th;
+                    }
                     return [
                         "metadata" => [
                             "message" => $sep->metaData->message,
@@ -1388,33 +1419,37 @@ class AntrianBPJSController extends Controller
             }
             // jika antrian gagal diupdate di bpjs
             else {
-                // print antrian
-                $print_karcis = new AntrianController();
-                $request['tarifkarcis'] = $tarifkarcis->TOTAL_TARIF_NEW;
-                $request['tarifadm'] = $tarifadm->TOTAL_TARIF_NEW;
-                $request['norm'] = $antrian->norm;
-                $request['nama'] = $antrian->nama;
-                $request['nik'] = $antrian->nik;
-                $request['nomorkartu'] = $antrian->nomorkartu;
-                $request['nohp'] = $antrian->nohp;
-                $request['nomorrujukan'] = $antrian->nomorrujukan;
-                $request['nomorsuratkontrol'] = $antrian->nomorsuratkontrol;
-                $request['namapoli'] = $antrian->namapoli;
-                $request['namadokter'] = $antrian->namadokter;
-                $request['jampraktek'] = $antrian->jampraktek;
-                $request['tanggalperiksa'] = $antrian->tanggalperiksa;
-                $request['jenispasien'] = $antrian->jenispasien;
-                $request['nomorantrean'] = $antrian->nomorantrean;
-                $request['lokasi'] = $antrian->lokasi;
-                $request['angkaantrean'] = $antrian->angkaantrean;
-                $request['lantaipendaftaran'] = $antrian->lantaipendaftaran;
-                $kunjungan = KunjunganDB::where('kode_kunjungan', $antrian->kode_kunjungan)->first();
-                $print_karcis->print_karcis($request, $kunjungan);
-                // notif wa
-                $wa = new WhatsappController();
-                $request['message'] = "Antrian dengan kode booking " . $antrian->kodebooking . " telah melakukan checkin.\n\n" . $request->keterangan;
-                $request['number'] = $antrian->nohp;
-                $wa->send_message($request);
+                // print antrian ulang
+                try {
+                    $print_karcis = new AntrianController();
+                    $request['tarifkarcis'] = $tarifkarcis->TOTAL_TARIF_NEW;
+                    $request['tarifadm'] = $tarifadm->TOTAL_TARIF_NEW;
+                    $request['norm'] = $antrian->norm;
+                    $request['nama'] = $antrian->nama;
+                    $request['nik'] = $antrian->nik;
+                    $request['nomorkartu'] = $antrian->nomorkartu;
+                    $request['nohp'] = $antrian->nohp;
+                    $request['nomorrujukan'] = $antrian->nomorrujukan;
+                    $request['nomorsuratkontrol'] = $antrian->nomorsuratkontrol;
+                    $request['namapoli'] = $antrian->namapoli;
+                    $request['namadokter'] = $antrian->namadokter;
+                    $request['jampraktek'] = $antrian->jampraktek;
+                    $request['tanggalperiksa'] = $antrian->tanggalperiksa;
+                    $request['jenispasien'] = $antrian->jenispasien;
+                    $request['nomorantrean'] = $antrian->nomorantrean;
+                    $request['lokasi'] = $antrian->lokasi;
+                    $request['angkaantrean'] = $antrian->angkaantrean;
+                    $request['lantaipendaftaran'] = $antrian->lantaipendaftaran;
+                    $kunjungan = KunjunganDB::where('kode_kunjungan', $antrian->kode_kunjungan)->first();
+                    $print_karcis->print_karcis($request, $kunjungan);
+                    // notif wa
+                    $wa = new WhatsappController();
+                    $request['message'] = "Antrian dengan kode booking " . $antrian->kodebooking . " telah melakukan checkin.\n\n" . $request->keterangan;
+                    $request['number'] = $antrian->nohp;
+                    $wa->send_message($request);
+                } catch (\Throwable $th) {
+                    //throw $th;
+                }
                 return $response;
             }
         }
