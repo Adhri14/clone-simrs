@@ -81,6 +81,7 @@ Route::prefix('vclaim')->group(function () {
     // surat kontrol
     Route::post('insert_rencana_kontrol', [VclaimBPJSController::class, 'insert_rencana_kontrol']);
     Route::get('surat_kontrol_nomor', [VclaimBPJSController::class, 'surat_kontrol_nomor'])->name('api.surat_kontrol_nomor');
+    Route::get('surat_kontrol_peserta', [VclaimBPJSController::class, 'surat_kontrol_peserta'])->name('api.surat_kontrol_peserta');
 });
 
 Route::prefix('wa')->group(function () {

@@ -319,6 +319,36 @@ class VclaimBPJSController extends Controller
         }
         return $response;
     }
+    public function surat_kontrol_peserta(Request $request)
+    {
+        // checking request
+        $validator = Validator::make(request()->all(), [
+            "tanggalperiksa" => "required",
+            "nomorkartu" => "required",
+            "formatfilter" => "required",
+        ]);
+        if ($validator->fails()) {
+            $response = [
+                'metaData' => [
+                    'code' => 400,
+                    'message' => $validator->errors()->first(),
+                ],
+            ];
+            return json_decode(json_encode($response));
+        }
+        $tanggalperiksa = Carbon::parse($request->tanggalperiksa);
+        $bulan = $tanggalperiksa->month;
+        $tahun = $tanggalperiksa->year;
+        $url = $this->baseUrl . "RencanaKontrol/ListRencanaKontrol/Bulan/" . sprintf("%02d", $bulan)  . "/Tahun/" . $tahun . "/Nokartu/" . $request->nomorkartu . "/filter/" . $request->formatfilter;
+        $signature = $this->signature();
+        $response = Http::withHeaders($signature)->get($url);
+        $response = json_decode($response);
+        if ($response->metaData->code == 200) {
+            $decrypt = $this->stringDecrypt($signature['decrypt_key'], $response->response);
+            $response->response = json_decode($decrypt);
+        }
+        return $response;
+    }
     public function surat_kontrol_nomor(Request $request)
     {
         // checking request
