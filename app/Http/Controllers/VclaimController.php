@@ -6,6 +6,9 @@ use App\Http\Controllers\API\VclaimBPJSController;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use RealRashid\SweetAlert\Facades\Alert;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Dompdf\Dompdf;
+
 
 class VclaimController extends Controller
 {
@@ -76,13 +79,19 @@ class VclaimController extends Controller
         }
         return redirect()->back();
     }
-
     public function buat_surat_kontrol(Request $request)
     {
-        $request['kodepoli'] = $request->kodepoli_suratkontrol;
-        $request['tanggalperiksa'] = $request->tanggal_suratkontrol;
-        $request['kodedokter'] = $request->kodedokter_suratkontrol;
+        $request->validate([
+            'nomorsep_suratkontrol' => 'required',
+            'tanggal_suratkontrol' => 'required',
+            'kodepoli_suratkontrol' => 'required',
+            'kodedokter_suratkontrol' => 'required',
+        ]);
         $request['nomorsep'] = $request->nomorsep_suratkontrol;
+        $request['tanggalperiksa'] = $request->tanggal_suratkontrol;
+        $request['kodepoli'] = $request->kodepoli_suratkontrol;
+        $request['kodedokter'] = $request->kodedokter_suratkontrol;
+
         $vclaim = new VclaimBPJSController();
         $sk = $vclaim->insert_rencana_kontrol($request);
         if ($sk->metaData->code == 200) {

@@ -33,7 +33,7 @@ use Mike42\Escpos\PrintConnectors\WindowsPrintConnector;
 class AntrianController extends Controller
 {
     //  public $printer_antrian = 'smb://PRINTER:qweqwe@192.168.2.133/Printer Receipt';
-   public $printer_antrian = 'smb://PRINTER:qweqwe@192.168.2.129/Printer Receipt';
+    public $printer_antrian = 'smb://PRINTER:qweqwe@192.168.2.129/Printer Receipt';
     // console antrian
     public function console()
     {
@@ -1173,6 +1173,38 @@ class AntrianController extends Controller
         Alert::success('Success', "Antrian Selesai. Semoga cepat sembuh.\n" . $response->metadata->message);
         return redirect()->back();
     }
+    public function surat_kontrol_poli(Request $request)
+    {
+        $kunjungans = null;
+        if ($request->tanggal) {
+            $kunjungans = KunjunganDB::whereDate('tgl_masuk', $request->tanggal)
+                ->where('no_sep', "!=", null)
+                ->where('no_rujukan', "!=", null)
+                ->where('kode_unit', "!=", null)
+                ->get();
+            if ($request->kodepoli != null) {
+                $poli = UnitDB::where('KDPOLI', $request->kodepoli)->first();
+                $kunjungans = $kunjungans->where('kode_unit', $poli->kode_unit);
+            }
+            if ($request->kodedokter != null) {
+                $dokter = ParamedisDB::where('kode_dokter_jkn', $request->kodedokter)->first();
+                $kunjungans = $kunjungans->where('kode_paramedis', $dokter->kode_paramedis);
+            }
+        }
+        $unit = UnitDB::where('KDPOLI', "!=", null)->get();
+        $dokters = Dokter::get();
+        return view('simrs.antrian_surat_kontrol_poli', [
+            'kunjungans' => $kunjungans,
+            'request' => $request,
+            'unit' => $unit,
+            'dokters' => $dokters,
+        ]);
+    }
+    public function surat_kontrol_create(Request $request)
+    {
+        dd($request->all());
+    }
+
     // farmasi
     public function farmasi(Request $request)
     {

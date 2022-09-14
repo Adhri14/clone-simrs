@@ -317,7 +317,6 @@
                                 <x-adminlte-button theme="danger" label="Dismiss" data-dismiss="modal" />
                             </x-slot>
                         </form>
-
                     </x-adminlte-modal>
                 @endif
                 {{-- poli belum dan sudah dilayani --}}

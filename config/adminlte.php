@@ -341,6 +341,13 @@ return [
                     'can' => 'poliklinik',
                 ],
                 [
+                    'text' => 'Surat Kontrol Poliklinik',
+                    'icon'    => 'fas fa-clinic-medical',
+                    'url'  => 'antrian/surat_kontrol_poli',
+                    'shift'   => 'ml-2',
+                    'can' => 'poliklinik',
+                ],
+                [
                     'text' => 'Antrian Farmasi',
                     'icon'    => 'fas fa-pills',
                     'url'  => 'antrian/farmasi',
