@@ -23,7 +23,7 @@ return new class extends Migration
             $table->string('nama');
             $table->string('kelamin');
             $table->string('tglLahir');
-            $table->string('namaDiagnosa');
+            $table->string('namaDiagnosa')->nullable();;
             $table->string('kodeDokter');
             $table->string('poliTujuan');
             $table->string('noRujukan')->nullable();

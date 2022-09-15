@@ -36,8 +36,8 @@ class AntrianBPJSController extends Controller
     // public $baseUrl = 'https://apijkn-dev.bpjs-kesehatan.go.id/antreanrs_dev/';
     public $baseUrl = 'https://apijkn.bpjs-kesehatan.go.id/antreanrs/';
 
-    // public $printer_antrian = 'smb://PRINTER:qweqwe@192.168.2.133/Printer Receipt';
-   public $printer_antrian = 'smb://PRINTER:qweqwe@192.168.2.129/Printer Receipt';
+    public $printer_antrian = 'smb://PRINTER:qweqwe@192.168.2.133/Printer Receipt';
+    //  public $printer_antrian = 'smb://PRINTER:qweqwe@192.168.2.129/Printer Receipt';
     // public $printer_antrian = 'Printer Receipt';
 
     public static function signature()
@@ -604,14 +604,14 @@ class AntrianBPJSController extends Controller
                                 ]
                             ];
                         }
-                        if (Carbon::parse($response->response->tglRencanaKontrol) != Carbon::parse($request->tanggalperiksa)) {
-                            return [
-                                "metadata" => [
-                                    "code" => 201,
-                                    "message" => "Tanggal periksa tidak sesuai dengan surat kontrol. Silahkan pengajuan perubahan tanggal surat kontrol terlebih dahulu."
-                                ]
-                            ];
-                        }
+                        // if (Carbon::parse($response->response->tglRencanaKontrol) != Carbon::parse($request->tanggalperiksa)) {
+                        //     return [
+                        //         "metadata" => [
+                        //             "code" => 201,
+                        //             "message" => "Tanggal periksa tidak sesuai dengan surat kontrol. Silahkan pengajuan perubahan tanggal surat kontrol terlebih dahulu."
+                        //         ]
+                        //     ];
+                        // }
                     } else {
                         return [
                             "metadata" => [

@@ -8,29 +8,20 @@ use Illuminate\Database\Eloquent\Model;
 class SuratKontrol extends Model
 {
     use HasFactory;
-
+    protected $connection = 'mysql2';
+    protected $table = 'jkn_surat_kontrol';
     protected $fillable = [
         "noSuratKontrol",
-        "noRujukan",
-        "jnsPelayanan",
-        "jnsKontrol",
         "namaJnsKontrol",
         "tglRencanaKontrol",
         "tglTerbitKontrol",
         "noSepAsalKontrol",
-        "poliAsal",
-        "namaPoliAsal",
-        "poliTujuan",
-        "namaPoliTujuan",
-        "tglSEP",
         "kodeDokter",
         "namaDokter",
         "noKartu",
         "nama",
         "kelamin",
         "tglLahir",
-        "namaDiagnosa",
-        "terbitSEP",
         "user",
     ];
 }

@@ -241,7 +241,7 @@ class WhatsappController extends Controller
                 // pilih jenis pasien, masukan rujukan
                 else if (substr($pesan, 0, 12) ==  'PASIEN BPJS_') {
                     $jadwalid = explode('_', $pesan)[1];
-                    $request['message'] = "*KETIK NOMOR KARTU BPJS KEDALAM FORMAT*\nUntuk pasien JKN/BPJS silahkan ketik nomor kartu 13 digit yang tertera pada kartu bpjs anda dengan format seperti berikut : \n\nNomor Kartu#BPJS#" . $jadwalid . "\n\n(Contoh)\nXX00067XX23XX#PASIEN_BPJS#" . $jadwalid;
+                    $request['message'] = "*KETIK NOMOR KARTU BPJS KEDALAM FORMAT*\nUntuk pasien JKN/BPJS silahkan ketik nomor kartu 13 digit yang tertera pada kartu bpjs anda dengan format seperti berikut : \n\n*Nomor Kartu*#PASIEN_BPJS#" . $jadwalid . "\n\n(Contoh)\nXX00067XX67XX#PASIEN_BPJS#" . $jadwalid;
                     $this->send_message($request);
                     $request['message'] = "XX00067XX23XX#PASIEN_BPJS#" . $jadwalid;
                     return $this->send_message($request);
@@ -249,7 +249,7 @@ class WhatsappController extends Controller
                 // pilih jenis pasien, masukan nik
                 else if (substr($pesan, 0, 12) == 'PASIEN UMUM_') {
                     $jadwalid = explode('_', $pesan)[1];
-                    $request['message'] = "*KETIK NIK/KTP KEDALAM FORMAT*\nUntuk pasien UMUM silahkan ketik nomor nik/ktp 16 digit yang tertera pada Kartu Tanda Penduduk (KTP) anda dengan format seperti berikut : \n\nNIK / KTP#UMUM#" . $jadwalid . "\n\n(Contoh)\n3209XXXX1234XXXX#PASIEN_UMUM#" . $jadwalid;
+                    $request['message'] = "*KETIK NIK/KTP KEDALAM FORMAT*\nUntuk pasien UMUM silahkan ketik nomor nik/ktp 16 digit yang tertera pada Kartu Tanda Penduduk (KTP) anda dengan format seperti berikut : \n\n*NIK / KTP*#PASIEN_UMUM#" . $jadwalid . "\n\n(Contoh)\n3209XXXX1234XXXX#PASIEN_UMUM#" . $jadwalid;
                     $this->send_message($request);
                     $request['message'] = "3209XXXX1234XXXX#PASIEN_UMUM#" . $jadwalid;
                     return $this->send_message($request);
@@ -277,6 +277,10 @@ class WhatsappController extends Controller
                 // pilih suratkontrol , kemudian cek
                 else if (str_contains($pesan, '_SURATKONTROL#')) {
                     return $this->cek_surat_kontrol($pesan, $request);
+                }
+                // insert antrian surat rujukan
+                else if (substr($pesan, 0, 15) == 'DAFTAR KONTROL_') {
+                    return $this->daftar_surat_kontrol($pesan, $request);
                 }
                 // insert antrian bpjs
                 else if (str_contains($pesan, '#DAFTAR_BPJS#')) {
@@ -865,24 +869,23 @@ class WhatsappController extends Controller
         }
         $vclaim = new VclaimBPJSController();
         $suratkontrol =  $vclaim->surat_kontrol_nomor($request);
-        // // gagal jumlah sep rujukan
+        // gagal jumlah sep rujukan
         if ($suratkontrol->metaData->code != 200) {
             $request['message'] = "*Gagal Cek Surat Kontrol (207)* \n" . $suratkontrol->metaData->message;
             return $this->send_message($request);
         }
-        // // berhasil cek jumlah sep rujukan
+        // berhasil cek jumlah sep rujukan
         else {
             $suratkontrol =  $suratkontrol->response;
             $tglkontrol = Carbon::createFromFormat('Y-m-d', $suratkontrol->tglRencanaKontrol, 'Asia/Jakarta');
             $tanggalperiksa = Carbon::createFromFormat('Y-m-d', $tanggalperiksa, 'Asia/Jakarta');
             // tanggal periksa kurang dari tanggal surat kontrol
-            if ($tglkontrol > $tanggalperiksa) {
-                $request['message'] = "*Gagal Cek Surat Kontrol (208)* \nTanggal kunjungan tidak sesuai dengan tanggal surat kontrol";
+            if ($tglkontrol->format('Y-m-d') != $tanggalperiksa->format('Y-m-d')) {
+                $request['message'] = "*Gagal Cek Surat Kontrol (218)* \nTanggal kunjungan (" . $tanggalperiksa->format('Y-m-d') . ") tidak sesuai dengan tanggal surat kontrol (" . $tglkontrol->format('Y-m-d') . ")";
                 return $this->send_message($request);
             }
             // jika berhasil
             else {
-                // dd($suratkontrol);
                 $request['nomorreferensi'] = $suratkontrol->sep->provPerujuk->noRujukan;
                 $vclaim = new VclaimBPJSController();
                 $rujukan  = $vclaim->rujukan_nomor($request);
@@ -901,14 +904,14 @@ class WhatsappController extends Controller
                 $request['diagnosa'] = $suratkontrol->sep->diagnosa;
                 $request['polirujukan'] = $suratkontrol->namaPoliTujuan;
                 // jika jadwal dan poli tujuan berbeda
-                if ($request->kodedokter ==  $jadwaldokter->kodedokter) {
+                if ($request->kodedokter !=  $jadwaldokter->kodedokter) {
                     $request['message'] = "*Pesan Gagal (203)*\nJadwal Dokter (" . strtoupper($jadwaldokter->kodedokter) . ") dan Dokter Tujuan Surat Kontrol (" . strtoupper($request->kodedokter) . ") yang dipilih berbeda. \nSilahkan plih jadwal sesuai dengan rujukan anda.";
                     $this->send_message($request);
                     return $this->pilih_poli($pesan, $request);
                 }
                 $request['titletext'] = "Konfirmasi Pendaftaran Pasien JKN";
-                $request['contenttext'] = "Jadwal dokter poliklinik yang dipilih sebagai berikut :\n*Poliklinik* : " . strtoupper($jadwaldokter->namasubspesialis) . "\n*Dokter* :  " . $jadwaldokter->namadokter . "\n*Jam Praktek* : " . $jadwaldokter->jadwal . "\n*Tanggal Periksa* :  " . $tanggalperiksa . "\n\nData pasien yang akan didaftarkan sebagai berikut :\n*Nama Pasien* : " . $request->nama . "\n*Status* : *" . $request->status . "*\n*NIK* : " . $request->nik . "\n*No BPJS* : " . $request->nomorkartu . "\n*No RM* : " . $request->norm . "\n\nData surat kontrol yang dipilih sebagai berikut : \n*No Rujukan* : " . $request->nomorreferensi . "\n*Poli Rujukan* : " . $request->polirujukan . "\n*Diagnosa* : " . $request->diagnosa .  "\n\nSebagai konfirmasi bahwa data yang diatas adalah benar pasien yang akan didaftarkan. Silahakan pilih tombol dibawah ini.";
-                $request['buttontext'] =  "DAFTAR KONTROL_" . $request->nomorreferensi . "#" . $jadwalid . "#" . $request->tanggalperiksa . ',BATAL PENDAFTARAN';
+                $request['contenttext'] = "Jadwal dokter poliklinik yang dipilih sebagai berikut :\n*Poliklinik* : " . strtoupper($jadwaldokter->namasubspesialis) . "\n*Dokter* :  " . $jadwaldokter->namadokter . "\n*Jam Praktek* : " . $jadwaldokter->jadwal . "\n*Tanggal Periksa* :  " . $tanggalperiksa . "\n\nData pasien yang akan didaftarkan sebagai berikut :\n*Nama Pasien* : " . $request->nama . "\n*Status* : *" . $request->status . "*\n*NIK* : " . $request->nik . "\n*No BPJS* : " . $request->nomorkartu . "\n*No RM* : " . $request->norm . "\n\nData surat kontrol yang dipilih sebagai berikut : \n*No Surat Kontrol* : " . $nomorsuratkontrol . "\n*No Rujukan* : " . $request->nomorreferensi . "\n*Poli Rujukan* : " . $request->polirujukan . "\n*Diagnosa* : " . $request->diagnosa .  "\n\nSebagai konfirmasi bahwa data yang diatas adalah benar pasien yang akan didaftarkan. Silahakan pilih tombol dibawah ini.";
+                $request['buttontext'] =  "DAFTAR KONTROL_" . $nomorsuratkontrol . "#" . $jadwalid . "#" . $request->tanggalperiksa . ',BATAL PENDAFTARAN';
                 return $this->send_button($request);
             }
         }
@@ -918,9 +921,9 @@ class WhatsappController extends Controller
         // init
         try {
             $format = explode('_', $pesan)[1];
-            $nomorsuratkontrol = explode('#', $format)[1];
-            $jadwalid = explode('#', $format)[2];
-            $tanggalperiksa = explode('#', $format)[3];
+            $nomorsuratkontrol = explode('#', $format)[0];
+            $jadwalid = explode('#', $format)[1];
+            $tanggalperiksa = explode('#', $format)[2];
             $jadwaldokter = JadwalDokter::find($jadwalid);
             $request['nomorreferensi'] = $nomorsuratkontrol;
         } catch (\Throwable $th) {
@@ -941,8 +944,8 @@ class WhatsappController extends Controller
             $tglkontrol = Carbon::createFromFormat('Y-m-d', $suratkontrol->tglRencanaKontrol, 'Asia/Jakarta');
             $tanggalperiksa = Carbon::createFromFormat('Y-m-d', $tanggalperiksa, 'Asia/Jakarta');
             // tanggal periksa kurang dari tanggal surat kontrol
-            if ($tglkontrol > $tanggalperiksa) {
-                $request['message'] = "*Gagal Cek Surat Kontrol (208)* \nTanggal kunjungan tidak sesuai dengan tanggal surat kontrol";
+            if ($tglkontrol->format('Y-m-d') != $tanggalperiksa->format('Y-m-d')) {
+                $request['message'] = "*Gagal Cek Surat Kontrol (228)* \nTanggal kunjungan (" . $tanggalperiksa->format('Y-m-d') . ") tidak sesuai dengan tanggal surat kontrol (" . $tglkontrol->format('Y-m-d') . ").\nSilahkan daftar dihari sesuai surat kontrol.";
                 return $this->send_message($request);
             }
             // jika berhasil
@@ -966,15 +969,20 @@ class WhatsappController extends Controller
                 $request['diagnosa'] = $suratkontrol->sep->diagnosa;
                 $request['polirujukan'] = $suratkontrol->namaPoliTujuan;
                 // jika jadwal dan poli tujuan berbeda
-                if ($request->kodedokter ==  $jadwaldokter->kodedokter) {
+                if ($request->kodedokter !=  $jadwaldokter->kodedokter) {
                     $request['message'] = "*Pesan Gagal (203)*\nJadwal Poli (" . strtoupper($jadwaldokter->namasubspesialis) . ") dan Poli Tujuan Surat Kontrol (" . strtoupper($request->polirujukan) . ") yang dipilih berbeda. \nSilahkan plih jadwal sesuai dengan rujukan anda.";
                     $this->send_message($request);
                     return $this->pilih_poli($pesan, $request);
                 }
-                $request['titletext'] = "Konfirmasi Pendaftaran Pasien JKN";
-                $request['contenttext'] = "Jadwal dokter poliklinik yang dipilih sebagai berikut :\n*Poliklinik* : " . strtoupper($jadwaldokter->namasubspesialis) . "\n*Dokter* :  " . $jadwaldokter->namadokter . "\n*Jam Praktek* : " . $jadwaldokter->jadwal . "\n*Tanggal Periksa* :  " . $tanggalperiksa . "\n\nData pasien yang akan didaftarkan sebagai berikut :\n*Nama Pasien* : " . $request->nama . "\n*Status* : *" . $request->status . "*\n*NIK* : " . $request->nik . "\n*No BPJS* : " . $request->nomorkartu . "\n*No RM* : " . $request->norm . "\n\nData surat kontrol yang dipilih sebagai berikut : \n*No Rujukan* : " . $request->nomorreferensi . "\n*Poli Rujukan* : " . $request->polirujukan . "\n*Diagnosa* : " . $request->diagnosa .  "\n\nSebagai konfirmasi bahwa data yang diatas adalah benar pasien yang akan didaftarkan. Silahakan pilih tombol dibawah ini.";
-                $request['buttontext'] =  "DAFTAR KONTROL_" . $request->nomorreferensi . "#" . $jadwalid . "#" . $request->tanggalperiksa . ',BATAL PENDAFTARAN';
-                return $this->send_button($request);
+                $request['jeniskunjungan'] = 3;
+                $antrian = new AntrianBPJSController();
+                $response = json_decode(json_encode($antrian->ambil_antrian($request)));
+                if ($response->metadata->code != 200) {
+                    $request['message'] = "Error Pendaftaran : " .  $response->metadata->message;
+                    return $this->send_message($request);
+                } else {
+                    return $response;
+                }
             }
         }
     }

@@ -3,12 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\API\VclaimBPJSController;
+use App\Models\SuratKontrol;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use RealRashid\SweetAlert\Facades\Alert;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Dompdf\Dompdf;
-
+use Illuminate\Support\Facades\Auth;
 
 class VclaimController extends Controller
 {
@@ -91,10 +92,23 @@ class VclaimController extends Controller
         $request['tanggalperiksa'] = $request->tanggal_suratkontrol;
         $request['kodepoli'] = $request->kodepoli_suratkontrol;
         $request['kodedokter'] = $request->kodedokter_suratkontrol;
-
         $vclaim = new VclaimBPJSController();
         $sk = $vclaim->insert_rencana_kontrol($request);
         if ($sk->metaData->code == 200) {
+            SuratKontrol::create([
+                "noSuratKontrol" => $sk->response->noSuratKontrol,
+                "namaJnsKontrol" => "Surat Kontrol",
+                "tglRencanaKontrol" => $sk->response->tglRencanaKontrol,
+                "tglTerbitKontrol" => Carbon::now()->format('Y-m-d'),
+                "noSepAsalKontrol" => $request->nomorsep,
+                "kodeDokter" => $request->kodedokter,
+                "namaDokter" => $sk->response->namaDokter,
+                "noKartu" => $sk->response->noKartu,
+                "nama" => $sk->response->nama,
+                "kelamin" => $sk->response->kelamin,
+                "tglLahir" => $sk->response->tglLahir,
+                "user" => Auth::user()->name,
+            ]);
             Alert::success('Success', 'Pembuatan Surat Kontrol Berhasil ' .  $sk->response->noSuratKontrol);
             return redirect()->back();
         } else {
