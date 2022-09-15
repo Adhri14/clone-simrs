@@ -310,11 +310,9 @@ class VclaimBPJSController extends Controller
         return $response;
     }
     // api sep
-    // syarat sep terakhir bisa diliat di monotoring pelayanan peserta / tb_sep
     public function insert_rencana_kontrol(Request $request)
     {
         // checking request
-
         $validator = Validator::make(request()->all(), [
             "kodepoli" => "required",
             "tanggalperiksa" => "required",
@@ -329,7 +327,6 @@ class VclaimBPJSController extends Controller
                 ],
             ];
         }
-
         // insert surat kontrol
         $url = $this->baseUrl . "RencanaKontrol/insert";
         $signature = $this->signature();

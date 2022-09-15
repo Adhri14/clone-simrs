@@ -119,7 +119,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified', 'permiss
     Route::resource('permission', PermissionController::class);
 });
 // vcalim
-Route::prefix('vclaim')->name('vclaim.')->middleware(['auth', 'verified', 'permission:bpjs'])->group(function () {
+Route::prefix('vclaim')->name('vclaim.')->middleware(['auth'])->group(function () {
     Route::get('monitoring_pelayanan_peserta', [VclaimController::class, 'monitoring_pelayanan_peserta'])->name('monitoring_pelayanan_peserta');
     Route::delete('delete_sep/{noSep}', [VclaimController::class, 'delete_sep'])->name('delete_sep');
     Route::get('data_surat_kontrol', [VclaimController::class, 'data_surat_kontrol'])->name('data_surat_kontrol');

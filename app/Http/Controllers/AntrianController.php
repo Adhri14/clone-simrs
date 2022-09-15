@@ -32,8 +32,8 @@ use Mike42\Escpos\PrintConnectors\WindowsPrintConnector;
 
 class AntrianController extends Controller
 {
-    // public $printer_antrian = 'smb://PRINTER:qweqwe@192.168.2.133/Printer Receipt';
-    public $printer_antrian = 'smb://PRINTER:qweqwe@192.168.2.129/Printer Receipt';
+    public $printer_antrian = 'smb://PRINTER:qweqwe@192.168.2.133/Printer Receipt';
+    // public $printer_antrian = 'smb://PRINTER:qweqwe@192.168.2.129/Printer Receipt';
     // console antrian
     public function console()
     {
@@ -1204,7 +1204,6 @@ class AntrianController extends Controller
     {
         dd($request->all());
     }
-
     // farmasi
     public function farmasi(Request $request)
     {

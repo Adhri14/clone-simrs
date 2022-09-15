@@ -72,14 +72,12 @@ Route::prefix('vclaim')->group(function () {
     Route::get('rujukan_rs_nomor', [VclaimBPJSController::class, 'rujukan_rs_nomor'])->name('api.rujukan_rs_nomor');
     Route::get('rujukan_peserta', [VclaimBPJSController::class, 'rujukan_peserta']);
     Route::get('rujukan_rs_peserta', [VclaimBPJSController::class, 'rujukan_rs_peserta']);
-    // 0301U0331019P003283
     // sep
     Route::post('insert_sep', [VclaimBPJSController::class, 'insert_sep']);
     Route::delete('delete_sep', [VclaimBPJSController::class, 'delete_sep']);
     Route::get('cari_sep', [VclaimBPJSController::class, 'cari_sep']);
     Route::get('sep_internal', [VclaimBPJSController::class, 'sep_internal']);
     Route::delete('delete_sep_internal', [VclaimBPJSController::class, 'delete_sep_internal']);
-
     // surat kontrol
     Route::post('insert_rencana_kontrol', [VclaimBPJSController::class, 'insert_rencana_kontrol']);
     Route::get('surat_kontrol_nomor', [VclaimBPJSController::class, 'surat_kontrol_nomor'])->name('api.surat_kontrol_nomor');
