@@ -36,8 +36,8 @@ class AntrianBPJSController extends Controller
     // public $baseUrl = 'https://apijkn-dev.bpjs-kesehatan.go.id/antreanrs_dev/';
     public $baseUrl = 'https://apijkn.bpjs-kesehatan.go.id/antreanrs/';
 
-    public $printer_antrian = 'smb://PRINTER:qweqwe@192.168.2.133/Printer Receipt';
-    //  public $printer_antrian = 'smb://PRINTER:qweqwe@192.168.2.129/Printer Receipt';
+    // public $printer_antrian = 'smb://PRINTER:qweqwe@192.168.2.133/Printer Receipt';
+    public $printer_antrian = 'smb://PRINTER:qweqwe@192.168.2.129/Printer Receipt';
     // public $printer_antrian = 'Printer Receipt';
 
     public static function signature()
@@ -604,14 +604,14 @@ class AntrianBPJSController extends Controller
                                 ]
                             ];
                         }
-                        // if (Carbon::parse($response->response->tglRencanaKontrol) != Carbon::parse($request->tanggalperiksa)) {
-                        //     return [
-                        //         "metadata" => [
-                        //             "code" => 201,
-                        //             "message" => "Tanggal periksa tidak sesuai dengan surat kontrol. Silahkan pengajuan perubahan tanggal surat kontrol terlebih dahulu."
-                        //         ]
-                        //     ];
-                        // }
+                        if (Carbon::parse($response->response->tglRencanaKontrol) != Carbon::parse($request->tanggalperiksa)) {
+                            return [
+                                "metadata" => [
+                                    "code" => 201,
+                                    "message" => "Tanggal periksa tidak sesuai dengan surat kontrol. Silahkan pengajuan perubahan tanggal surat kontrol terlebih dahulu."
+                                ]
+                            ];
+                        }
                     } else {
                         return [
                             "metadata" => [
@@ -726,7 +726,7 @@ class AntrianBPJSController extends Controller
             $wa->send_filepath($request);
             $response = $this->tambah_antrian($request);
             if ($response->metadata->code == 200) {
-                //tambah antrian database
+                // tambah antrian database
                 if (isset($suratkontrol)) {
                     $request["nomorsuratkontrol"] = $suratkontrol->noSuratKontrol;
                 }
@@ -767,7 +767,7 @@ class AntrianBPJSController extends Controller
                 // kirim notif wa
                 try {
                     $wa = new WhatsappController();
-                    $request['message'] = "*Antrian Berhasil di Daftarkan*\nAntrian anda berhasil didaftarkan melalui Layanan Online RSUD Waled dengan data sebagai berikut : \n\n*Kode Antrian :* " . $request->kodebooking .  "\n*Angka Antrian :* " . $request->angkaantrean .  "\n*Nomor Antrian :* " . $request->nomorantrean .  "\n\n*Nama :* " . $request->nama . "\n*Poliklinik :* " . $request->namapoli  . "\n*Dokter :* " . $request->namadokter  .  "\n*Jam Praktek :* " . $request->jampraktek  .  "\n*Tanggal Berobat :* " . $request->tanggalperiksa . "\n\n*Keterangan :* " . $request->keterangan  .  "\nTerima kasih. Semoga sehat selalu.\nUntuk pertanyaan & pengaduan silahkan hubungi :\n*Humas RSUD Waled 08983311118*";
+                    $request['message'] = "*Antrian Berhasil di Daftarkan*\nAntrian anda berhasil didaftarkan melalui Layanan Online RSUD Waled dengan data sebagai berikut : \n\n*Kode Antrian :* " . $request->kodebooking .  "\n*Angka Antrian :* " . $request->angkaantrean .  "\n*Nomor Antrian :* " . $request->nomorantrean . "\n*Jenis Pasien :* " . $request->jenispasien .  "\n*Jenis Kunjungan :* " . $request->jeniskunjungan .  "\n\n*Nama :* " . $request->nama . "\n*Poliklinik :* " . $request->namapoli  . "\n*Dokter :* " . $request->namadokter  .  "\n*Jam Praktek :* " . $request->jampraktek  .  "\n*Tanggal Berobat :* " . $request->tanggalperiksa . "\n\n*Keterangan :* " . $request->keterangan  .  "\nTerima kasih. Semoga sehat selalu.\nUntuk pertanyaan & pengaduan silahkan hubungi :\n*Humas RSUD Waled 08983311118*";
                     $request['number'] = $request->nohp;
                     $wa->send_message($request);
                 } catch (\Throwable $th) {
@@ -797,6 +797,58 @@ class AntrianBPJSController extends Controller
             } else {
                 return $response;
             }
+        }
+    }
+    public function sisa_antrian(Request $request)
+    {
+        // auth token
+        // $auth = $this->auth_token($request);
+        // if ($auth['metadata']['code'] != 200) {
+        //     return $auth;
+        // }
+        $antrian = Antrian::firstWhere('kodebooking', $request->kodebooking);
+        // antrian ditermukan
+        if ($antrian) {
+            $sisaantrean = Antrian::where('taskid', "<=", 3)
+                ->where('tanggalperiksa', $antrian->tanggalperiksa)
+                ->where('kodepoli', $antrian->kodepoli)
+                ->where('taskid', ">=", 0)
+                ->count();
+            $sisaantrean = 5;
+            $antreanpanggil =  Antrian::where('taskid', "<=", 3)
+                ->where('taskid', ">=", 1)
+                ->where('tanggalperiksa', $antrian->tanggalperiksa)
+                ->first();
+            if (empty($antreanpanggil)) {
+                $antreanpanggil['nomorantrean'] = 'Tidak Ada';
+            }
+            $antrian['waktutunggu'] = "10";
+            $antrian['keterangan'] = "";
+            $response = [
+                "response" => [
+                    "nomorantrean" => $antrian->nomorantrean,
+                    "namapoli" => $antrian->namapoli,
+                    "namadokter" => $antrian->namadokter,
+                    "sisaantrean" => $sisaantrean,
+                    "antreanpanggil" => $antreanpanggil['nomorantrean'],
+                    "waktutunggu" => $antrian->waktutunggu * 60 * ($sisaantrean),
+                    "keterangan" => $antrian->keterangan,
+                ],
+                "metadata" => [
+                    "message" => "Ok",
+                    "code" => 200
+                ]
+            ];
+            return $response;
+        }
+        // antrian tidak ditermukan
+        else {
+            return $response = [
+                "metadata" => [
+                    "message" => "Antrian tidak ditemukan",
+                    "code" => 201,
+                ],
+            ];
         }
     }
     public function info_pasien_baru(Request $request)
@@ -923,64 +975,8 @@ class AntrianBPJSController extends Controller
             ];
         }
     }
-    public function sisa_antrian(Request $request)
-    {
-        // auth token
-        // $auth = $this->auth_token($request);
-        // if ($auth['metadata']['code'] != 200) {
-        //     return $auth;
-        // }
-        $antrian = Antrian::firstWhere('kodebooking', $request->kodebooking);
-        // antrian ditermukan
-        if ($antrian) {
-            $sisaantrean = Antrian::where('taskid', "<=", 3)
-                ->where('tanggalperiksa', $antrian->tanggalperiksa)
-                ->where('taskid', ">=", 1)
-                ->count();
-            $antreanpanggil =  Antrian::where('taskid', "<=", 3)
-                ->where('taskid', ">=", 1)
-                ->where('tanggalperiksa', $antrian->tanggalperiksa)
-                ->first();
-            if (empty($antreanpanggil)) {
-                $antreanpanggil['nomorantrean'] = '';
-            }
-            $antrian['waktutunggu'] = "5";
-            $antrian['keterangan'] = "Info antrian anda";
-            $response = [
-                "response" => [
-                    "nomorantrean" => $antrian->nomorantrean,
-                    "namapoli" => $antrian->namapoli,
-                    "namadokter" => $antrian->namadokter,
-                    "sisaantrean" => $sisaantrean,
-                    "antreanpanggil" => $antreanpanggil['nomorantrean'],
-                    "waktutunggu" => $antrian->waktutunggu * 60 * ($sisaantrean),
-                    "keterangan" => $antrian->keterangan,
-                ],
-                "metadata" => [
-                    "message" => "Ok",
-                    "code" => 200
-                ]
-            ];
-            return $response;
-        }
-        // antrian tidak ditermukan
-        else {
-            return $response = [
-                "metadata" => [
-                    "message" => "Antrian tidak ditemukan",
-                    "code" => 201,
-                ],
-            ];
-        }
-    }
     public function batal_antrian(Request $request)
     {
-        // return $response = [
-        //     'metadata' => [
-        //         'code' => 200,
-        //         'message' => 'Ok',
-        //     ],
-        // ];
         // auth token
         // $auth = $this->auth_token($request);
         // if ($auth['metadata']['code'] != 200) {

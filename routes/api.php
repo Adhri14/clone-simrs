@@ -69,7 +69,9 @@ Route::prefix('vclaim')->group(function () {
     // rujukan
     Route::get('rujukan_jumlah_sep', [VclaimBPJSController::class, 'rujukan_jumlah_sep'])->name('api.rujukan_jumlah_sep');
     Route::get('rujukan_nomor', [VclaimBPJSController::class, 'rujukan_nomor'])->name('api.rujukan_nomor');
+    Route::get('rujukan_rs_nomor', [VclaimBPJSController::class, 'rujukan_rs_nomor'])->name('api.rujukan_rs_nomor');
     Route::get('rujukan_peserta', [VclaimBPJSController::class, 'rujukan_peserta']);
+    Route::get('rujukan_rs_peserta', [VclaimBPJSController::class, 'rujukan_rs_peserta']);
     // 0301U0331019P003283
     // sep
     Route::post('insert_sep', [VclaimBPJSController::class, 'insert_sep']);
