@@ -16,6 +16,7 @@ use App\Models\PasienDB;
 use App\Models\PenjaminDB;
 use App\Models\Poliklinik;
 use App\Models\Provinsi;
+use App\Models\SuratKontrol;
 use App\Models\TarifLayananDetailDB;
 use App\Models\TracerDB;
 use App\Models\TransaksiDB;
@@ -1176,7 +1177,9 @@ class AntrianController extends Controller
     public function surat_kontrol_poli(Request $request)
     {
         $kunjungans = null;
+        $surat_kontrols = null;
         if ($request->tanggal) {
+            $surat_kontrols = SuratKontrol::whereDate('tglTerbitKontrol', $request->tanggal)->get();
             $kunjungans = KunjunganDB::whereDate('tgl_masuk', $request->tanggal)
                 ->where('no_sep', "!=", null)
                 ->where('no_rujukan', "!=", null)
@@ -1198,12 +1201,13 @@ class AntrianController extends Controller
             'request' => $request,
             'unit' => $unit,
             'dokters' => $dokters,
+            'surat_kontrols' => $surat_kontrols,
         ]);
     }
-    public function surat_kontrol_create(Request $request)
-    {
-        dd($request->all());
-    }
+    // public function surat_kontrol_create(Request $request)
+    // {
+    //     dd($request->all());
+    // }
     // farmasi
     public function farmasi(Request $request)
     {

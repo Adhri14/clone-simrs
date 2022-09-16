@@ -85,7 +85,7 @@
                                         'format' => 'YYYY-MM-DD',
                                         'dayViewHeaderFormat' => 'MMM YYYY',
                                         'minDate' => "js:moment().add(1, 'days')",
-                                        'maxDate' => "js:moment().endOf('month')",
+                                        // 'maxDate' => "js:moment().endOf('month')",
                                         'daysOfWeekDisabled' => [0],
                                     ];
                                 @endphp
@@ -148,6 +148,31 @@
                     </div>
 
                 </div>
+                <x-adminlte-card title="Surat Kontrol Poliklinik ({{ $surat_kontrols->count() }})" theme="primary"
+                    icon="fas fa-info-circle" collapsible>
+                    @php
+                        $heads = ['Tgl Dibuat', 'Tgl S. Kontrol', 'Poliklinik', 'No S. Kontrol', 'No SEP Asal', 'Pasien'];
+                        // $config['order'] = ['7', 'asc'];
+                    @endphp
+                    <x-adminlte-datatable id="table1" class="nowrap" :heads="$heads" striped bordered hoverable
+                        compressed>
+                        @foreach ($surat_kontrols as $item)
+                            <tr>
+                                <td>{{ $item->tglTerbitKontrol }}</td>
+                                <td>{{ $item->tglRencanaKontrol }}</td>
+                                <td>{{ $item->namaDokter }}</td>
+                                <td>{{ $item->noSuratKontrol }}</td>
+                                <td>{{ $item->noSepAsalKontrol }}</td>
+                                <td>{{ $item->nama }}</td>
+                                {{-- <td>{{ $item->kode_kunjungan }}</td> --}}
+                                {{-- <td>{{ $item->no_rm }}<br>{{ $item->pasien->nama_px }}</td> --}}
+                                {{-- <td>{{ $item->no_sep }}</td> --}}
+                                {{-- <td>{{ $item->no_rujukan }}</td> --}}
+                                {{-- <td>{{ $item->unit->nama_unit }}<br>{{ $item->dokter->nama_paramedis }}</td> --}}
+                            </tr>
+                        @endforeach
+                    </x-adminlte-datatable>
+                </x-adminlte-card>
             @endif
         </div>
     </div>

@@ -551,18 +551,18 @@ class AntrianBPJSController extends Controller
             ];
         }
         // cek duplikasi nik antrian
-        // $antrian_nik = Antrian::where('tanggalperiksa', $request->tanggalperiksa)
-        //     ->where('nik', $request->nik)
-        //     ->where('taskid', '<=', 4)
-        //     ->count();
-        // if ($antrian_nik) {
-        //     return $response = [
-        //         "metadata" => [
-        //             "message" => "Terdapat antrian dengan nomor NIK yang sama pada tanggal tersebut yang belum selesai.",
-        //             "code" => 201,
-        //         ],
-        //     ];
-        // }
+        $antrian_nik = Antrian::where('tanggalperiksa', $request->tanggalperiksa)
+            ->where('nik', $request->nik)
+            ->where('taskid', '<=', 4)
+            ->count();
+        if ($antrian_nik) {
+            return $response = [
+                "metadata" => [
+                    "message" => "Terdapat antrian dengan nomor NIK yang sama pada tanggal tersebut yang belum selesai.",
+                    "code" => 201,
+                ],
+            ];
+        }
         // proses ambil antrian
         $pasien = PasienDB::where('nik_Bpjs',  $request->nik)->first();
         // cek pasien baru hit info pasien baru
@@ -720,7 +720,7 @@ class AntrianBPJSController extends Controller
             //tambah antrian bpjs
             $qr = QrCode::backgroundColor(255, 255, 51)->format('png')->generate($request->kodebooking, "public/storage/antrian" . $request->kodebooking . ".png");
             $request['filepath'] = public_path("storage/antrian" . $request->kodebooking . ".png");
-            $request['caption'] = "Kode booking : " . $request->kodebooking;
+            $request['caption'] = "Kode booking : " . $request->kodebooking ."\nSilahkan gunakan *QR Code* ini untuk checkin di mesin antrian rawat jalan.";
             $request['number'] = $request->nohp;
             $wa = new WhatsappController();
             $wa->send_filepath($request);
@@ -1070,6 +1070,7 @@ class AntrianBPJSController extends Controller
                 $request['noKartu'] = $antrian->nomorkartu;
                 $request['tglSep'] = Carbon::createFromTimestamp($request->waktu / 1000)->format('Y-m-d');
                 $request['noMR'] = $antrian->norm;
+                $request['norm'] = $antrian->norm;
                 $request['nik'] = $antrian->nik;
                 $request['nohp'] = $antrian->nohp;
                 $request['kodedokter'] = $antrian->kodedokter;

@@ -29,9 +29,9 @@ class WhatsappController extends Controller
     {
         // $pesan = "RUJUKAN FASKES 1_0000067046703#286#2022-09-14";
         // $pesan = "KONTROL_0000067046703#341#2022-09-16";
-        $pesan = "DAFTAR KONTROL_1018R0010922K002889#349#2022-09-16";
+        $pesan = "KONTROL_0001464157247#301#2022-09-21";
         $request['number'] = '6289529909036@c.us';
-        $sk = $this->daftar_surat_kontrol($pesan, $request);
+        $sk = $this->surat_kontrol_peserta($pesan, $request);
         dd($sk);
         // return $this->surat_kontrol_peserta($pesan, $request);
     }
@@ -119,11 +119,11 @@ class WhatsappController extends Controller
                 return $this->send_list($request);
                 break;
             case 'INFO CARA PENDAFTARAN':
-                $request['contenttext'] = "Untuk pendaftaran melalui Layanan Whatsapp RSUD Waled sebagai berikut :\n\n1. Pilih menu utama *DAFTAR PASIEN RAWAT JALAN*. \n2. Pilih *POLIKLINIK* yang akan dikunjungi dan yang tersedia untuk daftar online. \n3. Pilih *TANGGAL* kapan pasien akan berkunjung. \n4. Pilih *JADWAL DOKTER* yang akan dituju oleh pasien. \n5. Pilih *JENIS PASIEN* terdapat pilihan pasien *JKN / UMUM*. \n6. Menuliskan format pendaftaran, untuk pasien JKN memasukan *NOMOR RUJUKAN* dari faskes 1, untuk pasien Umum memasukan *NIK/KTP*. \n7. Konfirmasi pendaftaran lalu berhasil didaftarkan atau batal pendaftaran.\n\nUntuk pertanyaan & pengaduan silahkan hubungi :\n*Humas RSUD Waled 08983311118*";
-                $request['titletext'] = "Info Cara Pendaftaran";
-                $request['buttontext'] = 'MENU UTAMA';
-                $request['rowtitle'] = 'DAFTAR PASIEN RAWAT JALAN,INFO JADWAL POLIKLINIK,INFO CARA PENDAFTARAN,PERTANYAAN DAN PENGADUAN';
-                return $this->send_list($request);
+                $request['message'] = "Untuk pendaftaran melalui Layanan Whatsapp RSUD Waled sebagai berikut :\n\n1. Klik *MENU UTAMA* pilih *DAFTAR PASIEN RAWAT JALAN*. \n2. Pilih *POLIKLINIK* yang akan dikunjungi dan yang tersedia untuk daftar online. \n3. Pilih *TANGGAL* kapan pasien akan berkunjung. \n4. Pilih *JADWAL DOKTER* yang akan dituju oleh pasien. \n5. Pilih *JENIS PASIEN* terdapat pilihan pasien *JKN / UMUM*. \n6. Menuliskan format pendaftaran, untuk *PASIEN JKN* memasukan *Nomor Kartu* JKN/BPJS/KIS, untuk *PASIEN UMUM* memasukan *NIK/KTP*. \n7. Jika *PASIEN JKN/BPJS* akan memilih jenis kunjungan melalui Rujukan Faskes 1, Rujukan Internal, Kontrol, atau Rujukan Antar RS. Kemudian pilih nomor rujukan/surat tersebut. \n8. Konfirmasi pendaftaran lalu berhasil didaftarkan atau batal pendaftaran. Anda akan mendapatkan gambar *QR Code* untuk discan saat checkin di Rumah Sakit.\n\nUntuk pertanyaan & pengaduan silahkan hubungi :\n*Humas RSUD Waled 08983311118*";
+                // $request['titletext'] = "Info Cara Pendaftaran";
+                // $request['buttontext'] = 'MENU UTAMA';
+                // $request['rowtitle'] = 'DAFTAR PASIEN RAWAT JALAN,INFO JADWAL POLIKLINIK,INFO CARA PENDAFTARAN,PERTANYAAN DAN PENGADUAN';
+                return $this->send_message($request);
                 break;
             case 'INFO JADWAL POLIKLINIK':
                 $request['contenttext'] = "Silahkan pilih poliklinik yang tersedia untuk daftar online rawat jalan pasien dibawah ini.";
@@ -260,7 +260,7 @@ class WhatsappController extends Controller
                     return $this->cek_nomorkartu_peserta($pesan, $request);
                 }
                 // pilih rujukan faskses 1 peserta
-                else if (substr($pesan, 0, 11) == 'RUJUKAN RS_') {
+                else if (substr($pesan, 0, 17) == 'RUJUKAN ANTAR RS_') {
                     return $this->rujukan_peserta($pesan, $request);
                 }
                 // pilih rujukan faskses 1 peserta
@@ -271,18 +271,18 @@ class WhatsappController extends Controller
                 else if (substr($pesan, 0, 20) == 'DAFTAR RUJUKAN RS_') {
                     return $this->daftar_rujukan_fktp($pesan, $request);
                 }
-                                // pilih rujukan faskses 1 peserta
-                                else if (substr($pesan, 0, 17) == 'RUJUKAN FASKES 1_') {
-                                    return $this->rujukan_peserta($pesan, $request);
-                                }
-                                // pilih rujukan faskses 1 peserta
-                                else if (str_contains($pesan, '_RUJUKANFKTP#')) {
-                                    return $this->cek_rujukan($pesan, $request);
-                                }
-                                // insert antrian rujukan fk1
-                                else if (substr($pesan, 0, 20) == 'DAFTAR RUJUKAN FKTP_') {
-                                    return $this->daftar_rujukan_fktp($pesan, $request);
-                                }
+                // pilih rujukan faskses 1 peserta
+                else if (substr($pesan, 0, 17) == 'RUJUKAN FASKES 1_') {
+                    return $this->rujukan_peserta($pesan, $request);
+                }
+                // pilih rujukan faskses 1 peserta
+                else if (str_contains($pesan, '_RUJUKANFKTP#')) {
+                    return $this->cek_rujukan($pesan, $request);
+                }
+                // insert antrian rujukan fk1
+                else if (substr($pesan, 0, 20) == 'DAFTAR RUJUKAN FKTP_') {
+                    return $this->daftar_rujukan_fktp($pesan, $request);
+                }
                 // pilih rujukan faskses 1 peserta
                 else if (substr($pesan, 0, 8) == 'KONTROL_') {
                     return $this->surat_kontrol_peserta($pesan, $request);
@@ -309,10 +309,10 @@ class WhatsappController extends Controller
                 }
                 // default
                 else {
-                    $request['contenttext'] = "Mohon maaf pesan yang anda masukan tidak dapat diproses oleh sistem.\n\nSilahkan pilih *MENU UTAMA* yang dapat diproses dibawah ini.\n\nUntuk pertanyaan & pengaduan silahkan hubungi :\n*Humas RSUD Waled 08983311118*";
+                    $request['contenttext'] = "Mohon maaf pesan yang anda masukan tidak dapat diproses oleh sistem.\n\nSilahkan klik *MENU UTAMA* yang dapat diproses dibawah ini.\n\nUntuk pertanyaan & pengaduan silahkan hubungi :\n*Humas RSUD Waled 08983311118*";
                     $request['titletext'] = "Layanan Whatsapp RSUD Waled";
                     $request['buttontext'] = 'MENU UTAMA';
-                    $request['rowtitle'] = 'DAFTAR PASIEN RAWAT JALAN,INFO JADWAL POLIKLINIK,INFO CARA PENDAFTARAN,PERTANYAAN DAN PENGADUAN';
+                    $request['rowtitle'] = 'INFO CARA PENDAFTARAN,DAFTAR PASIEN RAWAT JALAN,INFO JADWAL POLIKLINIK,PERTANYAAN DAN PENGADUAN';
                     return $this->send_list($request);
                     break;
                 }
@@ -426,7 +426,7 @@ class WhatsappController extends Controller
                     $antrian = new AntrianBPJSController();
                     $response = json_decode(json_encode($antrian->ambil_antrian($request)));
                     if ($response->metadata->code != 200) {
-                        $request['message'] = "Error Pendaftaran : " .  $response->metadata->message;
+                        $request['message'] = "Maaf anda tidak bisa daftar : " .  $response->metadata->message;
                         return $this->send_message($request);
                     } else {
                         return $response;
@@ -579,7 +579,7 @@ class WhatsappController extends Controller
                             $antrian = new AntrianBPJSController();
                             $response = json_decode(json_encode($antrian->ambil_antrian($request)));
                             if ($response->metadata->code != 200) {
-                                $request['message'] = "Error Pendaftaran : " .  $response->metadata->message;
+                                $request['message'] = "Maaf anda tidak bisa daftar : " .  $response->metadata->message;
                                 return $this->send_message($request);
                             } else {
                                 return $response;
@@ -713,11 +713,11 @@ class WhatsappController extends Controller
                             $request['diagnosa'] = $rujukan->response->rujukan->diagnosa->nama;
                             $request['polirujukan'] = $rujukan->response->rujukan->poliRujukan->nama;
                             //    jika jadwal dan poli tujuan berbeda
-                            if (str_contains($request->polirujukan, $jadwaldokter->namasubspesialis)) {
-                                $request['message'] = "*Pesan Gagal (203)*\nJadwal Poli (" . strtoupper($jadwaldokter->namasubspesialis) . ") dan Poli Tujuan Rujukan (" . strtoupper($request->polirujukan) . ") yang dipilih berbeda. \nSilahkan plih jadwal sesuai dengan rujukan anda.";
-                                $this->send_message($request);
-                                return $this->pilih_poli($pesan, $request);
-                            }
+                            // if (str_contains($request->polirujukan, $jadwaldokter->namasubspesialis)) {
+                            //     $request['message'] = "*Pesan Gagal (203)*\nJadwal Poli (" . strtoupper($jadwaldokter->namasubspesialis) . ") dan Poli Tujuan Rujukan (" . strtoupper($request->polirujukan) . ") yang dipilih berbeda. \nSilahkan plih jadwal sesuai dengan rujukan anda.";
+                            //     $this->send_message($request);
+                            //     return $this->pilih_poli($pesan, $request);
+                            // }
                             $request['nohp'] = $request->number;
                             $request['tanggalperiksa'] = $tanggalperiksa;
                             $request['kodepoli'] = $jadwaldokter->kodesubspesialis;
@@ -799,7 +799,7 @@ class WhatsappController extends Controller
                             $antrian = new AntrianBPJSController();
                             $response = json_decode(json_encode($antrian->ambil_antrian($request)));
                             if ($response->metadata->code != 200) {
-                                $request['message'] = "Error Pendaftaran : " .  $response->metadata->message;
+                                $request['message'] = "Maaf anda tidak bisa daftar : " .  $response->metadata->message;
                                 return $this->send_message($request);
                             } else {
                                 return $response;
@@ -851,12 +851,18 @@ class WhatsappController extends Controller
             $rowsuratkontrol = null;
             $descsurarujukan = null;
             $suratkontrol = $suratkontrol->response->list;
+
             foreach ($suratkontrol as $value) {
                 if ($value->terbitSEP == "Belum") {
                     $rowsuratkontrol =  $rowsuratkontrol .  $value->jnsPelayanan  . " " . $value->namaPoliTujuan  . " " . $value->namaDokter . ',';
                     $descsurarujukan =  $descsurarujukan . '_SURATKONTROL#' . $value->noSuratKontrol . "#" . $jadwal . "#" . $tanggalperiksa . ',';
                 }
             }
+            if ($rowsuratkontrol == null) {
+                $request['message'] = "*Pesan Gagal Get Surat Kontrol (206)*\nSemua surat kontrol anda telah digunakan";
+                return $this->send_message($request);
+            };
+
             $request['contenttext'] = "Silahkan pilih nomor surat kontrol yang akan digunakan untuk mendaftar.";
             $request['titletext'] = "Surat Kontrol Pasien";
             $request['buttontext'] = 'PILIH SURAT KONTROL';
@@ -992,7 +998,7 @@ class WhatsappController extends Controller
                 $antrian = new AntrianBPJSController();
                 $response = json_decode(json_encode($antrian->ambil_antrian($request)));
                 if ($response->metadata->code != 200) {
-                    $request['message'] = "Error Pendaftaran : " .  $response->metadata->message;
+                    $request['message'] = "Maaf anda tidak bisa daftar : " .  $response->metadata->message;
                     return $this->send_message($request);
                 } else {
                     return $response;
@@ -1163,7 +1169,7 @@ class WhatsappController extends Controller
                             $antrian = new AntrianBPJSController();
                             $response = json_decode(json_encode($antrian->ambil_antrian($request)));
                             if ($response->metadata->code != 200) {
-                                $request['message'] = "Error Pendaftaran : " .  $response->metadata->message;
+                                $request['message'] = "Maaf anda tidak bisa daftar : " .  $response->metadata->message;
                                 return $this->send_message($request);
                             } else {
                                 return $response;

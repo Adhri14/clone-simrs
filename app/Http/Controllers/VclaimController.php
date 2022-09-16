@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\API\VclaimBPJSController;
+use App\Models\Poliklinik;
 use App\Models\SuratKontrol;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -91,25 +92,26 @@ class VclaimController extends Controller
         $request['nomorsep'] = $request->nomorsep_suratkontrol;
         $request['tanggalperiksa'] = $request->tanggal_suratkontrol;
         $request['kodepoli'] = $request->kodepoli_suratkontrol;
+        $poli = Poliklinik::where('kodesubspesialis',$request->kodepoli)->first();
         $request['kodedokter'] = $request->kodedokter_suratkontrol;
         $vclaim = new VclaimBPJSController();
         $sk = $vclaim->insert_rencana_kontrol($request);
         if ($sk->metaData->code == 200) {
             SuratKontrol::create([
-                "noSuratKontrol" => $sk->response->noSuratKontrol,
-                "namaJnsKontrol" => "Surat Kontrol",
-                "tglRencanaKontrol" => $sk->response->tglRencanaKontrol,
                 "tglTerbitKontrol" => Carbon::now()->format('Y-m-d'),
-                "noSepAsalKontrol" => $request->nomorsep,
+                "tglRencanaKontrol" => $sk->response->tglRencanaKontrol,
                 "kodeDokter" => $request->kodedokter,
                 "namaDokter" => $sk->response->namaDokter,
+                "noSuratKontrol" => $sk->response->noSuratKontrol,
+                "namaJnsKontrol" => "Surat Kontrol",
+                "noSepAsalKontrol" => $request->nomorsep,
                 "noKartu" => $sk->response->noKartu,
                 "nama" => $sk->response->nama,
                 "kelamin" => $sk->response->kelamin,
                 "tglLahir" => $sk->response->tglLahir,
                 "user" => Auth::user()->name,
             ]);
-            Alert::success('Success', 'Pembuatan Surat Kontrol Berhasil ' .  $sk->response->noSuratKontrol);
+            Alert::success('Success', 'Pembuatan Surat Kontrol Berhasil Silahkan tulis nomor surat ini untuk pasien : ' .  $sk->response->noSuratKontrol);
             return redirect()->back();
         } else {
             Alert::error('Error', 'Pembuatan Surat Kontrol Gagal karena ' .  $sk->metaData->message);

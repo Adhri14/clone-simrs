@@ -349,22 +349,22 @@ class VclaimBPJSController extends Controller
             $response->response = json_decode($decrypt);
             // insert database surat kontrol
             $surat_kontrol = $response->response;
-            SuratKontrol::create([
-                "noSuratKontrol" => $surat_kontrol->noSuratKontrol,
-                "tglTerbitKontrol" => Carbon::now()->format("Y-m-d"),
-                "tglRencanaKontrol" => $surat_kontrol->tglRencanaKontrol,
-                "noRujukan" => $request->nomorreferensi,
-                "namaDokter" => $surat_kontrol->namaDokter,
-                "noKartu" => $surat_kontrol->noKartu,
-                "nama" => $surat_kontrol->nama,
-                "kelamin" => $surat_kontrol->kelamin,
-                "tglLahir" => $surat_kontrol->tglLahir,
-                "namaDiagnosa" => $surat_kontrol->namaDiagnosa,
-                "poliTujuan" => $request->kodepoli,
-                "kodeDokter" => $request->kodedokter,
-                "user" => "System Ambil Antrian",
-                "noSepAsalKontrol" => $request->nomorsep,
-            ]);
+            // SuratKontrol::create([
+            //     "noSuratKontrol" => $surat_kontrol->noSuratKontrol,
+            //     "tglTerbitKontrol" => Carbon::now()->format("Y-m-d"),
+            //     "tglRencanaKontrol" => $surat_kontrol->tglRencanaKontrol,
+            //     "noRujukan" => $request->nomorreferensi,
+            //     "namaDokter" => $surat_kontrol->namaDokter,
+            //     "noKartu" => $surat_kontrol->noKartu,
+            //     "nama" => $surat_kontrol->nama,
+            //     "kelamin" => $surat_kontrol->kelamin,
+            //     "tglLahir" => $surat_kontrol->tglLahir,
+            //     "namaDiagnosa" => $surat_kontrol->namaDiagnosa,
+            //     "poliTujuan" => $request->kodepoli,
+            //     "kodeDokter" => $request->kodedokter,
+            //     "user" => "System Ambil Antrian",
+            //     "noSepAsalKontrol" => $request->nomorsep,
+            // ]);
         }
         return $response;
     }

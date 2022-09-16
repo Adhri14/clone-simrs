@@ -11,13 +11,15 @@ class SuratKontrol extends Model
     protected $connection = 'mysql2';
     protected $table = 'jkn_surat_kontrol';
     protected $fillable = [
-        "noSuratKontrol",
-        "namaJnsKontrol",
-        "tglRencanaKontrol",
         "tglTerbitKontrol",
-        "noSepAsalKontrol",
+        "tglRencanaKontrol",
+        "kodepoli",
+        "namapoli",
         "kodeDokter",
         "namaDokter",
+        "noSuratKontrol",
+        "noSepAsalKontrol",
+        "namaJnsKontrol",
         "noKartu",
         "nama",
         "kelamin",
