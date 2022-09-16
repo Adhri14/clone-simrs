@@ -13,8 +13,8 @@ class SuratKontrol extends Model
     protected $fillable = [
         "tglTerbitKontrol",
         "tglRencanaKontrol",
-        "kodepoli",
-        "namapoli",
+        "poliTujuan",
+        "namaPoliTujuan",
         "kodeDokter",
         "namaDokter",
         "noSuratKontrol",

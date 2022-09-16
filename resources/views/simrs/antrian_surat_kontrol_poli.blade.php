@@ -151,7 +151,7 @@
                 <x-adminlte-card title="Surat Kontrol Poliklinik ({{ $surat_kontrols->count() }})" theme="primary"
                     icon="fas fa-info-circle" collapsible>
                     @php
-                        $heads = ['Tgl Dibuat', 'Tgl S. Kontrol', 'Poliklinik', 'No S. Kontrol', 'No SEP Asal', 'Pasien'];
+                        $heads = ['Tgl Dibuat', 'Tgl S. Kontrol', 'Poliklinik', 'No S. Kontrol', 'No SEP Asal', 'Pasien', 'Dokter'];
                         // $config['order'] = ['7', 'asc'];
                     @endphp
                     <x-adminlte-datatable id="table1" class="nowrap" :heads="$heads" striped bordered hoverable
@@ -160,15 +160,11 @@
                             <tr>
                                 <td>{{ $item->tglTerbitKontrol }}</td>
                                 <td>{{ $item->tglRencanaKontrol }}</td>
-                                <td>{{ $item->namaDokter }}</td>
+                                <td>{{ $item->namaPoliTujuan }}</td>
                                 <td>{{ $item->noSuratKontrol }}</td>
                                 <td>{{ $item->noSepAsalKontrol }}</td>
                                 <td>{{ $item->nama }}</td>
-                                {{-- <td>{{ $item->kode_kunjungan }}</td> --}}
-                                {{-- <td>{{ $item->no_rm }}<br>{{ $item->pasien->nama_px }}</td> --}}
-                                {{-- <td>{{ $item->no_sep }}</td> --}}
-                                {{-- <td>{{ $item->no_rujukan }}</td> --}}
-                                {{-- <td>{{ $item->unit->nama_unit }}<br>{{ $item->dokter->nama_paramedis }}</td> --}}
+                                <td>{{ $item->namaDokter }}</td>
                             </tr>
                         @endforeach
                     </x-adminlte-datatable>

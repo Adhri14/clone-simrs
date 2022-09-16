@@ -92,7 +92,7 @@ class VclaimController extends Controller
         $request['nomorsep'] = $request->nomorsep_suratkontrol;
         $request['tanggalperiksa'] = $request->tanggal_suratkontrol;
         $request['kodepoli'] = $request->kodepoli_suratkontrol;
-        $poli = Poliklinik::where('kodesubspesialis',$request->kodepoli)->first();
+        $poli = Poliklinik::where('kodesubspesialis', $request->kodepoli)->first();
         $request['kodedokter'] = $request->kodedokter_suratkontrol;
         $vclaim = new VclaimBPJSController();
         $sk = $vclaim->insert_rencana_kontrol($request);
@@ -100,6 +100,8 @@ class VclaimController extends Controller
             SuratKontrol::create([
                 "tglTerbitKontrol" => Carbon::now()->format('Y-m-d'),
                 "tglRencanaKontrol" => $sk->response->tglRencanaKontrol,
+                "poliTujuan" => $request->kodepoli,
+                "namaPoliTujuan" => $poli->namasubspesialis,
                 "kodeDokter" => $request->kodedokter,
                 "namaDokter" => $sk->response->namaDokter,
                 "noSuratKontrol" => $sk->response->noSuratKontrol,
