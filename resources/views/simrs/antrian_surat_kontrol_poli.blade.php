@@ -134,7 +134,7 @@
                             <x-adminlte-datatable id="table2" class="nowrap" :heads="$heads" striped bordered hoverable
                                 compressed>
                                 @foreach ($kunjungans as $item)
-                                    <tr>
+                                    <tr class={{ $item->surat_kontrol ? 'text-success' : null }}>
                                         <td>{{ $item->tgl_masuk }}</td>
                                         <td>{{ $item->kode_kunjungan }}</td>
                                         <td>{{ $item->no_rm }}<br>{{ $item->pasien->nama_px }}</td>
@@ -144,6 +144,7 @@
                                     </tr>
                                 @endforeach
                             </x-adminlte-datatable>
+                            Warna teks hijau adalah kunjungan yang telah dibuatkan surat kontrol.
                         </x-adminlte-card>
                     </div>
 

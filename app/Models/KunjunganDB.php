@@ -58,6 +58,8 @@ class KunjunganDB extends Model
     {
         return $this->belongsTo(ParamedisDB::class, 'kode_paramedis', 'kode_paramedis');
     }
-
-    // public $timestamps = false;
+    public function surat_kontrol()
+    {
+        return $this->hasOne(SuratKontrol::class, 'noSepAsalKontrol', 'no_sep');
+    }
 }

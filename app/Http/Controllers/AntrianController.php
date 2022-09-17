@@ -1188,6 +1188,7 @@ class AntrianController extends Controller
             if ($request->kodepoli != null) {
                 $poli = UnitDB::where('KDPOLI', $request->kodepoli)->first();
                 $kunjungans = $kunjungans->where('kode_unit', $poli->kode_unit);
+                $surat_kontrols = $surat_kontrols->where('poliTujuan', $request->kodepoli);
             }
             if ($request->kodedokter != null) {
                 $dokter = ParamedisDB::where('kode_dokter_jkn', $request->kodedokter)->first();
