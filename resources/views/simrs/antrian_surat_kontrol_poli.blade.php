@@ -137,7 +137,7 @@
                                     <tr class={{ $item->surat_kontrol ? 'text-success' : null }}>
                                         <td>{{ $item->tgl_masuk }}</td>
                                         <td>{{ $item->kode_kunjungan }}</td>
-                                        <td>{{ $item->no_rm }}<br>{{ $item->pasien->nama_px }}</td>
+                                        <td>{{ $item->pasien->no_Bpjs }}<br>{{ $item->no_rm }} {{ $item->pasien->nama_px }}</td>
                                         <td>{{ $item->no_sep }}</td>
                                         <td>{{ $item->no_rujukan }}</td>
                                         <td>{{ $item->unit->nama_unit }}<br>{{ $item->dokter->nama_paramedis }}</td>

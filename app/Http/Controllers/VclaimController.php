@@ -28,10 +28,19 @@ class VclaimController extends Controller
             }
         }
         $monitoring = $api->monitoring_pelayanan_peserta($request);
+
+        $request['formatfilter'] = 1;
+        $suratkontrols = $api->surat_kontrol_peserta($request);
+        if ($suratkontrols->metaData->code == 200) {
+            $suratkontrols = $suratkontrols->response->list;
+        } else {
+            $suratkontrols = null;
+        }
         return view('vclaim.monitoring_pelayanan_peserta', [
             'request' => $request,
             'response' => $response,
             'monitoring' => $monitoring,
+            'suratkontrols' => $suratkontrols,
         ]);
     }
     public function delete_sep($noSep, Request $request)

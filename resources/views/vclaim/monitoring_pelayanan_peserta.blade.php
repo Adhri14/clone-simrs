@@ -143,6 +143,26 @@
                             </x-adminlte-datatable>
                         </div>
                     </div>
+                    <x-adminlte-card title="Surat Kontrol Peserta" theme="primary" icon="fas fa-info-circle" collapsible>
+                        @php
+                            $heads = ['Tgl Dibuat', 'Tgl S. Kontrol', 'Poliklinik', 'No S. Kontrol', 'No SEP Asal', 'Pasien', 'Dokter'];
+                            // $config['order'] = ['7', 'asc'];
+                        @endphp
+                        <x-adminlte-datatable id="table2" class="nowrap" :heads="$heads" striped bordered hoverable
+                            compressed>
+                            @foreach ($suratkontrols as $item)
+                                <tr>
+                                    <td>{{ $item->tglTerbitKontrol }}</td>
+                                    <td>{{ $item->tglRencanaKontrol }}</td>
+                                    <td>{{ $item->namaPoliTujuan }}</td>
+                                    <td>{{ $item->noSuratKontrol }}</td>
+                                    <td>{{ $item->noSepAsalKontrol }}</td>
+                                    <td>{{ $item->nama }}</td>
+                                    <td>{{ $item->namaDokter }}</td>
+                                </tr>
+                            @endforeach
+                        </x-adminlte-datatable>
+                    </x-adminlte-card>
                 @endif
             @endisset
         </div>
