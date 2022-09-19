@@ -718,12 +718,7 @@ class AntrianBPJSController extends Controller
             $request['kuotanonjkn'] = round($jadwal->kapasitaspasien * 20 / 100);
             $request['keterangan'] = "Peserta harap 60 menit lebih awal dari jadwal untuk checkin dekat mesin antrian untuk mencetak tiket antrian.";
             //tambah antrian bpjs
-            $qr = QrCode::backgroundColor(255, 255, 51)->format('png')->generate($request->kodebooking, "public/storage/antrian" . $request->kodebooking . ".png");
-            $request['filepath'] = public_path("storage/antrian" . $request->kodebooking . ".png");
-            $request['caption'] = "Kode booking : " . $request->kodebooking ."\nSilahkan gunakan *QR Code* ini untuk checkin di mesin antrian rawat jalan.";
-            $request['number'] = $request->nohp;
-            $wa = new WhatsappController();
-            $wa->send_filepath($request);
+
             $response = $this->tambah_antrian($request);
             if ($response->metadata->code == 200) {
                 // tambah antrian database
@@ -766,6 +761,13 @@ class AntrianBPJSController extends Controller
                 ]);
                 // kirim notif wa
                 try {
+                    $qr = QrCode::backgroundColor(255, 255, 51)->format('png')->generate($request->kodebooking, "public/storage/antrian" . $request->kodebooking . ".png");
+                    $request['filepath'] = public_path("storage/antrian" . $request->kodebooking . ".png");
+                    $request['caption'] = "Kode booking : " . $request->kodebooking . "\nSilahkan gunakan *QR Code* ini untuk checkin di mesin antrian rawat jalan.";
+                    $request['number'] = $request->nohp;
+                    $wa = new WhatsappController();
+                    $wa->send_filepath($request);
+
                     $wa = new WhatsappController();
                     $request['message'] = "*Antrian Berhasil di Daftarkan*\nAntrian anda berhasil didaftarkan melalui Layanan Online RSUD Waled dengan data sebagai berikut : \n\n*Kode Antrian :* " . $request->kodebooking .  "\n*Angka Antrian :* " . $request->angkaantrean .  "\n*Nomor Antrian :* " . $request->nomorantrean . "\n*Jenis Pasien :* " . $request->jenispasien .  "\n*Jenis Kunjungan :* " . $request->jeniskunjungan .  "\n\n*Nama :* " . $request->nama . "\n*Poliklinik :* " . $request->namapoli  . "\n*Dokter :* " . $request->namadokter  .  "\n*Jam Praktek :* " . $request->jampraktek  .  "\n*Tanggal Berobat :* " . $request->tanggalperiksa . "\n\n*Keterangan :* " . $request->keterangan  .  "\nTerima kasih. Semoga sehat selalu.\nUntuk pertanyaan & pengaduan silahkan hubungi :\n*Humas RSUD Waled 08983311118*";
                     $request['number'] = $request->nohp;

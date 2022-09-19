@@ -29,9 +29,9 @@ class WhatsappController extends Controller
     {
         // $pesan = "RUJUKAN FASKES 1_0000067046703#286#2022-09-14";
         // $pesan = "KONTROL_0000067046703#341#2022-09-16";
-        $pesan = "KONTROL_0001464157247#301#2022-09-21";
+        $request['message']  = "TANGGAL_2022-09-19#ANAK";
         $request['number'] = '6289529909036@c.us';
-        $sk = $this->surat_kontrol_peserta($pesan, $request);
+        $sk = $this->callback($request);
         dd($sk);
         // return $this->surat_kontrol_peserta($pesan, $request);
     }
@@ -144,10 +144,9 @@ class WhatsappController extends Controller
                 if (substr($pesan, 0, 11) == 'POLIKLINIK_') {
                     $poli = explode('_', $pesan)[1];
                     $now = Carbon::now();
-                    $rowtanggal = $poli . '_TANGGAL#' . $now->format('Y-m-d');
-
+                    $rowtanggal = 'TANGGAL_' . $now->format('Y-m-d') . "#" . $poli;
                     for ($i = 0; $i < 6; $i++) {
-                        $rowtanggal = $rowtanggal . ',' . $poli . '_TANGGAL#' . $now->addDay(1)->format('Y-m-d');
+                        $rowtanggal = $rowtanggal . ',' .  'TANGGAL_' . $now->addDay(1)->format('Y-m-d') . "#" . $poli;
                     }
                     $request['contenttext'] = "Silahkan pilih tanggal rawat jalan poliklinik " . strtoupper($poli) . " dibawah ini.";
                     $request['titletext'] = "Poliklinik  " . strtoupper($poli);
@@ -169,9 +168,10 @@ class WhatsappController extends Controller
                     return $this->send_button($request);
                 }
                 // tanggal poli terus pilih jadwal
-                else if (str_contains($pesan, '_TANGGAL#')) {
-                    $poli = explode('_', $pesan)[0];
-                    $tanggal = Carbon::parse(explode('#', $pesan)[1]);
+                else if (str_contains($pesan, 'TANGGAL_')) {
+                    $format = explode('_', $pesan)[1];
+                    $tanggal = Carbon::parse(explode('#', $format)[0]);
+                    $poli = explode('#', $format)[1];
                     $hari = $tanggal->dayOfWeek;
                     $rowjadwaldokter = null;
                     $jadwaldokters = JadwalDokter::where('hari', $hari)
@@ -181,9 +181,9 @@ class WhatsappController extends Controller
                         $request['titletext'] = "Pilih Tanggal Jadwal Dokter Poliklinik";
                         $request['buttontext'] = 'PILIH JADWAL POLIKLINIK';
                         $now = Carbon::now();
-                        $rowhari = $poli . '_TANGGAL#' . $now->format('Y-m-d');
+                        $rowhari = 'TANGGAL_' . $now->format('Y-m-d') . "#" . $poli;
                         for ($i = 0; $i < 6; $i++) {
-                            $rowhari = $rowhari . ',' . $poli . '_TANGGAL#' . $now->addDay(1)->format('Y-m-d');
+                            $rowhari = $rowhari . ','  . 'TANGGAL_' . $now->addDay(1)->format('Y-m-d') .  "#" . $poli;
                         }
                         $request['rowtitle'] = $rowhari;
                         return $this->send_list($request);
@@ -205,30 +205,15 @@ class WhatsappController extends Controller
                     // jika jadwal libur
                     if ($jadwaldokter->libur == 1) {
                         $poli = $jadwaldokter->namasubspesialis;
-                        $tanggal = Carbon::parse(explode('#', $pesan)[3]);
-                        $hari = $tanggal->dayOfWeek;
-                        $rowjadwaldokter = null;
-                        $jadwaldokters = JadwalDokter::where('hari', $hari)
-                            ->where('namasubspesialis', $poli)->get();
-                        if ($jadwaldokters->count() == 0) {
-                            $request['contenttext'] = "Mohon maaf tidak ada jadwal dokter poliklinik " . $poli . " di tanggal " . $tanggal->format('Y-m-d') . ".\n\nSilahkan pilih jadwal dokter poliklinik " . $poli . " pada tanggal tanggal yang lain dibawah ini.";
-                            $request['titletext'] = "Pilih Tanggal Jadwal Dokter Poliklinik";
-                            $request['buttontext'] = 'PILIH JADWAL POLIKLINIK';
-                            $now = Carbon::now();
-                            $rowhari = $poli . '_TANGGAL#' . $now->format('Y-m-d');
-                            for ($i = 0; $i < 6; $i++) {
-                                $rowhari = $rowhari . ',' . $poli . '_TANGGAL#' . $now->addDay(1)->format('Y-m-d');
-                            }
-                            $request['rowtitle'] = $rowhari;
-                            return $this->send_list($request);
+                        $now = Carbon::now();
+                        $rowtanggal = 'TANGGAL_' . $now->format('Y-m-d') . "#" . $poli;
+                        for ($i = 0; $i < 6; $i++) {
+                            $rowtanggal = $rowtanggal . ',' . 'TANGGAL_' . $now->addDay(1)->format('Y-m-d') . "#" . $poli;
                         }
-                        foreach ($jadwaldokters as  $value) {
-                            $rowjadwaldokter = $rowjadwaldokter . $value->jadwal . " " . $value->namadokter . '_JADWAL.ID#' . $value->id . '#' . $tanggal->format('Y-m-d') . ',';
-                        }
-                        $request['contenttext'] = "Silahkan pilih jadwal dokter poliklinik " . $poli . " pada tanggal " . $tanggal->format('Y-m-d') . " dibawah ini.";
-                        $request['titletext'] = "Pilih Jadwal Dokter";
-                        $request['buttontext'] = 'PILIH JADWAL DOKTER';
-                        $request['rowtitle'] = $rowjadwaldokter;
+                        $request['contenttext'] = "Silahkan pilih tanggal lain rawat jalan poliklinik " . strtoupper($poli) . " dibawah ini.";
+                        $request['titletext'] = "Jadwal Dokter Pilihan sedang Libur/Tutup";
+                        $request['buttontext'] = 'PILIH TANGGAL';
+                        $request['rowtitle'] = $rowtanggal;
                         return $this->send_list($request);
                     }
                     // jika jadwal jalan
@@ -632,7 +617,7 @@ class WhatsappController extends Controller
             $request['contenttext'] = "Nomor kartu berhasil ditemukan dengan data sebagai berikut : \n*Nama* : " . $peserta->nama . "\n*NIK* : " . $peserta->nik . "\n*No Kartu* : " . $peserta->noKartu . "\n*No RM* : " . $peserta->mr->noMR . "\n\n*Status* : " . $peserta->statusPeserta->keterangan . "\n*Faskes 1* : " . $peserta->provUmum->nmProvider . "\n*Jenis Peserta* : " . $peserta->jenisPeserta->keterangan . "\n*Hak Kelas* : " . $peserta->hakKelas->keterangan . "\n\nSilahkan pilih jenis kunjungan dibawah ini.";
             $request['titletext'] = "Pilih Jenis Kunjungan";
             $request['buttontext'] = 'PILIH JENIS KUNJUNGAN';
-            $request['rowtitle'] = "RUJUKAN FASKES 1_" . $nomorkartu . "#" . $jadwal . "#" . $tanggalperiksa . "," . "RUJUKAN INTERNAL_" . $nomorkartu . "#" . $jadwal . "#" . $tanggalperiksa . "," . "KONTROL_" . $nomorkartu . "#" . $jadwal . "#" . $tanggalperiksa . "," . "RUJUKAN ANTAR RS_" . $nomorkartu . "#" . $jadwal . "#" . $tanggalperiksa . ",";
+            $request['rowtitle'] = "RUJUKAN FASKES 1_" . $nomorkartu . "#" . $jadwal . "#" . $tanggalperiksa . "," . "KONTROL_" . $nomorkartu . "#" . $jadwal . "#" . $tanggalperiksa . "," . "RUJUKAN ANTAR RS_" . $nomorkartu . "#" . $jadwal . "#" . $tanggalperiksa . ",";
             return $this->send_list($request);
         }
     }
@@ -742,10 +727,10 @@ class WhatsappController extends Controller
             }
             // daftar pake surat kontrol
             else {
-                $request['contenttext'] = "*Mohon Maaf Tidak Bisa Daftar Rujukan (202)*\nMohon maaf kunjungan rujukan lebih dari satu. Anda harus mendaftar menggunakan Surat Kontrol yang dibuat saat berobat sebelumnya.\nSilahkan daftar melalui *JENIS KUNJUNGAN* lainnya karena nomor rujukan FKTP telah digunakan.";
+                $request['contenttext'] = "*Mohon Maaf Tidak Bisa Daftar Rujukan (202)*\nMohon maaf kunjungan rujukan lebih dari satu. Anda harus mendaftar menggunakan *SURAT KONTROL* yang dibuat saat berobat sebelumnya.\nSilahkan daftar melalui *JENIS KUNJUNGAN* lainnya karena nomor rujukan FKTP telah digunakan.";
                 $request['titletext'] = "Pilih Jenis Kunjungan";
                 $request['buttontext'] = 'PILIH JENIS KUNJUNGAN';
-                $request['rowtitle'] = "RUJUKAN FASKES 1_" . $nomorkartu . "#" . $jadwalid . "#" . $tanggalperiksa . "," . "RUJUKAN INTERNAL_" . $nomorkartu . "#" . $jadwalid . "#" . $tanggalperiksa . "," . "KONTROL_" . $nomorkartu . "#" . $jadwalid . "#" . $tanggalperiksa . "," . "RUJUKAN ANTAR RS_" . $nomorkartu . "#" . $jadwalid . "#" . $tanggalperiksa . ",";
+                $request['rowtitle'] = "RUJUKAN FASKES 1_" . $nomorkartu . "#" . $jadwalid . "#" . $tanggalperiksa . "," . "KONTROL_" . $nomorkartu . "#" . $jadwalid . "#" . $tanggalperiksa . "," . "RUJUKAN ANTAR RS_" . $nomorkartu . "#" . $jadwalid . "#" . $tanggalperiksa . ",";
                 return $this->send_list($request);
             }
         }
@@ -859,7 +844,7 @@ class WhatsappController extends Controller
                 }
             }
             if ($rowsuratkontrol == null) {
-                $request['message'] = "*Mohon Maaf Tidak Bisa Get Surat Kontrol (206)*\nSemua surat kontrol anda telah digunakan.";
+                $request['message'] = "*Mohon Maaf Tidak Bisa Get Surat Kontrol (223)*\nSemua surat kontrol anda telah digunakan.";
                 return $this->send_message($request);
             };
 
@@ -1057,7 +1042,7 @@ class WhatsappController extends Controller
         $jumlah_sep =  $vclaim->rujukan_jumlah_sep($request);
         // gagal jumlah sep rujukan
         if ($jumlah_sep->metaData->code != 200) {
-            $request['message'] = "Error : " . $jumlah_sep->metaData->message;
+            $request['message'] = "Error 99 : " . $jumlah_sep->metaData->message;
             return $this->send_message($request);
         }
         // berhasil cek jumlah sep rujukan
@@ -1067,7 +1052,7 @@ class WhatsappController extends Controller
                 $rujukan  = $vclaim->rujukan_rs_nomor($request);
                 // gagal rujukan
                 if ($rujukan->metaData->code != 200) {
-                    $request['message'] = "Error : " . $rujukan->metaData->message;
+                    $request['message'] = "Error 101 : " . $rujukan->metaData->message;
                     return $this->send_message($request);
                 }
                 // rujukan berhasil
@@ -1084,7 +1069,7 @@ class WhatsappController extends Controller
                             $request['polirujukan'] = $rujukan->response->rujukan->poliRujukan->nama;
                             //    jika jadwal dan poli tujuan berbeda
                             if (str_contains($request->polirujukan, $jadwaldokter->namasubspesialis)) {
-                                $request['message'] = "*Mohon Maag (203)*\nJadwal Poli (" . strtoupper($jadwaldokter->namasubspesialis) . ") dan Poli Tujuan Rujukan (" . strtoupper($request->polirujukan) . ") yang dipilih berbeda. \nSilahkan plih jadwal sesuai dengan rujukan anda.";
+                                $request['message'] = "*Mohon Maaf (203)*\nJadwal Poli (" . strtoupper($jadwaldokter->namasubspesialis) . ") dan Poli Tujuan Rujukan (" . strtoupper($request->polirujukan) . ") yang dipilih berbeda. \nSilahkan plih jadwal sesuai dengan rujukan anda.";
                                 $this->send_message($request);
                                 return $this->pilih_poli($pesan, $request);
                             }
@@ -1105,17 +1090,17 @@ class WhatsappController extends Controller
                     }
                     // pasien baru
                     else {
-                        $request['message'] = "Error : Mohon maaf untuk pasien baru tidak bisa daftar melalui whatsapp. Silahkan untuk daftar langsung ke RSUD Waled. Terima kasih.";
+                        $request['message'] = "Pesan 102 : Mohon maaf untuk pasien baru tidak bisa daftar melalui whatsapp. Silahkan untuk daftar langsung ke RSUD Waled. Terima kasih.";
                         return $this->send_message($request);
                     }
                 }
             }
             // daftar pake surat kontrol
             else {
-                $request['contenttext'] = "*Mohon Maaf Tidak Bisa Daftar Rujukan (202)*\nKunjungan rujukan lebih dari satu. Anda harus mendaftar menggunakan Surat Kontrol yang dibuat saat berobat sebelumnya.\nSilahkan daftar melalui *JENIS KUNJUNGAN* lainnya karena nomor rujukan FKTP telah digunakan.";
+                $request['contenttext'] = "*Mohon Maaf Tidak Bisa Daftar Rujukan (202)*\nKunjungan rujukan lebih dari satu. Anda harus mendaftar menggunakan *SURAT KONTROL* yang dibuat saat berobat sebelumnya.\nSilahkan daftar melalui *JENIS KUNJUNGAN* lainnya karena nomor rujukan FKTP telah digunakan.";
                 $request['titletext'] = "Pilih Jenis Kunjungan";
                 $request['buttontext'] = 'PILIH JENIS KUNJUNGAN';
-                $request['rowtitle'] = "RUJUKAN FASKES 1_" . $nomorkartu . "#" . $jadwalid . "#" . $tanggalperiksa . "," . "RUJUKAN INTERNAL_" . $nomorkartu . "#" . $jadwalid . "#" . $tanggalperiksa . "," . "KONTROL_" . $nomorkartu . "#" . $jadwalid . "#" . $tanggalperiksa . "," . "RUJUKAN ANTAR RS_" . $nomorkartu . "#" . $jadwalid . "#" . $tanggalperiksa . ",";
+                $request['rowtitle'] = "RUJUKAN FASKES 1_" . $nomorkartu . "#" . $jadwalid . "#" . $tanggalperiksa . ","  . "KONTROL_" . $nomorkartu . "#" . $jadwalid . "#" . $tanggalperiksa . "," . "RUJUKAN ANTAR RS_" . $nomorkartu . "#" . $jadwalid . "#" . $tanggalperiksa . ",";
                 return $this->send_list($request);
             }
         }
