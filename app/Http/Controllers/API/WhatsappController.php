@@ -134,8 +134,6 @@ class WhatsappController extends Controller
                 return $this->send_message($request);
                 break;
             case 'INFO JADWAL POLIKLINIK':
-                $request['notif'] = 'info jadwal';
-                $this->send_notif($request);
                 $request['contenttext'] = "Silahkan pilih poliklinik yang tersedia untuk daftar online rawat jalan pasien dibawah ini.";
                 $request['titletext'] = "Info Jadwal Poliklinik";
                 $request['buttontext'] = 'PILIH POLIKLINIK';
@@ -150,8 +148,24 @@ class WhatsappController extends Controller
                 $this->pilih_poli($pesan, $request);
                 break;
             default:
+                // info jadwal poli
+                if (str_contains($pesan, 'JADWAL_POLIKLINIK_')) {
+                    $request['notif'] = 'info jadwal';
+                    $this->send_notif($request);
+
+                    $poli = explode('_', $pesan)[2];
+                    $rowjadwaldokter = null;
+                    $jadwaldokters = JadwalDokter::where('namasubspesialis', $poli)->get();
+                    foreach ($jadwaldokters as  $value) {
+                        $rowjadwaldokter = $rowjadwaldokter . $this->hari[$value->hari] . '  : ' . $value->namadokter . ' ' . $value->jadwal . " KUOTA : " . $value->kapasitaspasien . "\n";
+                    }
+                    $request['contenttext'] = "Jadwal dokter poliklinik " . $poli . " sebagai berikut : \n\n" . $rowjadwaldokter;
+                    $request['titletext'] = "3. Pilih Jadwal Dokter " . $poli;
+                    $request['buttontext'] = 'INFO JADWAL POLIKLINIK';
+                    return $this->send_button($request);
+                }
                 // 2. pilih poli terus tanggal
-                if (substr($pesan, 0, 11) == 'POLIKLINIK_') {
+                else if (substr($pesan, 0, 11) == 'POLIKLINIK_') {
                     $poli = explode('_', $pesan)[1];
                     $now = Carbon::now();
                     $rowtanggal = 'TANGGAL_' . $now->format('Y-m-d') . "#" . $poli;
@@ -239,53 +253,53 @@ class WhatsappController extends Controller
                     $request['message'] = "3209XXXX1234XXXX#UMUM#" . $jadwalid;
                     return $this->send_message($request);
                 }
+                // 6. pilih jenis pasien, masukan nik
+                else if (str_contains($pesan, '#UMUM#')) {
+                    return $this->konfirmasi_antrian_umum($pesan, $request);
+                }
                 // 6. pilih jenis kunjungan untuk pasien bpjs
                 else if (str_contains($pesan, '#BPJS#')) {
                     return $this->cek_nomorkartu_peserta($pesan, $request);
+                }
+                // 7. pilih jenis pasien, masukan nik
+                else if (str_contains($pesan, '#DAFTAR_UMUM#')) {
+                    return $this->daftar_antrian_umum($pesan, $request);
+                }
+                // 7. pilih rujukan faskses 1 peserta
+                else if (substr($pesan, 0, 17) == 'RUJUKAN FASKES 1_') {
+                    return $this->rujukan_peserta($pesan, $request);
+                }
+                // 7. pilih rujukan faskses 1 peserta
+                else if (substr($pesan, 0, 8) == 'KONTROL_') {
+                    return $this->surat_kontrol_peserta($pesan, $request);
                 }
                 // 7. pilih rujukan faskses 1 peserta
                 else if (substr($pesan, 0, 17) == 'RUJUKAN ANTAR RS_') {
                     return $this->rujukan_rs_peserta($pesan, $request);
                 }
                 // 8. pilih rujukan faskses 1 peserta
-                else if (str_contains($pesan, '_RUJUKANRS#')) {
-                    return $this->cek_rujukan_rs($pesan, $request);
-                }
-                // 9. insert antrian rujukan rs
-                else if (substr($pesan, 0, 18) == 'DAFTAR RUJUKAN RS_') {
-                    return $this->daftar_rujukan_rs($pesan, $request);
-                }
-                // 7. pilih rujukan faskses 1 peserta
-                else if (substr($pesan, 0, 17) == 'RUJUKAN FASKES 1_') {
-                    return $this->rujukan_peserta($pesan, $request);
-                }
-                // 8. pilih rujukan faskses 1 peserta
                 else if (str_contains($pesan, '_RUJUKANFKTP#')) {
                     return $this->cek_rujukan($pesan, $request);
-                }
-                // 9. insert antrian rujukan fk1
-                else if (substr($pesan, 0, 20) == 'DAFTAR RUJUKAN FKTP_') {
-                    return $this->daftar_rujukan_fktp($pesan, $request);
-                }
-                // 7. pilih rujukan faskses 1 peserta
-                else if (substr($pesan, 0, 8) == 'KONTROL_') {
-                    return $this->surat_kontrol_peserta($pesan, $request);
                 }
                 // 8. pilih suratkontrol , kemudian cek
                 else if (str_contains($pesan, '_SURATKONTROL#')) {
                     return $this->cek_surat_kontrol($pesan, $request);
                 }
+                // 8. pilih rujukan faskses 1 peserta
+                else if (str_contains($pesan, '_RUJUKANRS#')) {
+                    return $this->cek_rujukan_rs($pesan, $request);
+                }
+                // 9. insert antrian rujukan fk1
+                else if (substr($pesan, 0, 20) == 'DAFTAR RUJUKAN FKTP_') {
+                    return $this->daftar_rujukan_fktp($pesan, $request);
+                }
                 // 9. insert antrian surat rujukan
                 else if (substr($pesan, 0, 15) == 'DAFTAR KONTROL_') {
                     return $this->daftar_surat_kontrol($pesan, $request);
                 }
-                // 5. pilih jenis pasien, masukan nik
-                else if (str_contains($pesan, '#UMUM#')) {
-                    return $this->konfirmasi_antrian_umum($pesan, $request);
-                }
-                // 6. pilih jenis pasien, masukan nik
-                else if (str_contains($pesan, '#DAFTAR_UMUM#')) {
-                    return $this->daftar_antrian_umum($pesan, $request);
+                // 9. insert antrian rujukan rs
+                else if (substr($pesan, 0, 18) == 'DAFTAR RUJUKAN RS_') {
+                    return $this->daftar_rujukan_rs($pesan, $request);
                 }
                 // default
                 else {
@@ -680,12 +694,12 @@ class WhatsappController extends Controller
             $tanggal = Carbon::parse(explode('#', $format)[2]);
             $vclaim = new VclaimBPJSController();
             $request['nomorkartu'] = $nomorkartu;
-            $request['tanggalperiksa'] = $tanggal;
+            $request['tanggalperiksa'] = $tanggal->format('Y-m-d');
             $request['formatfilter'] = 2;
         } catch (\Throwable $th) {
             $request['notif'] = '7 peserta surat kontrol error : ' . $th->getMessage();
             $this->send_notif($request);
-            $request['message'] = "*7. Pilih Surat Kontrol*\nMohon maaf " . $th->getMessage();
+            $request['message'] = "*7. Pilih Surat Kontrol*\nMohon maaf silahkan periksa format anda." . $th->getMessage();
             return $this->send_message($request);
         }
         $suratkontrol = $vclaim->surat_kontrol_peserta($request);
@@ -702,7 +716,7 @@ class WhatsappController extends Controller
             foreach ($suratkontrol as $value) {
                 if ($value->terbitSEP == "Belum") {
                     $rowsuratkontrol =  $rowsuratkontrol .  $value->jnsPelayanan  . " " . $value->namaPoliTujuan  . " " . $value->namaDokter . ',';
-                    $descsurarujukan =  $descsurarujukan . '_SURATKONTROL#' . $value->noSuratKontrol . "#" . $jadwal . "#" . $tanggalperiksa . ',';
+                    $descsurarujukan =  $descsurarujukan . '_SURATKONTROL#' . $value->noSuratKontrol . "#" . $jadwal . "#" . $request->tanggalperiksa . ',';
                 }
             }
             if ($rowsuratkontrol == null) {

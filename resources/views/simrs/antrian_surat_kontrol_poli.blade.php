@@ -128,7 +128,7 @@
                         <x-adminlte-card title="Kunjungan Poliklinik ({{ $kunjungans->count() }} Orang)" theme="primary"
                             icon="fas fa-info-circle" collapsible>
                             @php
-                                $heads = ['Tanggal', 'Kode', 'No RM', 'SEP', 'Rujukan', 'Poliklinik'];
+                                $heads = ['Tanggal', 'Kunjungan', 'No Kartu / No RM / Nama', 'SEP', 'Rujukan', 'Poliklinik'];
                                 // $config['order'] = ['7', 'asc'];
                             @endphp
                             <x-adminlte-datatable id="table2" class="nowrap" :heads="$heads" striped bordered hoverable
