@@ -4,21 +4,12 @@
 <head>
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
-
     <title>SIM RSUD Waled</title>
     <meta content="" name="description">
     <meta content="" name="keywords">
-
     <!-- Favicons -->
     <link href="{{ asset('assets/img/logo rs waled ico.png') }}" rel="icon">
     <link href="{{ asset('assets/img/logo rs waled ico.png') }}" rel="apple-touch-icon">
-
-    <!-- Google Fonts -->
-    {{-- <link
-        href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
-        rel="stylesheet"> --}}
-
-    <!-- Vendor CSS Files -->
     <link href="{{ asset('assets/vendor/animate.css/animate.min.css') }}" rel="stylesheet">
     <link href="{{ asset('assets/vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
     <link href="{{ asset('assets/vendor/bootstrap-icons/bootstrap-icons.css') }}" rel="stylesheet">
@@ -27,21 +18,11 @@
     <link href="{{ asset('assets/vendor/glightbox/css/glightbox.min.css') }}" rel="stylesheet">
     <link href="{{ asset('assets/vendor/remixicon/remixicon.css') }}" rel="stylesheet">
     <link href="{{ asset('assets/vendor/swiper/swiper-bundle.min.css') }}" rel="stylesheet">
-
     <!-- Template Main CSS File -->
     <link href="{{ asset('assets/css/style.css') }}" rel="stylesheet">
-
-    <!-- =======================================================
-  * Template Name: Medilab - v4.6.0
-  * Template URL: https://bootstrapmade.com/medilab-free-medical-bootstrap-theme/
-  * Author: BootstrapMade.com
-  * License: https://bootstrapmade.com/license/
-  ======================================================== -->
 </head>
 
 <body>
-
-    <!-- ======= Top Bar ======= -->
     <div id="topbar" class="d-flex align-items-center fixed-top">
         <div class="container d-flex justify-content-between">
             <div class="contact-info d-flex align-items-center">
@@ -61,27 +42,21 @@
         <div class="container d-flex align-items-center">
             <a href="index.html" class="logo m-2"><img src="{{ asset('assets/img/logo rs waled ico.png') }}"
                     alt="" class="img-fluid"></a>
-            <h1 class="logo me-auto"><a href="index.html">RSUD Waled</a></h1>
+            <h1 class="logo me-auto"><a href="#">RSUD Waled</a></h1>
             <nav id="navbar" class="navbar order-last order-lg-0">
                 <ul>
-                    <li><a class="nav-link scrollto" href="#contact">Daftar Pasien</a></li>
+                    <li><a class="nav-link scrollto" href="#">Melayani Sepenuh Hati</a></li>
                 </ul>
                 <i class="bi bi-list mobile-nav-toggle"></i>
             </nav>
-            <a href="{{ route('login') }}" class="appointment-btn scrollto"><span class="d-none d-md-inline"></span>
-                @guest
-                    Login
-                @else
-                    Dashboard
-                @endguest
-            </a>
         </div>
     </header>
 
     <section id="hero" class="d-flex align-items-center">
         <div class="container">
-            <h1>SIM RSUD Waled</h1>
-            <h2>Sistem Informasi Management <br> Rumah Sakit Umum Daerah Waled</h2>
+            <h1>Pendaftaran Pasien</h1>
+            <h2>Melayani Pendaftaran Pasien Rawat Jalan<br>Secara Online Di Beberapa Poliklinik<br>Rumah Sakit Umum
+                Daerah Waled</h2>
             {{-- <a href="{{route('pasien.create')}}" class="btn-get-started scrollto">Daftar Sebagai Pasien</a> --}}
         </div>
     </section><!-- End Hero -->
@@ -93,7 +68,7 @@
                 <div class="row">
                     <div class="col-lg-4 d-flex align-items-stretch">
                         <div class="content">
-                            <h3>Apa sih SIM RSUD Waled ?</h3>
+                            <h3>Bagaimana cara mendaftarkan Pasien Rawat Jalan secara Online ?</h3>
                             <p>
                                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
                                 incididunt ut labore et dolore magna aliqua. Duis aute irure dolor in reprehenderit
@@ -146,6 +121,68 @@
 
             </div>
         </section><!-- End Why Us Section -->
+
+        <!-- ======= Appointment Section ======= -->
+        <section id="appointment" class="appointment section-bg">
+            <div class="container">
+                <div class="section-title">
+                    <h2>Pendaftaran Pasien Rawat Jalan</h2>
+                    <p>Magnam dolores commodi suscipit. Necessitatibus eius consequatur ex aliquid fuga eum quidem. Sit
+                        sint consectetur velit. Quisquam quos quisquam cupiditate. Et nemo qui impedit suscipit alias
+                        ea. Quia fugiat sit in iste officiis commodi quidem hic quas.</p>
+                </div>
+                <form action="forms/appointment.php" method="post" role="form" class="php-email-form">
+                    <div class="row">
+                        <div class="col-md-4 form-group mt-3">
+                            <select name="department" id="department" class="form-select">
+                                <option value="">Pilih Jenis Pasien</option>
+                                <option value="Department 1">Pasien JKN / BPJS</option>
+                                <option value="Department 2">Pasien Umum </option>
+                            </select>
+                            <div class="validate"></div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4 form-group mt-3">
+                            <input type="datetime" name="date" class="form-control datepicker" id="date"
+                                placeholder="Appointment Date" data-rule="minlen:4"
+                                data-msg="Please enter at least 4 chars">
+                            <div class="validate"></div>
+                        </div>
+                        <div class="col-md-4 form-group mt-3">
+                            <select name="department" id="department" class="form-select">
+                                <option value="">Select Department</option>
+                                <option value="Department 1">Department 1</option>
+                                <option value="Department 2">Department 2</option>
+                                <option value="Department 3">Department 3</option>
+                            </select>
+                            <div class="validate"></div>
+                        </div>
+                        <div class="col-md-4 form-group mt-3">
+                            <select name="doctor" id="doctor" class="form-select">
+                                <option value="">Select Doctor</option>
+                                <option value="Doctor 1">Doctor 1</option>
+                                <option value="Doctor 2">Doctor 2</option>
+                                <option value="Doctor 3">Doctor 3</option>
+                            </select>
+                            <div class="validate"></div>
+                        </div>
+                    </div>
+                    <div class="form-group mt-3">
+                        <textarea class="form-control" name="message" rows="5" placeholder="Message (Optional)"></textarea>
+                        <div class="validate"></div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="loading">Loading</div>
+                        <div class="error-message"></div>
+                        <div class="sent-message">Your appointment request has been sent successfully. Thank you!</div>
+                    </div>
+                    <div class="text-center"><button type="submit">Make an Appointment</button></div>
+                </form>
+
+            </div>
+        </section><!-- End Appointment Section -->
+
     </main><!-- End #main -->
 
     <!-- ======= Footer ======= -->

@@ -23,5 +23,7 @@ class LayananDetailDB extends Model
         'grantotal_layanan',
         'kode_dokter1',
         'tgl_layanan_detail',
+        'status_layanan_detail',
+        'tgl_layanan_detail_2',
     ];
 }

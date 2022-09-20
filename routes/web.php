@@ -30,6 +30,9 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+Route::get('daftar_pasien', function () {
+    return view('simrs.daftar_pasien');
+});
 Auth::routes();
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
@@ -126,6 +129,7 @@ Route::prefix('vclaim')->name('vclaim.')->middleware(['auth'])->group(function (
     Route::delete('delete_surat_kontrol/{noSurat}', [VclaimController::class, 'delete_surat_kontrol'])->name('delete_surat_kontrol');
     Route::post('buat_surat_kontrol', [VclaimController::class, 'buat_surat_kontrol'])->name('buat_surat_kontrol');
 });
+
 Route::resource('poli', PoliklinikController::class)->only(['index', 'create', 'edit', 'show', 'store'])->middleware('permission:pelayanan-medis');
 Route::resource('dokter', DokterController::class)->only(['index', 'create'])->middleware('permission:pelayanan-medis');
 Route::resource('jadwaldokter', JadwalDokterController::class)->only(['index', 'store', 'edit'])->middleware('permission:pelayanan-medis');

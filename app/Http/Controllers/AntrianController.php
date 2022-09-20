@@ -1329,6 +1329,10 @@ class AntrianController extends Controller
     // admin pendaftaran
     public function laporan(Request $request)
     {
+        $layanandet = LayananDetailDB::orderBy('tgl_layanan_detail', 'DESC')->first();
+
+        dd($layanandet->id_layanan_detail, substr($layanandet->id_layanan_detail, 9) + 1);
+
         if ($request->tanggal == null) {
             $tanggal_awal = Carbon::now()->startOfMonth()->format('Y-m-d');
             $tanggal_akhir = Carbon::now()->endOfMonth()->format('Y-m-d');
@@ -1337,8 +1341,7 @@ class AntrianController extends Controller
             $tanggal_awal = Carbon::parse($tanggal[0])->format('Y-m-d');
             $tanggal_akhir = Carbon::parse($tanggal[1])->format('Y-m-d');
         }
-        $antrians = Antrian::with(['pasien'])
-            ->whereBetween('tanggalperiksa', [$tanggal_awal, $tanggal_akhir])
+        $antrians = Antrian::whereBetween('tanggalperiksa', [$tanggal_awal, $tanggal_akhir])
             ->get();
         return view('simrs.antrian_laporan', [
             'antrians' => $antrians,

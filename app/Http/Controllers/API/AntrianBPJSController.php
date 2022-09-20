@@ -1324,10 +1324,13 @@ class AntrianBPJSController extends Controller
                         ]
                     );
                     //  insert layanan header dan detail karcis admin konsul 25 + 5 = 30
+                    // DET tahun bulan tanggal baru urutan 6 digit kanan
                     //  insert layanan detail karcis
+                    $layanandet = LayananDetailDB::orderBy('tgl_layanan_detail', 'DESC')->first();
+                    $nomorlayanandet = substr($layanandet->id_layanan_detail, 9) + 1;
                     $karcis = LayananDetailDB::create(
                         [
-                            'id_layanan_detail' => "DET" . $now->yearIso . $now->month . $now->day .  "001",
+                            'id_layanan_detail' => "DET" . $now->yearIso . $now->month . $now->day . $nomorlayanandet,
                             'row_id_header' => $layananbaru->id,
                             'kode_layanan_header' => $layananbaru->kode_layanan_header,
                             'kode_tarif_detail' => $tarifkarcis->KODE_TARIF_DETAIL,
@@ -1339,12 +1342,16 @@ class AntrianBPJSController extends Controller
                             'grantotal_layanan' => $tarifkarcis->TOTAL_TARIF_NEW,
                             'kode_dokter1' => $paramedis->kode_paramedis, // ambil dari mt paramdeis
                             'tgl_layanan_detail' =>  $now,
+                            'status_layanan_detail' => "OPN",
+                            'tgl_layanan_detail_2' =>  $now,
                         ]
                     );
                     //  insert layanan detail admin
+                    $layanandet = LayananDetailDB::orderBy('tgl_layanan_detail', 'DESC')->first();
+                    $nomorlayanandet = substr($layanandet->id_layanan_detail, 9) + 1;
                     $adm = LayananDetailDB::create(
                         [
-                            'id_layanan_detail' => "DET" . $now->yearIso . $now->month . $now->day .  "01",
+                            'id_layanan_detail' => "DET" . $now->yearIso . $now->month . $now->day . $nomorlayanandet,
                             'row_id_header' => $layananbaru->id,
                             'kode_layanan_header' => $layananbaru->kode_layanan_header,
                             'kode_tarif_detail' => $tarifadm->KODE_TARIF_DETAIL,
@@ -1356,6 +1363,8 @@ class AntrianBPJSController extends Controller
                             'grantotal_layanan' => $tarifadm->TOTAL_TARIF_NEW,
                             'kode_dokter1' => 0,
                             'tgl_layanan_detail' =>  $now,
+                            'status_layanan_detail' => "OPN",
+                            'tgl_layanan_detail_2' =>  $now,
                         ]
                     );
                     //  update layanan header total tagihan

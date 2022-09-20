@@ -59,7 +59,7 @@
                     @endphp
                     <x-adminlte-datatable id="table1" class="nowrap" :heads="$heads" :config="$config" striped bordered
                         hoverable compressed>
-                        @foreach ($antrians as $item)
+                        {{-- @foreach ($antrians as $item)
                             <tr>
                                 <td>{{ $item->angkaantrean }}</td>
                                 <td>{{ $item->kodebooking }}<br>
@@ -94,7 +94,6 @@
                                 <td>{{ $item->namapoli }}<br>{{ $item->namadokter }} <br>{{ $item->jampraktek }}
                                 </td>
                                 <td>
-                                    {{-- {{ $item->taskid }} --}}
                                     @if ($item->taskid == 0)
                                         <span class="badge bg-secondary">{{ $item->taskid }}. Belum Checkin</span>
                                     @endif
@@ -120,7 +119,7 @@
 
                                 </td>
                             </tr>
-                        @endforeach
+                        @endforeach --}}
                     </x-adminlte-datatable>
                 </x-adminlte-card>
             @endif
