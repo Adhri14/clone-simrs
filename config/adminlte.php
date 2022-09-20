@@ -342,7 +342,7 @@ return [
                 ],
                 [
                     'text' => 'Surat Kontrol Poliklinik',
-                    'icon'    => 'fas fa-clinic-medical',
+                    'icon'    => 'fas fa-file-medical',
                     'url'  => 'antrian/surat_kontrol_poli',
                     'shift'   => 'ml-2',
                     'can' => 'poliklinik',

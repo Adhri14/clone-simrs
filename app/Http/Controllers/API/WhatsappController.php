@@ -45,6 +45,15 @@ class WhatsappController extends Controller
         $response = json_decode($response->getBody());
         return $response;
     }
+    public function send_notif(Request $request)
+    {
+        $url = $this->baseUrl . "notif";
+        $response = Http::post($url, [
+            'message' => $request->notif,
+        ]);
+        $response = json_decode($response->getBody());
+        return $response;
+    }
     public function send_button(Request $request)
     {
         $url = $this->baseUrl . "send-button";
@@ -119,13 +128,14 @@ class WhatsappController extends Controller
                 return $this->send_list($request);
                 break;
             case 'INFO CARA PENDAFTARAN':
+                $request['notif'] = 'info daftar';
+                $this->send_notif($request);
                 $request['message'] = "Untuk pendaftaran melalui Layanan Whatsapp RSUD Waled sebagai berikut :\n\n1. Klik *MENU UTAMA* pilih *DAFTAR PASIEN RAWAT JALAN*. \n2. Pilih *POLIKLINIK* yang akan dikunjungi dan yang tersedia untuk daftar online. \n3. Pilih *TANGGAL* kapan pasien akan berkunjung. \n4. Pilih *JADWAL DOKTER* yang akan dituju oleh pasien. \n5. Pilih *JENIS PASIEN* terdapat pilihan pasien *JKN / UMUM*. \n6. Menuliskan format pendaftaran, untuk *PASIEN JKN* memasukan *Nomor Kartu* JKN/BPJS/KIS, untuk *PASIEN UMUM* memasukan *NIK/KTP*. \n7. Jika *PASIEN JKN/BPJS* akan memilih jenis kunjungan melalui Rujukan Faskes 1, Kontrol, atau Rujukan Antar RS. Kemudian pilih nomor rujukan/surat tersebut. \n8. Konfirmasi pendaftaran lalu berhasil didaftarkan atau batal pendaftaran. Anda akan mendapatkan gambar *QR Code* untuk discan saat checkin di Rumah Sakit.\n\nUntuk pertanyaan & pengaduan silahkan hubungi :\n*Humas RSUD Waled 08983311118*";
-                // $request['titletext'] = "Info Cara Pendaftaran";
-                // $request['buttontext'] = 'MENU UTAMA';
-                // $request['rowtitle'] = 'DAFTAR PASIEN RAWAT JALAN,INFO JADWAL POLIKLINIK,INFO CARA PENDAFTARAN,PERTANYAAN DAN PENGADUAN';
                 return $this->send_message($request);
                 break;
             case 'INFO JADWAL POLIKLINIK':
+                $request['notif'] = 'info jadwal';
+                $this->send_notif($request);
                 $request['contenttext'] = "Silahkan pilih poliklinik yang tersedia untuk daftar online rawat jalan pasien dibawah ini.";
                 $request['titletext'] = "Info Jadwal Poliklinik";
                 $request['buttontext'] = 'PILIH POLIKLINIK';
@@ -137,11 +147,16 @@ class WhatsappController extends Controller
                 $request['rowtitle'] = $rowpoli;
                 return $this->send_list($request);
             case 'DAFTAR PASIEN RAWAT JALAN':
+                $request['notif'] = '1 daftar pilih poli';
+                $this->send_notif($request);
                 $this->pilih_poli($pesan, $request);
                 break;
             default:
                 // 2. pilih poli terus tanggal
                 if (substr($pesan, 0, 11) == 'POLIKLINIK_') {
+                    $request['notif'] = '2 cek poli';
+                    $this->send_notif($request);
+
                     $poli = explode('_', $pesan)[1];
                     $now = Carbon::now();
                     $rowtanggal = 'TANGGAL_' . $now->format('Y-m-d') . "#" . $poli;
@@ -169,6 +184,9 @@ class WhatsappController extends Controller
                 // }
                 // 3. tanggal poli terus pilih jadwal
                 else if (str_contains($pesan, 'TANGGAL_')) {
+                    $request['notif'] = '3 cek tanggal';
+                    $this->send_notif($request);
+
                     $format = explode('_', $pesan)[1];
                     $tanggal = Carbon::parse(explode('#', $format)[0]);
                     $poli = explode('#', $format)[1];
@@ -199,6 +217,8 @@ class WhatsappController extends Controller
                 }
                 // 4. pilih dokter terus jenis pasien
                 else if (str_contains($pesan, '_JADWAL.ID#')) {
+                    $request['notif'] = '4 cek jadwal';
+                    $this->send_notif($request);
                     $jadwalid = explode('#', $pesan)[1];
                     $tanggal = explode('#', $pesan)[2];
                     $jadwaldokter = JadwalDokter::find($jadwalid);
@@ -226,6 +246,8 @@ class WhatsappController extends Controller
                 }
                 // 5. pilih jenis pasien, masukan rujukan
                 else if (substr($pesan, 0, 12) ==  'PASIEN BPJS_') {
+                    $request['notif'] = '5 pasien bpjs';
+                    $this->send_notif($request);
                     $jadwalid = explode('_', $pesan)[1];
                     $request['message'] = "*5. Ketik Format Pasien BPJS*\nUntuk pasien JKN/BPJS silahkan ketik nomor kartu 13 digit yang tertera pada kartu bpjs anda dengan format seperti berikut : \n\n_*Nomor Kartu*_#BPJS#" . $jadwalid . "\n(Contoh)\n_*0000067XX23XX*_#BPJS#" . $jadwalid . "\n\n Silahkan rubah nomor yang cetak miring tebal dengan nomor kartu BPJS/KIS pasien.";
                     $this->send_message($request);
@@ -234,6 +256,8 @@ class WhatsappController extends Controller
                 }
                 // 5. pilih jenis pasien, masukan nik
                 else if (substr($pesan, 0, 12) == 'PASIEN UMUM_') {
+                    $request['notif'] = '5 pasien umum';
+                    $this->send_notif($request);
                     $jadwalid = explode('_', $pesan)[1];
                     $request['message'] = "*5. Ketik Format Pasien Umum*\nUntuk pasien UMUM silahkan ketik nomor nik/ktp 16 digit yang tertera pada Kartu Tanda Penduduk (KTP) anda dengan format seperti berikut : \n\n_*NIK / KTP*_#UMUM#" . $jadwalid . "\n\n(Contoh)\n_*3209XXXX1234XXXX*_#UMUM#" . $jadwalid;
                     $this->send_message($request);
@@ -314,6 +338,8 @@ class WhatsappController extends Controller
     }
     public function konfirmasi_antrian_umum($pesan, Request $request)
     {
+        $request['notif'] = '6 cek umum';
+        $this->send_notif($request);
         // init
         try {
             $request['nik'] = explode('#', $pesan)[0];
@@ -373,6 +399,8 @@ class WhatsappController extends Controller
     }
     public function daftar_antrian_umum($pesan, Request $request)
     {
+        $request['notif'] = '7 daftar umum';
+        $this->send_notif($request);
         // init
         try {
             $request['nik'] = explode('#', $pesan)[0];
@@ -432,170 +460,11 @@ class WhatsappController extends Controller
             return $this->send_message($request);
         }
     }
-    public function konfirmasi_antrian_bpjs($pesan, Request $request)
-    {
-        // init
-        try {
-            $request['nomorreferensi'] = explode('#', $pesan)[0];
-            $request['jenisrujukan'] = 1;
-            $tipepasien = explode('#', $pesan)[1];
-            $jadwalid = explode('#', $pesan)[2];
-            $tanggalperiksa = explode('#', $pesan)[3];
-            $jadwaldokter = JadwalDokter::find($jadwalid);
-        } catch (\Throwable $th) {
-            //throw $th;
-            $request['message'] = "Error : " . $th->getMessage() . "\nSilahkan hubungi admin. Terima kasih.";
-            return $this->send_message($request);
-        }
-        $vclaim = new VclaimBPJSController();
-        $jumlah_sep =  $vclaim->rujukan_jumlah_sep($request);
-        //    server bpjs gangguan
-        if ($jumlah_sep ==  null) {
-            $request['message'] = "Mohon maaf server bpjs sedang gangguan.";
-            return $this->send_message($request);
-        }
-        // berhasil
-        else if ($jumlah_sep->metaData->code == 200) {
-            // daftar pake rujukan
-            if ($jumlah_sep->response->jumlahSEP == 0) {
-                $rujukan  = $vclaim->rujukan_nomor($request);
-                // rujukan 200 code
-                if ($rujukan->metaData->code == 200) {
-                    // pasien lama
-                    if (isset($rujukan->response->rujukan->peserta->mr->noMR)) {
-                        try {
-                            $request['nomorkartu'] = $rujukan->response->rujukan->peserta->noKartu;
-                            $request['nama'] = $rujukan->response->rujukan->peserta->nama;
-                            $request['nik'] = $rujukan->response->rujukan->peserta->nik;
-                            $request['norm'] = $rujukan->response->rujukan->peserta->mr->noMR;
-                            $request['status'] = $rujukan->response->rujukan->peserta->statusPeserta->keterangan;
-                            $request['diagnosa'] = $rujukan->response->rujukan->diagnosa->nama;
-                            $request['polirujukan'] = $rujukan->response->rujukan->poliRujukan->nama;
-                            $request['nohp'] = $request->number;
-                            $request['tanggalperiksa'] = $tanggalperiksa;
-                            $request['kodepoli'] = $jadwaldokter->kodesubspesialis;
-                            $request['kodedokter'] = $jadwaldokter->kodedokter;
-                            $request['jampraktek'] = $jadwaldokter->jadwal;
-                            $request['jeniskunjungan'] = 1;
-                            $request['titletext'] = "Konfirmasi Pendaftaran Pasien JKN";
-                            $request['contenttext'] = "Jadwal dokter poliklinik yang dipilih sebagai berikut :\n\n*Poliklinik* : " . strtoupper($jadwaldokter->namasubspesialis) . "\n*Dokter* :  " . $jadwaldokter->namadokter . "\n*Jam Praktek* : " . $jadwaldokter->jadwal . "\n*Tanggal Periksa* :  " . $tanggalperiksa . "\n\n*Nama Pasien* : " . $request->nama . "\n*Status* : *" . $request->status . "*\n*NIK* : " . $request->nik . "\n*No BPJS* : " . $request->nomorkartu . "\n*No RM* : " . $request->norm . "\n*No Rujukan* : " . $request->nomorreferensi . "\n*Poli Rujukan* : " . $request->polirujukan . "\n*Diagnosa* : " . $request->diagnosa .  "\n\nSebagai konfirmasi bahwa data yang diatas adalah benar pasien yang akan didaftarkan. Silahakan pilih tombol dibawah ini.";
-                            $request['buttontext'] =  $request->nomorreferensi . "#DAFTAR_BPJS#" . $jadwalid . "#" . $request->tanggalperiksa . ',BATAL PENDAFTARAN';
-                            return $this->send_button($request);
-                        } catch (\Throwable $th) {
-                            $request['message'] = "Error : " . $th;
-                            return $this->send_message($request);
-                        }
-                    }
-                    // pasien baru
-                    else {
-                        $request['message'] = "Error : Mohon maaf untuk pasien baru tidak bisa daftar melalui whatsapp. Silahkan untuk daftar langsung ke RSUD Waled. Terima kasih.";
-                        return $this->send_message($request);
-                    }
-                }
-                // rujukan error
-                else {
-                    $request['message'] = "Error : " . $rujukan->metaData->message;
-                    return $this->send_message($request);
-                }
-            }
-            // daftar pake surat kontrol
-            else {
-                $request['jeniskunjungan'] = 3;
-                $request['message'] = "Error : Mohon maaf kunjungan rujukan lebih dari 1. Anda harus mendaftar menggunakan Surat Kontrol yang dibuat saat berobat sebelumnya. Untuk pertanyaan silahkan hubungi admin. Terima kasih";
-                return $this->send_message($request);
-                dd($request->all());
-            }
-        }
-        // gagal rujukan
-        else {
-            $request['message'] = "Error : " . $jumlah_sep->metaData->message;
-            return $this->send_message($request);
-        }
-    }
-    public function daftar_antrian_bpjs($pesan, Request $request)
-    {
-        // init
-        try {
-            $request['nomorreferensi'] = explode('#', $pesan)[0];
-            $request['jenisrujukan'] = 1;
-            $tipepasien = explode('#', $pesan)[1];
-            $jadwalid = explode('#', $pesan)[2];
-            $tanggalperiksa = explode('#', $pesan)[3];
-            $jadwaldokter = JadwalDokter::find($jadwalid);
-        } catch (\Throwable $th) {
-            //throw $th;
-            $request['message'] = "Error : " . $th->getMessage() . "\nSilahkan hubungi admin. Terima kasih.";
-            return $this->send_message($request);
-        }
-        $vclaim = new VclaimBPJSController();
-        $jumlah_sep =  $vclaim->rujukan_jumlah_sep($request);
-        //    server bpjs gangguan
-        if ($jumlah_sep ==  null) {
-            $request['message'] = "Mohon maaf server bpjs sedang gangguan.";
-            return $this->send_message($request);
-        }
-        // berhasil
-        else if ($jumlah_sep->metaData->code == 200) {
-            // daftar pake rujukan
-            if ($jumlah_sep->response->jumlahSEP == 0) {
-                $rujukan  = $vclaim->rujukan_nomor($request);
-                // rujukan 200 code
-                if ($rujukan->metaData->code == 200) {
-                    // pasien lama
-                    if (isset($rujukan->response->rujukan->peserta->mr->noMR)) {
-                        try {
-                            $request['nomorkartu'] = $rujukan->response->rujukan->peserta->noKartu;
-                            $request['nama'] = $rujukan->response->rujukan->peserta->nama;
-                            $request['nik'] = $rujukan->response->rujukan->peserta->nik;
-                            $request['norm'] = $rujukan->response->rujukan->peserta->mr->noMR;
-                            $request['status'] = $rujukan->response->rujukan->peserta->statusPeserta->keterangan;
-                            $request['diagnosa'] = $rujukan->response->rujukan->diagnosa->nama;
-                            $request['polirujukan'] = $rujukan->response->rujukan->poliRujukan->nama;
-                            $request['nohp'] = $request->number;
-                            $request['tanggalperiksa'] = $tanggalperiksa;
-                            $request['kodepoli'] = $jadwaldokter->kodesubspesialis;
-                            $request['kodedokter'] = $jadwaldokter->kodedokter;
-                            $request['jampraktek'] = $jadwaldokter->jadwal;
-                            $request['jeniskunjungan'] = 1;
-                            $antrian = new AntrianBPJSController();
-                            $response = json_decode(json_encode($antrian->ambil_antrian($request)));
-                            if ($response->metadata->code != 200) {
-                                $request['message'] = "Maaf anda tidak bisa daftar : " .  $response->metadata->message;
-                                return $this->send_message($request);
-                            } else {
-                                return $response;
-                            }
-                        } catch (\Throwable $th) {
-                            $request['message'] = "Error : " . $th;
-                            return $this->send_message($request);
-                        }
-                    }
-                    // pasien baru
-                    else {
-                        $request['message'] = "Error : Mohon maaf untuk pasien baru tidak bisa daftar melalui whatsapp. Silahkan untuk daftar langsung ke RSUD Waled. Terima kasih.";
-                        return $this->send_message($request);
-                    }
-                }
-                // rujukan error
-                else {
-                    $request['message'] = "Error : " . $rujukan->metaData->message;
-                    return $this->send_message($request);
-                }
-            }
-            // daftar pake surat kontrol
-            else {
-                $request['message'] = "Error : Mohon maaf kunjungan rujukan lebih dari 1. Anda harus mendaftar menggunakan Surat Kontrol. Silahkan hubungi admin. Terima kasih";
-                return $this->send_message($request);
-            }
-        }
-        // gagal rujukan
-        else {
-            $request['message'] = "Error : " . $jumlah_sep->metaData->message;
-            return $this->send_message($request);
-        }
-    }
     public function cek_nomorkartu_peserta($pesan, Request $request)
     {
+        $request['notif'] = '6 cek nomor kartu';
+        $this->send_notif($request);
+
         $nomorkartu = explode('#', $pesan)[0];
         $jadwal = explode('#', $pesan)[2];
         $tanggalperiksa = explode('#', $pesan)[3];
@@ -619,6 +488,9 @@ class WhatsappController extends Controller
     }
     public function rujukan_peserta($pesan, Request $request)
     {
+        $request['notif'] = '7 peserta rujukan fktp';
+        $this->send_notif($request);
+
         $format = explode('_', $pesan)[1];
         $nomorkartu = explode('#', $format)[0];
         $jadwal = explode('#', $format)[1];
@@ -649,6 +521,8 @@ class WhatsappController extends Controller
     }
     public function cek_rujukan($pesan, Request $request)
     {
+        $request['notif'] = '8 cek rujukan fktp';
+        $this->send_notif($request);
         // init
         try {
             $format = explode('_', $pesan)[1];
@@ -733,6 +607,8 @@ class WhatsappController extends Controller
     }
     public function daftar_rujukan_fktp($pesan, Request $request)
     {
+        $request['notif'] = '9 daftar rujukan fktp';
+        $this->send_notif($request);
         // init
         try {
             $format = explode('_', $pesan)[1];
@@ -816,6 +692,9 @@ class WhatsappController extends Controller
     }
     public function surat_kontrol_peserta($pesan, Request $request)
     {
+        $request['notif'] = '7 peserta surat kontrol';
+        $this->send_notif($request);
+
         $format = explode('_', $pesan)[1];
         $nomorkartu = explode('#', $format)[0];
         $jadwal = explode('#', $format)[1];
@@ -854,6 +733,8 @@ class WhatsappController extends Controller
     }
     public function cek_surat_kontrol($pesan, Request $request)
     {
+        $request['notif'] = '8 cek surat kontrol';
+        $this->send_notif($request);
         // init
         try {
             $format = explode('_', $pesan)[1];
@@ -919,6 +800,8 @@ class WhatsappController extends Controller
     }
     public function daftar_surat_kontrol($pesan, Request $request)
     {
+        $request['notif'] = '9 daftar surat kontrol';
+        $this->send_notif($request);
         // init
         try {
             $format = explode('_', $pesan)[1];
@@ -989,6 +872,9 @@ class WhatsappController extends Controller
     }
     public function rujukan_rs_peserta($pesan, Request $request)
     {
+        $request['notif'] = '7 peserta rujukan rs';
+        $this->send_notif($request);
+
         $format = explode('_', $pesan)[1];
         $nomorkartu = explode('#', $format)[0];
         $jadwal = explode('#', $format)[1];
@@ -1019,6 +905,8 @@ class WhatsappController extends Controller
     }
     public function cek_rujukan_rs($pesan, Request $request)
     {
+        $request['notif'] = '8 cek rujukan rs';
+        $this->send_notif($request);
         // init
         try {
             $format = explode('_', $pesan)[1];
@@ -1103,6 +991,8 @@ class WhatsappController extends Controller
     }
     public function daftar_rujukan_rs($pesan, Request $request)
     {
+        $request['notif'] = '9 daftar rujukan rs';
+        $this->send_notif($request);
         // init
         try {
             $format = explode('_', $pesan)[1];
