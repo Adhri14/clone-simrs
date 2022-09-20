@@ -251,7 +251,6 @@ class VclaimBPJSController extends Controller
             ];
             return json_decode(json_encode($response));
         }
-
         $url = $this->baseUrl . "Rujukan/" . $request->nomorreferensi;
         $signature = $this->signature();
         $response = Http::withHeaders($signature)->get($url);

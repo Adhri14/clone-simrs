@@ -624,7 +624,13 @@ class AntrianBPJSController extends Controller
                 // kunjungan rujukan
                 else {
                     $request['nomorrujukan'] = $request->nomorreferensi;
-                    $response =  $vclaim->rujukan_nomor($request);
+                    if ($request->jenisrujukan == 1) {
+                        $response =  $vclaim->rujukan_nomor($request);
+                    } else {
+                        $response =  $vclaim->rujukan_rs_nomor($request);
+                    }
+
+
                     if ($response->metaData->code == 200) {
                         // cek rujukan orang lain
                         if ($request->nomorkartu != $response->response->rujukan->peserta->noKartu) {
