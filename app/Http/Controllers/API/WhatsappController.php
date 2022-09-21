@@ -29,7 +29,7 @@ class WhatsappController extends Controller
     {
         // $pesan = "RUJUKAN FASKES 1_0000067046703#286#2022-09-14";
         // $pesan = ;
-        $request['message']  = "KONTROL_0002230530546#289#289";
+        $request['message']  = "DAFTAR RUJUKAN FKTP_0125B0240922P000613#293#2022-09-21";
         $request['number'] = '6289529909036@c.us';
         $sk = $this->callback($request);
         dd($sk);
@@ -1044,7 +1044,6 @@ class WhatsappController extends Controller
                             $request['jenisrujukan'] = 2;
                             $antrian = new AntrianBPJSController();
                             $response = json_decode(json_encode($antrian->ambil_antrian($request)));
-                            dd($response);
                             if ($response->metadata->code != 200) {
                                 $request['message'] = "Maaf anda tidak bisa daftar : " .  $response->metadata->message;
                                 return $this->send_message($request);

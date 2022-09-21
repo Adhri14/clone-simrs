@@ -33,8 +33,6 @@ use Mike42\Escpos\PrintConnectors\WindowsPrintConnector;
 
 class AntrianController extends Controller
 {
-    public $printer_antrian = 'smb://PRINTER:qweqwe@192.168.2.133/Printer Receipt';
-    // public $printer_antrian = 'smb://PRINTER:qweqwe@192.168.2.129/Printer Receipt';
     // console antrian
     public function console()
     {
@@ -46,10 +44,10 @@ class AntrianController extends Controller
     public function cek_post()
     {
         try {
-            $connector = new WindowsPrintConnector($this->printer_antrian);
+            $connector = new WindowsPrintConnector(env('PRINTER_CHECKIN'));
             $printer = new Printer($connector);
             $printer->text("Connector Printer :\n");
-            $printer->text($this->printer_antrian . "\n");
+            $printer->text(env('PRINTER_CHECKIN') . "\n");
             $printer->text("Test Printer Berhasil.\n");
             $printer->cut();
             $printer->close();
@@ -63,7 +61,7 @@ class AntrianController extends Controller
     }
     function print_karcis(Request $request,  $kunjungan)
     {
-        $connector = new WindowsPrintConnector($this->printer_antrian);
+        $connector = new WindowsPrintConnector(env('PRINTER_CHECKIN'));
         $printer = new Printer($connector);
         $printer->setEmphasis(true);
         $printer->text("ANTRIAN RAWAT JALAN\n");
@@ -125,7 +123,7 @@ class AntrianController extends Controller
         // $for_sep = ['PERCOBAAN'];
         $sep = $sep->response;
         foreach ($for_sep as  $value) {
-            $connector = new WindowsPrintConnector($this->printer_antrian);
+            $connector = new WindowsPrintConnector(env('PRINTER_CHECKIN'));
             $printer = new Printer($connector);
             $printer->setEmphasis(true);
             $printer->text("SURAT ELEGTABILITAS PASIEN (SEP)\n");
@@ -194,7 +192,7 @@ class AntrianController extends Controller
     {
         // cek printer dulu
         try {
-            $connector = new WindowsPrintConnector($this->printer_antrian);
+            $connector = new WindowsPrintConnector(env('PRINTER_CHECKIN'));
             $printer = new Printer($connector);
             $printer->close();
         } catch (\Throwable $th) {

@@ -7,7 +7,6 @@ use App\Models\SuratKontrol;
 use Carbon\Carbon;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator;
 
@@ -759,7 +758,7 @@ class VclaimBPJSController extends Controller
             "tujuan" => "required",
             "eksekutif" => "required",
 
-            // "tujuanKunj" => "required",
+            "tujuanKunj" => "required",
             // "flagProcedure" => "required",
             // "kdPenunjang" => "required",
             // "assesmentPel" => "required",
