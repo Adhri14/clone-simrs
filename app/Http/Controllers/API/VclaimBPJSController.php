@@ -173,72 +173,9 @@ class VclaimBPJSController extends Controller
         }
         return $response;
     }
-    // api rujukan
-    public function rujukan_jumlah_sep(Request $request)
-    {
-        // checking request
-        $validator = Validator::make(request()->all(), [
-            "jenisrujukan" => "required",
-            "nomorreferensi" => "required",
-        ]);
-        if ($validator->fails()) {
-            $response = [
-                'metaData' => [
-                    'code' => 400,
-                    'message' => $validator->errors()->first(),
-                ],
-            ];
-            return json_decode(json_encode($response));
-        }
-        $url = $this->baseUrl . "Rujukan/JumlahSEP/" . $request->jenisrujukan . "/" . $request->nomorreferensi;
-        $signature = $this->signature();
-        $response = Http::withHeaders($signature)->get($url);
-        $response = json_decode($response);
-        if ($response == null) {
-            return $response;
-        } else if ($response->metaData->code == 200) {
-            $decrypt = $this->stringDecrypt($signature['decrypt_key'], $response->response);
-            $response->response = json_decode($decrypt);
-        } else if ($response->metaData->code == 201) {
-            $decrypt = $this->stringDecrypt($signature['decrypt_key'], $response->response);
-            $response->response = json_decode($decrypt);
-        }
-        return $response;
-    }
-    public function rujukan_rs_jumlah_sep(Request $request)
-    {
-        // checking request
-        $validator = Validator::make(request()->all(), [
-            "jenisrujukan" => "required",
-            "nomorreferensi" => "required",
-        ]);
-        if ($validator->fails()) {
-            $response = [
-                'metaData' => [
-                    'code' => 400,
-                    'message' => $validator->errors()->first(),
-                ],
-            ];
-            return json_decode(json_encode($response));
-        }
-        $url = $this->baseUrl . "Rujukan/JumlahSEP/" . $request->jenisrujukan . "/" . $request->nomorreferensi;
-        $signature = $this->signature();
-        $response = Http::withHeaders($signature)->get($url);
-        $response = json_decode($response);
-        if ($response == null) {
-            return $response;
-        } else if ($response->metaData->code == 200) {
-            $decrypt = $this->stringDecrypt($signature['decrypt_key'], $response->response);
-            $response->response = json_decode($decrypt);
-        } else if ($response->metaData->code == 201) {
-            $decrypt = $this->stringDecrypt($signature['decrypt_key'], $response->response);
-            $response->response = json_decode($decrypt);
-        }
-        return $response;
-    }
+    // Cari Rujukan
     public function rujukan_nomor(Request $request)
     {
-        // checking request
         $validator = Validator::make(request()->all(), [
             "nomorreferensi" => "required",
         ]);
@@ -252,6 +189,32 @@ class VclaimBPJSController extends Controller
             return json_decode(json_encode($response));
         }
         $url = $this->baseUrl . "Rujukan/" . $request->nomorreferensi;
+        $signature = $this->signature();
+        $response = Http::withHeaders($signature)->get($url);
+        $response = json_decode($response);
+        if ($response->metaData->code == 200) {
+            $decrypt = $this->stringDecrypt($signature['decrypt_key'], $response->response);
+            $response->response = json_decode($decrypt);
+        }
+        return $response;
+    }
+    public function rujukan_peserta(Request $request)
+    {
+        // checking request
+        $validator = Validator::make(request()->all(), [
+            "nomorkartu" => "required",
+        ]);
+        if ($validator->fails()) {
+            $response = [
+                'metaData' => [
+                    'code' => 400,
+                    'message' => $validator->errors()->first(),
+                ],
+            ];
+            return json_decode(json_encode($response));
+        }
+
+        $url = $this->baseUrl . "Rujukan/List/Peserta/" . $request->nomorkartu;
         $signature = $this->signature();
         $response = Http::withHeaders($signature)->get($url);
         $response = json_decode($response);
@@ -287,31 +250,6 @@ class VclaimBPJSController extends Controller
         }
         return $response;
     }
-    public function rujukan_peserta(Request $request)
-    {
-        // checking request
-        $validator = Validator::make(request()->all(), [
-            "nomorkartu" => "required",
-        ]);
-        if ($validator->fails()) {
-            $response = [
-                'metaData' => [
-                    'code' => 400,
-                    'message' => $validator->errors()->first(),
-                ],
-            ];
-            return json_decode(json_encode($response));
-        }
-        $url = $this->baseUrl . "Rujukan/List/Peserta/" . $request->nomorkartu;
-        $signature = $this->signature();
-        $response = Http::withHeaders($signature)->get($url);
-        $response = json_decode($response);
-        if ($response->metaData->code == 200) {
-            $decrypt = $this->stringDecrypt($signature['decrypt_key'], $response->response);
-            $response->response = json_decode($decrypt);
-        }
-        return $response;
-    }
     public function rujukan_rs_peserta(Request $request)
     {
         // checking request
@@ -338,6 +276,38 @@ class VclaimBPJSController extends Controller
         }
         return $response;
     }
+    public function rujukan_jumlah_sep(Request $request)
+    {
+        // checking request
+        $validator = Validator::make(request()->all(), [
+            "jenisrujukan" => "required",
+            "nomorreferensi" => "required",
+        ]);
+        if ($validator->fails()) {
+            $response = [
+                'metaData' => [
+                    'code' => 400,
+                    'message' => $validator->errors()->first(),
+                ],
+            ];
+            return json_decode(json_encode($response));
+        }
+        $url = $this->baseUrl . "Rujukan/JumlahSEP/" . $request->jenisrujukan . "/" . $request->nomorreferensi;
+        $signature = $this->signature();
+        $response = Http::withHeaders($signature)->get($url);
+        $response = json_decode($response);
+        if ($response == null) {
+            return $response;
+        } else if ($response->metaData->code == 200) {
+            $decrypt = $this->stringDecrypt($signature['decrypt_key'], $response->response);
+            $response->response = json_decode($decrypt);
+        } else if ($response->metaData->code == 201) {
+            $decrypt = $this->stringDecrypt($signature['decrypt_key'], $response->response);
+            $response->response = json_decode($decrypt);
+        }
+        return $response;
+    }
+    // Pembuatan Rencana Kontrol/SPRI
     public function insert_rencana_kontrol(Request $request)
     {
         // checking request
@@ -349,7 +319,7 @@ class VclaimBPJSController extends Controller
         ]);
         if ($validator->fails()) {
             return $response = [
-                'metadata' => [
+                'metaData' => [
                     'code' => 201,
                     'message' => $validator->errors()->first(),
                 ],
@@ -396,6 +366,180 @@ class VclaimBPJSController extends Controller
         }
         return $response;
     }
+    public function surat_kontrol_insert(Request $request)
+    {
+        $validator = Validator::make(request()->all(), [
+            "noSEP" => "required",
+            "kodeDokter" => "required",
+            "poliKontrol" => "required",
+            "tglRencanaKontrol" => "required",
+            "user" => "required",
+        ]);
+        if ($validator->fails()) {
+            return $response = [
+                'metaData' => [
+                    'code' => 201,
+                    'message' => $validator->errors()->first(),
+                ],
+            ];
+        }
+        $url = $this->baseUrl . "RencanaKontrol/insert";
+        $signature = $this->signature();
+        $client = new Client();
+        $response = $client->request('POST', $url, [
+            'headers' => $signature,
+            'body' => json_encode([
+                "request" => [
+                    "noSEP" => $request->noSEP,
+                    "kodeDokter" => $request->kodeDokter,
+                    "poliKontrol" => $request->poliKontrol,
+                    "tglRencanaKontrol" => $request->tglRencanaKontrol,
+                    "user" => $request->user,
+                ]
+            ]),
+        ]);
+        $response = json_decode($response->getBody());
+        if ($response->metaData->code == 200) {
+            $decrypt = $this->stringDecrypt($signature['decrypt_key'], $response->response);
+            $response->response = json_decode($decrypt);
+            // insert database surat kontrol
+            $suratkontrol = $response->response;
+            SuratKontrol::create([
+                "tglTerbitKontrol" => Carbon::now()->format('Y-m-d'),
+                "tglRencanaKontrol" => $suratkontrol->tglRencanaKontrol,
+                "poliTujuan" => $request->poliKontrol,
+                // "namaPoliTujuan" => $poli->namasubspesialis,
+                "kodeDokter" => $request->kodeDokter,
+                "namaDokter" => $suratkontrol->namaDokter,
+                "noSuratKontrol" => $suratkontrol->noSuratKontrol,
+                "namaJnsKontrol" => "Surat Kontrol",
+                "noSepAsalKontrol" => $request->noSEP,
+                "noKartu" => $suratkontrol->noKartu,
+                "nama" => $suratkontrol->nama,
+                "kelamin" => $suratkontrol->kelamin,
+                "tglLahir" => $suratkontrol->tglLahir,
+                "user" => $request->user,
+            ]);
+        }
+        return $response;
+    }
+    public function surat_kontrol_update(Request $request)
+    {
+        $validator = Validator::make(request()->all(), [
+            "noSuratKontrol" => "required",
+            "noSEP" => "required",
+            "kodeDokter" => "required",
+            "poliKontrol" => "required",
+            "tglRencanaKontrol" => "required",
+            "user" => "required",
+        ]);
+        if ($validator->fails()) {
+            return $response = [
+                'metaData' => [
+                    'code' => 201,
+                    'message' => $validator->errors()->first(),
+                ],
+            ];
+        }
+        $url = $this->baseUrl . "RencanaKontrol/Update";
+        $signature = $this->signature();
+        $client = new Client();
+        $response = $client->request('PUT', $url, [
+            'headers' => $signature,
+            'body' => json_encode([
+                "request" => [
+                    "noSuratKontrol" => $request->noSuratKontrol,
+                    "noSEP" => $request->noSEP,
+                    "kodeDokter" => $request->kodeDokter,
+                    "poliKontrol" => $request->poliKontrol,
+                    "tglRencanaKontrol" => $request->tglRencanaKontrol,
+                    "user" => $request->user,
+                ]
+            ]),
+        ]);
+        $response = json_decode($response->getBody());
+        if ($response->metaData->code == 200) {
+            $decrypt = $this->stringDecrypt($signature['decrypt_key'], $response->response);
+            $response->response = json_decode($decrypt);
+            $suratkontrol = $response->response;
+            $suratkontrols = SuratKontrol::where('noSuratKontrol', $suratkontrol->noSuratKontrol)->first();
+            $suratkontrols->update([
+                "tglRencanaKontrol" => $suratkontrol->$suratkontrol,
+                "namaDokter" => $suratkontrol->namaDokter,
+                "namaDokter" => $suratkontrol->namaDokter,
+                "noKartu" => $suratkontrol->noKartu,
+                "nama" => $suratkontrol->nama,
+                "tglLahir" => $suratkontrol->tglLahir,
+                "kelamin" => $suratkontrol->kelamin,
+                "namaDiagnosa" => $suratkontrol->namaDiagnosa,
+            ]);
+        }
+        return $response;
+    }
+    public function surat_kontrol_delete(Request $request)
+    {
+        // checking request
+        $validator = Validator::make(request()->all(), [
+            "noSuratKontrol" => "required",
+            "user" => "required",
+        ]);
+        if ($validator->fails()) {
+            return $response = [
+                'metaData' => [
+                    'code' => 201,
+                    'message' => $validator->errors()->first(),
+                ],
+            ];
+        }
+        // insert surat kontrol
+        $url = $this->baseUrl . "RencanaKontrol/insert";
+        $signature = $this->signature();
+        $client = new Client();
+        $response = $client->request('POST', $url, [
+            'headers' => $signature,
+            'body' => json_encode([
+                "request" => [
+                    "noSEP" => $request->nomorsep,
+                    "kodeDokter" => $request->kodedokter,
+                    "poliKontrol" => $request->kodepoli,
+                    "tglRencanaKontrol" => $request->tanggalperiksa,
+                    "user" => "Antrian RSUD Waled",
+                ]
+            ]),
+        ]);
+        $response = json_decode($response->getBody());
+        if ($response->metaData->code == 200) {
+            $decrypt = $this->stringDecrypt($signature['decrypt_key'], $response->response);
+            $response->response = json_decode($decrypt);
+            $surat_kontrol = $response->response;
+        }
+        return $response;
+    }
+    public function surat_kontrol_nomor(Request $request)
+    {
+        // checking request
+        $validator = Validator::make(request()->all(), [
+            "nomorreferensi" => "required",
+        ]);
+        if ($validator->fails()) {
+            $response = [
+                'metaData' => [
+                    'code' => 400,
+                    'message' => $validator->errors()->first(),
+                ],
+            ];
+            return json_decode(json_encode($response));
+        }
+        $url = $this->baseUrl . "RencanaKontrol/noSuratKontrol/" . $request->nomorreferensi;
+        $signature = $this->signature();
+        $response = Http::withHeaders($signature)->get($url);
+        $response = json_decode($response);
+        if ($response->metaData->code == 200) {
+            $decrypt = $this->stringDecrypt($signature['decrypt_key'], $response->response);
+            $response->response = json_decode($decrypt);
+        }
+        return $response;
+    }
     public function surat_kontrol_peserta(Request $request)
     {
         // checking request
@@ -426,31 +570,6 @@ class VclaimBPJSController extends Controller
         }
         return $response;
     }
-    public function surat_kontrol_nomor(Request $request)
-    {
-        // checking request
-        $validator = Validator::make(request()->all(), [
-            "nomorreferensi" => "required",
-        ]);
-        if ($validator->fails()) {
-            $response = [
-                'metaData' => [
-                    'code' => 400,
-                    'message' => $validator->errors()->first(),
-                ],
-            ];
-            return json_decode(json_encode($response));
-        }
-        $url = $this->baseUrl . "RencanaKontrol/noSuratKontrol/" . $request->nomorreferensi;
-        $signature = $this->signature();
-        $response = Http::withHeaders($signature)->get($url);
-        $response = json_decode($response);
-        if ($response->metaData->code == 200) {
-            $decrypt = $this->stringDecrypt($signature['decrypt_key'], $response->response);
-            $response->response = json_decode($decrypt);
-        }
-        return $response;
-    }
     public function data_surat_kontrol(Request $request)
     {
         // checking request
@@ -469,6 +588,58 @@ class VclaimBPJSController extends Controller
         }
         $url = $this->baseUrl . "RencanaKontrol/ListRencanaKontrol/tglAwal/" . $request->tanggal_awal . "/tglAkhir/" . $request->tanggal_akhir . "/filter/2";
         // dd($url);
+        $signature = $this->signature();
+        $response = Http::withHeaders($signature)->get($url);
+        $response = json_decode($response);
+        if ($response->metaData->code == 200) {
+            $decrypt = $this->stringDecrypt($signature['decrypt_key'], $response->response);
+            $response->response = json_decode($decrypt);
+        }
+        return $response;
+    }
+    public function surat_kontrol_poli(Request $request)
+    {
+        $validator = Validator::make(request()->all(), [
+            "jeniskontrol" => "required",
+            "nomor" => "required",
+            "tanggalkontrol" => "required",
+        ]);
+        if ($validator->fails()) {
+            $response = [
+                'metaData' => [
+                    'code' => 400,
+                    'message' => $validator->errors()->first(),
+                ],
+            ];
+            return json_decode(json_encode($response));
+        }
+        $url = $this->baseUrl . "RencanaKontrol/ListSpesialistik/JnsKontrol/" . $request->jeniskontrol . "/nomor/" . $request->nomor . "/TglRencanaKontrol/" . $request->tanggalkontrol;
+        $signature = $this->signature();
+        $response = Http::withHeaders($signature)->get($url);
+        $response = json_decode($response);
+        if ($response->metaData->code == 200) {
+            $decrypt = $this->stringDecrypt($signature['decrypt_key'], $response->response);
+            $response->response = json_decode($decrypt);
+        }
+        return $response;
+    }
+    public function surat_kontrol_dokter(Request $request)
+    {
+        $validator = Validator::make(request()->all(), [
+            "jeniskontrol" => "required",
+            "kodepoli" => "required",
+            "tanggalkontrol" => "required",
+        ]);
+        if ($validator->fails()) {
+            $response = [
+                'metaData' => [
+                    'code' => 400,
+                    'message' => $validator->errors()->first(),
+                ],
+            ];
+            return json_decode(json_encode($response));
+        }
+        $url = $this->baseUrl . "RencanaKontrol/JadwalPraktekDokter/JnsKontrol/" . $request->jeniskontrol . "/KdPoli/" . $request->kodepoli . "/TglRencanaKontrol/" . $request->tanggalkontrol;
         $signature = $this->signature();
         $response = Http::withHeaders($signature)->get($url);
         $response = json_decode($response);
@@ -511,6 +682,7 @@ class VclaimBPJSController extends Controller
         $response = json_decode($response->getBody());
         return $response;
     }
+    // Pembuatan SEP
     public function insert_sep(Request $request)
     {
         // if ($request->nomorsuratkontrol) {
@@ -606,6 +778,125 @@ class VclaimBPJSController extends Controller
         }
         return $response;
     }
+    public function sep_insert(Request $request)
+    {
+        $validator = Validator::make(request()->all(), [
+            "noKartu" => "required",
+            "tglSep" => "required",
+            "ppkPelayanan" => "required",
+            "jnsPelayanan" => "required",
+
+            "klsRawatHak" => "required",
+            "klsRawatNaik" => "required",
+            "pembiayaan" => "required",
+            "penanggungJawab" => "required",
+
+            "asalRujukan" => "required",
+            "tglRujukan" => "required",
+            "noRujukan" => "required",
+            "ppkRujukan" => "required",
+
+            "catatan" => "required",
+            "diagAwal" => "required",
+
+            "tujuan" => "required",
+            "eksekutif" => "required",
+
+            "tujuanKunj" => "required",
+            "flagProcedure" => "required",
+            "kdPenunjang" => "required",
+            "assesmentPel" => "required",
+
+            "noSurat" => "required",
+            "kodeDPJP" => "required",
+            "dpjpLayan" => "required",
+            "noTelp" => "required",
+            "user" => "required",
+        ]);
+        if ($validator->fails()) {
+            return $response = [
+                'metaData' => [
+                    'code' => 201,
+                    'message' => $validator->errors()->first(),
+                ],
+            ];
+        }
+        $url = $this->baseUrl . "SEP/2.0/insert";
+        $signature = $this->signature();
+        $client = new Client();
+        $response = $client->request('POST', $url, [
+            'headers' => $signature,
+            'body' => json_encode([
+                "request" => [
+                    "t_sep" => [
+                        "noKartu" => $request->noKartu,
+                        "tglSep" => $request->tglSep,
+                        "ppkPelayanan" => $request->ppkPelayanan,
+                        "jnsPelayanan" => $request->jnsPelayanan,
+                        "klsRawat" => [
+                            "klsRawatHak" => $request->klsRawatHak,
+                            "klsRawatNaik" => $request->klsRawatNaik,
+                            "pembiayaan" => $request->pembiayaan,
+                            "penanggungJawab" => $request->penanggungJawab,
+                        ],
+                        "noMR" => $request->noMR,
+                        "rujukan" => [
+                            "asalRujukan" =>  $request->asalRujukan,
+                            "tglRujukan" =>  $request->tglRujukan,
+                            "noRujukan" =>  $request->noRujukan,
+                            "ppkRujukan" =>  $request->ppkRujukan,
+                        ],
+                        "catatan" => $request->catatan,
+                        "diagAwal" => $request->diagAwal,
+                        "poli" => [
+                            "tujuan" => $request->tujuan,
+                            "eksekutif" => $request->eksekutif,
+                        ],
+                        "cob" => [
+                            "cob" => "0"
+                        ],
+                        "katarak" => [
+                            "katarak" => "0"
+                        ],
+                        "jaminan" => [
+                            "lakaLantas" => "0",
+                            "noLP" => "",
+                            "penjamin" => [
+                                "tglKejadian" => "",
+                                "keterangan" => "",
+                                "suplesi" => [
+                                    "suplesi" => "0",
+                                    "noSepSuplesi" => "",
+                                    "lokasiLaka" => [
+                                        "kdPropinsi" => "",
+                                        "kdKabupaten" => "",
+                                        "kdKecamatan" => ""
+                                    ]
+                                ]
+                            ]
+                        ],
+                        "tujuanKunj" => $request->tujuanKunj,
+                        "flagProcedure" => $request->flagProcedure,
+                        "kdPenunjang" => $request->kdPenunjang,
+                        "assesmentPel" => $request->assesmentPel,
+                        "skdp" => [
+                            "noSurat" => $request->noSurat,
+                            "kodeDPJP" => $request->kodeDPJP,
+                        ],
+                        "dpjpLayan" => $request->dpjpLayan,
+                        "noTelp" => $request->noTelp,
+                        "user" =>  $request->user,
+                    ]
+                ]
+            ]),
+        ]);
+        $response = json_decode($response->getBody());
+        if ($response->metaData->code == 200) {
+            $decrypt = $this->stringDecrypt($signature['decrypt_key'], $response->response);
+            $response->response = json_decode($decrypt);
+        }
+        return $response;
+    }
     public function delete_sep(Request $request)
     {
         // checking request
@@ -654,7 +945,6 @@ class VclaimBPJSController extends Controller
             ];
             return json_decode(json_encode($response));
         }
-
         $url = $this->baseUrl . "SEP/" . $request->noSep;
         $signature = $this->signature();
         $response = Http::withHeaders($signature)->get($url);

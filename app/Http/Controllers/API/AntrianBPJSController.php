@@ -45,12 +45,10 @@ class AntrianBPJSController extends Controller
         $cons_id =  env('ANTRIAN_CONS_ID');
         $secretKey = env('ANTRIAN_SECRET_KEY');
         $userkey = env('ANTRIAN_USER_KEY');
-
         date_default_timezone_set('UTC');
         $tStamp = strval(time() - strtotime('1970-01-01 00:00:00'));
         $signature = hash_hmac('sha256', $cons_id . "&" . $tStamp, $secretKey, true);
         $encodedSignature = base64_encode($signature);
-
         $response = array(
             'user_key' => $userkey,
             'x-cons-id' => $cons_id,
@@ -69,9 +67,10 @@ class AntrianBPJSController extends Controller
         $output = \LZCompressor\LZString::decompressFromEncodedURIComponent($output);
         return $output;
     }
+    // Web Service Antrean - BPJS (Diakses oleh sistem RS)
     public function ref_poli()
     {
-        $url = $this->baseUrl . "ref/poli";
+        $url = env('ANTRIAN_URL') . "ref/poli";
         $signature = $this->signature();
         $response = Http::withHeaders($signature)->get($url);
         $response = json_decode($response);
@@ -81,7 +80,7 @@ class AntrianBPJSController extends Controller
     }
     public function ref_dokter()
     {
-        $url = $this->baseUrl . "ref/dokter";
+        $url = env('ANTRIAN_URL') . "ref/dokter";
         $signature = $this->signature();
         $response = Http::withHeaders($signature)->get($url);
         $response = json_decode($response);
@@ -93,7 +92,7 @@ class AntrianBPJSController extends Controller
     {
         $request['kodepoli'] = $request->kodepoli;
         $request['tanggal'] = $request->tanggalperiksa;
-        $url = $this->baseUrl . "jadwaldokter/kodepoli/" . $request->kodepoli . "/tanggal/" . $request->tanggal;
+        $url = env('ANTRIAN_URL') . "jadwaldokter/kodepoli/" . $request->kodepoli . "/tanggal/" . $request->tanggal;
         $signature = $this->signature();
         $response = Http::withHeaders($signature)->get($url);
         $response = json_decode($response);
@@ -105,7 +104,7 @@ class AntrianBPJSController extends Controller
     }
     public function update_jadwal_dokter(Request $request)
     {
-        $url = $this->baseUrl . "jadwaldokter/updatejadwaldokter";
+        $url = env('ANTRIAN_URL') . "jadwaldokter/updatejadwaldokter";
         $signature = $this->signature();
         $client = new Client();
         $response = $client->request('POST', $url, [
@@ -167,7 +166,7 @@ class AntrianBPJSController extends Controller
             ];
             return json_decode(json_encode($response));
         }
-        $url = $this->baseUrl . "antrean/add";
+        $url = env('ANTRIAN_URL') . "antrean/add";
         $signature = $this->signature();
         $client = new Client();
         $response = $client->request('POST', $url, [
@@ -218,7 +217,7 @@ class AntrianBPJSController extends Controller
             ];
             return json_decode(json_encode($response));
         }
-        $url = $this->baseUrl . "antrean/updatewaktu";
+        $url = env('ANTRIAN_URL') . "antrean/updatewaktu";
         $signature = $this->signature();
         $client = new Client();
         $response = $client->request('POST', $url, [
@@ -247,7 +246,7 @@ class AntrianBPJSController extends Controller
                 ],
             ];
         }
-        $url = $this->baseUrl . "antrean/batal";
+        $url = env('ANTRIAN_URL') . "antrean/batal";
         $signature = $this->signature();
         $client = new Client();
         $response = $client->request('POST', $url, [
@@ -269,7 +268,7 @@ class AntrianBPJSController extends Controller
         if ($validator->fails()) {
             return response()->json(['error' => $validator->errors()], 400);
         }
-        $url = $this->baseUrl . "antrean/getlisttask";
+        $url = env('ANTRIAN_URL') . "antrean/getlisttask";
         $signature = $this->signature();
         $client = new Client();
         $response = $client->request('POST', $url, [
@@ -302,7 +301,7 @@ class AntrianBPJSController extends Controller
             return $response;
         }
         // proses
-        $url = $this->baseUrl . "dashboard/waktutunggu/tanggal/" . $request->tanggal . "/waktu/" . $request->waktu;
+        $url = env('ANTRIAN_URL') . "dashboard/waktutunggu/tanggal/" . $request->tanggal . "/waktu/" . $request->waktu;
         $signature = $this->signature();
         $response = Http::withHeaders($signature)->get($url);
         $response = json_decode($response);
@@ -326,13 +325,13 @@ class AntrianBPJSController extends Controller
             return $response;
         }
         // proses
-        $url = $this->baseUrl . "dashboard/waktutunggu/bulan/" . $request->bulan . "/tahun/" . $request->tahun . "/waktu/" . $request->waktu;
+        $url = env('ANTRIAN_URL') . "dashboard/waktutunggu/bulan/" . $request->bulan . "/tahun/" . $request->tahun . "/waktu/" . $request->waktu;
         $signature = $this->signature();
         $response = Http::withHeaders($signature)->get($url);
         $response = json_decode($response);
         return $response;
     }
-    // function WS RS
+    // Web Service Antrean - RS (Diakses oleh Mobile JKN)
     public function token(Request $request)
     {
         if (Auth::attempt(['username' => $request->header('x-username'), 'password' => $request->header('x-password')])) {
@@ -365,10 +364,8 @@ class AntrianBPJSController extends Controller
         if ($aktif == false) {
             if ($request->hasHeader('x-token')) {
                 if ($request->hasHeader('x-username')) {
-                    // $user = User::where('username', $request->header('x-username'))->first();
                     $credentials = $request->header('x-token');
                     $token = PersonalAccessToken::findToken($credentials);
-                    // token tidak ditemukan
                     if (!$token) {
                         return $response = [
                             "metadata" => [
@@ -376,9 +373,7 @@ class AntrianBPJSController extends Controller
                                 "message" => "Unauthorized (Token Salah)"
                             ]
                         ];
-                    }
-                    // token ditemukan
-                    else {
+                    } else {
                         $user = $token->tokenable;
                         if (Carbon::now() >  $token->created_at->addMinute($tokenexpired)) {
                             $token->delete();
@@ -439,66 +434,66 @@ class AntrianBPJSController extends Controller
         //     return $auth;
         // }
         // check tanggal
-        $time = Carbon::parse($request->tanggalperiksa)->endOfDay();
-        if ($time->isPast()) {
+        $time = Carbon::parse($request->tanggalperiksa);
+        if ($time->endOfDay()->isPast()) {
             return [
                 "metadata" => [
                     "code" => 201,
                     "message" => "Tanggal periksa sudah terlewat"
                 ]
             ];
-        } else {
-            $jadwals = $this->ref_jadwal_dokter($request);
-            if (isset($jadwals->response)) {
-                $jadwal = collect($jadwals->response)->where('kodedokter', $request->kodedokter)->first();
-                if (empty($jadwal)) {
-                    $response = [
-                        "metadata" => [
-                            "code" => 201,
-                            "message" => "Tidak ada jadwal dokter dihari tersebut."
-                        ]
-                    ];
-                    return $response;
-                }
-                $antrian = Antrian::where('kodepoli', $request->kodepoli)
-                    ->where('tanggalperiksa', $request->tanggalperiksa);
-                $antrians = $antrian->count();
-                $antreanpanggil =  Antrian::where('kodepoli', $request->kodepoli)
-                    ->where('tanggalperiksa', $request->tanggalperiksa)
-                    ->where('taskid', 4)->first();
-                if (isset($antreanpanggil)) {
-                    $nomorantean = $antreanpanggil->nomorantrian;
-                } else {
-                    $nomorantean = 0;
-                }
-                $antrianjkn = Antrian::where('kodepoli', $request->kodepoli)
-                    ->where('tanggalperiksa', $request->tanggalperiksa)
-                    ->where('jenispasien', "JKN")->count();
-                $antriannonjkn = Antrian::where('kodepoli', $request->kodepoli)
-                    ->where('tanggalperiksa', $request->tanggalperiksa)
-                    ->where('jenispasien', "NON-JKN")->count();
+        }
+        $jadwals = $this->ref_jadwal_dokter($request);
+        if (isset($jadwals->response)) {
+            $jadwal = collect($jadwals->response)->where('kodedokter', $request->kodedokter)->first();
+            if (empty($jadwal)) {
                 $response = [
-                    "response" => [
-                        "namapoli" => $jadwal->namapoli,
-                        "namadokter" => $jadwal->namadokter,
-                        "totalantrean" => $antrians,
-                        "sisaantrean" => $jadwal->kapasitaspasien - $antrians,
-                        "antreanpanggil" => $nomorantean,
-                        "sisakuotajkn" => round($jadwal->kapasitaspasien * 80 / 100) -  $antrianjkn,
-                        "kuotajkn" => round($jadwal->kapasitaspasien * 80 / 100),
-                        "sisakuotanonjkn" => round($jadwal->kapasitaspasien * 20 / 100) - $antriannonjkn,
-                        "kuotanonjkn" =>  round($jadwal->kapasitaspasien * 20 / 100),
-                        "keterangan" => "Informasi antrian poliklinik",
-                    ],
                     "metadata" => [
-                        "message" => "Ok",
-                        "code" => 200
+                        "code" => 201,
+                        "message" => "Tidak ada jadwal dokter dihari tersebut."
                     ]
                 ];
                 return $response;
-            } else {
-                return  $jadwals;
             }
+            $antrian = Antrian::where('kodepoli', $request->kodepoli)
+                ->where('tanggalperiksa', $request->tanggalperiksa);
+            $antrians = $antrian->count();
+            $antreanpanggil =  Antrian::where('kodepoli', $request->kodepoli)
+                ->where('tanggalperiksa', $request->tanggalperiksa)
+                ->where('taskid', 4)->first();
+            if (isset($antreanpanggil)) {
+                $nomorantean = $antreanpanggil->nomorantrian;
+            } else {
+                $nomorantean = 0;
+            }
+            $antrianjkn = Antrian::where('kodepoli', $request->kodepoli)
+                ->where('tanggalperiksa', $request->tanggalperiksa)
+                ->where('jenispasien', "JKN")->count();
+            $antriannonjkn = Antrian::where('kodepoli', $request->kodepoli)
+                ->where('tanggalperiksa', $request->tanggalperiksa)
+                ->where('jenispasien', "NON-JKN")->count();
+
+            $response = [
+                "response" => [
+                    "namapoli" => $jadwal->namapoli,
+                    "namadokter" => $jadwal->namadokter,
+                    "totalantrean" => $antrians,
+                    "sisaantrean" => $jadwal->kapasitaspasien - $antrians,
+                    "antreanpanggil" => $nomorantean,
+                    "sisakuotajkn" => round($jadwal->kapasitaspasien * 80 / 100) -  $antrianjkn,
+                    "kuotajkn" => round($jadwal->kapasitaspasien * 80 / 100),
+                    "sisakuotanonjkn" => round($jadwal->kapasitaspasien * 20 / 100) - $antriannonjkn,
+                    "kuotanonjkn" =>  round($jadwal->kapasitaspasien * 20 / 100),
+                    "keterangan" => "Informasi antrian poliklinik",
+                ],
+                "metadata" => [
+                    "message" => "Ok",
+                    "code" => 200
+                ]
+            ];
+            return $response;
+        } else {
+            return  $jadwals;
         }
     }
     public function ambil_antrian(Request $request)
@@ -516,7 +511,7 @@ class AntrianBPJSController extends Controller
             "nik" => "required|numeric|digits:16",
             "nohp" => "required",
             "kodepoli" => "required",
-            // "norm" => "required",
+            "norm" => "required",
             "tanggalperiksa" => "required",
             "kodedokter" => "required",
             "jampraktek" => "required",
@@ -724,7 +719,6 @@ class AntrianBPJSController extends Controller
             $request['kuotanonjkn'] = round($jadwal->kapasitaspasien * 20 / 100);
             $request['keterangan'] = "Peserta harap 60 menit lebih awal dari jadwal untuk checkin dekat mesin antrian untuk mencetak tiket antrian.";
             //tambah antrian bpjs
-
             $response = $this->tambah_antrian($request);
             if ($response->metadata->code == 200) {
                 // tambah antrian database
