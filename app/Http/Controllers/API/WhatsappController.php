@@ -764,9 +764,9 @@ class WhatsappController extends Controller
             $tanggalperiksa = Carbon::createFromFormat('Y-m-d', $tanggalperiksa, 'Asia/Jakarta');
             // tanggal periksa kurang dari tanggal surat kontrol
             if ($tglkontrol->format('Y-m-d') != $tanggalperiksa->format('Y-m-d')) {
-                // $request['notif'] = '8 cek surat kontrol error : tanggal kunjungan (" . $tanggalperiksa->format('Y-m-d') . ") tidak sesuai dengan tanggal surat kontrol (" . $tglkontrol->format('Y-m-d') . ")';
-                // $this->send_notif($request);
-                $request['message'] = "*8. Konfirmasi Surat Kontrol* \nMohon maaf tanggal kunjungan (" . $tanggalperiksa->format('Y-m-d') . ") tidak sesuai dengan tanggal surat kontrol (" . $tglkontrol->format('Y-m-d') . ")";
+                $request['notif'] = "8 cek surat kontrol error : tanggal kunjungan (" . $tanggalperiksa->format('Y-m-d') . ") tidak sesuai dengan tanggal surat kontrol (" . $tglkontrol->format('Y-m-d') . ")";
+                $this->send_notif($request);
+                $request['message'] = "*8. Konfirmasi Surat Kontrol* \nMohon maaf tanggal kunjungan (" . $tanggalperiksa->format('Y-m-d') . ") tidak sesuai dengan tanggal surat kontrol (" . $tglkontrol->format('Y-m-d') . "). Silahkan lakukan pengajuan ubah tanggal surat kontrol.";
                 return $this->send_message($request);
             }
             // jika berhasil
@@ -784,6 +784,7 @@ class WhatsappController extends Controller
                 $request['kodepoli'] = $jadwaldokter->kodesubspesialis;
                 $request['tanggalperiksa'] = $tanggalperiksa->format('Y-m-d');
                 $request['kodedokter'] = $suratkontrol->kodeDokter;
+                $request['namadokter'] = $suratkontrol->namaDokter;
                 $request['jampraktek'] = $jadwaldokter->jadwal;
                 $request['jeniskunjungan'] = 3;
                 $request['status'] = $peserta->statusPeserta->keterangan;
@@ -791,7 +792,7 @@ class WhatsappController extends Controller
                 $request['polirujukan'] = $suratkontrol->namaPoliTujuan;
                 // jika jadwal dan poli tujuan berbeda
                 if ($request->kodedokter !=  $jadwaldokter->kodedokter) {
-                    $request['message'] = "*8. Konfirmasi Surat Kontrol*\nMohon maaf Jadwal Dokter (" . strtoupper($jadwaldokter->kodedokter) . ") dan Dokter Tujuan Surat Kontrol (" . strtoupper($request->kodedokter) . ") yang dipilih berbeda. \nSilahkan plih jadwal sesuai dengan rujukan anda.";
+                    $request['message'] = "*8. Konfirmasi Surat Kontrol*\nMohon maaf Jadwal Dokter yang ada pilih (" . strtoupper($jadwaldokter->namadokter) . ") berbeda dengan Dokter Tujuan Surat Kontrol (" . strtoupper($request->namadokter) . ") anda. \nSilahkan plih jadwal sesuai dengan surat kontrol anda.";
                     $this->send_message($request);
                     return $this->pilih_poli($pesan, $request);
                 }
@@ -836,7 +837,7 @@ class WhatsappController extends Controller
                 $request['message'] = "*Mohon Maaf Surat Kontrol (228)* \nTanggal kunjungan (" . $tanggalperiksa->format('Y-m-d') . ") tidak sesuai dengan tanggal surat kontrol (" . $tglkontrol->format('Y-m-d') . ").\nSilahkan daftar dihari sesuai surat kontrol.";
                 return $this->send_message($request);
             }
-            // jika berhasil
+            // // jika berhasil
             else {
                 $vclaim = new VclaimBPJSController();
                 $request['nomorreferensi'] = $suratkontrol->sep->provPerujuk->noRujukan;
@@ -851,17 +852,18 @@ class WhatsappController extends Controller
                 $request['kodepoli'] = $jadwaldokter->kodesubspesialis;
                 $request['tanggalperiksa'] = $tanggalperiksa->format('Y-m-d');
                 $request['kodedokter'] = $suratkontrol->kodeDokter;
+                $request['namadokter'] = $suratkontrol->namaDokter;
                 $request['jampraktek'] = $jadwaldokter->jadwal;
                 $request['jeniskunjungan'] = 3;
                 $request['status'] = $peserta->statusPeserta->keterangan;
                 $request['diagnosa'] = $suratkontrol->sep->diagnosa;
                 $request['polirujukan'] = $suratkontrol->namaPoliTujuan;
                 // jika jadwal dan poli tujuan berbeda
-                // if ($request->kodedokter !=  $jadwaldokter->kodedokter) {
-                //     $request['message'] = "*Mohon Maaf (203)*\nJadwal Poli (" . strtoupper($jadwaldokter->namasubspesialis) . ") dan Poli Tujuan Surat Kontrol (" . strtoupper($request->polirujukan) . ") yang dipilih berbeda. \nSilahkan plih jadwal sesuai dengan rujukan anda.";
-                //     $this->send_message($request);
-                //     return $this->pilih_poli($pesan, $request);
-                // }
+                if ($request->kodedokter !=  $jadwaldokter->kodedokter) {
+                    $request['message'] = "*8. Konfirmasi Surat Kontrol*\nMohon maaf Jadwal Dokter yang ada pilih (" . strtoupper($jadwaldokter->namadokter) . ") berbeda dengan Dokter Tujuan Surat Kontrol (" . strtoupper($request->namadokter) . ") anda. \nSilahkan plih jadwal sesuai dengan rujukan anda.";
+                    $this->send_message($request);
+                    return $this->pilih_poli($pesan, $request);
+                }
                 $request['jeniskunjungan'] = 3;
                 $antrian = new AntrianBPJSController();
                 $response = json_decode(json_encode($antrian->ambil_antrian($request)));

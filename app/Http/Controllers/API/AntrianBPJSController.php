@@ -1206,7 +1206,7 @@ class AntrianBPJSController extends Controller
                 else {
                     return [
                         "metadata" => [
-                            "message" => $sep->metaData->message,
+                            "message" => "Gagal Buat SEP : " . $sep->metaData->message,
                             "code" => 201,
                         ],
                     ];
