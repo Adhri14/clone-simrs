@@ -119,7 +119,6 @@ class VclaimController extends Controller
     }
     public function delete_surat_kontrol($noSuratKontrol, Request $request)
     {
-        dd($request->all());
         $request['noSuratKontrol'] = $noSuratKontrol;
         $request['user'] = Auth::user()->name;
         $vclaim = new VclaimBPJSController();

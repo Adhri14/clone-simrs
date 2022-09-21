@@ -61,6 +61,9 @@ class AntrianController extends Controller
     }
     function print_karcis(Request $request,  $kunjungan)
     {
+        Carbon::setLocale('id');
+        date_default_timezone_set('Asia/Jakarta');
+        $now = Carbon::now();
         $connector = new WindowsPrintConnector(env('PRINTER_CHECKIN'));
         $printer = new Printer($connector);
         $printer->setEmphasis(true);
@@ -113,12 +116,15 @@ class AntrianController extends Controller
         $printer->text("Lokasi Pendaftaran Lantai " . $request->lantaipendaftaran . " \n");
         $printer->text("================================================\n");
         $printer->setJustification(Printer::JUSTIFY_LEFT);
-        $printer->text("Cetakan 1 : " . Carbon::now() . "\n");
+        $printer->text("Cetakan 1 : " . $now . "\n");
         $printer->cut();
         $printer->close();
     }
     function print_sep(Request $request, $sep)
     {
+        Carbon::setLocale('id');
+        date_default_timezone_set('Asia/Jakarta');
+        $now = Carbon::now();
         $for_sep = ['POLIKLINIK', 'FARMASI', 'ARSIP'];
         // $for_sep = ['PERCOBAAN'];
         $sep = $sep->response;
@@ -154,10 +160,10 @@ class AntrianController extends Controller
             $printer->text("Faskes Perujuk : -\n");
             $printer->text("Catatan : " . $sep->sep->catatan . "\n\n");
             $printer->setJustification(Printer::JUSTIFY_RIGHT);
-            $printer->text("Cirebon, " . Carbon::now()->format('d-m-Y') . " \n\n\n\n");
+            $printer->text("Cirebon, " . $now->format('d-m-Y') . " \n\n\n\n");
             $printer->text("RSUD Waled \n\n");
             $printer->setJustification(Printer::JUSTIFY_LEFT);
-            $printer->text("Cetakan : " . Carbon::now() . "\n");
+            $printer->text("Cetakan : " . $now . "\n");
             $printer->cut();
             $printer->close();
         }
@@ -1180,7 +1186,7 @@ class AntrianController extends Controller
             $surat_kontrols = SuratKontrol::whereDate('tglTerbitKontrol', $request->tanggal)->get();
             $kunjungans = KunjunganDB::whereDate('tgl_masuk', $request->tanggal)
                 ->where('no_sep', "!=", null)
-                // ->where('no_rujukan', "!=", null)
+                ->where('status_kunjungan', "!=", 8)
                 ->where('kode_unit', "!=", null)
                 ->get();
             if ($request->kodepoli != null) {

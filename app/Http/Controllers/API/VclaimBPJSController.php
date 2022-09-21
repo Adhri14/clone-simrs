@@ -107,7 +107,6 @@ class VclaimBPJSController extends Controller
         $url = $this->baseUrl . "monitoring/HistoriPelayanan/NoKartu/" . $request->nomorkartu . "/tglMulai/" . $tanggal_lama . "/tglAkhir/" . $tanggal_akhir;
         $signature = $this->signature();
         $response = Http::withHeaders($signature)->get($url);
-        // dd($response);
         $response = json_decode($response);
         if ($response->metaData->code == 200) {
             $decrypt = $this->stringDecrypt($signature['decrypt_key'], $response->response);
@@ -490,7 +489,6 @@ class VclaimBPJSController extends Controller
             ];
         }
         $url = $this->baseUrl . "RencanaKontrol/Delete";
-        dd($url);
         $signature = $this->signature();
         $client = new Client();
         $response = $client->request("DELETE", $url, [
