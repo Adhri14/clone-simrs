@@ -478,7 +478,6 @@ class VclaimBPJSController extends Controller
     }
     public function surat_kontrol_delete(Request $request)
     {
-        // checking request
         $validator = Validator::make(request()->all(), [
             "noSuratKontrol" => "required",
             "user" => "required",
@@ -491,28 +490,22 @@ class VclaimBPJSController extends Controller
                 ],
             ];
         }
-        // insert surat kontrol
-        $url = $this->baseUrl . "RencanaKontrol/insert";
+        $url = $this->baseUrl . "RencanaKontrol/Delete";
+        dd($url);
         $signature = $this->signature();
         $client = new Client();
-        $response = $client->request('POST', $url, [
+        $response = $client->request("DELETE", $url, [
             'headers' => $signature,
             'body' => json_encode([
                 "request" => [
-                    "noSEP" => $request->nomorsep,
-                    "kodeDokter" => $request->kodedokter,
-                    "poliKontrol" => $request->kodepoli,
-                    "tglRencanaKontrol" => $request->tanggalperiksa,
-                    "user" => "Antrian RSUD Waled",
+                    "t_suratkontrol" => [
+                        "noSuratKontrol" => $request->noSuratKontrol,
+                        "user" =>  $request->user,
+                    ],
                 ]
             ]),
         ]);
         $response = json_decode($response->getBody());
-        if ($response->metaData->code == 200) {
-            $decrypt = $this->stringDecrypt($signature['decrypt_key'], $response->response);
-            $response->response = json_decode($decrypt);
-            $surat_kontrol = $response->response;
-        }
         return $response;
     }
     public function surat_kontrol_nomor(Request $request)
@@ -649,39 +642,6 @@ class VclaimBPJSController extends Controller
         }
         return $response;
     }
-    public function delete_surat_kontrol(Request $request)
-    {
-        // checking request
-        $validator = Validator::make(request()->all(), [
-            "noSurat" => "required",
-        ]);
-        if ($validator->fails()) {
-            $response = [
-                'metaData' => [
-                    'code' => 400,
-                    'message' => $validator->errors()->first(),
-                ],
-            ];
-            return json_decode(json_encode($response));
-        }
-        // delete sep
-        $url = $this->baseUrl . "RencanaKontrol/Delete";
-        $signature = $this->signature();
-        $client = new Client();
-        $response = $client->request('DELETE', $url, [
-            'headers' => $signature,
-            'body' => json_encode([
-                "request" => [
-                    "t_suratkontrol" => [
-                        "noSuratKontrol" => $request->noSurat,
-                        "user" => "RSUD Waled",
-                    ]
-                ]
-            ]),
-        ]);
-        $response = json_decode($response->getBody());
-        return $response;
-    }
     // Pembuatan SEP
     public function insert_sep(Request $request)
     {
@@ -787,9 +747,6 @@ class VclaimBPJSController extends Controller
             "jnsPelayanan" => "required",
 
             "klsRawatHak" => "required",
-            "klsRawatNaik" => "required",
-            "pembiayaan" => "required",
-            "penanggungJawab" => "required",
 
             "asalRujukan" => "required",
             "tglRujukan" => "required",
@@ -802,13 +759,13 @@ class VclaimBPJSController extends Controller
             "tujuan" => "required",
             "eksekutif" => "required",
 
-            "tujuanKunj" => "required",
-            "flagProcedure" => "required",
-            "kdPenunjang" => "required",
-            "assesmentPel" => "required",
+            // "tujuanKunj" => "required",
+            // "flagProcedure" => "required",
+            // "kdPenunjang" => "required",
+            // "assesmentPel" => "required",
 
-            "noSurat" => "required",
-            "kodeDPJP" => "required",
+            // "noSurat" => "required",
+            // "kodeDPJP" => "required",
             "dpjpLayan" => "required",
             "noTelp" => "required",
             "user" => "required",

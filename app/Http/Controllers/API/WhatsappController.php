@@ -476,7 +476,6 @@ class WhatsappController extends Controller
     }
     public function rujukan_peserta($pesan, Request $request)
     {
-
         $format = explode('_', $pesan)[1];
         $nomorkartu = explode('#', $format)[0];
         $jadwal = explode('#', $format)[1];

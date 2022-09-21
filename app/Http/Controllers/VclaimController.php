@@ -78,18 +78,6 @@ class VclaimController extends Controller
             'suratkontrols' => $suratkontrols,
         ]);
     }
-    public function delete_surat_kontrol($noSurat, Request $request)
-    {
-        $api = new VclaimBPJSController();
-        $request['noSurat'] = $noSurat;
-        $response = $api->delete_surat_kontrol($request);
-        if ($response->metaData->code == '200') {
-            Alert::success('Success', 'Data berhasil dihapus. ' . $response->metaData->message);
-        } else {
-            Alert::error('Error', 'Data gagal dihapus. ' .  $response->metaData->message);
-        }
-        return redirect()->back();
-    }
     public function buat_surat_kontrol(Request $request)
     {
         $request->validate([
@@ -128,5 +116,19 @@ class VclaimController extends Controller
             Alert::error('Error', 'Pembuatan Surat Kontrol Gagal karena ' .  $sk->metaData->message);
             return redirect()->back();
         }
+    }
+    public function delete_surat_kontrol($noSuratKontrol, Request $request)
+    {
+        dd($request->all());
+        $request['noSuratKontrol'] = $noSuratKontrol;
+        $request['user'] = Auth::user()->name;
+        $vclaim = new VclaimBPJSController();
+        $response = $vclaim->surat_kontrol_delete($request);
+        if ($response->metaData->code == '200') {
+            Alert::success('Success', 'Data berhasil dihapus. ' . $response->metaData->message);
+        } else {
+            Alert::error('Error', 'Data gagal dihapus. ' .  $response->metaData->message);
+        }
+        return redirect()->back();
     }
 }

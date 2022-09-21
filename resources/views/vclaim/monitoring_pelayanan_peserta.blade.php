@@ -72,6 +72,8 @@
                                     <dd class="col-sm-8">{{ $response->response->peserta->nik }}</dd>
                                     <dt class="col-sm-4">No Kartu</dt>
                                     <dd class="col-sm-8">{{ $response->response->peserta->noKartu }}</dd>
+                                    <dt class="col-sm-4">No RM</dt>
+                                    <dd class="col-sm-8">{{ $response->response->peserta->mr->noMR }}</dd>
                                     <dt class="col-sm-4">Nama</dt>
                                     <dd class="col-sm-8">{{ $response->response->peserta->nama }}</dd>
                                     <dt class="col-sm-4">Pisa</dt>
@@ -144,7 +146,7 @@
                         </div>
                     </div>
                     <x-adminlte-card title="Surat Kontrol Peserta" theme="primary" icon="fas fa-info-circle" collapsible>
-                        @php
+                        {{-- @php
                             $heads = ['Tgl Dibuat', 'Tgl S. Kontrol', 'Poliklinik', 'No S. Kontrol', 'No SEP Asal', 'Pasien', 'Dokter'];
                             // $config['order'] = ['7', 'asc'];
                         @endphp
@@ -161,6 +163,48 @@
                                     <td>{{ $item->namaDokter }}</td>
                                 </tr>
                             @endforeach
+                        </x-adminlte-datatable> --}}
+                        @php
+                            $heads = ['Tgl Dibuat', 'Tgl S. Kontrol', 'Action', 'No S. Kontrol', 'Poliklinik', 'Pasien', 'Kartu', 'No SEP Asal', 'Dokter'];
+                            $config['order'] = ['1', 'DESC'];
+                        @endphp
+                        <x-adminlte-datatable id="table2" class="nowrap" :heads="$heads" :config="$config" striped bordered
+                            hoverable compressed>
+                            @if (isset($suratkontrols))
+                                @foreach ($suratkontrols as $item)
+                                    <tr>
+                                        <td>{{ $item->tglTerbitKontrol }}</td>
+                                        <td>{{ $item->tglRencanaKontrol }}</td>
+                                        <td>
+                                            {{-- <form action="{{ route('api.surat_kontrol_delete') }}" method="POST"> --}}
+                                            {{-- <x-adminlte-button class="btn-xs" theme="warning" icon="fas fa-edit"
+                                            onclick="#" /> --}}
+                                            {{-- <x-adminlte-button class="btn-xs" theme="warning" icon="fas fa-edit"
+                                            onclick="window.location='{{ route('admin.user.edit', $item->username) }}'" /> --}}
+                                            {{-- @csrf
+                                        <input type="hidden" name="noSuratKontrol" value="{{ $item->noSuratKontrol }}">
+                                        <x-adminlte-button class="btn-xs" theme="danger" icon="fas fa-trash-alt"
+                                            type="submit"
+                                            onclick="return confirm('Apakah anda akan menghapus {{ $item->noSuratKontrol }} ?')" />
+                                    </form> --}}
+                                            <form action="{{ route('vclaim.delete_surat_kontrol', $item->noSuratKontrol) }}"
+                                                method="POST">
+                                                @csrf
+                                                @method('DELETE')
+                                                <x-adminlte-button class="btn-xs" theme="danger" icon="fas fa-trash-alt"
+                                                    type="submit"
+                                                    onclick="return confirm('Apakah anda akan menghapus surat kontrol {{ $item->noSuratKontrol }} ?')" />
+                                            </form>
+                                        </td>
+                                        <td>{{ $item->noSuratKontrol }}</td>
+                                        <td>{{ $item->namaPoliTujuan }}</td>
+                                        <td>{{ $item->nama }}</td>
+                                        <td>{{ $item->noKartu }}</td>
+                                        <td>{{ $item->noSepAsalKontrol }}</td>
+                                        <td>{{ $item->namaDokter }}</td>
+                                    </tr>
+                                @endforeach
+                            @endif
                         </x-adminlte-datatable>
                     </x-adminlte-card>
                 @endif
