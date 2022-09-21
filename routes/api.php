@@ -58,6 +58,7 @@ Route::prefix('wsrs')->group(function () {
 
 Route::prefix('vclaim')->group(function () {
     // ref
+    Route::get('signature', [VclaimBPJSController::class, 'signature'])->name('signature');
     Route::get('ref_provinsi', [VclaimBPJSController::class, 'ref_provinsi'])->name('ref_provinsi');
     Route::post('ref_kabupaten', [VclaimBPJSController::class, 'ref_kabupaten'])->name('ref_kabupaten');
     Route::post('ref_kecamatan', [VclaimBPJSController::class, 'ref_kecamatan'])->name('ref_kecamatan');
@@ -67,11 +68,11 @@ Route::prefix('vclaim')->group(function () {
     Route::get('peserta_nomorkartu', [VclaimBPJSController::class, 'peserta_nomorkartu'])->name('api.cek_nomorkartu');
     Route::get('peserta_nik', [VclaimBPJSController::class, 'peserta_nik'])->name('api.cek_nik');
     // rujukan
-    Route::get('rujukan_jumlah_sep', [VclaimBPJSController::class, 'rujukan_jumlah_sep'])->name('api.rujukan_jumlah_sep');
     Route::get('rujukan_nomor', [VclaimBPJSController::class, 'rujukan_nomor'])->name('api.rujukan_nomor');
-    Route::get('rujukan_rs_nomor', [VclaimBPJSController::class, 'rujukan_rs_nomor'])->name('api.rujukan_rs_nomor');
     Route::get('rujukan_peserta', [VclaimBPJSController::class, 'rujukan_peserta']);
+    Route::get('rujukan_rs_nomor', [VclaimBPJSController::class, 'rujukan_rs_nomor'])->name('api.rujukan_rs_nomor');
     Route::get('rujukan_rs_peserta', [VclaimBPJSController::class, 'rujukan_rs_peserta']);
+    Route::get('rujukan_jumlah_sep', [VclaimBPJSController::class, 'rujukan_jumlah_sep'])->name('api.rujukan_jumlah_sep');
     // sep
     Route::post('insert_sep', [VclaimBPJSController::class, 'insert_sep']);
     Route::delete('delete_sep', [VclaimBPJSController::class, 'delete_sep']);
@@ -80,8 +81,13 @@ Route::prefix('vclaim')->group(function () {
     Route::delete('delete_sep_internal', [VclaimBPJSController::class, 'delete_sep_internal']);
     // surat kontrol
     Route::post('insert_rencana_kontrol', [VclaimBPJSController::class, 'insert_rencana_kontrol']);
+    Route::post('surat_kontrol_insert', [VclaimBPJSController::class, 'surat_kontrol_insert'])->name('api.surat_kontrol_insert');
+    Route::post('surat_kontrol_update', [VclaimBPJSController::class, 'surat_kontrol_update'])->name('api.surat_kontrol_update');
+    Route::get('surat_kontrol_delete', [VclaimBPJSController::class, 'surat_kontrol_delete'])->name('api.surat_kontrol_delete');
     Route::get('surat_kontrol_nomor', [VclaimBPJSController::class, 'surat_kontrol_nomor'])->name('api.surat_kontrol_nomor');
     Route::get('surat_kontrol_peserta', [VclaimBPJSController::class, 'surat_kontrol_peserta'])->name('api.surat_kontrol_peserta');
+    Route::get('surat_kontrol_poli', [VclaimBPJSController::class, 'surat_kontrol_poli'])->name('api.surat_kontrol_poli');
+    Route::get('surat_kontrol_dokter', [VclaimBPJSController::class, 'surat_kontrol_dokter'])->name('api.surat_kontrol_dokter');
 });
 
 Route::prefix('wa')->group(function () {
