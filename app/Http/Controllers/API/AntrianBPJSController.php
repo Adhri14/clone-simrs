@@ -1171,7 +1171,7 @@ class AntrianBPJSController extends Controller
                         $request['tujuan'] =  $tujuan->kode;
                         $request['eksekutif'] =  0;
                         // dpjp
-                        $request['tujuanKunj'] = "0";
+                        $request['tujuanKunj'] = "";
                         $request['flagProcedure'] = "";
                         $request['kdPenunjang'] = "";
                         $request['assesmentPel'] = "";
@@ -1187,7 +1187,8 @@ class AntrianBPJSController extends Controller
                         ];
                     }
                     // create sep
-                    $sep = $vclaim->insert_sep($request);
+                    $sep = $vclaim->sep_insert($request);
+                    dd($sep);
                 }
                 // print sep
                 if ($sep->metaData->code == 200) {
@@ -1462,7 +1463,12 @@ class AntrianBPJSController extends Controller
                     $request['number'] = $antrian->nohp;
                     $wa->send_message($request);
                 } catch (\Throwable $th) {
-                    //throw $th;
+                    return [
+                        "metadata" => [
+                            "message" => $th->getMessage(),
+                            "code" => 201,
+                        ],
+                    ];
                 }
                 return $response;
             }

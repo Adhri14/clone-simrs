@@ -334,7 +334,17 @@
                                 <td>{{ $item->kodebooking }}<br>
                                     {{ $item->nomorantrean }}
                                 </td>
-                                <td>{{ $item->tanggalperiksa }}</td>
+                                <td>{{ $item->tanggalperiksa }}<br>
+                                    @if ($item->jeniskunjungan == 1)
+                                        Rujukan FKTP
+                                    @endif
+                                    @if ($item->jeniskunjungan == 3)
+                                        Kontrol
+                                    @endif
+                                    @if ($item->jeniskunjungan == 4)
+                                        Rujukan RS
+                                    @endif
+                                </td>
                                 <td>
                                     {{ $item->norm }} <br>
                                     {{ $item->nik }}

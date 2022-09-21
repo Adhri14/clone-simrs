@@ -48,7 +48,7 @@ Route::prefix('antrian')->name('antrian.')->group(function () {
     Route::get('checkin_update', [AntrianController::class, 'checkin_update'])->name('checkin_update');
 });
 
-Route::prefix('antrian')->name('antrian.')->group(function () {
+Route::prefix('antrian')->name('antrian.')->middleware(['auth'])->group(function () {
     // console
     Route::get('laporan', [AntrianController::class, 'laporan'])->name('laporan');
     Route::get('laporan_tanggal', [AntrianController::class, 'laporan_tanggal'])->name('laporan_tanggal');
@@ -76,13 +76,10 @@ Route::prefix('antrian')->name('antrian.')->group(function () {
     Route::get('panggil_farmasi/{kodebooking}', [AntrianController::class, 'panggil_farmasi'])->name('panggil_farmasi')->middleware('permission:farmasi');
     Route::get('racik_farmasi/{kodebooking}', [AntrianController::class, 'racik_farmasi'])->name('racik_farmasi')->middleware('permission:farmasi');
     Route::get('selesai_farmasi/{kodebooking}', [AntrianController::class, 'selesai_farmasi'])->name('selesai_farmasi')->middleware('permission:farmasi');
-
     Route::get('{kodebookig}/show', [AntrianController::class, 'show'])->name('show');
-
     Route::get('display_pendaftaran', [AntrianController::class, 'display_pendaftaran'])->name('display_pendaftaran');
     Route::get('/', [AntrianController::class, 'index'])->name('index');
     Route::get('cari_pasien/{nik}', [AntrianController::class, 'cari_pasien'])->name('cari_pasien');
-
     Route::prefix('ref')->name('ref.')->group(function () {
         Route::get('poli', [AntrianController::class, 'ref_poli'])->name('poli');
         Route::get('get_poli_bpjs', [AntrianController::class, 'get_poli_bpjs'])->name('get_poli_bpjs');
@@ -91,14 +88,9 @@ Route::prefix('antrian')->name('antrian.')->group(function () {
         Route::get('jadwaldokter', [AntrianController::class, 'ref_jadwaldokter'])->name('jadwaldokter');
         Route::get('get_jadwal_bpjs', [AntrianController::class, 'get_jadwal_bpjs'])->name('get_jadwal_bpjs');
     });
-
     Route::post('store', [AntrianController::class, 'store'])->name('store');
-    // Route::get('offline', [AntrianController::class, 'offline'])->name('offline');
-    // Route::get('offline/add/{poli}', [AntrianController::class, 'offline_add'])->name('offline_add');
-    // pendaftaran
     Route::get('baru_online/{kodebooking}', [AntrianController::class, 'baru_online'])->name('baru_online');
     Route::post('simpan_baru_online/{kodebooking}', [AntrianController::class, 'simpan_baru_online'])->name('simpan_baru_online');
-
     Route::get('baru_offline/{kodebooking}', [AntrianController::class, 'baru_offline'])->name('baru_offline');
 });
 

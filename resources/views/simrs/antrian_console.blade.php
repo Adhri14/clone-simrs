@@ -82,20 +82,40 @@
                     };
                     $('#kodebooking').val(sCode);
                     $.get(url, formData, function(data) {
-                        if (data.success == 'true') {
-                            $('#status').html(data.metadata.message);
-                        } else
-                            $('#status').html(data.metadata.message);
+                        console.log(data);
                         $.LoadingOverlay("hide");
+                        if (data.metadata.code == 200) {
+                            $('#status').html(data.metadata.message);
+                            swal.fire(
+                                'Sukses...',
+                                data.metadata.message,
+                                'success'
+                            ).then(okay => {
+                                if (okay) {
+                                    $.LoadingOverlay("show", {
+                                        text: "Reload..."
+                                    });
+                                    $('#status').html('-');
+                                    location.reload();
+                                }
+                            });
+                        } else {
+                            $('#status').html(data.metadata.message);
+                            swal.fire(
+                                'Opss Error...',
+                                data.metadata.message,
+                                'error'
+                            ).then(okay => {
+                                if (okay) {
+                                    $.LoadingOverlay("show", {
+                                        text: "Reload..."
+                                    });
+                                    $('#status').html('-');
+                                    location.reload();
+                                }
+                            });
+                        }
                     });
-                    setTimeout(function() {
-                        $.LoadingOverlay("show", {
-                            text: "Reload..."
-                        });
-                        location.reload();
-                        $('#status').html('-');
-
-                    }, 2000);
                 },
             });
         });
@@ -115,29 +135,39 @@
                 };
                 $('#kodebooking').val(kodebooking);
                 $.get(url, formData, function(data) {
+                    console.log(data);
+                    $.LoadingOverlay("hide");
                     if (data.metadata.code == 200) {
                         $('#status').html(data.metadata.message);
                         swal.fire(
                             'Sukses...',
                             data.metadata.message,
                             'success'
-                        );
+                        ).then(okay => {
+                            if (okay) {
+                                $.LoadingOverlay("show", {
+                                    text: "Reload..."
+                                });
+                                $('#status').html('-');
+                                location.reload();
+                            }
+                        });
                     } else {
                         $('#status').html(data.metadata.message);
                         swal.fire(
                             'Opss Error...',
                             data.metadata.message,
                             'error'
-                        );
-                    }
-                    $.LoadingOverlay("hide");
-                    setTimeout(function() {
-                        $.LoadingOverlay("show", {
-                            text: "Reload..."
+                        ).then(okay => {
+                            if (okay) {
+                                $.LoadingOverlay("show", {
+                                    text: "Reload..."
+                                });
+                                $('#status').html('-');
+                                location.reload();
+                            }
                         });
-                        location.reload();
-                        $('#status').html('-');
-                    }, 3000);
+                    }
                 });
             });
         });

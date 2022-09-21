@@ -137,7 +137,8 @@
                                     <tr class={{ $item->surat_kontrol ? 'text-success' : null }}>
                                         <td>{{ $item->tgl_masuk }}</td>
                                         <td>{{ $item->kode_kunjungan }}</td>
-                                        <td>{{ $item->pasien->no_Bpjs }}<br>{{ $item->no_rm }} {{ $item->pasien->nama_px }}</td>
+                                        <td>{{ $item->pasien->no_Bpjs }}<br>{{ $item->no_rm }}
+                                            {{ $item->pasien->nama_px }}</td>
                                         <td>{{ $item->no_sep }}</td>
                                         <td>{{ $item->no_rujukan }}</td>
                                         <td>{{ $item->unit->nama_unit }}<br>{{ $item->dokter->nama_paramedis }}</td>
@@ -152,7 +153,7 @@
                 <x-adminlte-card title="Surat Kontrol Poliklinik ({{ $surat_kontrols->count() }})" theme="primary"
                     icon="fas fa-info-circle" collapsible>
                     @php
-                        $heads = ['Tgl Dibuat', 'Tgl S. Kontrol', 'Poliklinik', 'No S. Kontrol', 'No SEP Asal', 'Pasien', 'Dokter'];
+                        $heads = ['Tgl Dibuat', 'Tgl S. Kontrol', 'Action', 'No S. Kontrol', 'Poliklinik', 'Pasien', 'Kartu', 'No SEP Asal', 'Dokter'];
                         // $config['order'] = ['7', 'asc'];
                     @endphp
                     <x-adminlte-datatable id="table1" class="nowrap" :heads="$heads" striped bordered hoverable
@@ -161,10 +162,14 @@
                             <tr>
                                 <td>{{ $item->tglTerbitKontrol }}</td>
                                 <td>{{ $item->tglRencanaKontrol }}</td>
-                                <td>{{ $item->namaPoliTujuan }}</td>
+                                <td>
+                                    <x-adminlte-button class="btn-xs" theme="warning" icon="fas fa-edit" onclick="#" />
+                                </td>
                                 <td>{{ $item->noSuratKontrol }}</td>
-                                <td>{{ $item->noSepAsalKontrol }}</td>
+                                <td>{{ $item->namaPoliTujuan }}</td>
                                 <td>{{ $item->nama }}</td>
+                                <td>{{ $item->noKartu }}</td>
+                                <td>{{ $item->noSepAsalKontrol }}</td>
                                 <td>{{ $item->namaDokter }}</td>
                             </tr>
                         @endforeach
