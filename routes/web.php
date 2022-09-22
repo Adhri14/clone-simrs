@@ -4,6 +4,7 @@ use App\Http\Controllers\AntrianController;
 use App\Http\Controllers\AntrianWAController;
 use App\Http\Controllers\DokterController;
 use App\Http\Controllers\JadwalDokterController;
+use App\Http\Controllers\JadwalLiburController;
 use App\Http\Controllers\JadwalOperasiController;
 use App\Http\Controllers\KunjunganController;
 use App\Http\Controllers\PasienController;
@@ -37,6 +38,8 @@ Auth::routes();
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 Route::get('info_jadwaldokter', [JadwalDokterController::class, 'index'])->name('info_jadwaldokter');
+Route::get('info_jadwalibur', [JadwalDokterController::class, 'jadwal_poli_libur']);
+
 Route::get('info_jadwaloperasi', [JadwalOperasiController::class, 'index'])->name('info_jadwaloperasi');
 // antrian routes
 Route::prefix('antrian')->name('antrian.')->group(function () {
@@ -131,3 +134,5 @@ Route::resource('pasien', PasienController::class)->middleware('permission:rekam
 Route::resource('tindakan', PasienController::class)->middleware('permission:rekam-medis');
 Route::resource('tarif_kelompok_layanan', TarifKelompokLayananController::class);
 Route::resource('tarif_layanan', TarifLayananController::class);
+Route::resource('jadwallibur', JadwalLiburController::class);
+

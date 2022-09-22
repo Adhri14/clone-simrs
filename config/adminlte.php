@@ -260,12 +260,19 @@ return [
                     // 'can' => 'admin',
                 ],
                 [
+                    'text' => 'Jadwal Libur Poliklinik',
+                    'icon'    => 'fas fa-calendar-times',
+                    'shift'   => 'ml-2',
+                    'url'  => 'info_jadwallibur',
+                ],
+                [
                     'text' => 'Jadwal Operasi',
                     'icon'    => 'fas fa-calendar-alt',
                     'shift'   => 'ml-2',
                     'url'  => 'info_jadwaloperasi',
                     // 'can' => 'admin',
                 ],
+
                 // [
                 //     'text' => 'Status Antrian',
                 //     'icon'    => 'fas fa-sign-in-alt',
@@ -439,6 +446,14 @@ return [
                     'shift'   => 'ml-2',
                     'url'  => 'jadwaldokter',
                     'can' => 'pelayanan-medis',
+                ],
+                [
+                    'text' => 'Jadwal Libur Poliklinik',
+                    'icon'    => 'fas fa-calendar-times',
+                    'shift'   => 'ml-2',
+                    'url'  => 'jadwallibur',
+                    // 'active'  => ['pelayananmedis/jadwal_poli_libur', 'regex:@^pelayananmedis/jadwal_poli_libur(\/[0-9]+)?+$@', 'regex:@^pelayananmedis/jadwal_poli_libur(\/[0-9]+)?\/edit+$@',  'pelayananmedis/jadwal_poli_libur/create'],
+                    'can' => ['pelayanan-medis'],
                 ],
                 [
                     'text' => 'Jadwal Opersi',

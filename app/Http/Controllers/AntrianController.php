@@ -37,8 +37,11 @@ class AntrianController extends Controller
     public function console()
     {
         $poliklinik = Poliklinik::with(['antrians', 'jadwals'])->where('status', 1)->get();
+        $now = Carbon::now();
+        $jadwal = JadwalDokter::where('hari',  $now->dayOfWeek)->get();
         return view('simrs.antrian_console', [
             'poliklinik' => $poliklinik,
+            'jadwal' => $jadwal,
         ]);
     }
     public function cek_post()
@@ -184,6 +187,10 @@ class AntrianController extends Controller
             ->count();
         $poli = Poliklinik::where('kodesubspesialis', $poli)->first();
         $jadwal = $poli->jadwals->where('hari', Carbon::parse($tanggal)->dayOfWeek)->where('kodedokter', $dokter)->first();
+        if ( $jadwal->libur ) {
+            Alert::error('Error', 'Jadwal Dokter sedang Libur / Ditutup');
+            return redirect()->route('antrian.console');
+        }
         $dokter = Dokter::where('kodedokter', $dokter)->first();
         if ($antrian_dokter >= $jadwal->kapasitaspasien) {
             Alert::error('Error', 'Antrian poliklinik jadwal dokter tersebut telah penuh');

@@ -10,7 +10,7 @@ class JadwalLiburPoliDB extends Model
     use HasFactory;
 
     protected $connection = 'mysql2';
-    protected $table = 'mw_jadwal_libur';
+    protected $table = 'jkn_jadwal_libur';
     protected $primaryKey = 'id';
 
     protected $fillable = [
@@ -27,6 +27,6 @@ class JadwalLiburPoliDB extends Model
     }
     public function antrians()
     {
-        return $this->hasMany(AntrianDB::class, 'tanggal', 'tanggal');
+        return $this->hasMany(Antrian::class,  'tanggal', 'tanggalperiksa');
     }
 }

@@ -182,18 +182,24 @@
                 var url =
                     "{{ route('antrian.index') }}" + "/console_jadwaldokter/" + kodepoli +
                     "/" + tanggalperiksa;
-                console.log(url);
                 $.get(url, function(data) {
+                    console.log(data);
                     $('#modalDokter').modal('show');
                     $('.btnPilihDokter').remove();
                     $.each(data, function(value) {
+                        if (data[value].libur == 1) {
+                            var libur = "danger";
+                        } else {
+                            var libur = "success";
+                        }
                         $('#btnDokter').append(
                             "<a href='" + "{{ route('antrian.index') }}" +
                             "/tambah_offline/" +
                             data[
                                 value].kodesubspesialis +
                             "/" + data[value].kodedokter + "/" + data[value].jadwal +
-                            "' class='btn btn-lg bg-success m-2 btnPilihDokter withLoad'>" +
+                            "' class='btn btn-lg bg-" + libur +
+                            " m-2 btnPilihDokter withLoad'>" +
                             data[value].jadwal + " " + data[value].namadokter + " (" +
                             data[value].kapasitaspasien + ") </a>");
                     });
