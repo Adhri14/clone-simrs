@@ -38,7 +38,7 @@ Auth::routes();
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 Route::get('info_jadwaldokter', [JadwalDokterController::class, 'index'])->name('info_jadwaldokter');
-Route::get('info_jadwalibur', [JadwalDokterController::class, 'jadwal_poli_libur']);
+Route::get('info_jadwallibur', [JadwalLiburController::class, 'index'])->name('info_jadwallibur');
 
 Route::get('info_jadwaloperasi', [JadwalOperasiController::class, 'index'])->name('info_jadwaloperasi');
 // antrian routes
