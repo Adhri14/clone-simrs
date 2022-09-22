@@ -864,7 +864,6 @@ class WhatsappController extends Controller
                     $this->send_message($request);
                     return $this->pilih_poli($pesan, $request);
                 }
-                $request['jeniskunjungan'] = 3;
                 $antrian = new AntrianBPJSController();
                 $response = json_decode(json_encode($antrian->ambil_antrian($request)));
                 if ($response->metadata->code != 200) {
@@ -968,7 +967,7 @@ class WhatsappController extends Controller
                             $request['kodepoli'] = $jadwaldokter->kodesubspesialis;
                             $request['kodedokter'] = $jadwaldokter->kodedokter;
                             $request['jampraktek'] = $jadwaldokter->jadwal;
-                            $request['jeniskunjungan'] = 1;
+                            $request['jeniskunjungan'] = 4;
                             $request['titletext'] = "Konfirmasi Pendaftaran Pasien JKN";
                             $request['contenttext'] = "Jadwal dokter poliklinik yang dipilih sebagai berikut :\n*Poliklinik* : " . strtoupper($jadwaldokter->namasubspesialis) . "\n*Dokter* :  " . $jadwaldokter->namadokter . "\n*Jam Praktek* : " . $jadwaldokter->jadwal . "\n*Tanggal Periksa* :  " . $tanggalperiksa . "\n\nData pasien yang akan didaftarkan sebagai berikut :\n*Nama Pasien* : " . $request->nama . "\n*Status* : *" . $request->status . "*\n*NIK* : " . $request->nik . "\n*No BPJS* : " . $request->nomorkartu . "\n*No RM* : " . $request->norm . "\n\nData rujukan yang dipilih sebagai berikut : \n*No Rujukan* : " . $request->nomorreferensi . "\n*Poli Rujukan* : " . $request->polirujukan . "\n*Diagnosa* : " . $request->diagnosa .  "\n\nSebagai konfirmasi bahwa data yang diatas adalah benar pasien yang akan didaftarkan. Silahakan pilih tombol dibawah ini.";
                             $request['buttontext'] =  "DAFTAR RUJUKAN RS_" . $request->nomorreferensi . "#" . $jadwalid . "#" . $request->tanggalperiksa . ',BATAL PENDAFTARAN';
@@ -1042,7 +1041,7 @@ class WhatsappController extends Controller
                             $request['kodepoli'] = $jadwaldokter->kodesubspesialis;
                             $request['kodedokter'] = $jadwaldokter->kodedokter;
                             $request['jampraktek'] = $jadwaldokter->jadwal;
-                            $request['jeniskunjungan'] = 1;
+                            $request['jeniskunjungan'] = 4;
                             $request['jenisrujukan'] = 2;
                             $antrian = new AntrianBPJSController();
                             $response = json_decode(json_encode($antrian->ambil_antrian($request)));
