@@ -18,8 +18,7 @@
                     </ul>
                 </x-adminlte-alert>
             @endif
-            <x-adminlte-card title="Jadwal Operasi RSUD Waled" theme="info" icon="fas fa-info-circle" collapsible
-                maximizable>
+            <x-adminlte-card title="Jadwal Operasi RSUD Waled" theme="info" icon="fas fa-info-circle" collapsible>
                 @php
                     $heads = ['Tanggal', 'Kode Booking', 'Jenis Tindakan', 'Poliklinik', 'Dokter', 'Pasien', 'Status', 'Action'];
                 @endphp
@@ -65,7 +64,7 @@
                         </tr>
                     @endforeach
                 </x-adminlte-datatable>
-                <x-adminlte-button label="Open Modal" theme="success" data-toggle="modal"
+                <x-adminlte-button label="Tambah Jadwal Operasi" theme="success" data-toggle="modal"
                     data-target="#jadwalOpeasiModal" />
                 {{-- <a href="{{ route('dokter.create') }}" class="btn btn-success">Refresh</a> --}}
             </x-adminlte-card>

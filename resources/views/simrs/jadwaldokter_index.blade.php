@@ -10,8 +10,7 @@
     <div class="row">
         <div class="col-12">
             @can('pelayanan-medis')
-                <x-adminlte-card title="Informasi Referensi Jadwal Dokter" theme="info" icon="fas fa-info-circle" collapsible
-                    maximizable>
+                <x-adminlte-card title="Informasi Referensi Jadwal Dokter" theme="info" icon="fas fa-info-circle" collapsible>
                     <form name="formJadwalHafiz" id="formJadwalHafiz" action="{{ route('jadwaldokter.store') }}" method="post">
                         @csrf
                         <input type="hidden" name="method" value="GET">
@@ -41,8 +40,7 @@
                     </form>
                 </x-adminlte-card>
             @endcan
-            <x-adminlte-card title="Data Informasi Jadwal Dokter" theme="info" icon="fas fa-info-circle" collapsible
-                maximizable>
+            <x-adminlte-card title="Data Informasi Jadwal Dokter" theme="info" icon="fas fa-info-circle" collapsible>
                 @php
                     $heads = ['Nama Poliklinik', 'Dokter', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
                     $config['paging'] = false;

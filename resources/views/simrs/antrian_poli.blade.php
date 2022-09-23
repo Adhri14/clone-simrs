@@ -102,8 +102,8 @@
                 <x-adminlte-card theme="primary" icon="fas fa-info-circle" collapsible
                     title="Antrian Sedang Dilayani Poliklinik ({{ $antrians->where('taskid', 4)->count() }} Orang)">
                     @php
-                        $heads = ['No', 'Kode', 'Tanggal', 'No RM / NIK', 'Jenis / Pasien', 'No Kartu / Rujukan', 'Poliklinik / Dokter', 'Status', 'Action'];
-                        $config['order'] = ['7', 'asc'];
+                        $heads = ['No', 'Kode', 'Tanggal', 'No RM / NIK', 'No Kartu / Rujukan', 'Jenis / Pasien', 'Status', 'Action', 'Poliklinik / Dokter'];
+                        $config['order'] = ['6', 'asc'];
                     @endphp
                     <x-adminlte-datatable id="table1" class="nowrap" :heads="$heads" :config="$config" striped bordered
                         hoverable compressed>
@@ -113,7 +113,17 @@
                                 <td>{{ $item->kodebooking }}<br>
                                     {{ $item->nomorantrean }}
                                 </td>
-                                <td>{{ $item->tanggalperiksa }}</td>
+                                <td>{{ $item->tanggalperiksa }}<br>
+                                    @if ($item->jeniskunjungan == 1)
+                                        Rujukan FKTP
+                                    @endif
+                                    @if ($item->jeniskunjungan == 3)
+                                        Kontrol
+                                    @endif
+                                    @if ($item->jeniskunjungan == 4)
+                                        Rujukan RS
+                                    @endif
+                                </td>
                                 <td>
                                     {{ $item->norm }} <br>
                                     {{ $item->nik }}
@@ -128,6 +138,11 @@
                                     @if ($item->pasienbaru == 0)
                                         <span class="badge bg-secondary">{{ $item->pasienbaru }}. Lama</span>
                                     @endif
+                                    @if (isset($item->method))
+                                        <span class="badge bg-secondary">{{ $item->method }}LINE</span>
+                                    @else
+                                        <span class="badge bg-secondary">NULL</span>
+                                    @endif
                                 </td>
                                 <td>
                                     @isset($item->nomorkartu)
@@ -136,8 +151,6 @@
                                     @isset($item->nomorkartu)
                                         <br> {{ $item->nomorreferensi }}
                                     @endisset
-                                </td>
-                                <td>{{ $item->namapoli }} {{ $item->jampraktek }}<br>{{ $item->namadokter }}
                                 </td>
                                 <td>
                                     @if ($item->taskid == 3)
@@ -196,6 +209,9 @@
                                     @endif
 
                                 </td>
+                                <td>{{ $item->namapoli }} {{ $item->jampraktek }}<br>{{ $item->namadokter }}
+                                </td>
+
                             </tr>
                         @endforeach
                     </x-adminlte-datatable>
@@ -274,7 +290,6 @@
                             </x-slot>
                         </form>
                     </x-adminlte-modal>
-
                     {{-- modal KPO --}}
                     <x-adminlte-modal id="modalKPO" name="modalKPO" title="Buat Surat Kontrol Rawat Jalan"
                         size="lg" theme="warning" icon="fas fa-prescription-bottle-alt" v-centered>
@@ -323,8 +338,8 @@
                     title="Antrian Pelayanan Poliklinik ({{ $antrians->where('taskid', '!=', 4)->count() }} Orang)"
                     theme="primary" icon="fas fa-info-circle" collapsible>
                     @php
-                        $heads = ['No', 'Kode', 'Tanggal', 'No RM / NIK', 'Jenis / Pasien', 'No Kartu / Rujukan', 'Poliklinik / Dokter', 'Status', 'Action'];
-                        $config['order'] = ['7', 'asc'];
+                        $heads = ['No', 'Kode', 'Tanggal', 'No RM / NIK', 'No Kartu / Rujukan', 'Jenis / Pasien', 'Status', 'Action', 'Poliklinik / Dokter'];
+                        $config['order'] = ['6', 'asc'];
                     @endphp
                     <x-adminlte-datatable id="table2" class="nowrap" :heads="$heads" :config="$config" striped
                         bordered hoverable compressed>
@@ -358,6 +373,11 @@
                                     @if ($item->pasienbaru == 0)
                                         <span class="badge bg-secondary">{{ $item->pasienbaru }}. Lama</span>
                                     @endif
+                                    @if (isset($item->method))
+                                        <span class="badge bg-secondary">{{ $item->method }}LINE</span>
+                                    @else
+                                        <span class="badge bg-secondary">NULL</span>
+                                    @endif
                                 </td>
                                 <td>
                                     @isset($item->nomorkartu)
@@ -367,11 +387,9 @@
                                         <br> {{ $item->nomorreferensi }}
                                     @endisset
                                 </td>
-                                <td>{{ $item->namapoli }} {{ $item->jampraktek }}<br>{{ $item->namadokter }}
-                                </td>
                                 <td>
                                     @if ($item->taskid == 0)
-                                        <span class="badge bg-secondary">{{ $item->taskid }}. Belum Chekcin</span>
+                                        <span class="badge bg-secondary">Belum Chekcin</span>
                                     @endif
                                     @if ($item->taskid == 1)
                                         <span class="badge bg-secondary">{{ $item->taskid }}. Chekcin</span>
@@ -434,6 +452,10 @@
                                             onclick="window.location='{{ route('antrian.batal_antrian', $item->kodebooking) }}'" />
                                     @endif
                                 </td>
+                                <td>{{ $item->namapoli }} {{ $item->jampraktek }}<br>{{ $item->namadokter }}
+                                </td>
+
+
                             </tr>
                         @endforeach
                     </x-adminlte-datatable>

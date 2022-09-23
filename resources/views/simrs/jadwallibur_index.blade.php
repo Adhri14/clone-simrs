@@ -89,7 +89,7 @@
                     @endforeach
                 </x-adminlte-datatable>
                 @can('pelayanan-medis')
-                    <x-adminlte-button label="Tambah Jadwal Libur" class="btn-sm" theme="success"
+                    <x-adminlte-button label="Tambah Jadwal Libur" class="btn" theme="success"
                         title="Tambah Unit & Poliklinik" icon="fas fa-plus" data-toggle="modal" data-target="#modalCustom" />
                 @endcan
             </x-adminlte-card>

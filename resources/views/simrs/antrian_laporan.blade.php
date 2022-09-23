@@ -33,11 +33,11 @@
                 </form>
             </x-adminlte-card>
             <div class="row">
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <x-adminlte-small-box title="{{ $antrians->count() }}" text="Total Antrian Terdaftar" theme="success"
                         icon="fas fa-users" />
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <x-adminlte-small-box title="{{ $antrians->where('taskid', 99)->count() }}" text="Antrian Batal"
                         theme="danger" icon="fas fa-users" />
                 </div>

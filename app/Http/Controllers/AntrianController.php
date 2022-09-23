@@ -187,7 +187,7 @@ class AntrianController extends Controller
             ->count();
         $poli = Poliklinik::where('kodesubspesialis', $poli)->first();
         $jadwal = $poli->jadwals->where('hari', Carbon::parse($tanggal)->dayOfWeek)->where('kodedokter', $dokter)->first();
-        if ( $jadwal->libur ) {
+        if ($jadwal->libur) {
             Alert::error('Error', 'Jadwal Dokter sedang Libur / Ditutup');
             return redirect()->route('antrian.console');
         }
@@ -1340,10 +1340,6 @@ class AntrianController extends Controller
     // admin pendaftaran
     public function laporan(Request $request)
     {
-        $layanandet = LayananDetailDB::orderBy('tgl_layanan_detail', 'DESC')->first();
-
-        dd($layanandet->id_layanan_detail, substr($layanandet->id_layanan_detail, 9) + 1);
-
         if ($request->tanggal == null) {
             $tanggal_awal = Carbon::now()->startOfMonth()->format('Y-m-d');
             $tanggal_akhir = Carbon::now()->endOfMonth()->format('Y-m-d');

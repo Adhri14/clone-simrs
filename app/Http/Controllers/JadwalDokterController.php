@@ -34,7 +34,7 @@ class JadwalDokterController extends Controller
                 $jadwals = $api->ref_jadwal_dokter($request);
                 if (isset($jadwals->response)) {
                     foreach ($jadwals->response as  $jadwal) {
-                        JadwalDokter::create(
+                        JadwalDokter::updateOrCreate(
                             [
                                 'kodesubspesialis' => $jadwal->kodesubspesialis,
                                 'kodedokter' => $jadwal->kodedokter,
@@ -42,7 +42,7 @@ class JadwalDokterController extends Controller
                                 'kodepoli' => $jadwal->kodepoli,
                                 'namapoli' => $jadwal->namapoli,
                                 'namasubspesialis' => $jadwal->namasubspesialis,
-                                'namadokter' => $jadwal->namadokter,
+                                'namadokter' => str_replace(',', '.', $jadwal->namadokter),
                                 'namahari' => $jadwal->namahari,
                                 'jadwal' => $jadwal->jadwal,
                                 'libur' => $jadwal->libur,

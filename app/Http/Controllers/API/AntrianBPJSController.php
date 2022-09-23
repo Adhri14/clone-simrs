@@ -616,30 +616,54 @@ class AntrianBPJSController extends Controller
                 // kunjungan rujukan
                 else {
                     $request['nomorrujukan'] = $request->nomorreferensi;
-
                     if ($request->jeniskunjungan == 1) {
                         $response =  $vclaim->rujukan_nomor($request);
+                        $request['jenisrujukan'] = 1;
                     } else if ($request->jeniskunjungan == 4) {
                         $response =  $vclaim->rujukan_rs_nomor($request);
+                        $request['jenisrujukan'] = 2;
                     }
-
-                    if ($response->metaData->code == 200) {
-                        // cek rujukan orang lain
-                        if ($request->nomorkartu != $response->response->rujukan->peserta->noKartu) {
-                            return [
-                                "metadata" => [
-                                    "code" => 201,
-                                    "message" => "Nomor peserta tidak sesuai dengan rujukan."
-                                ]
-                            ];
-                        }
-                    } else {
+                    $jumlah_sep  = $vclaim->rujukan_jumlah_sep($request);
+                    // gagal jumlah sep rujukan
+                    if ($jumlah_sep->metaData->code != 200) {
                         return [
                             "metadata" => [
                                 "code" => 201,
-                                "message" => $response->metaData->message
+                                "message" => $jumlah_sep->metaData->message
                             ]
                         ];
+                    }
+                    // berhasil jumlah sep rujukan
+                    else {
+                        if ($jumlah_sep->response->jumlahSEP == 0) {
+                            if ($response->metaData->code == 200) {
+                                // cek rujukan orang lain
+                                if ($request->nomorkartu != $response->response->rujukan->peserta->noKartu) {
+                                    return [
+                                        "metadata" => [
+                                            "code" => 201,
+                                            "message" => "Nomor peserta tidak sesuai dengan rujukan."
+                                        ]
+                                    ];
+                                }
+                            } else {
+                                return [
+                                    "metadata" => [
+                                        "code" => 201,
+                                        "message" => $response->metaData->message
+                                    ]
+                                ];
+                            }
+                        }
+                        // jumlah sep lebih dari 1
+                        else {
+                            return [
+                                "metadata" => [
+                                    "code" => 201,
+                                    "message" => "Mohon maaf Rujukan anda telah digunakan untuk kunjungan pertama kali. Untuk kunjungan selanjutnya silahkan gunakan Surat Kontrol yang dbuat di Poliklinik."
+                                ]
+                            ];
+                        }
                     }
                 }
             }
@@ -762,7 +786,7 @@ class AntrianBPJSController extends Controller
                 // kirim notif offline
                 if ($request->method == "OFF") {
                     $wa = new WhatsappController();
-                    $request['message'] = "*Antrian Berhasil di Daftarkan*\nAntrian anda berhasil didaftarkan melalui Layanan Online RSUD Waled dengan data sebagai berikut : \n\n*Kode Antrian :* " . $request->kodebooking .  "\n*Angka Antrian :* " . $request->angkaantrean .  "\n*Nomor Antrian :* " . $request->nomorantrean . "\n*Jenis Pasien :* " . $request->jenispasien .  "\n*Jenis Kunjungan :* " . $request->jeniskunjungan .  "\n\n*Nama :* " . $request->nama . "\n*Poliklinik :* " . $request->namapoli  . "\n*Dokter :* " . $request->namadokter  .  "\n*Jam Praktek :* " . $request->jampraktek  .  "\n*Tanggal Berobat :* " . $request->tanggalperiksa . "\n\n*Keterangan :* " . $request->keterangan  .  "\nTerima kasih. Semoga sehat selalu.\nUntuk pertanyaan & pengaduan silahkan hubungi :\n*Humas RSUD Waled 08983311118*";
+                    $request['message'] = "*Antrian Berhasil di Daftarkan*\nAntrian anda berhasil didaftarkan melalui Layanan Online RSUD Waled dengan data sebagai berikut : \n\n*Kode Antrian :* " . $request->kodebooking .  "\n*Angka Antrian :* " . $request->angkaantrean .  "\n*Nomor Antrian :* " . $request->nomorantrean . "\n*Jenis Pasien :* " . $request->jenispasien .  "\n*Jenis Kunjungan :* " . $request->jeniskunjungan .  "\n\n*Nama :* " . $request->nama . "\n*Poliklinik :* " . $request->namapoli  . "\n*Dokter :* " . $request->namadokter  .  "\n*Jam Praktek :* " . $request->jampraktek  .  "\n*Tanggal Berobat :* " . $request->tanggalperiksa . "\n\nTerima kasih. Semoga sehat selalu.\nUntuk pertanyaan & pengaduan silahkan hubungi :\n*Humas RSUD Waled 08983311118*";
                     $request['number'] = $request->nohp;
                     $wa->send_message($request);
                     $response = [
@@ -795,7 +819,7 @@ class AntrianBPJSController extends Controller
                 $wa = new WhatsappController();
                 $wa->send_filepath($request);
                 $wa = new WhatsappController();
-                $request['message'] = "*Antrian Berhasil di Daftarkan*\nAntrian anda berhasil didaftarkan melalui Layanan Online RSUD Waled dengan data sebagai berikut : \n\n*Kode Antrian :* " . $request->kodebooking .  "\n*Angka Antrian :* " . $request->angkaantrean .  "\n*Nomor Antrian :* " . $request->nomorantrean . "\n*Jenis Pasien :* " . $request->jenispasien .  "\n*Jenis Kunjungan :* " . $request->jeniskunjungan .  "\n\n*Nama :* " . $request->nama . "\n*Poliklinik :* " . $request->namapoli  . "\n*Dokter :* " . $request->namadokter  .  "\n*Jam Praktek :* " . $request->jampraktek  .  "\n*Tanggal Berobat :* " . $request->tanggalperiksa . "\n\nTerima kasih. Semoga sehat selalu.\nUntuk pertanyaan & pengaduan silahkan hubungi :\n*Humas RSUD Waled 08983311118*";
+                $request['message'] = "*Antrian Berhasil di Daftarkan*\nAntrian anda berhasil didaftarkan melalui Layanan Online RSUD Waled dengan data sebagai berikut : \n\n*Kode Antrian :* " . $request->kodebooking .  "\n*Angka Antrian :* " . $request->angkaantrean .  "\n*Nomor Antrian :* " . $request->nomorantrean . "\n*Jenis Pasien :* " . $request->jenispasien .  "\n*Jenis Kunjungan :* " . $request->jeniskunjungan .  "\n\n*Nama :* " . $request->nama . "\n*Poliklinik :* " . $request->namapoli  . "\n*Dokter :* " . $request->namadokter  .  "\n*Jam Praktek :* " . $request->jampraktek  .  "\n*Tanggal Berobat :* " . $request->tanggalperiksa . "\n\n*Keterangan :* " . $request->keterangan  .  "\nTerima kasih. Semoga sehat selalu.\nUntuk pertanyaan & pengaduan silahkan hubungi :\n*Humas RSUD Waled 08983311118*";
                 $request['number'] = $request->nohp;
                 $wa->send_message($request);
                 $response = [

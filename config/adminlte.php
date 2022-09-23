@@ -319,13 +319,13 @@ return [
                     'shift'   => 'ml-2',
                     'can' => 'admin',
                 ],
-                [
-                    'text' => 'Antrian Pendaftaran WA',
-                    'icon'    => 'fas fa-user-plus',
-                    'url'  => 'antrianwa',
-                    'shift'   => 'ml-2',
-                    'can' => 'pendaftaran',
-                ],
+                // [
+                //     'text' => 'Antrian Pendaftaran WA',
+                //     'icon'    => 'fas fa-user-plus',
+                //     'url'  => 'antrianwa',
+                //     'shift'   => 'ml-2',
+                //     'can' => 'pendaftaran',
+                // ],
                 [
                     'text' => 'Antrian Pendaftaran',
                     'icon'    => 'fas fa-user-plus',
