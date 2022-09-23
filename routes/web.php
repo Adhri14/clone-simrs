@@ -128,11 +128,10 @@ Route::prefix('vclaim')->name('vclaim.')->middleware(['auth'])->group(function (
 Route::resource('poli', PoliklinikController::class)->only(['index', 'create', 'edit', 'show', 'store'])->middleware('permission:pelayanan-medis');
 Route::resource('dokter', DokterController::class)->only(['index', 'create'])->middleware('permission:pelayanan-medis');
 Route::resource('jadwaldokter', JadwalDokterController::class)->only(['index', 'store', 'edit'])->middleware('permission:pelayanan-medis');
+Route::resource('jadwallibur', JadwalLiburController::class)->middleware(['auth', 'permission:pelayanan-medis']);
 Route::resource('jadwaloperasi', JadwalOperasiController::class)->only(['index', 'store', 'edit'])->middleware('permission:pelayanan-medis');
 Route::resource('kunjungan', KunjunganController::class)->middleware('permission:rekam-medis');
 Route::resource('pasien', PasienController::class)->middleware('permission:rekam-medis');
 Route::resource('tindakan', PasienController::class)->middleware('permission:rekam-medis');
 Route::resource('tarif_kelompok_layanan', TarifKelompokLayananController::class);
 Route::resource('tarif_layanan', TarifLayananController::class);
-Route::resource('jadwallibur', JadwalLiburController::class);
-

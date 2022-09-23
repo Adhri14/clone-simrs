@@ -69,8 +69,13 @@
                                                         title="Jadwal Dokter" data-id="{{ $jadwal->id }}" />
                                                 @endif
                                             @else
-                                                <x-adminlte-button label="{{ $jadwal->jadwal }}" class="btn-xs mb-1"
-                                                    theme="warning" data-toggle="tooltip" title="Jadwal Dokter" />
+                                                @if ($jadwal->libur == 1)
+                                                    <x-adminlte-button label="{{ $jadwal->jadwal }}" class="btn-xs mb-1"
+                                                        theme="danger" data-toggle="tooltip" title="Jadwal Dokter" />
+                                                @else
+                                                    <x-adminlte-button label="{{ $jadwal->jadwal }}" class="btn-xs mb-1"
+                                                        theme="warning" data-toggle="tooltip" title="Jadwal Dokter" />
+                                                @endif
                                             @endcan
                                         @endif
                                     @endforeach

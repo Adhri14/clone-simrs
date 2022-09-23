@@ -20,6 +20,7 @@ class Antrian extends Model
         "nohp",
         "kodepoli",
         "norm",
+        "method",
         "tanggalperiksa",
         "kodedokter",
         "jampraktek",

@@ -9,12 +9,6 @@
 @section('content')
     <div class="row">
         <div class="col-12">
-            <div class="row">
-                <div class="col-md-3">
-                    <x-adminlte-small-box title="{{ $jadwals->total() }}" text="Total Jadwal Libur" theme="success"
-                        icon="fas fa-users" />
-                </div>
-            </div>
             @if ($errors->any())
                 <x-adminlte-alert title="Ops Terjadi Masalah !" theme="danger" dismissable>
                     <ul>
@@ -24,6 +18,7 @@
                     </ul>
                 </x-adminlte-alert>
             @endif
+
             <x-adminlte-card title="Jadwal Libur Poliklinik Akan Datang" theme="warning" collapsible>
                 @php
                     $heads = ['No.', 'Unit', 'Tanggal Libur', 'Keterangan', 'Antrian', 'Status', 'Action'];
@@ -93,6 +88,10 @@
                         </tr>
                     @endforeach
                 </x-adminlte-datatable>
+                @can('pelayanan-medis')
+                    <x-adminlte-button label="Tambah Jadwal Libur" class="btn-sm" theme="success"
+                        title="Tambah Unit & Poliklinik" icon="fas fa-plus" data-toggle="modal" data-target="#modalCustom" />
+                @endcan
             </x-adminlte-card>
             <x-adminlte-card title="Jadwal Libur Poliklinik Terlewat" theme="secondary" collapsible="collapsed">
                 @php
