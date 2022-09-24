@@ -690,13 +690,13 @@ class AntrianBPJSController extends Controller
             if ($jadwals->count() != 0) {
                 $jadwal = $jadwals->where('kodedokter', $request->kodedokter)->first();
                 // jika ada jadwal
-                if (isset($jadwals)) {
+                if ($jadwal != null) {
                     // ambil data
                     $request['namapoli'] = $jadwal->namapoli;
                     $request['namadokter'] = $jadwal->namadokter;
                 }
                 // jika dokter tidak ada
-                else {
+                else if ($jadwal == null) {
                     $response = [
                         "metadata" => [
                             "code" => 201,
@@ -749,7 +749,7 @@ class AntrianBPJSController extends Controller
                 if (isset($suratkontrol)) {
                     $request["nomorsuratkontrol"] = $suratkontrol->noSuratKontrol;
                 }
-                Antrian::create([
+                $antrian = Antrian::create([
                     "kodebooking" => $request->kodebooking,
                     "nomorkartu" => $request->nomorkartu,
                     "nik" => $request->nik,
@@ -765,6 +765,8 @@ class AntrianBPJSController extends Controller
                     "method" => $request->method,
                     "nomorrujukan" => $request->nomorrujukan,
                     "nomorsuratkontrol" => $request->nomorsuratkontrol,
+                    'nomorsep' => $request->nomorsep,
+                    "kode_kunjungan" => $request->kode_kunjungan,
                     "jenispasien" => $request->jenispasien,
                     "namapoli" => $request->namapoli,
                     "namadokter" => $request->namadokter,
@@ -789,15 +791,8 @@ class AntrianBPJSController extends Controller
                     $request['message'] = "*Antrian Berhasil di Daftarkan*\nAntrian anda berhasil didaftarkan melalui Layanan Online RSUD Waled dengan data sebagai berikut : \n\n*Kode Antrian :* " . $request->kodebooking .  "\n*Angka Antrian :* " . $request->angkaantrean .  "\n*Nomor Antrian :* " . $request->nomorantrean . "\n*Jenis Pasien :* " . $request->jenispasien .  "\n*Jenis Kunjungan :* " . $request->jeniskunjungan .  "\n\n*Nama :* " . $request->nama . "\n*Poliklinik :* " . $request->namapoli  . "\n*Dokter :* " . $request->namadokter  .  "\n*Jam Praktek :* " . $request->jampraktek  .  "\n*Tanggal Periksa :* " . $request->tanggalperiksa . "\n\nTerima kasih. Semoga sehat selalu.\nUntuk pertanyaan & pengaduan silahkan hubungi :\n*Humas RSUD Waled 08983311118*";
                     $request['number'] = $request->nohp;
                     $wa->send_message($request);
-
                     $request['notif'] = 'Antrian berhasil didaftarkan melalui ' . $request->method . "LINE\n*Nama :* " . $request->nama . "\n*Poliklinik :* " . $request->namapoli .  "\n*Tanggal Periksa :* " . $request->tanggalperiksa;
                     $wa->send_notif($request);
-
-                    $antrian = Antrian::firstWhere('kodebooking', $request->kodebooking);
-                    $antrian->update([
-                        'kode_kunjungan' => $request->kode_kunjungan,
-                        'nomorsep' => $request->nomorsep,
-                    ]);
                     $response = [
                         "response" => [
                             "nomorantrean" => $request->nomorantrean,
@@ -1383,7 +1378,7 @@ class AntrianBPJSController extends Controller
                     ]
                 );
                 //  insert layanan header dan detail karcis admin konsul 25 + 5 = 30
-                //  DET tahun bulan tanggal baru urutan 6 digit kanan
+                //  DET tahun bulan `tanggal b`aru urutan 6 digit kanan
                 //  insert layanan detail karcis
                 $layanandet = LayananDetailDB::orderBy('tgl_layanan_detail', 'DESC')->first();
                 $nomorlayanandet = substr($layanandet->id_layanan_detail, 9) + 1;

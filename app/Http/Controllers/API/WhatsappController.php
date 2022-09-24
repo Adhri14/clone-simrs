@@ -417,7 +417,7 @@ class WhatsappController extends Controller
                     if ($response->metadata->code != 200) {
                         $request['notif'] = '7 daftar umum error : ' . $response->metadata->message;
                         $this->send_notif($request);
-                        $request['message'] = "Maaf anda tidak bisa daftar : " .  $response->metadata->message;
+                        $request['message'] = "Maaf anda tidak bisa daftar : " .  $response->metadata->message . ". Silahkan daftar melalui offline.";
                         return $this->send_message($request);
                     } else {
                         return $response;
@@ -665,7 +665,7 @@ class WhatsappController extends Controller
                             $antrian = new AntrianBPJSController();
                             $response = json_decode(json_encode($antrian->ambil_antrian($request)));
                             if ($response->metadata->code != 200) {
-                                $request['message'] = "Maaf anda tidak bisa daftar : " .  $response->metadata->message;
+                                $request['message'] = "Maaf anda tidak bisa daftar : " .  $response->metadata->message . ". Silahkan daftar melalui offline.";
                                 return $this->send_message($request);
                             } else {
                                 return $response;
@@ -725,7 +725,7 @@ class WhatsappController extends Controller
         $suratkontrol = $vclaim->surat_kontrol_peserta($request);
         $code = $suratkontrol->metaData->code;
         if ($code != 200) {
-            $request['notif'] = "7 peserta " . $nomorkartu . "  surat kontrol error : " . $suratkontrol->metaData->message;
+            $request['notif'] = "7 peserta " . $nomorkartu . " surat kontrol error : " . $suratkontrol->metaData->message;
             $this->send_notif($request);
             $request['message'] = "*7. Pilih Surat Kontrol*\nMohon maaf " . $suratkontrol->metaData->message;
             return $this->send_message($request);
@@ -899,7 +899,7 @@ class WhatsappController extends Controller
                 $antrian = new AntrianBPJSController();
                 $response = json_decode(json_encode($antrian->ambil_antrian($request)));
                 if ($response->metadata->code != 200) {
-                    $request['message'] = "Maaf anda tidak bisa daftar : " .  $response->metadata->message;
+                    $request['message'] = "Maaf anda tidak bisa daftar : " .  $response->metadata->message . ". Silahkan daftar melalui offline.";
                     return $this->send_message($request);
                 } else {
                     return $response;
@@ -1082,7 +1082,7 @@ class WhatsappController extends Controller
                             $antrian = new AntrianBPJSController();
                             $response = json_decode(json_encode($antrian->ambil_antrian($request)));
                             if ($response->metadata->code != 200) {
-                                $request['message'] = "Maaf anda tidak bisa daftar : " .  $response->metadata->message;
+                                $request['message'] = "Maaf anda tidak bisa daftar : " .  $response->metadata->message . ". Silahkan daftar melalui offline.";
                                 return $this->send_message($request);
                             } else {
                                 return $response;
