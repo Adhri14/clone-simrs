@@ -20,7 +20,6 @@ use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class WhatsappController extends Controller
 {
-    public $baseUrl = "192.168.2.30:3000/";
     public $hari = ["MINGGU", "SENIN", "SELASA", "RABU", "KAMIS", "JUMAT", "SABTU"];
     protected $except = [
         'callback',
@@ -35,7 +34,7 @@ class WhatsappController extends Controller
     }
     public function send_message(Request $request)
     {
-        $url = $this->baseUrl . "send-message";
+        $url = env('WHATASAPP_URL') . "send-message";
         $response = Http::post($url, [
             'number' => $request->number,
             'message' => $request->message,
@@ -45,7 +44,7 @@ class WhatsappController extends Controller
     }
     public function send_notif(Request $request)
     {
-        $url = $this->baseUrl . "notif";
+        $url = env('WHATASAPP_URL') . "notif";
         $response = Http::post($url, [
             'message' => $request->notif,
         ]);
@@ -54,7 +53,7 @@ class WhatsappController extends Controller
     }
     public function send_button(Request $request)
     {
-        $url = $this->baseUrl . "send-button";
+        $url = env('WHATASAPP_URL') . "send-button";
         $response = Http::post($url, [
             'number' => $request->number,
             'contenttext' => $request->contenttext,
@@ -67,7 +66,7 @@ class WhatsappController extends Controller
     }
     public function send_list(Request $request)
     {
-        $url = $this->baseUrl . "send-list";
+        $url = env('WHATASAPP_URL') . "send-list";
         $response = Http::post($url, [
             'number' => $request->number,
             'contenttext' => $request->contenttext,
@@ -83,7 +82,7 @@ class WhatsappController extends Controller
     }
     public function send_image(Request $request)
     {
-        $url = $this->baseUrl . "send-media";
+        $url = env('WHATASAPP_URL') . "send-media";
         $response = Http::post($url, [
             'number' => $request->number,
             'fileurl' => $request->fileurl,
@@ -94,7 +93,7 @@ class WhatsappController extends Controller
     }
     public function send_filepath(Request $request)
     {
-        $url = $this->baseUrl . "send-filepath";
+        $url = env('WHATASAPP_URL') . "send-filepath";
         $response = Http::post($url, [
             'number' => $request->number,
             'filepath' => $request->filepath,
