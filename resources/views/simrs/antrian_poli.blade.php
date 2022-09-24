@@ -77,15 +77,14 @@
                 {{-- info box --}}
                 <div class="row">
                     <div class="col-md-3">
-                        <x-adminlte-small-box title="{{ $antrians->where('taskid', 4)->first()->angkaantrean ?? '0' }}"
-                            text="Antrian Saat Ini" theme="primary" class="withLoad" icon="fas fa-sign-in-alt"
-                            url="" url-text="Batalkan Antrian" />
+                        <x-adminlte-small-box title="{{ $antrians->where('taskid', 4)->first()->nomorantrean ?? '0' }}"
+                            text="Antrian Saat Ini" theme="primary" icon="fas fa-sign-in-alt" />
                     </div>
                     <div class="col-md-3">
                         <x-adminlte-small-box
-                            title="{{ $antrians->where('taskid', 3)->where('status_api', 1)->first()->angkaantrean ?? '0' }}"
-                            class="withLoad" text="Antrian Selanjutnya" theme="success" icon="fas fa-sign-in-alt"
-                            url="{{ route('antrian.panggil_poli',$antrians->where('taskid', 3)->where('status_api', 1)->first()->kodebooking ?? '0') }}"
+                            title="{{ $antrians->where('taskid', 3)->where('status_api', 1)->first()->nomorantrean ?? '0' }}"
+                            text="Antrian Selanjutnya" theme="success" icon="fas fa-sign-in-alt"
+                            url="{{ route('antrian.panggil_poli',$antrians->where('taskid', 3)->where('status_api', 1)->first()->kodebooking ?? '0') }} "
                             url-text="Panggil Antrian Selanjutnya" />
                     </div>
                     <div class="col-md-3">
@@ -98,15 +97,288 @@
                             icon="fas fa-sign-in-alt" />
                     </div>
                 </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        {{-- poli belum dan sudah dilayani --}}
+                        <x-adminlte-card
+                            title="Antrian Tunggu Poliklinik ({{ $antrians->where('taskid', '!=', 4)->count() }} Orang)"
+                            theme="warning" icon="fas fa-info-circle" collapsible>
+                            @php
+                                $heads = ['Kodeboking', 'Kunjungan', 'Pasien', 'Action', 'SEP / Ref', 'Status'];
+                                $config['order'] = ['5', 'asc'];
+                            @endphp
+                            <x-adminlte-datatable id="table2" class="nowrap text-xs" :heads="$heads" :config="$config"
+                                striped bordered hoverable compressed>
+                                @foreach ($antrians->where('taskid', '!=', 4) as $item)
+                                    <tr>
+                                        <td>
+                                            {{ $item->nomorantrean }}<br>
+                                            {{ $item->kodebooking }}<br>
+                                            @if ($item->taskid == 0)
+                                                <span class="badge bg-secondary">Belum Chekcin</span>
+                                            @endif
+                                            @if ($item->taskid == 1)
+                                                <span class="badge bg-secondary">{{ $item->taskid }}. Chekcin</span>
+                                            @endif
+                                            @if ($item->taskid == 2)
+                                                <span class="badge bg-secondary">{{ $item->taskid }}. Pendaftaran</span>
+                                            @endif
+                                            @if ($item->taskid == 3)
+                                                @if ($item->status_api == 0)
+                                                    <span class="badge bg-warning">{{ $item->taskid }}. Belum
+                                                        Pembayaran</span>
+                                                @else
+                                                    <span class="badge bg-warning">{{ $item->taskid }}. Tunggu Poli</span>
+                                                @endif
+                                            @endif
+                                            @if ($item->taskid == 4)
+                                                <span class="badge bg-success">{{ $item->taskid }}. Periksa Poli</span>
+                                            @endif
+                                            @if ($item->taskid == 5)
+                                                @if ($item->status_api == 0)
+                                                    <span class="badge bg-success">{{ $item->taskid }}. Tunggu
+                                                        Farmasi</span>
+                                                @endif
+                                                @if ($item->status_api == 1)
+                                                    <span class="badge bg-success">{{ $item->taskid }}. Selesai</span>
+                                                @endif
+                                            @endif
+                                            @if ($item->taskid == 6)
+                                                <span class="badge bg-success">{{ $item->taskid }}. Racik Obat</span>
+                                            @endif
+                                            @if ($item->taskid == 7)
+                                                <span class="badge bg-success">{{ $item->taskid }}. Selesai</span>
+                                            @endif
+                                            @if ($item->taskid == 99)
+                                                <span class="badge bg-danger">{{ $item->taskid }}. Batal</span>
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @if ($item->jeniskunjungan == 1)
+                                                Rujukan FKTP
+                                            @endif
+                                            @if ($item->jeniskunjungan == 3)
+                                                Kontrol
+                                            @endif
+                                            @if ($item->jeniskunjungan == 4)
+                                                Rujukan RS
+                                            @endif
+                                            <br>{{ $item->jenispasien }}
+                                            @if ($item->pasienbaru == 1)
+                                                <span class="badge bg-secondary">Baru</span>
+                                            @endif
+                                            @if ($item->pasienbaru == 0)
+                                                <span class="badge bg-secondary">Lama</span>
+                                            @endif
+                                            @if (isset($item->method))
+                                                <span class="badge bg-secondary">{{ $item->method }}LINE</span>
+                                            @else
+                                                <span class="badge bg-secondary">NULL</span>
+                                            @endif
+                                            <span class="badge bg-success">{{ $item->kodepoli }}</span>
+                                            <br>{{ substr($item->namadokter, 0, 19) }}...
+                                        </td>
+                                        <td>
+                                            RM : {{ $item->norm }}<br>
+                                            <b>{{ $item->nama }}</b>
+                                            @isset($item->nomorkartu)
+                                                <br>{{ $item->nomorkartu }}
+                                            @endisset
+                                        </td>
+                                        <td>
+                                            @if ($item->taskid == 3)
+                                                {{-- panggil pertama --}}
+                                                @if ($item->status_api == 1)
+                                                    <x-adminlte-button class="btn-xs withLoad" label="Panggil"
+                                                        theme="warning" icon="fas fa-volume-down" data-toggle="tooltip"
+                                                        title="Panggil Antrian {{ $item->nomorantrean }}"
+                                                        onclick="window.location='{{ route('antrian.panggil_poli', $item->kodebooking) }}'" />
+                                                @endif
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @isset($item->nomorsep)
+                                                SEP : {{ $item->nomorsep }}
+                                            @else
+                                                SEP : -
+                                            @endisset
+                                            @isset($item->nomorreferensi)
+                                                <br>Ref : {{ $item->nomorreferensi }}
+                                            @else
+                                                <br>Ref : -
+                                            @endisset
+
+                                        </td>
+                                        <td>
+                                            @if ($item->taskid == 0)
+                                                <span class="badge bg-secondary">Belum Chekcin</span>
+                                            @endif
+                                            @if ($item->taskid == 1)
+                                                <span class="badge bg-secondary">{{ $item->taskid }}. Chekcin</span>
+                                            @endif
+                                            @if ($item->taskid == 2)
+                                                <span class="badge bg-secondary">{{ $item->taskid }}. Pendaftaran</span>
+                                            @endif
+                                            @if ($item->taskid == 3)
+                                                @if ($item->status_api == 0)
+                                                    <span class="badge bg-warning">{{ $item->taskid }}. Belum
+                                                        Pembayaran</span>
+                                                @else
+                                                    <span class="badge bg-warning">{{ $item->taskid }}. Tunggu Poli</span>
+                                                @endif
+                                            @endif
+                                            @if ($item->taskid == 4)
+                                                <span class="badge bg-success">{{ $item->taskid }}. Periksa Poli</span>
+                                            @endif
+                                            @if ($item->taskid == 5)
+                                                @if ($item->status_api == 0)
+                                                    <span class="badge bg-success">{{ $item->taskid }}. Tunggu
+                                                        Farmasi</span>
+                                                @endif
+                                                @if ($item->status_api == 1)
+                                                    <span class="badge bg-success">{{ $item->taskid }}. Selesai</span>
+                                                @endif
+                                            @endif
+                                            @if ($item->taskid == 6)
+                                                <span class="badge bg-success">{{ $item->taskid }}. Racik Obat</span>
+                                            @endif
+                                            @if ($item->taskid == 7)
+                                                <span class="badge bg-success">{{ $item->taskid }}. Selesai</span>
+                                            @endif
+                                            @if ($item->taskid == 99)
+                                                <span class="badge bg-danger">{{ $item->taskid }}. Batal</span>
+                                            @endif
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </x-adminlte-datatable>
+                        </x-adminlte-card>
+                    </div>
+                    <div class="col-md-6">
+                        <x-adminlte-card theme="success" icon="fas fa-info-circle" collapsible
+                            title="Antrian Pelayanan Poliklinik ({{ $antrians->where('taskid', 4)->count() }} Orang)">
+                            @php
+                                $heads = ['Kodeboking', 'Kunjungan', 'Pasien', 'Action', 'SEP / Ref', 'Urutan'];
+                                $config['order'] = ['5', 'asc'];
+                            @endphp
+                            <x-adminlte-datatable id="table4" class="nowrap text-xs" :heads="$heads"
+                                :config="$config" striped bordered hoverable compressed>
+                                @foreach ($antrians->where('taskid', 4) as $item)
+                                    <tr>
+                                        <td>
+                                            {{ $item->nomorantrean }}<br>
+                                            {{ $item->kodebooking }}<br>
+                                            @if ($item->taskid == 3)
+                                                @if ($item->status_api == 0)
+                                                    <span class="badge bg-warning">{{ $item->taskid }}. Belum
+                                                        Pembayaran</span>
+                                                @else
+                                                    <span class="badge bg-warning">{{ $item->taskid }}. Tunggu Poli</span>
+                                                @endif
+                                            @endif
+                                            @if ($item->taskid == 4)
+                                                <span class="badge bg-success">{{ $item->taskid }}. Periksa Poli</span>
+                                            @endif
+                                            @if ($item->taskid == 5)
+                                                @if ($item->status_api == 1)
+                                                    <span class="badge bg-success">{{ $item->taskid }}. Tunggu
+                                                        Farmasi</span>
+                                                @endif
+                                                @if ($item->status_api == 2)
+                                                    <span class="badge bg-success">{{ $item->taskid }}. Selesai</span>
+                                                @endif
+                                            @endif
+                                            @if ($item->taskid == 6)
+                                                <span class="badge bg-success">{{ $item->taskid }}. Racik Obat</span>
+                                            @endif
+                                            @if ($item->taskid == 7)
+                                                <span class="badge bg-success">{{ $item->taskid }}. Selesai</span>
+                                            @endif
+                                            @if ($item->taskid == 99)
+                                                <span class="badge bg-danger">{{ $item->taskid }}. Batal</span>
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @if ($item->jeniskunjungan == 1)
+                                                Rujukan FKTP
+                                            @endif
+                                            @if ($item->jeniskunjungan == 3)
+                                                Kontrol
+                                            @endif
+                                            @if ($item->jeniskunjungan == 4)
+                                                Rujukan RS
+                                            @endif
+                                            <br>{{ $item->jenispasien }}
+                                            @if ($item->pasienbaru == 1)
+                                                <span class="badge bg-secondary">Baru</span>
+                                            @endif
+                                            @if ($item->pasienbaru == 0)
+                                                <span class="badge bg-secondary">Lama</span>
+                                            @endif
+                                            @if (isset($item->method))
+                                                <span class="badge bg-secondary">{{ $item->method }}LINE</span>
+                                            @else
+                                                <span class="badge bg-secondary">NULL</span>
+                                            @endif
+                                            <span class="badge bg-success">{{ $item->kodepoli }}</span>
+                                            <br>{{ substr($item->namadokter, 0, 17) }}...
+                                        </td>
+                                        <td>
+                                            RM : {{ $item->norm }}<br>
+                                            <b>{{ $item->nama }}</b>
+                                            @isset($item->nomorkartu)
+                                                <br>{{ $item->nomorkartu }}
+                                            @endisset
+                                        </td>
+                                        <td>
+                                            {{-- tombol pelayanan --}}
+                                            @if ($item->taskid == 4)
+                                                <x-adminlte-button class="btn-xs mb-1 withLoad" label="Panggil"
+                                                    theme="primary" icon="fas fa-volume-down" data-toggle="tooltip"
+                                                    title="Panggil Ulang Pasien"
+                                                    onclick="window.location='{{ route('antrian.panggil_poli', $item->kodebooking) }}'" />
+                                                <br>
+                                                <x-adminlte-button class="btn-xs btnLayani" label="Layani"
+                                                    theme="success" icon="fas fa-hand-holding-medical"
+                                                    data-toggle="tooltop" title="Layani Pasien"
+                                                    data-id="{{ $item->id }}" />
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @isset($item->nomorsep)
+                                                SEP : {{ $item->nomorsep }}
+                                            @else
+                                                SEP : -
+                                            @endisset
+                                            @isset($item->nomorreferensi)
+                                                <br>Ref : {{ $item->nomorreferensi }}
+                                            @else
+                                                <br>Ref : -
+                                            @endisset
+                                            <br>
+                                            <x-adminlte-button class="btn-xs" theme="danger" icon="fas fa-times"
+                                                data-toggle="tooltop" title="Batal Antrian {{ $item->nomorantrean }}"
+                                                onclick="window.location='{{ route('antrian.batal_antrian', $item->kodebooking) }}'" />
+                                        </td>
+                                        <td>
+                                            {{ $item->nomorantrean }}
+
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </x-adminlte-datatable>
+                        </x-adminlte-card>
+                    </div>
+                </div>
                 {{-- poli sedang dilayani --}}
                 <x-adminlte-card theme="primary" icon="fas fa-info-circle" collapsible
-                    title="Antrian Sedang Dilayani Poliklinik ({{ $antrians->where('taskid', 4)->count() }} Orang)">
-                    @php
+                    title="Info cara menggunakan aplikasi antrian Online">
+                    {{-- @php
                         $heads = ['No', 'Kode', 'Tanggal', 'No RM / NIK', 'No Kartu / Rujukan', 'Jenis / Pasien', 'Status', 'Action', 'Poliklinik / Dokter'];
                         $config['order'] = ['6', 'asc'];
                     @endphp
-                    <x-adminlte-datatable id="table1" class="nowrap" :heads="$heads" :config="$config" striped bordered
-                        hoverable compressed>
+                    <x-adminlte-datatable id="table1" class="nowrap" :heads="$heads" :config="$config" striped
+                        bordered hoverable compressed>
                         @foreach ($antrians->where('taskid', 4) as $item)
                             <tr>
                                 <td>{{ $item->angkaantrean }}</td>
@@ -183,7 +455,6 @@
                                 </td>
                                 <td>
                                     @if ($item->taskid == 3)
-                                        {{-- panggil pertama --}}
                                         @if ($item->status_api == 1)
                                             <x-adminlte-button class="btn-xs" label="Panggil" theme="success"
                                                 icon="fas fa-volume-down" data-toggle="tooltip"
@@ -195,7 +466,6 @@
                                             data-toggle="tooltop" title="Batal Antrian {{ $item->nomorantrean }}"
                                             onclick="window.location='{{ route('antrian.batal_antrian', $item->kodebooking) }}'" />
                                     @endif
-                                    {{-- panggil ulang --}}
                                     @if ($item->taskid == 4)
                                         <x-adminlte-button class="btn-xs" label="Panggil Ulang" theme="primary"
                                             icon="fas fa-volume-down" data-toggle="tooltip" title=""
@@ -214,7 +484,7 @@
 
                             </tr>
                         @endforeach
-                    </x-adminlte-datatable>
+                    </x-adminlte-datatable> --}}
                 </x-adminlte-card>
                 @if ($antrians->count() > 0)
                     {{-- modal pelayanan --}}
@@ -282,11 +552,11 @@
                                 <x-adminlte-button class="mr-auto btnSuratKontrol" label="Buat Surat Kontrol"
                                     theme="primary" icon="fas fa-prescription-bottle-alt" />
                                 <x-adminlte-button label="Lanjut Farmasi" theme="warning"
-                                    icon="fas fa-prescription-bottle-alt"
+                                    icon="fas fa-prescription-bottle-alt" class="withLoad"
                                     onclick=" window.location='{{ route('antrian.lanjut_farmasi', $item->kodebooking ?? 0) }}'" />
-                                <x-adminlte-button label="Selesai" theme="success" icon="fas fa-check"
+                                <x-adminlte-button label="Selesai" theme="success" icon="fas fa-check" class="withLoad"
                                     onclick="window.location='{{ route('antrian.selesai', $item->kodebooking ?? 0) }}'" />
-                                <x-adminlte-button theme="danger" label="Dismiss" data-dismiss="modal" />
+                                <x-adminlte-button theme="danger" label="Tutup" data-dismiss="modal" />
                             </x-slot>
                         </form>
                     </x-adminlte-modal>
@@ -333,133 +603,7 @@
                         </form>
                     </x-adminlte-modal>
                 @endif
-                {{-- poli belum dan sudah dilayani --}}
-                <x-adminlte-card
-                    title="Antrian Pelayanan Poliklinik ({{ $antrians->where('taskid', '!=', 4)->count() }} Orang)"
-                    theme="primary" icon="fas fa-info-circle" collapsible>
-                    @php
-                        $heads = ['No', 'Kode', 'Tanggal', 'No RM / NIK', 'No Kartu / Rujukan', 'Jenis / Pasien', 'Status', 'Action', 'Poliklinik / Dokter'];
-                        $config['order'] = ['6', 'asc'];
-                    @endphp
-                    <x-adminlte-datatable id="table2" class="nowrap" :heads="$heads" :config="$config" striped
-                        bordered hoverable compressed>
-                        @foreach ($antrians->where('taskid', '!=', 4) as $item)
-                            <tr>
-                                <td>{{ $item->angkaantrean }}</td>
-                                <td>{{ $item->kodebooking }}<br>
-                                    {{ $item->nomorantrean }}
-                                </td>
-                                <td>{{ $item->tanggalperiksa }}<br>
-                                    @if ($item->jeniskunjungan == 1)
-                                        Rujukan FKTP
-                                    @endif
-                                    @if ($item->jeniskunjungan == 3)
-                                        Kontrol
-                                    @endif
-                                    @if ($item->jeniskunjungan == 4)
-                                        Rujukan RS
-                                    @endif
-                                </td>
-                                <td>
-                                    {{ $item->norm }} <br>
-                                    {{ $item->nik }}
-                                </td>
-                                <td>
-                                    {{ $item->nama }}<br>
-                                    {{ $item->jenispasien }}
-                                    @if ($item->pasienbaru == 1)
-                                        <span class="badge bg-secondary">{{ $item->pasienbaru }}. Baru</span>
-                                    @endif
-                                    @if ($item->pasienbaru == 0)
-                                        <span class="badge bg-secondary">{{ $item->pasienbaru }}. Lama</span>
-                                    @endif
-                                    @if (isset($item->method))
-                                        <span class="badge bg-secondary">{{ $item->method }}LINE</span>
-                                    @else
-                                        <span class="badge bg-secondary">NULL</span>
-                                    @endif
-                                </td>
-                                <td>
-                                    @isset($item->nomorkartu)
-                                        {{ $item->nomorkartu }}
-                                    @endisset
-                                    @isset($item->nomorkartu)
-                                        <br> {{ $item->nomorreferensi }}
-                                    @endisset
-                                </td>
-                                <td>
-                                    @if ($item->taskid == 0)
-                                        <span class="badge bg-secondary">Belum Chekcin</span>
-                                    @endif
-                                    @if ($item->taskid == 1)
-                                        <span class="badge bg-secondary">{{ $item->taskid }}. Chekcin</span>
-                                    @endif
-                                    @if ($item->taskid == 2)
-                                        <span class="badge bg-secondary">{{ $item->taskid }}. Pendaftaran</span>
-                                    @endif
-                                    @if ($item->taskid == 3)
-                                        @if ($item->status_api == 0)
-                                            <span class="badge bg-warning">{{ $item->taskid }}. Belum Pembayaran</span>
-                                        @else
-                                            <span class="badge bg-warning">{{ $item->taskid }}. Tunggu Poli</span>
-                                        @endif
-                                    @endif
-                                    @if ($item->taskid == 4)
-                                        <span class="badge bg-success">{{ $item->taskid }}. Periksa Poli</span>
-                                    @endif
-                                    @if ($item->taskid == 5)
-                                        @if ($item->status_api == 0)
-                                            <span class="badge bg-success">{{ $item->taskid }}. Tunggu Farmasi</span>
-                                        @endif
-                                        @if ($item->status_api == 1)
-                                            <span class="badge bg-success">{{ $item->taskid }}. Selesai</span>
-                                        @endif
-                                    @endif
-                                    @if ($item->taskid == 6)
-                                        <span class="badge bg-success">{{ $item->taskid }}. Racik Obat</span>
-                                    @endif
-                                    @if ($item->taskid == 7)
-                                        <span class="badge bg-success">{{ $item->taskid }}. Selesai</span>
-                                    @endif
-                                    @if ($item->taskid == 99)
-                                        <span class="badge bg-danger">{{ $item->taskid }}. Batal</span>
-                                    @endif
-                                </td>
-                                <td>
-                                    @if ($item->taskid == 3)
-                                        {{-- panggil pertama --}}
-                                        @if ($item->status_api == 1)
-                                            <x-adminlte-button class="btn-xs" label="Panggil" theme="success"
-                                                icon="fas fa-volume-down" data-toggle="tooltip"
-                                                title="Panggil Antrian {{ $item->nomorantrean }}"
-                                                onclick="window.location='{{ route('antrian.panggil_poli', $item->kodebooking) }}'" />
-                                        @endif
 
-                                        <x-adminlte-button class="btn-xs" theme="danger" icon="fas fa-times"
-                                            data-toggle="tooltop" title="Batal Antrian {{ $item->nomorantrean }}"
-                                            onclick="window.location='{{ route('antrian.batal_antrian', $item->kodebooking) }}'" />
-                                    @endif
-                                    {{-- panggil ulang --}}
-                                    @if ($item->taskid == 4)
-                                        <x-adminlte-button class="btn-xs" label="Panggil Ulang" theme="primary"
-                                            icon="fas fa-volume-down" data-toggle="tooltip" title=""
-                                            onclick="window.location='{{ route('antrian.panggil_poli', $item->kodebooking) }}'" />
-                                        <x-adminlte-button class="btn-xs btnLayani" label="Layani" theme="success"
-                                            icon="fas fa-hand-holding-medical" data-toggle="tooltop" title="Layani"
-                                            data-id="{{ $item->id }}" />
-                                        <x-adminlte-button class="btn-xs" theme="danger" icon="fas fa-times"
-                                            data-toggle="tooltop" title="Batal Antrian {{ $item->nomorantrean }}"
-                                            onclick="window.location='{{ route('antrian.batal_antrian', $item->kodebooking) }}'" />
-                                    @endif
-                                </td>
-                                <td>{{ $item->namapoli }} {{ $item->jampraktek }}<br>{{ $item->namadokter }}
-                                </td>
-
-
-                            </tr>
-                        @endforeach
-                    </x-adminlte-datatable>
-                </x-adminlte-card>
             @endif
         </div>
     </div>

@@ -537,17 +537,17 @@ return [
                 ],
             ],
         ],
-        ['header' => 'account_settings'],
-        [
-            'text' => 'profile',
-            'url'  => 'profile',
-            'icon' => 'fas fa-fw fa-user',
-        ],
-        [
-            'text' => 'change_password',
-            'url'  => 'password/reset',
-            'icon' => 'fas fa-fw fa-lock',
-        ],
+        // ['header' => 'account_settings'],
+        // [
+        //     'text' => 'profile',
+        //     'url'  => 'profile',
+        //     'icon' => 'fas fa-fw fa-user',
+        // ],
+        // [
+        //     'text' => 'change_password',
+        //     'url'  => 'password/reset',
+        //     'icon' => 'fas fa-fw fa-lock',
+        // ],
     ],
 
     /*

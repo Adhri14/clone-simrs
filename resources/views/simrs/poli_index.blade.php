@@ -3,7 +3,7 @@
 @section('title', 'Referensi Poliklinik')
 
 @section('content_header')
-    <h1>Referensi Polikliniask</h1>
+    <h1>Referensi Poliklinik</h1>
 @stop
 
 @section('content')

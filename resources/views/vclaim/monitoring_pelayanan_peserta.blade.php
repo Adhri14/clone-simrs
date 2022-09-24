@@ -74,6 +74,8 @@
                                     <dd class="col-sm-8">{{ $response->response->peserta->noKartu }}</dd>
                                     <dt class="col-sm-4">No RM</dt>
                                     <dd class="col-sm-8">{{ $response->response->peserta->mr->noMR }}</dd>
+                                    <dt class="col-sm-4">No HP</dt>
+                                    <dd class="col-sm-8">{{ $response->response->peserta->mr->noTelepon }}</dd>
                                     <dt class="col-sm-4">Nama</dt>
                                     <dd class="col-sm-8">{{ $response->response->peserta->nama }}</dd>
                                     <dt class="col-sm-4">Pisa</dt>

@@ -45,7 +45,7 @@
                     $heads = ['Nama Poliklinik', 'Dokter', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
                     $config['paging'] = false;
                 @endphp
-                <x-adminlte-datatable id="table1" class="nowrap" :heads="$heads" :config="$config" striped bordered
+                <x-adminlte-datatable id="table1" class="nowrap text-xs" :heads="$heads" :config="$config" striped bordered
                     hoverable compressed>
                     @foreach ($jadwals->groupby('kodedokter') as $item)
                         <tr>

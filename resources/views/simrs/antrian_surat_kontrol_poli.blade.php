@@ -52,10 +52,10 @@
                             <x-adminlte-select2 name="kodedokter" label="Dokter">
                                 <option value="">00000 - SEMUA DOKTER</option>
                                 @foreach ($dokters as $item)
-                                    <option value="{{ $item->kodedokter }}"
-                                        {{ $item->kodedokter == $request->kodedokter ? 'selected' : null }}>
-                                        {{ $item->kodedokter }} -
-                                        {{ $item->namadokter }}
+                                    <option value="{{ $item->kode_dokter_jkn }}"
+                                        {{ $item->kode_dokter_jkn == $request->kodedokter ? 'selected' : null }}>
+                                        {{ $item->kode_dokter_jkn }} -
+                                        {{ $item->nama_paramedis }}
                                     </option>
                                 @endforeach
                             </x-adminlte-select2>
@@ -77,8 +77,7 @@
                                     </ul>
                                 </x-adminlte-alert>
                             @endif
-                            <form action="{{ route('vclaim.buat_surat_kontrol') }}" target="_blank" id="formSuratKontrol"
-                                method="post">
+                            <form action="{{ route('vclaim.buat_surat_kontrol') }}" id="formSuratKontrol" method="post">
                                 @csrf
                                 @php
                                     $config = [
@@ -110,9 +109,10 @@
                                 </x-adminlte-select2>
                                 <x-adminlte-select2 name="kodedokter_suratkontrol" label="DPJP Surat Kontrol">
                                     @foreach ($dokters as $item)
-                                        <option value="{{ $item->kodedokter }}">
-                                            {{ $item->kodedokter }} -
-                                            {{ $item->namadokter }}
+                                        <option value="{{ $item->kode_dokter_jkn }}"
+                                            {{ $item->kode_dokter_jkn == $request->kodedokter ? 'selected' : null }}>
+                                            {{ $item->kode_dokter_jkn }} -
+                                            {{ $item->nama_paramedis }}
                                         </option>
                                     @endforeach
                                 </x-adminlte-select2>
@@ -128,17 +128,20 @@
                         <x-adminlte-card title="Kunjungan Poliklinik ({{ $kunjungans->count() }} Orang)" theme="primary"
                             icon="fas fa-info-circle" collapsible>
                             @php
-                                $heads = ['Tanggal', 'Kunjungan', 'No Kartu / No RM / Nama', 'SEP', 'Rujukan', 'Poliklinik'];
-                                // $config['order'] = ['7', 'asc'];
+                                $heads = ['Tgl Kunjungan', 'Pasien', 'SEP', 'Rujukan', 'Poliklinik'];
+                                // $config['order'] = ['7', 'asc'];S
                             @endphp
-                            <x-adminlte-datatable id="table2" class="nowrap" :heads="$heads" striped bordered hoverable
-                                compressed>
+                            <x-adminlte-datatable id="table2" class="nowrap text-xs" :heads="$heads" striped bordered
+                                hoverable compressed>
                                 @foreach ($kunjungans as $item)
                                     <tr class={{ $item->surat_kontrol ? 'text-success' : null }}>
-                                        <td>{{ $item->tgl_masuk }}</td>
-                                        <td>{{ $item->kode_kunjungan }}</td>
-                                        <td>{{ $item->pasien->no_Bpjs }}<br>{{ $item->no_rm }}
-                                            {{ $item->pasien->nama_px }}</td>
+                                        <td>
+                                            {{ $item->tgl_masuk }}
+                                            <br>{{ $item->kode_kunjungan }}
+                                        </td>
+                                        <td>
+                                            RM : {{ $item->no_rm }}<br><b>{{ $item->pasien->nama_px }}</b>
+                                        </td>
                                         <td>{{ $item->no_sep }}</td>
                                         <td>{{ $item->no_rujukan }}</td>
                                         <td>{{ $item->unit->nama_unit }}<br>{{ $item->dokter->nama_paramedis }}</td>

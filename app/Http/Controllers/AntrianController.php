@@ -1192,6 +1192,7 @@ class AntrianController extends Controller
         if ($request->tanggal) {
             $surat_kontrols = SuratKontrol::whereDate('tglTerbitKontrol', $request->tanggal)->get();
             $kunjungans = KunjunganDB::whereDate('tgl_masuk', $request->tanggal)
+                ->where('no_sep', "!=", '')
                 ->where('no_sep', "!=", null)
                 ->where('status_kunjungan', "!=", 8)
                 ->where('kode_unit', "!=", null)
@@ -1206,8 +1207,19 @@ class AntrianController extends Controller
                 $kunjungans = $kunjungans->where('kode_paramedis', $dokter->kode_paramedis);
             }
         }
-        $unit = UnitDB::where('KDPOLI', "!=", null)->get();
-        $dokters = Dokter::get();
+        if ($request->kodepoli == null) {
+            $unit = UnitDB::where('KDPOLI', "!=", null)->get();
+            $dokters = ParamedisDB::where('kode_dokter_jkn', "!=", null)
+                ->where('unit', "!=", null)
+                ->get();
+        } else {
+            $unit = UnitDB::where('KDPOLI', "!=", null)->get();
+            $poli =   UnitDB::firstWhere('KDPOLI', $request->kodepoli);
+            $dokters = ParamedisDB::where('unit', $poli->kode_unit)
+                ->where('kode_dokter_jkn', "!=", null)
+                ->get();
+        }
+
         return view('simrs.antrian_surat_kontrol_poli', [
             'kunjungans' => $kunjungans,
             'request' => $request,
