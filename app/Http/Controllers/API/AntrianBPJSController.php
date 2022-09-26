@@ -1179,7 +1179,7 @@ class AntrianBPJSController extends Controller
                             $request['catatan'] =  $diganosa->nama;
                             $request['diagAwal'] =  $diganosa->kode;
                             // poli tujuan
-                            $request['tujuan'] =  $tujuan->kode;
+                            $request['tujuan'] =  $antrian->kodepoli;
                             $request['eksekutif'] =  0;
                             // dpjp
                             $request['tujuanKunj'] = "2";
@@ -1246,7 +1246,7 @@ class AntrianBPJSController extends Controller
                         $request['catatan'] =  $diganosa->nama;
                         $request['diagAwal'] =  $diganosa->kode;
                         // poli tujuan
-                        $request['tujuan'] =  $tujuan->kode;
+                        $request['tujuan'] =  $antrian->kodepoli;
                         $request['eksekutif'] =  0;
                         // dpjp
                         $request['tujuanKunj'] = "0";
@@ -1255,7 +1255,7 @@ class AntrianBPJSController extends Controller
                         $request['assesmentPel'] = "";
                         // $request['noSurat'] = "";
                         $request['kodeDPJP'] = "";
-                        $request['dpjpLayan'] = $request->kodedokter;
+                        $request['dpjpLayan'] = $antrian->kodedokter;
                         $request['noTelp'] = $antrian->nohp;
                         $request['user'] = "Mesin Antrian";
                     }
