@@ -61,10 +61,10 @@
                             <x-adminlte-select2 name="kodedokter" label="Dokter">
                                 <option value="">00000 - SEMUA DOKTER</option>
                                 @foreach ($dokters as $item)
-                                    <option value="{{ $item->kodedokter }}"
-                                        {{ $item->kodedokter == $request->kodedokter ? 'selected' : null }}>
-                                        {{ $item->kodedokter }} -
-                                        {{ $item->namadokter }}
+                                    <option value="{{ $item->kode_dokter_jkn }}"
+                                        {{ $item->kode_dokter_jkn == $request->kodedokter ? 'selected' : null }}>
+                                        {{ $item->kode_dokter_jkn }} -
+                                        {{ $item->nama_paramedis }}
                                     </option>
                                 @endforeach
                             </x-adminlte-select2>
@@ -589,9 +589,10 @@
                             <input type="hidden" name="kodepoli_suratkontrol" id="kodepoli_suratkontrol">
                             <x-adminlte-select2 name="kodedokter_suratkontrol" label="DPJP Surat Kontrol">
                                 @foreach ($dokters as $item)
-                                    <option value="{{ $item->kodedokter }}">
-                                        {{ $item->kodedokter }} -
-                                        {{ $item->namadokter }}
+                                    <option value="{{ $item->kode_dokter_jkn }}"
+                                        {{ $item->kode_dokter_jkn == $request->kodedokter ? 'selected' : null }}>
+                                        {{ $item->kode_dokter_jkn }} -
+                                        {{ $item->nama_paramedis }}
                                     </option>
                                 @endforeach
                             </x-adminlte-select2>

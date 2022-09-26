@@ -1086,7 +1086,16 @@ class AntrianController extends Controller
             }
         }
         $polis = Poliklinik::where('status', 1)->get();
-        $dokters = Dokter::get();
+        if ($request->kodepoli == null) {
+            $dokters = ParamedisDB::where('kode_dokter_jkn', "!=", null)
+                ->where('unit', "!=", null)
+                ->get();
+        } else {
+            $poli =   UnitDB::firstWhere('KDPOLI', $request->kodepoli);
+            $dokters = ParamedisDB::where('unit', $poli->kode_unit)
+                ->where('kode_dokter_jkn', "!=", null)
+                ->get();
+        }
         return view('simrs.antrian_poli', [
             'antrians' => $antrians,
             'request' => $request,

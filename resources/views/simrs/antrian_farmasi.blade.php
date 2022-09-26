@@ -310,7 +310,7 @@
                     </x-adminlte-datatable>
                 </x-adminlte-card>
                 @if ($antrians->count() > 0)
-                    <x-adminlte-modal id="modalPembayaran" title="Pembayaran Antrian Pasien" size="xl"
+                    {{-- <x-adminlte-modal id="modalPembayaran" title="Pembayaran Antrian Pasien" size="xl"
                         theme="success" icon="fas fa-user-plus" v-centered>
                         <form name="formLayanan" id="formLayanan" action="{{ route('antrian.pendaftaran') }}"
                             method="post">
@@ -370,7 +370,7 @@
                                 <x-adminlte-button theme="danger" label="Dismiss" data-dismiss="modal" />
                             </x-slot>
                         </form>
-                    </x-adminlte-modal>
+                    </x-adminlte-modal> --}}
                 @endif
             @endif
         </div>
