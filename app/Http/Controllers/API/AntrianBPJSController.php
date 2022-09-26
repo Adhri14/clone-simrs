@@ -688,13 +688,13 @@ class AntrianBPJSController extends Controller
             $request['pasienbaru'] = 0;
             // cek jadwal
             // $jadwals = $this->ref_jadwal_dokter($request);
-            $jadwals = JadwalDokter::where("kodepoli", $request->kodepoli)->where("hari",  Carbon::parse($request->tanggalperiksa)->dayOfWeek)->get();
+            $jadwals = JadwalDokter::where("kodesubspesialis", $request->kodepoli)->where("hari",  Carbon::parse($request->tanggalperiksa)->dayOfWeek)->get();
             if ($jadwals->count() != 0) {
                 $jadwal = $jadwals->where('kodedokter', $request->kodedokter)->first();
                 // jika ada jadwal
                 if ($jadwal != null) {
                     // ambil data
-                    $request['namapoli'] = $jadwal->namapoli;
+                    $request['namapoli'] = $jadwal->namasubspesialis;
                     $request['namadokter'] = $jadwal->namadokter;
                 }
                 // jika dokter tidak ada
@@ -717,7 +717,7 @@ class AntrianBPJSController extends Controller
                 return $response;
             }
             //  cek nik
-            $poli = Poliklinik::where('kodepoli', $request->kodepoli)->first();
+            $poli = Poliklinik::where('kodesubspesialis', $request->kodepoli)->first();
             $antrians = Antrian::where('tanggalperiksa', $request->tanggalperiksa)
                 ->count();
             $antrian_poli = Antrian::where('tanggalperiksa', $request->tanggalperiksa)
