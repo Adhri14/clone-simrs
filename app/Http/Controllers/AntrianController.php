@@ -1275,15 +1275,15 @@ class AntrianController extends Controller
                 'keterangan' => $request->keterangan,
                 // 'user' => Auth::user()->name,
             ]);
-            try {
-                // notif wa
-                $wa = new WhatsappController();
-                $request['message'] = "Resep obat atas nama pasien " . $antrian->nama . " dengan nomor antrean " . $antrian->nomorantrean . " telah diterima farmasi. Silahkan menunggu peracikan obat.";
-                $request['number'] = $antrian->nohp;
-                $wa->send_message($request);
-            } catch (\Throwable $th) {
-                //throw $th;
-            }
+            // try {
+            //     // notif wa
+            //     $wa = new WhatsappController();
+            //     $request['message'] = "Resep obat atas nama pasien " . $antrian->nama . " dengan nomor antrean " . $antrian->nomorantrean . " telah diterima farmasi. Silahkan menunggu peracikan obat.";
+            //     $request['number'] = $antrian->nohp;
+            //     $wa->send_message($request);
+            // } catch (\Throwable $th) {
+            //     //throw $th;
+            // }
             Alert::success('Proses', 'Proses Peracikan Obat ' . $response->metadata->message);
             return redirect()->back();
         } else {
@@ -1306,15 +1306,15 @@ class AntrianController extends Controller
             'keterangan' => $request->keterangan,
             // 'user' => Auth::user()->name,
         ]);
-        try {
-            // notif wa
-            $wa = new WhatsappController();
-            $request['message'] = "Resep obat atas nama pasien " . $antrian->nama . " dengan nomor antrean " . $antrian->nomorantrean . " telah telah selesai diracik. Silahkan diambil di farmasi.";
-            $request['number'] = $antrian->nohp;
-            $wa->send_message($request);
-        } catch (\Throwable $th) {
-            //throw $th;
-        }
+        // try {
+        //     // notif wa
+        //     $wa = new WhatsappController();
+        //     $request['message'] = "Resep obat atas nama pasien " . $antrian->nama . " dengan nomor antrean " . $antrian->nomorantrean . " telah telah selesai diracik. Silahkan diambil di farmasi.";
+        //     $request['number'] = $antrian->nohp;
+        //     $wa->send_message($request);
+        // } catch (\Throwable $th) {
+        //     //throw $th;
+        // }
         Alert::success('Success', 'Selesai Peracikan Obat ' . $response->metadata->message);
         return redirect()->back();
     }
