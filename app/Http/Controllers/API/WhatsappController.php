@@ -26,10 +26,13 @@ class WhatsappController extends Controller
     ];
     public function index(Request $request)
     {
-        $request['message']  = "DAFTAR KONTROL_1018R0010922K004387#301#2022-09-28";
-        $request['number'] = '6289529909036@c.us';
-        $sk = $this->callback($request);
-        dd('callback', $sk);
+        // $request['message']  = "DAFTAR KONTROL_1018R0010922K004387#301#2022-09-28";
+        // $request['number'] = '6289529909036@c.us';
+        // $sk = $this->callback($request);
+        $request['kodebooking'] = "63300BAABB42A";
+        $antrian = new AntrianBPJSController();
+        $antrian->print_ulang($request);
+        dd('callback');
         // return $this->surat_kontrol_peserta($pesan, $request);
     }
     public function send_message(Request $request)

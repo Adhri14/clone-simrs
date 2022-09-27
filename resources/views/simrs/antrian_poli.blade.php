@@ -202,10 +202,15 @@
                                             @else
                                                 SEP : -
                                             @endisset
-                                            @isset($item->nomorreferensi)
-                                                <br>Ref : {{ $item->nomorreferensi }}
+                                            @isset($item->nomorrujukan)
+                                                <br>Rujukan : {{ $item->nomorrujukan }}
                                             @else
-                                                <br>Ref : -
+                                                <br>Rujukan : -
+                                            @endisset
+                                            @isset($item->nomorsuratkontrol)
+                                                <br>S. Kontrol : {{ $item->nomorsuratkontrol }}
+                                            @else
+                                                <br>S. Kontrol : -
                                             @endisset
 
                                         </td>

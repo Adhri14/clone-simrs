@@ -1128,7 +1128,6 @@ class AntrianBPJSController extends Controller
             } else {
                 $request['pasienbaru_print'] = 'LAMA';
             }
-
             // jika pasien jkn
             if ($antrian->jenispasien == "JKN") {
                 $request['status_api'] = 1;
@@ -1154,6 +1153,9 @@ class AntrianBPJSController extends Controller
                         $request['jeniskunjungan_print'] = 'KONTROL';
                         $request['nomorreferensi'] = $antrian->nomorrujukan;
                         $data = $vclaim->rujukan_nomor($request);
+                        if ($data->metaData->code != 200) {
+                            $data = $vclaim->rujukan_rs_nomor($request);
+                        }
                         // berhasil get rujukan
                         if ($data->metaData->code == 200) {
                             $rujukan = $data->response->rujukan;
@@ -1516,6 +1518,43 @@ class AntrianBPJSController extends Controller
                 "metadata" => [
                     "message" => "Kode booking tidak ditemukan",
                     "code" => 201,
+                ],
+            ];
+        }
+    }
+    public function print_ulang(Request $request)
+    {
+        $antrian = Antrian::firstWhere('kodebooking', $request->kodebooking);
+        $unit = UnitDB::firstWhere('KDPOLI', $antrian->kodepoli);
+        $tarifkarcis = TarifLayananDetailDB::firstWhere('KODE_TARIF_DETAIL', $unit->kode_tarif_karcis);
+        $tarifadm = TarifLayananDetailDB::firstWhere('KODE_TARIF_DETAIL', $unit->kode_tarif_adm);
+        if ($antrian->taskid == 3) {
+            // print antrian
+            $print_karcis = new AntrianController();
+            $request['tarifkarcis'] = $tarifkarcis->TOTAL_TARIF_NEW;
+            $request['tarifadm'] = $tarifadm->TOTAL_TARIF_NEW;
+            $request['norm'] = $antrian->norm;
+            $request['nama'] = $antrian->nama;
+            $request['nik'] = $antrian->nik;
+            $request['nomorkartu'] = $antrian->nomorkartu;
+            $request['nohp'] = $antrian->nohp;
+            $request['nomorrujukan'] = $antrian->nomorrujukan;
+            $request['nomorsuratkontrol'] = $antrian->nomorsuratkontrol;
+            $request['namapoli'] = $antrian->namapoli;
+            $request['namadokter'] = $antrian->namadokter;
+            $request['jampraktek'] = $antrian->jampraktek;
+            $request['tanggalperiksa'] = $antrian->tanggalperiksa;
+            $request['jenispasien'] = $antrian->jenispasien;
+            $request['nomorantrean'] = $antrian->nomorantrean;
+            $request['lokasi'] = $antrian->lokasi;
+            $request['angkaantrean'] = $antrian->angkaantrean;
+            $request['lantaipendaftaran'] = $antrian->lantaipendaftaran;
+            $kunjungan = KunjunganDB::firstWhere('kode_kunjungan', $antrian->kode_kunjungan);
+            $print_karcis->print_karcis($request, $kunjungan);
+            return [
+                "metadata" => [
+                    "message" => "Print ulang sukses.",
+                    "code" => 200,
                 ],
             ];
         }
