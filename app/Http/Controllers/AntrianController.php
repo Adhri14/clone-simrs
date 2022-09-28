@@ -1201,11 +1201,10 @@ class AntrianController extends Controller
         if ($request->tanggal) {
             $surat_kontrols = SuratKontrol::whereDate('tglTerbitKontrol', $request->tanggal)->get();
             $kunjungans = KunjunganDB::whereDate('tgl_masuk', $request->tanggal)
-                ->where('no_sep', "!=", '')
-                ->where('no_sep', "!=", null)
                 ->where('status_kunjungan', "!=", 8)
                 ->where('kode_unit', "!=", null)
-                ->with(['dokter', 'unit','pasien','surat_kontrol'])
+                ->where('kode_unit', "!=", 1002)
+                ->with(['dokter', 'unit', 'pasien', 'surat_kontrol'])
                 ->get();
             if ($request->kodepoli != null) {
                 $poli = UnitDB::where('KDPOLI', $request->kodepoli)->first();
