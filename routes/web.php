@@ -72,6 +72,7 @@ Route::prefix('antrian')->name('antrian.')->middleware(['auth'])->group(function
     Route::get('panggil_poli/{kodebooking}', [AntrianController::class, 'panggil_poli'])->name('panggil_poli')->middleware('permission:poliklinik');
     Route::get('lanjut_farmasi/{kodebooking}', [AntrianController::class, 'lanjut_farmasi'])->name('lanjut_farmasi')->middleware('permission:poliklinik');
     Route::get('selesai/{kodebooking}', [AntrianController::class, 'selesai'])->name('selesai')->middleware('permission:poliklinik');
+    Route::get('selesai_semua/{kodepoli}', [AntrianController::class, 'selesai_semua'])->name('selesai_semua')->middleware('permission:poliklinik');
     Route::get('surat_kontrol_poli', [AntrianController::class, 'surat_kontrol_poli'])->name('surat_kontrol_poli')->middleware('permission:poliklinik');
     Route::post('surat_kontrol_create', [AntrianController::class, 'surat_kontrol_create'])->name('surat_kontrol_create')->middleware('permission:poliklinik');
     // farmasi
