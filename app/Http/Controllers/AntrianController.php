@@ -8,6 +8,7 @@ use App\Http\Controllers\API\WhatsappController;
 use App\Models\Antrian;
 use App\Models\Dokter;
 use App\Models\JadwalDokter;
+use App\Models\Kunjungan;
 use App\Models\KunjunganDB;
 use App\Models\LayananDB;
 use App\Models\LayananDetailDB;
@@ -1283,10 +1284,6 @@ class AntrianController extends Controller
             'surat_kontrols' => $surat_kontrols,
         ]);
     }
-    // public function surat_kontrol_create(Request $request)
-    // {
-    //     dd($request->all());
-    // }
     // farmasi
     public function farmasi(Request $request)
     {
@@ -1408,8 +1405,8 @@ class AntrianController extends Controller
     public function laporan(Request $request)
     {
         if ($request->tanggal == null) {
-            $tanggal_awal = Carbon::now()->startOfMonth()->format('Y-m-d');
-            $tanggal_akhir = Carbon::now()->endOfMonth()->format('Y-m-d');
+            $tanggal_awal = Carbon::now()->startOfDay()->format('Y-m-d');
+            $tanggal_akhir = Carbon::now()->endOfDay()->format('Y-m-d');
         } else {
             $tanggal = explode(' - ', $request->tanggal);
             $tanggal_awal = Carbon::parse($tanggal[0])->format('Y-m-d');
@@ -1417,9 +1414,22 @@ class AntrianController extends Controller
         }
         $antrians = Antrian::whereBetween('tanggalperiksa', [$tanggal_awal, $tanggal_akhir])
             ->get();
+
+        $kunjungans = KunjunganDB::whereBetween('tgl_masuk', [Carbon::parse($tanggal_awal)->startOfDay(), Carbon::parse($tanggal_akhir)->endOfDay()])
+            ->where('kode_unit', 'LIKE', '10%')
+            ->where('kode_unit', '!=', '1002')
+            ->get();
+
+        $units = UnitDB::where('KDPOLI', '!=', null)->get();
+
+        // $polis = Poliklinik::where('status', 1)
+        //     ->get();
         return view('simrs.antrian_laporan', [
             'antrians' => $antrians,
             'request' => $request,
+            // 'polis' => $polis,
+            'kunjungans' => $kunjungans,
+            'units' => $units,
         ]);
     }
     public function laporan_tanggal(Request $request)

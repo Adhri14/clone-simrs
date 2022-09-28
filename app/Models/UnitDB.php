@@ -34,4 +34,8 @@ class UnitDB extends Model
     {
         return $this->hasOne(LokasiUnitDB::class, 'kode_unit', 'kode_unit');
     }
+    public function poliklinik()
+    {
+        return $this->hasOne(Poliklinik::class, 'kodesubspesialis', 'KDPOLI');
+    }
 }
