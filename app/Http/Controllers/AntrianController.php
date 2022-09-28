@@ -1194,6 +1194,52 @@ class AntrianController extends Controller
         Alert::success('Success', "Antrian Selesai. Semoga cepat sembuh.\n" . $response->metadata->message);
         return redirect()->back();
     }
+    public function selesai_semua($kodepoli, Request $request)
+    {
+        $now = Carbon::now();
+        if ($kodepoli == 0) {
+            $antrians = Antrian::where('taskid', 3)
+                ->whereDate('tanggalperiksa', $now->format('Y-m-d'))
+                ->get();
+        } else {
+            $antrians = Antrian::where('taskid', 3)
+                ->whereDate('tanggalperiksa', $now->format('Y-m-d'))
+                ->where('kodepoli', $kodepoli)
+                ->get();
+        }
+        dd($antrians, $kodepoli, $request->all());
+        foreach ($antrians as  $antrian) {
+            $vclaim = new AntrianBPJSController();
+            // panggil poli 4
+            $request['kodebooking'] = $antrian->kodebooking;
+            $request['taskid'] = 4;
+            $request['keterangan'] = "Panggilan ke poliklinik yang anda pilih";
+            $request['waktu'] = $now->timestamp * 1000;
+            $response = $vclaim->update_antrian($request);
+            $antrian->update([
+                'taskid' => $request->taskid,
+                'status_api' => 1,
+                'keterangan' => $request->keterangan,
+                // 'user' => Auth::user()->name,
+            ]);
+            // panggil selesai 5
+            $request['kodebooking'] = $antrian->kodebooking;
+            $request['taskid'] = 5;
+            $request['keterangan'] = "Semoga cepat sembuh";
+            $request['waktu'] = Carbon::now()->timestamp * 1000;
+            $response = $vclaim->update_antrian($request);
+            $antrian->update([
+                'taskid' => $request->taskid,
+                'status_api' => 1,
+                'keterangan' => $request->keterangan,
+                // 'user' => Auth::user()->name,
+            ]);
+            dd($antrian);
+        }
+
+        Alert::success('Success', "Antrian Selesai. Semoga cepat sembuh.\n");
+        return redirect()->back();
+    }
     public function surat_kontrol_poli(Request $request)
     {
         $kunjungans = null;
