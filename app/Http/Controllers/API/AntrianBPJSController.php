@@ -625,46 +625,48 @@ class AntrianBPJSController extends Controller
                         $response =  $vclaim->rujukan_rs_nomor($request);
                         $request['jenisrujukan'] = 2;
                     }
-                    $jumlah_sep  = $vclaim->rujukan_jumlah_sep($request);
-                    // gagal jumlah sep rujukan
-                    if ($jumlah_sep->metaData->code != 200) {
-                        return [
-                            "metadata" => [
-                                "code" => 201,
-                                "message" => $jumlah_sep->metaData->message
-                            ]
-                        ];
-                    }
-                    // berhasil jumlah sep rujukan
-                    else {
-                        if ($jumlah_sep->response->jumlahSEP == 0) {
-                            if ($response->metaData->code == 200) {
-                                // cek rujukan orang lain
-                                if ($request->nomorkartu != $response->response->rujukan->peserta->noKartu) {
-                                    return [
-                                        "metadata" => [
-                                            "code" => 201,
-                                            "message" => "Nomor peserta tidak sesuai dengan rujukan."
-                                        ]
-                                    ];
-                                }
-                            } else {
-                                return [
-                                    "metadata" => [
-                                        "code" => 201,
-                                        "message" => $response->metaData->message
-                                    ]
-                                ];
-                            }
-                        }
-                        // jumlah sep lebih dari 1
-                        else {
+                    if ($request->method != "OFF") {
+                        $jumlah_sep  = $vclaim->rujukan_jumlah_sep($request);
+                        // gagal jumlah sep rujukan
+                        if ($jumlah_sep->metaData->code != 200) {
                             return [
                                 "metadata" => [
                                     "code" => 201,
-                                    "message" => "Mohon maaf Rujukan anda telah digunakan untuk kunjungan pertama kali. Untuk kunjungan selanjutnya silahkan gunakan Surat Kontrol yang dbuat di Poliklinik."
+                                    "message" => $jumlah_sep->metaData->message
                                 ]
                             ];
+                        }
+                        // berhasil jumlah sep rujukan
+                        else {
+                            if ($jumlah_sep->response->jumlahSEP == 0) {
+                                if ($response->metaData->code == 200) {
+                                    // cek rujukan orang lain
+                                    if ($request->nomorkartu != $response->response->rujukan->peserta->noKartu) {
+                                        return [
+                                            "metadata" => [
+                                                "code" => 201,
+                                                "message" => "Nomor peserta tidak sesuai dengan rujukan."
+                                            ]
+                                        ];
+                                    }
+                                } else {
+                                    return [
+                                        "metadata" => [
+                                            "code" => 201,
+                                            "message" => $response->metaData->message
+                                        ]
+                                    ];
+                                }
+                            }
+                            // jumlah sep lebih dari 1
+                            else {
+                                return [
+                                    "metadata" => [
+                                        "code" => 201,
+                                        "message" => "Mohon maaf Rujukan anda telah digunakan untuk kunjungan pertama kali. Untuk kunjungan selanjutnya silahkan gunakan Surat Kontrol yang dbuat di Poliklinik."
+                                    ]
+                                ];
+                            }
                         }
                     }
                 }
@@ -828,7 +830,7 @@ class AntrianBPJSController extends Controller
                 $request['message'] = "*Antrian Berhasil di Daftarkan*\nAntrian anda berhasil didaftarkan melalui Layanan Online RSUD Waled dengan data sebagai berikut : \n\n*Kode Antrian :* " . $request->kodebooking .  "\n*Angka Antrian :* " . $request->angkaantrean .  "\n*Nomor Antrian :* " . $request->nomorantrean . "\n*Jenis Pasien :* " . $request->jenispasien .  "\n*Jenis Kunjungan :* " . $request->jeniskunjungan .  "\n\n*Nama :* " . $request->nama . "\n*Poliklinik :* " . $request->namapoli  . "\n*Dokter :* " . $request->namadokter  .  "\n*Jam Praktek :* " . $request->jampraktek  .  "\n*Tanggal Periksa :* " . $request->tanggalperiksa . "\n\n*Keterangan :* " . $request->keterangan  .  "\nTerima kasih. Semoga sehat selalu.\nUntuk pertanyaan & pengaduan silahkan hubungi :\n*Humas RSUD Waled 08983311118*";
                 $request['number'] = $request->nohp;
                 $wa->send_message($request);
-                $request['notif'] = 'Antrian berhasil didaftarkan melalui ' . $request->method . "LINE\n*Nama :* " . $request->nama . "\n*Poliklinik :* " . $request->namapoli .  "\n*Tanggal Periksa :* " . $request->tanggalperiksa;
+                $request['notif'] = 'Antrian berhasil didaftarkan melalui ' . $request->method . "LINE\n*Nama :* " . $request->nama . "\n*Poliklinik :* " . $request->namapoli .  "\n*Tanggal Periksa :* " . $request->tanggalperiksa . "\n*Jenis Kunjungan :* " . $request->jeniskunjungan;
                 $wa->send_notif($request);
                 $response = [
                     "response" => [
