@@ -432,12 +432,7 @@ class VclaimBPJSController extends Controller
             "user" => "required",
         ]);
         if ($validator->fails()) {
-            return $response = [
-                'metaData' => [
-                    'code' => 201,
-                    'message' => $validator->errors()->first(),
-                ],
-            ];
+            return  json_decode(json_encode(['metaData' => ['code' => 201, 'message' => $validator->errors()->first(),],]));
         }
         $url = $this->baseUrl . "RencanaKontrol/Update";
         $signature = $this->signature();
@@ -462,14 +457,15 @@ class VclaimBPJSController extends Controller
             $suratkontrol = $response->response;
             $suratkontrols = SuratKontrol::where('noSuratKontrol', $suratkontrol->noSuratKontrol)->first();
             $suratkontrols->update([
-                "tglRencanaKontrol" => $suratkontrol->$suratkontrol,
-                "namaDokter" => $suratkontrol->namaDokter,
+                "poliKontrol" => $request->poliKontrol,
+                "kodeDokter" => $request->kodeDokter,
+                "noSuratKontrol" => $suratkontrol->noSuratKontrol,
+                "tglRencanaKontrol" => $suratkontrol->tglRencanaKontrol,
                 "namaDokter" => $suratkontrol->namaDokter,
                 "noKartu" => $suratkontrol->noKartu,
                 "nama" => $suratkontrol->nama,
                 "tglLahir" => $suratkontrol->tglLahir,
                 "kelamin" => $suratkontrol->kelamin,
-                "namaDiagnosa" => $suratkontrol->namaDiagnosa,
             ]);
         }
         return $response;

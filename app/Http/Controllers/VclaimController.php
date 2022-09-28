@@ -117,6 +117,37 @@ class VclaimController extends Controller
             return redirect()->back();
         }
     }
+    public function edit_surat_kontrol($id)
+    {
+        $suratkontrol = SuratKontrol::find($id);
+        return response()->json($suratkontrol);
+    }
+    public function update_surat_kontrol(Request $request)
+    {
+        $request['user'] = Auth::user()->name;
+        $request->validate([
+            'nomor_suratkontrol_edit' => 'required',
+            'nomorsep_suratkontrol_edit' => 'required',
+            'kodedokter_suratkontrol_edit' => 'required',
+            'kodepoli_suratkontrol_edit' => 'required',
+            'tanggal_suratkontrol_edit' => 'required',
+            "user" => "required",
+
+        ]);
+        $request['noSuratKontrol'] = $request->nomor_suratkontrol_edit;
+        $request['noSEP'] = $request->nomorsep_suratkontrol_edit;
+        $request['kodeDokter'] = $request->kodedokter_suratkontrol_edit;
+        $request['poliKontrol'] = $request->kodepoli_suratkontrol_edit;
+        $request['tglRencanaKontrol'] = $request->tanggal_suratkontrol_edit;
+        $vclaim = new VclaimBPJSController();
+        $response = $vclaim->surat_kontrol_update($request);
+        if ($response->metaData->code == 200) {
+            Alert::success('Success', 'Surat Kontrol ' . $request->nomor_suratkontrol_edit . ' berhasil di update.');
+        } else {
+            Alert::error('Error', 'Surat Kontrol ' . $request->nomor_suratkontrol_edit . ' gagal di update. ' . $response->metaData->message);
+        }
+        return redirect()->back();
+    }
     public function delete_surat_kontrol($noSuratKontrol, Request $request)
     {
         $request['noSuratKontrol'] = $noSuratKontrol;

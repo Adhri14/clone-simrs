@@ -1205,6 +1205,7 @@ class AntrianController extends Controller
                 ->where('no_sep', "!=", null)
                 ->where('status_kunjungan', "!=", 8)
                 ->where('kode_unit', "!=", null)
+                ->with(['dokter', 'unit','pasien','surat_kontrol'])
                 ->get();
             if ($request->kodepoli != null) {
                 $poli = UnitDB::where('KDPOLI', $request->kodepoli)->first();
