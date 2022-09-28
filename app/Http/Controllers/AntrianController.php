@@ -1113,6 +1113,15 @@ class AntrianController extends Controller
             $request['waktu'] = Carbon::now()->timestamp * 1000;
             $vclaim = new AntrianBPJSController();
             $response = $vclaim->update_antrian($request);
+            // try {
+            //     // notif wa
+            //     $wa = new WhatsappController();
+            //     $request['message'] = "Panggilan antrian atas nama pasien " . $antrian->nama . " dengan nomor antrean " . $antrian->nomorantrean . " untuk segera dilayani di POLIKLINIK " . $antrian->namapoli;
+            //     $request['number'] = $antrian->nohp;
+            //     $wa->send_message($request);
+            // } catch (\Throwable $th) {
+            //     //throw $th;
+            // }
             $antrian->update([
                 'taskid' => $request->taskid,
                 'status_api' => 1,
@@ -1185,52 +1194,6 @@ class AntrianController extends Controller
         Alert::success('Success', "Antrian Selesai. Semoga cepat sembuh.\n" . $response->metadata->message);
         return redirect()->back();
     }
-    public function selesai_semua($kodepoli, Request $request)
-    {
-        $now = Carbon::now();
-        if ($kodepoli == 0) {
-            $antrians = Antrian::where('taskid', 3)
-                ->whereDate('tanggalperiksa', $now->format('Y-m-d'))
-                ->get();
-        } else {
-            $antrians = Antrian::where('taskid', 3)
-                ->whereDate('tanggalperiksa', $now->format('Y-m-d'))
-                ->where('kodepoli', $kodepoli)
-                ->get();
-        }
-        dd($antrians, $kodepoli, $request->all());
-        foreach ($antrians as  $antrian) {
-            $vclaim = new AntrianBPJSController();
-            // panggil poli 4
-            $request['kodebooking'] = $antrian->kodebooking;
-            $request['taskid'] = 4;
-            $request['keterangan'] = "Panggilan ke poliklinik yang anda pilih";
-            $request['waktu'] = $now->timestamp * 1000;
-            $response = $vclaim->update_antrian($request);
-            $antrian->update([
-                'taskid' => $request->taskid,
-                'status_api' => 1,
-                'keterangan' => $request->keterangan,
-                // 'user' => Auth::user()->name,
-            ]);
-            // panggil selesai 5
-            $request['kodebooking'] = $antrian->kodebooking;
-            $request['taskid'] = 5;
-            $request['keterangan'] = "Semoga cepat sembuh";
-            $request['waktu'] = Carbon::now()->timestamp * 1000;
-            $response = $vclaim->update_antrian($request);
-            $antrian->update([
-                'taskid' => $request->taskid,
-                'status_api' => 1,
-                'keterangan' => $request->keterangan,
-                // 'user' => Auth::user()->name,
-            ]);
-            dd($antrian);
-        }
-
-        Alert::success('Success', "Antrian Selesai. Semoga cepat sembuh.\n");
-        return redirect()->back();
-    }
     public function surat_kontrol_poli(Request $request)
     {
         $kunjungans = null;
@@ -1240,10 +1203,7 @@ class AntrianController extends Controller
             $kunjungans = KunjunganDB::whereDate('tgl_masuk', $request->tanggal)
                 ->where('status_kunjungan', "!=", 8)
                 ->where('kode_unit', "!=", null)
-<<<<<<< HEAD
                 ->where('kode_unit', "!=", 1002)
-=======
->>>>>>> f226548daddbf362174af97a9d657654bf33d1eb
                 ->with(['dokter', 'unit', 'pasien', 'surat_kontrol'])
                 ->get();
             if ($request->kodepoli != null) {
