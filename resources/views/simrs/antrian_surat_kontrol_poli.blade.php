@@ -155,9 +155,12 @@
                     icon="fas fa-info-circle" collapsible>
                     @php
                         $heads = ['Tgl Dibuat', 'Tgl S. Kontrol', 'Action', 'No S. Kontrol', 'Poliklinik', 'Pasien', 'Kartu', 'No SEP Asal', 'Dokter'];
-                        // $config['order'] = ['7', 'asc'];
+                        $config = [
+                            'order' => ['2', 'desc'],
+                            'paging' => false,
+                        ];
                     @endphp
-                    <x-adminlte-datatable id="table1" class="nowrap" :heads="$heads" striped bordered hoverable
+                    <x-adminlte-datatable id="table1" class="nowrap" :heads="$heads" :config="$config"  striped bordered hoverable
                         compressed>
                         @foreach ($surat_kontrols as $item)
                             <tr>
