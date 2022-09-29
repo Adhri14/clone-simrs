@@ -48,7 +48,7 @@
             </div>
             <div class="row">
                 <div class="col-md-4">
-                    <x-adminlte-card title="Laporan Pasien JKN/NON-JKN Antrian Poliklinik" theme="primary"
+                    <x-adminlte-card title="Grafik Jenis Pasien Poliklinik" theme="primary"
                         icon="fas fa-info-circle" collapsible>
                         <canvas id="donutChartJenisPasien"
                             style="min-height: 300px; height: 300px; max-height: 300px; max-width: 100%;"></canvas>
@@ -62,7 +62,7 @@
                     </x-adminlte-card>
                 </div>
                 <div class="col-md-4">
-                    <x-adminlte-card title="Laporan Metode Antrian Poliklinik" theme="primary" icon="fas fa-info-circle"
+                    <x-adminlte-card title="Grafik Metode Antrian Poliklinik" theme="primary" icon="fas fa-info-circle"
                         collapsible>
                         <canvas id="donutChartMethod"
                             style="min-height: 300px; height: 300px; max-height: 300px; max-width: 100%;"></canvas>
@@ -74,12 +74,13 @@
                     </x-adminlte-card>
                 </div>
                 <div class="col-md-4">
-                    <x-adminlte-card title="Laporan Taskid Antrian Poliklinik" theme="primary" icon="fas fa-info-circle"
+                    <x-adminlte-card title="Grafik Taskid Antrian Poliklinik" theme="primary" icon="fas fa-info-circle"
                         collapsible>
                         <canvas id="donutChartTaskid"
                             style="min-height: 300px; height: 300px; max-height: 300px; max-width: 100%;"></canvas>
                         <br>
                         <ul style="list-style-type:disc;">
+                            <li>Taskid adalah tahapan antrian rawat jalan</li>
                             <li>Data diambil dari database Antrian SIMRS</li>
                             <li>Total Antrian : {{ $antrians->count() }} </li>
                         </ul>

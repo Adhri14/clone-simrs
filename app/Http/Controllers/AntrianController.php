@@ -1250,7 +1250,9 @@ class AntrianController extends Controller
             $kunjungans = KunjunganDB::whereDate('tgl_masuk', $request->tanggal)
                 ->where('status_kunjungan', "!=", 8)
                 ->where('kode_unit', "!=", null)
+                ->where('kode_unit', 'LIKE', '10%')
                 ->where('kode_unit', "!=", 1002)
+                ->where('kode_unit', "!=", 1023)
                 ->with(['dokter', 'unit', 'pasien', 'surat_kontrol'])
                 ->get();
             if ($request->kodepoli != null) {
@@ -1416,8 +1418,10 @@ class AntrianController extends Controller
             ->get();
 
         $kunjungans = KunjunganDB::whereBetween('tgl_masuk', [Carbon::parse($tanggal_awal)->startOfDay(), Carbon::parse($tanggal_akhir)->endOfDay()])
+            ->where('kode_unit', "!=", null)
             ->where('kode_unit', 'LIKE', '10%')
             ->where('kode_unit', '!=', '1002')
+            ->where('kode_unit', "!=", 1023)
             ->get();
 
         $units = UnitDB::where('KDPOLI', '!=', null)->get();

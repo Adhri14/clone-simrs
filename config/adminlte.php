@@ -369,7 +369,7 @@ return [
                 //     'can' => 'admin',
                 // ],
                 [
-                    'text' => 'Laporan Pendaftaran',
+                    'text' => 'Laporan Antrian',
                     'icon'    => 'fas fa-chart-line',
                     'shift'   => 'ml-2',
                     'url'  => 'antrian/laporan',
