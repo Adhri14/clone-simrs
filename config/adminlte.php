@@ -664,6 +664,11 @@ return [
                     'location' => 'vendor/datatables-plugins/pdfmake/vfs_fonts.js',
                 ],
                 [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => 'vendor/datatables-plugins/buttons/js/buttons.colVis.min.js',
+                ],
+                [
                     'type' => 'css',
                     'asset' => true,
                     'location' => 'vendor/datatables-plugins/buttons/css/buttons.bootstrap4.min.css',

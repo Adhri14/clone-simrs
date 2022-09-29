@@ -48,8 +48,8 @@
             </div>
             <div class="row">
                 <div class="col-md-4">
-                    <x-adminlte-card title="Grafik Jenis Pasien Poliklinik" theme="primary"
-                        icon="fas fa-info-circle" collapsible>
+                    <x-adminlte-card title="Grafik Jenis Pasien Poliklinik" theme="primary" icon="fas fa-info-circle"
+                        collapsible>
                         <canvas id="donutChartJenisPasien"
                             style="min-height: 300px; height: 300px; max-height: 300px; max-width: 100%;"></canvas>
                         <br>
@@ -86,7 +86,6 @@
                         </ul>
                     </x-adminlte-card>
                 </div>
-                <!-- /.col (LEFT) -->
                 <div class="col-md-6">
                     <!-- LINE CHART -->
                     {{-- <div class="card card-info">
@@ -159,11 +158,8 @@
                     <!-- /.card-body -->
                   </div> --}}
                     <!-- /.card -->
-
                 </div>
-                <!-- /.col (RIGHT) -->
             </div>
-            <!-- /.row -->
             <x-adminlte-card title="Antrian Poliklinik" theme="primary" icon="fas fa-info-circle" collapsible>
                 @if ($errors->any())
                     <x-adminlte-alert title="Ops Terjadi Masalah !" theme="danger" dismissable>
@@ -176,11 +172,27 @@
                 @endif
                 @php
                     $heads = ['Poliklinik', 'Blm. Chkin', 'Tggu. Poli', 'Poliklinik', 'S. Poli', 'Tggu. Farmasi', 'Racik', 'Selesai', 'Batal', 'Total', 'Kunjungan', '%'];
-                    $config['order'] = ['2', 'desc'];
-                    $config['paging'] = false;
+                    $config = [
+                        'order' => ['2', 'desc'],
+                        'paging' => false,
+                        'buttons' => [
+                            [
+                                'extend' => 'colvis',
+                                'className' => 'btn-info',
+                            ],
+                            [
+                                'extend' => 'print',
+                                'className' => 'btn-info',
+                            ],
+                            [
+                                'extend' => 'pdf',
+                                'className' => 'btn-info',
+                            ],
+                        ],
+                    ];
                 @endphp
                 <x-adminlte-datatable id="table1" class="nowrap" :heads="$heads" :config="$config" striped bordered
-                    hoverable compressed>
+                    hoverable compressed with-buttons>
                     @foreach ($units as $unit)
                         @isset($unit->poliklinik)
                             <tr>
@@ -228,7 +240,7 @@
                             </tr>
                         @endisset
                     @endforeach
-                    <thead>
+                    <tfoot>
                         <tr>
                             <th>Total</th>
                             <th>
@@ -245,68 +257,7 @@
                             <th>{{ $kunjungans->count() }} </th>
                             <th>{{ round(($antrians->count() / $kunjungans->count()) * 100) }} % </th>
                         </tr>
-                    </thead>
-                    {{-- @foreach ($antrians as $item)
-                            <tr>
-                                <td>{{ $item->angkaantrean }}</td>
-                                <td>{{ $item->kodebooking }}<br>
-                                    {{ $item->nomorantrean }}
-                                </td>
-                                <td>{{ $item->tanggalperiksa }}</td>
-                                <td>
-                                    {{ $item->norm }} <br>
-                                    {{ $item->nik }}
-                                </td>
-                                <td>
-                                    {{ $item->jenispasien }}
-                                    @if ($item->pasienbaru == 1)
-                                        <span class="badge bg-secondary">{{ $item->pasienbaru }}. Baru</span>
-                                    @endif
-                                    @if ($item->pasienbaru == 0)
-                                        <span class="badge bg-secondary">{{ $item->pasienbaru }}. Lama</span>
-                                    @endif
-                                    @isset($item->pasien)
-                                        <br>
-                                        {{ $item->pasien->nama }}
-                                    @endisset
-                                </td>
-                                <td>
-                                    @isset($item->nomorkartu)
-                                        {{ $item->nomorkartu }}
-                                    @endisset
-                                    @isset($item->nomorkartu)
-                                        <br> {{ $item->nomorreferensi }}
-                                    @endisset
-                                </td>
-                                <td>{{ $item->namapoli }}<br>{{ $item->namadokter }} <br>{{ $item->jampraktek }}
-                                </td>
-                                <td>
-                                    @if ($item->taskid == 0)
-                                        <span class="badge bg-secondary">{{ $item->taskid }}. Belum Checkin</span>
-                                    @endif
-                                    @if ($item->taskid == 1)
-                                        <span class="badge bg-warning">{{ $item->taskid }}. Checkin</span>
-                                    @endif
-                                    @if ($item->taskid == 2)
-                                        <span class="badge bg-primary">{{ $item->taskid }}. Proses Pendaftaran</span>
-                                    @endif
-                                    @if ($item->taskid == 3)
-                                        @if ($item->status_api == 0)
-                                            <span class="badge bg-warning">2. Belum Pembayaran</span>
-                                        @else
-                                            <span class="badge bg-success">{{ $item->taskid }}. Tunggu Poli</span>
-                                        @endif
-                                    @endif
-                                    @if ($item->taskid >= 4 && $item->taskid <= 7)
-                                        <span class="badge bg-success">{{ $item->taskid }}. Pelayanan Poli</span>
-                                    @endif
-                                    @if ($item->taskid == 99)
-                                        <span class="badge bg-danger">{{ $item->taskid }}. Batal</span>
-                                    @endif
-
-                                </td>
-                            </tr>
-                        @endforeach --}}
+                    </tfoot>
                 </x-adminlte-datatable>
             </x-adminlte-card>
         </div>
@@ -314,6 +265,7 @@
 @stop
 
 @section('plugins.Datatables', true)
+@section('plugins.DatatablesPlugins', true)
 @section('plugins.TempusDominusBs4', true)
 @section('plugins.DateRangePicker', true)
 @section('plugins.Chartjs', true)
