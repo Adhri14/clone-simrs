@@ -39,7 +39,6 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 
 Route::get('info_jadwaldokter', [JadwalDokterController::class, 'index'])->name('info_jadwaldokter');
 Route::get('info_jadwallibur', [JadwalLiburController::class, 'index'])->name('info_jadwallibur');
-
 Route::get('info_jadwaloperasi', [JadwalOperasiController::class, 'index'])->name('info_jadwaloperasi');
 // antrian routes
 Route::prefix('antrian')->name('antrian.')->group(function () {

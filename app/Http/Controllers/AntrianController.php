@@ -8,7 +8,6 @@ use App\Http\Controllers\API\WhatsappController;
 use App\Models\Antrian;
 use App\Models\Dokter;
 use App\Models\JadwalDokter;
-use App\Models\Kunjungan;
 use App\Models\KunjunganDB;
 use App\Models\LayananDB;
 use App\Models\LayananDetailDB;
