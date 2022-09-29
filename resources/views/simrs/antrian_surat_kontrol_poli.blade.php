@@ -139,7 +139,8 @@
                                             <br>{{ $item->kode_kunjungan }}
                                         </td>
                                         <td>
-                                            RM : {{ $item->no_rm }}<br><b>{{ $item->pasien->nama_px }}</b>
+                                            RM : {{ $item->no_rm }}<br><b>{{ $item->pasien->nama_px }}</b><br>
+                                            {{ $item->pasien->no_Bpjs }}
                                         </td>
                                         <td>{{ $item->no_sep }}</td>
                                         <td>{{ $item->no_rujukan }}</td>

@@ -559,7 +559,7 @@ class AntrianBPJSController extends Controller
             ->where('taskid', '<=', 4)
             ->count();
         if ($antrian_nik) {
-            $request['notif'] = "function ambil_antrian error antrian nik sama : " . $request->nik;
+            $request['notif'] = "function ambil_antrian error antrian " . $request->method . " nik sama : \nNoRM : " . $request->norm . "\nNIK : " . $request->nik . " Poli : " . $request->kodepoli;
             $wa->send_notif($request);
             return $response = [
                 "metadata" => [
@@ -582,7 +582,7 @@ class AntrianBPJSController extends Controller
         }
         // cek no kartu sesuai tidak
         else if ($pasien->no_Bpjs != $request->nomorkartu || $pasien->nik_bpjs != $request->nik) {
-            $request['notif'] = "function ambil_antrian error data pasien bermasalah : \nNokartu : " . $request->nomorkartu . " != " . $pasien->no_Bpjs . "\nNik : " . $request->nik . " != " . $pasien->nik_bpjs;
+            $request['notif'] = "function ambil_antrian error data pasien bermasalah : \nNoRM : " . $pasien->no_rm . " = " . $pasien->nama_px . "\nNokartu : " . $request->nomorkartu . " != " . $pasien->no_Bpjs . "\nNik : " . $request->nik . " != " . $pasien->nik_bpjs;
             $wa->send_notif($request);
             return $response = [
                 "metadata" => [
@@ -740,7 +740,7 @@ class AntrianBPJSController extends Controller
                     return $response;
                 }
             } else {
-                $request['notif'] = "function ambil_antrian error tidak ada jadwal.";
+                $request['notif'] = "function ambil_antrian error tidak ada jadwal kodepoli " . $request->kodepoli . " tanggal periksa " . $request->tanggalperiksa;
                 $wa->send_notif($request);
                 $response = [
                     "metadata" => [
@@ -827,7 +827,7 @@ class AntrianBPJSController extends Controller
                     $request['message'] = "*Antrian Berhasil di Daftarkan*\nAntrian anda berhasil didaftarkan melalui Layanan Online RSUD Waled dengan data sebagai berikut : \n\n*Kode Antrian :* " . $request->kodebooking .  "\n*Angka Antrian :* " . $request->angkaantrean .  "\n*Nomor Antrian :* " . $request->nomorantrean . "\n*Jenis Pasien :* " . $request->jenispasien .  "\n*Jenis Kunjungan :* " . $request->jeniskunjungan .  "\n\n*Nama :* " . $request->nama . "\n*Poliklinik :* " . $request->namapoli  . "\n*Dokter :* " . $request->namadokter  .  "\n*Jam Praktek :* " . $request->jampraktek  .  "\n*Tanggal Periksa :* " . $request->tanggalperiksa . "\n\nTerima kasih. Semoga sehat selalu.\nUntuk pertanyaan & pengaduan silahkan hubungi :\n*Humas RSUD Waled 08983311118*";
                     $request['number'] = $request->nohp;
                     $wa->send_message($request);
-                    $request['notif'] = 'Antrian berhasil didaftarkan melalui ' . $request->method . "(" . $request->nama . "," . $request->namapoli .  "," . $request->tanggalperiksa . "," . $request->jeniskunjungan . ")";
+                    $request['notif'] = 'Antrian berhasil didaftarkan melalui ' . $request->method . "LINE \n(" . $request->nama . "," . $request->namapoli .  "," . $request->tanggalperiksa . "," . $request->jeniskunjungan . ")";
                     $wa->send_notif($request);
                     $response = [
                         "response" => [
