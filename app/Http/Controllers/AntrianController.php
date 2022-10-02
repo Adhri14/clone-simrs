@@ -1207,7 +1207,6 @@ class AntrianController extends Controller
                 ->where('kodepoli', $kodepoli)
                 ->get();
         }
-        dd($antrians, $kodepoli, $request->all());
         foreach ($antrians as  $antrian) {
             $vclaim = new AntrianBPJSController();
             // panggil poli 4
@@ -1234,10 +1233,8 @@ class AntrianController extends Controller
                 'keterangan' => $request->keterangan,
                 // 'user' => Auth::user()->name,
             ]);
-            dd($antrian);
         }
-
-        Alert::success('Success', "Antrian Selesai. Semoga cepat sembuh.\n");
+        Alert::success('Success', "Antrian Selesai." . $response->metadata->code);
         return redirect()->back();
     }
     public function surat_kontrol_poli(Request $request)

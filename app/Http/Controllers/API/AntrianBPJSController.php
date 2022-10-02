@@ -584,12 +584,12 @@ class AntrianBPJSController extends Controller
         else if ($pasien->no_Bpjs != $request->nomorkartu || $pasien->nik_bpjs != $request->nik) {
             $request['notif'] = "function ambil_antrian error data pasien bermasalah : \nNoRM : " . $pasien->no_rm . " = " . $pasien->nama_px . "\nNokartu : " . $request->nomorkartu . " != " . $pasien->no_Bpjs . "\nNik : " . $request->nik . " != " . $pasien->nik_bpjs;
             $wa->send_notif($request);
-            return $response = [
-                "metadata" => [
-                    "message" => "NIK atau Nomor Kartu Tidak Sesuai dengan Data RM, (" . $pasien->no_Bpjs . ", " . $pasien->nik_bpjs . ")",
-                    "code" => 201,
-                ],
-            ];
+            // return $response = [
+            //     "metadata" => [
+            //         "message" => "NIK atau Nomor Kartu Tidak Sesuai dengan Data RM, (" . $pasien->no_Bpjs . ", " . $pasien->nik_bpjs . ")",
+            //         "code" => 201,
+            //     ],
+            // ];
         }
         // cek pasien lama
         else {

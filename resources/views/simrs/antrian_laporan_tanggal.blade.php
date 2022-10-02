@@ -57,22 +57,22 @@
                                 <td>{{ $item->tanggal }}</td>
                                 <td>{{ $item->nmppk }}</td>
                                 <td>{{ $item->namapoli }}</td>
-                                <td>Total : {{ round($item->waktu_task1 / 60) }} menit <br>
+                                <td>Total : {{ round($item->waktu_task1 / 60 / 60) }} jam <br>
                                     Rata : {{ round($item->avg_waktu_task1 / 60) }} menit
                                 </td>
-                                <td>Total : {{ round($item->waktu_task2 / 60) }} menit<br>
+                                <td>Total : {{ round($item->waktu_task2 / 60 / 60 ) }} jam<br>
                                     Rata : {{ round($item->avg_waktu_task2 / 60) }} menit
                                 </td>
-                                <td>Total : {{ round($item->waktu_task3 / 60) }} menit<br>
+                                <td>Total : {{ round($item->waktu_task3 / 60 / 60) }} jam<br>
                                     Rata : {{ round($item->avg_waktu_task3 / 60) }} menit
                                 </td>
-                                <td>Total : {{ round($item->waktu_task4 / 60) }} menit<br>
+                                <td>Total : {{ round($item->waktu_task4 / 60 / 60) }} jam<br>
                                     Rata : {{ round($item->avg_waktu_task4 / 60) }} menit
                                 </td>
-                                <td>Total : {{ round($item->waktu_task5 / 60) }} menit<br>
+                                <td>Total : {{ round($item->waktu_task5 / 60 /  60) }} jam<br>
                                     Rata : {{ round($item->avg_waktu_task5 / 60) }} menit
                                 </td>
-                                <td>Total : {{ round($item->waktu_task6 / 60) }} menit<br>
+                                <td>Total : {{ round($item->waktu_task6 / 60 / 60) }} jam<br>
                                     Rata : {{ round($item->avg_waktu_task6 / 60) }} menit
                                 </td>
                                 <td> {{ $item->jumlah_antrean }}</td>
