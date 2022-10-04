@@ -33,9 +33,10 @@ Route::get('/', function () {
 });
 Route::get('daftar_pasien', function () {
     return view('simrs.daftar_pasien');
-});
+})->name('daftar_pasien');
 Auth::routes();
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/status', [App\Http\Controllers\HomeController::class, 'status'])->name('status');
 
 Route::get('info_jadwaldokter', [JadwalDokterController::class, 'index'])->name('info_jadwaldokter');
 Route::get('info_jadwallibur', [JadwalLiburController::class, 'index'])->name('info_jadwallibur');

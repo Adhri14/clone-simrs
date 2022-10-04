@@ -40,12 +40,12 @@
 
     <header id="header" class="fixed-top">
         <div class="container d-flex align-items-center">
-            <a href="index.html" class="logo m-2"><img src="{{ asset('assets/img/logo rs waled ico.png') }}"
+            <a href="/" class="logo m-2"><img src="{{ asset('assets/img/logo rs waled ico.png') }}"
                     alt="" class="img-fluid"></a>
-            <h1 class="logo me-auto"><a href="#">RSUD Waled</a></h1>
+            <h1 class="logo me-auto"><a href="/">RSUD Waled</a></h1>
             <nav id="navbar" class="navbar order-last order-lg-0">
                 <ul>
-                    <li><a class="nav-link scrollto" href="#">Melayani Sepenuh Hati</a></li>
+                    <li><a class="nav-link scrollto" href="/">Kembali</a></li>
                 </ul>
                 <i class="bi bi-list mobile-nav-toggle"></i>
             </nav>
@@ -271,10 +271,7 @@
     <script src="{{ asset('assets/vendor/php-email-form/validate.js') }}"></script>
     {{-- <script src="{{ asset('assets/vendor/purecounter/purecounter.js') }}"></script> --}}
     <script src="{{ asset('assets/vendor/swiper/swiper-bundle.min.js') }}"></script>
-
     <!-- Template Main JS File -->
     <script src="{{ asset('assets/js/main.js') }}"></script>
-
 </body>
-
 </html>

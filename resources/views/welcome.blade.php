@@ -59,12 +59,12 @@
 
     <header id="header" class="fixed-top">
         <div class="container d-flex align-items-center">
-            <a href="index.html" class="logo m-2"><img src="{{ asset('assets/img/logo rs waled ico.png') }}"
+            <a href="/" class="logo m-2"><img src="{{ asset('assets/img/logo rs waled ico.png') }}"
                     alt="" class="img-fluid"></a>
-            <h1 class="logo me-auto"><a href="index.html">RSUD Waled</a></h1>
+            <h1 class="logo me-auto"><a href="/">RSUD Waled</a></h1>
             <nav id="navbar" class="navbar order-last order-lg-0">
                 <ul>
-                    <li><a class="nav-link scrollto" href="#contact">Daftar Pasien</a></li>
+                    <li><a class="nav-link scrollto" href="{{ route('daftar_pasien') }}">Daftar Pasien</a></li>
                 </ul>
                 <i class="bi bi-list mobile-nav-toggle"></i>
             </nav>

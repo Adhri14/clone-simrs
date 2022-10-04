@@ -26,13 +26,14 @@ class WhatsappController extends Controller
     ];
     public function index(Request $request)
     {
-        // $request['message']  = "DAFTAR KONTROL_1018R0010922K004387#301#2022-09-28";
-        // $request['number'] = '6289529909036@c.us';
-        // $sk = $this->callback($request);
-        $request['kodebooking'] = "63300BAABB42A";
-        $antrian = new AntrianBPJSController();
-        $antrian->print_ulang($request);
+        $request['message']  = "Rawat Inap BEDAH Dr. MOHAMAD ROMDHONI_SURATKONTROL#1018R0010922K006951#521#2022-10-05";
+        $request['number'] = '6289529909036@c.us';
+        $sk = $this->callback($request);
         dd('callback');
+
+        // $request['kodebooking'] = "63300BAABB42A";
+        // $antrian = new AntrianBPJSController();
+        // $antrian->print_ulang($request);
         // return $this->surat_kontrol_peserta($pesan, $request);
     }
     public function send_message(Request $request)
@@ -143,7 +144,12 @@ class WhatsappController extends Controller
                 $request['rowtitle'] = $rowpoli;
                 return $this->send_list($request);
             case 'DAFTAR PASIEN RAWAT JALAN':
+                // if ($request->number == "6289529909036@c.us") {
                 $this->pilih_poli($pesan, $request);
+                // } else {
+                // $request['message'] = "Mohon maaf server BPJS sedang dalam perbaikan (201)";
+                // $this->send_message($request);
+                // }
                 break;
             default:
                 // info jadwal poli
@@ -738,8 +744,10 @@ class WhatsappController extends Controller
             $suratkontrol = $suratkontrol->response->list;
             foreach ($suratkontrol as $value) {
                 if ($value->terbitSEP == "Belum") {
-                    $rowsuratkontrol =  $rowsuratkontrol .  $value->jnsPelayanan  . " " . $value->namaPoliTujuan  . " " . $value->namaDokter . ',';
-                    $descsurarujukan =  $descsurarujukan . '_SURATKONTROL#' . $value->noSuratKontrol . "#" . $jadwal . "#" . $request->tanggalperiksa . ',';
+                    if ($value->jnsKontrol == 2) {
+                        $rowsuratkontrol =  $rowsuratkontrol .  $value->jnsPelayanan  . " " . $value->namaPoliTujuan  . " " . $value->namaDokter . ',';
+                        $descsurarujukan =  $descsurarujukan . '_SURATKONTROL#' . $value->noSuratKontrol . "#" . $jadwal . "#" . $request->tanggalperiksa . ',';
+                    }
                 }
             }
             if ($rowsuratkontrol == null) {
@@ -774,7 +782,6 @@ class WhatsappController extends Controller
         }
         $vclaim = new VclaimBPJSController();
         $suratkontrol =  $vclaim->surat_kontrol_nomor($request);
-
         // gagal jumlah sep rujukan
         if ($suratkontrol->metaData->code != 200) {
             $request['notif'] = '8 cek surat kontrol error : ' . $suratkontrol->metaData->message;
@@ -801,6 +808,7 @@ class WhatsappController extends Controller
                 $request['asalRujukan'] = $suratkontrol->sep->provPerujuk->asalRujukan;
                 if ($request->asalRujukan == 2) {
                     $rujukan  = $vclaim->rujukan_rs_nomor($request);
+                    // dd($suratkontrol, $request->nomorreferensi,  $rujukan);
                 } else {
                     $rujukan  = $vclaim->rujukan_nomor($request);
                 }

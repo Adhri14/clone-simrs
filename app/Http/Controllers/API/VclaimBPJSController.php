@@ -136,6 +136,14 @@ class VclaimBPJSController extends Controller
         $url = $this->baseUrl . "Peserta/nokartu/" . $request->nomorkartu . "/tglSEP/" . $request->tanggalperiksa;
         $signature = $this->signature();
         $response = Http::withHeaders($signature)->get($url);
+        if ($response->status() != 200) {
+            return json_decode(json_encode([
+                'metaData' => [
+                    'code' => 500,
+                    'message' => "Sistem tidak terhubung ke Bridging VClaim BPJS",
+                ]
+            ]));
+        }
         $response = json_decode($response);
         if ($response->metaData->code == 200) {
             $decrypt = $this->stringDecrypt($signature['decrypt_key'], $response->response);

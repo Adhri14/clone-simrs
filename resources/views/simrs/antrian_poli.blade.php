@@ -91,7 +91,7 @@
                         <x-adminlte-small-box
                             title="{{ $antrians->where('taskid', '<', 4)->where('taskid', '>=', 1)->count() }}"
                             text="Sisa Antrian" theme="warning" icon="fas fa-sign-in-alt"
-                            url="{{ route('antrian.selesai_semua', $request->kodepoli ?? '0') }}"
+                            {{-- url="{{ route('antrian.selesai_semua', $request->kodepoli ?? '0') }}" --}}
                             url-text="Selesaikan Semua Antrian" />
                     </div>
                     <div class="col-md-3">
