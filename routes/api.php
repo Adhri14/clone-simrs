@@ -69,9 +69,9 @@ Route::prefix('vclaim')->group(function () {
     Route::get('peserta_nik', [VclaimBPJSController::class, 'peserta_nik'])->name('api.cek_nik');
     // rujukan
     Route::get('rujukan_nomor', [VclaimBPJSController::class, 'rujukan_nomor'])->name('api.rujukan_nomor');
-    Route::get('rujukan_peserta', [VclaimBPJSController::class, 'rujukan_peserta']);
+    Route::get('rujukan_peserta', [VclaimBPJSController::class, 'rujukan_peserta'])->name('api.rujukan_peserta');
     Route::get('rujukan_rs_nomor', [VclaimBPJSController::class, 'rujukan_rs_nomor'])->name('api.rujukan_rs_nomor');
-    Route::get('rujukan_rs_peserta', [VclaimBPJSController::class, 'rujukan_rs_peserta']);
+    Route::get('rujukan_rs_peserta', [VclaimBPJSController::class, 'rujukan_rs_peserta'])->name('api.rujukan_rs_peserta');
     Route::get('rujukan_jumlah_sep', [VclaimBPJSController::class, 'rujukan_jumlah_sep'])->name('api.rujukan_jumlah_sep');
     // sep
     Route::post('insert_sep', [VclaimBPJSController::class, 'insert_sep']);

@@ -204,7 +204,6 @@
                             data[value].kapasitaspasien + ") </a>");
                     });
                     $.LoadingOverlay("hide", true);
-
                 });
             });
         });

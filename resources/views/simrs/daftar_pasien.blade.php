@@ -1,277 +1,385 @@
-<!DOCTYPE html>
-<html lang="en">
+@extends('adminlte::page')
 
-<head>
-    <meta charset="utf-8">
-    <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <title>SIM RSUD Waled</title>
-    <meta content="" name="description">
-    <meta content="" name="keywords">
-    <!-- Favicons -->
-    <link href="{{ asset('assets/img/logo rs waled ico.png') }}" rel="icon">
-    <link href="{{ asset('assets/img/logo rs waled ico.png') }}" rel="apple-touch-icon">
-    <link href="{{ asset('assets/vendor/animate.css/animate.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('assets/vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('assets/vendor/bootstrap-icons/bootstrap-icons.css') }}" rel="stylesheet">
-    <link href="{{ asset('assets/vendor/boxicons/css/boxicons.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('assets/vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('assets/vendor/glightbox/css/glightbox.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('assets/vendor/remixicon/remixicon.css') }}" rel="stylesheet">
-    <link href="{{ asset('assets/vendor/swiper/swiper-bundle.min.css') }}" rel="stylesheet">
-    <!-- Template Main CSS File -->
-    <link href="{{ asset('assets/css/style.css') }}" rel="stylesheet">
-</head>
+@section('title', 'Daftar Pasien Baru')
 
-<body>
-    <div id="topbar" class="d-flex align-items-center fixed-top">
-        <div class="container d-flex justify-content-between">
-            <div class="contact-info d-flex align-items-center">
-                <i class="bi bi-envelope"></i> <a href="mailto:contact@example.com">it.support@rsudwaled.id</a>
-                <i class="bi bi-phone"></i> 0895 2990 9036
-            </div>
-            <div class="d-none d-lg-flex social-links align-items-center">
-                <a href="#" class="twitter"><i class="bi bi-twitter"></i></a>
-                <a href="#" class="facebook"><i class="bi bi-facebook"></i></a>
-                <a href="#" class="instagram"><i class="bi bi-instagram"></i></a>
-                <a href="#" class="linkedin"><i class="bi bi-linkedin"></i></i></a>
-            </div>
+@section('content_header')
+    <h1>Daftar Pasien Baru</h1>
+@stop
+
+@section('content')
+    <div class="row">
+        <div class="col-12">
+            @if ($errors->any())
+                <x-adminlte-alert title="Ops Terjadi Masalah !" theme="danger" dismissable>
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </x-adminlte-alert>
+            @endif
+            <x-adminlte-card title="Jadwal Dokter Poliklinik Rawat Jalan" theme="warning" collapsible>
+                @php
+                    $config = [
+                        'format' => 'YYYY-MM-DD',
+                        'dayViewHeaderFormat' => 'MMM YYYY',
+                        'minDate' => "js:moment().add(-1, 'days')",
+                        'maxDate' => "js:moment().add(6, 'days')",
+                        'daysOfWeekDisabled' => [0],
+                    ];
+                @endphp
+                <x-adminlte-input-date name="tanggalperiksa" label="Tanggal Periksa" :config="$config"
+                    placeholder="Pilih Tanggal Surat Kontrol ..." value="{{ Carbon\Carbon::now()->format('Y-m-d') }}">
+                    <x-slot name="prependSlot">
+                        <div class="input-group-text bg-primary">
+                            <i class="fas fa-calendar-alt"></i>
+                        </div>
+                    </x-slot>
+                </x-adminlte-input-date>
+                <x-adminlte-select2 name="kodepoli" label="Poliklinik">
+                    <option value="000" selected disabled>PILIH POLIKLINIK</option>
+                    @foreach ($poli as $item)
+                        <option value="{{ $item->kodesubspesialis }}">
+                            {{ $item->kodesubspesialis }}
+                            -
+                            {{ $item->namasubspesialis }}
+                        </option>
+                    @endforeach
+                </x-adminlte-select2>
+                <x-adminlte-select name="kodedokter" id="kodedokter" label="Dokter">
+                    <option disabled selected>PILIH DOKTER</option>
+                </x-adminlte-select>
+            </x-adminlte-card>
+            <x-adminlte-card title="Data Pasien Rawat Jalan" theme="warning" collapsible>
+                <x-adminlte-select name="pilihjeniskunjungan" id="pilihjeniskunjungan" label="Jenis Kunjungan Pasien">
+                    <option value="0" selected>PILIH JENIS KUNJUNGAN PASIEN</option>
+                    <option value="1">BPJS Rujukan Faskes 1</option>
+                    <option value="2">BPJS Rujukan Internal</option>
+                    <option value="3">BPJS Surat Kontrol</option>
+                    <option value="4">BPJS Rujukan Antar RS</option>
+                    <option value="5">UMUM (NON-JKN)</option>
+                </x-adminlte-select>
+                <input type="hidden" name="jeniskunjungan" id="jeniskunjungan">
+                {{-- <p class="text-success">Keterangan Aktif</p> --}}
+                <x-adminlte-input fgroup-class="nama" name="nama" label="Nama Pasien" />
+                <x-adminlte-input fgroup-class="norm" name="norm" label="Nomor Rekam Medis Pasien" />
+                <x-adminlte-input fgroup-class="nomorkartu" name="nomorkartu" label="No Kartu BPJS" type="number">
+                    <x-slot name="appendSlot">
+                        <x-adminlte-button name="btn_check_nomorkartu" id="btn_check_nomorkartu" theme="success"
+                            label="Cek" />
+                    </x-slot>
+                </x-adminlte-input>
+                <x-adminlte-input fgroup-class="nik" name="nik" label="NIK" type="number">
+                    <x-slot name="appendSlot">
+                        <x-adminlte-button name="btn_check_nik" id="btn_check_nik" theme="success" label="Cek" />
+                    </x-slot>
+                </x-adminlte-input>
+                <x-adminlte-input fgroup-class="nohp" name="nohp" label="Nomor HP Pasien" />
+                <x-adminlte-select name="nomorreferensi" fgroup-class="nomorreferensi" label="Nomor Referensi">
+                    <option value="0" selected>PILIH NOMOR REFERENSI</option>
+                </x-adminlte-select>
+                <x-slot name="footerSlot">
+                    <x-adminlte-button icon="fas fa-sync" id="reset" theme="danger" label="Reset" />
+                </x-slot>
+            </x-adminlte-card>
         </div>
     </div>
+    {{-- <x-adminlte-modal id="modalCustom" title="Tambah Jadwal Libur" theme="success" v-centered static-backdrop>
+        <form action="{{ route('jadwallibur.store') }}" id="myform" method="post">
+            @csrf
+            <x-adminlte-select2 name="kode_poli" label="Poliklinik">
+                <option value="0">SEMUA POLIKLINIK</option>
+                <x-adminlte-options :options=$polikliniks />
+            </x-adminlte-select2>
+            @php
+                $config = [
+                    'locale' => ['format' => 'YYYY/MM/DD'],
+                ];
+            @endphp
+            <x-adminlte-date-range name="tanggal" label="Tanggal Libur" :config="$config" />
+            <x-adminlte-textarea name="keterangan" placeholder="Masukan keterangan libur." label="Keterangan" />
+        </form>
+        <x-slot name="footerSlot">
+            <x-adminlte-button form="myform" class="mr-auto" type="submit" theme="success" label="Simpan" />
+            <x-adminlte-button theme="danger" label="Kembali" data-dismiss="modal" />
+        </x-slot>
+    </x-adminlte-modal> --}}
+@stop
+@section('plugins.Select2', true)
+@section('plugins.TempusDominusBs4', true)
 
-    <header id="header" class="fixed-top">
-        <div class="container d-flex align-items-center">
-            <a href="/" class="logo m-2"><img src="{{ asset('assets/img/logo rs waled ico.png') }}"
-                    alt="" class="img-fluid"></a>
-            <h1 class="logo me-auto"><a href="/">RSUD Waled</a></h1>
-            <nav id="navbar" class="navbar order-last order-lg-0">
-                <ul>
-                    <li><a class="nav-link scrollto" href="/">Kembali</a></li>
-                </ul>
-                <i class="bi bi-list mobile-nav-toggle"></i>
-            </nav>
-        </div>
-    </header>
+@section('js')
+    <script src="{{ asset('vendor/sweetalert2/sweetalert2.all.min.js') }}"></script>
+    <script>
+        $(function() {
+            $('.nik').hide();
+            $('.nomorkartu').hide();
+            $('.nama').hide();
+            $('.norm').hide();
+            $('.nohp').hide();
+            $('.nomorreferensi').hide();
+            $('#kodepoli').change(function() {
+                var tanggalperiksa = $('#tanggalperiksa').val();
+                var kodepoli = $('#kodepoli').find('option:selected').val();
+                var url =
+                    "{{ route('antrian.index') }}" + "/console_jadwaldokter/" + kodepoli +
+                    "/" + tanggalperiksa;
+                $.LoadingOverlay("show");
+                $.get(url, function(data) {
+                    $('#kodedokter').find('option').remove();
+                    console.log(data);
+                    $.each(data, function(value) {
+                        if (data[value].libur == "1") {
+                            var libur = "LIBUR " +
+                                data[value].jadwal;
+                            var disablee = "disabled";
+                        } else {
+                            var libur = "" +
+                                data[value].jadwal;
+                            var disablee = "";
+                        }
+                        $('#kodedokter').append($(
+                            "<option value='" + data[value].kodedokter +
+                            "' " + disablee + " > " + libur +
+                            " " + data[value]
+                            .namadokter + "</option>"));
+                    });
+                    $.LoadingOverlay("hide", true);
+                });
+            });
+            $('#pilihjeniskunjungan').change(function() {
+                var jeniskunjungan = $('#pilihjeniskunjungan').find('option:selected').val();
+                $('#jeniskunjungan').val(jeniskunjungan);
+                if (1 >= jeniskunjungan <= 4) {
+                    $('.nik').hide();
+                    $('.nomorkartu').show();
+                }
+                if (jeniskunjungan == 5) {
+                    $('.nik').show();
+                    $('.nomorkartu').hide();
+                }
+                if (jeniskunjungan == 0) {
+                    $('.nik').hide();
+                    $('.nomorkartu').hide();
+                }
+            });
+            $('#btn_check_nomorkartu').click(function() {
+                var nomorkartu = $('#nomorkartu').val();
+                var jeniskunjungan = $('#jeniskunjungan').val();
+                $('#pilihjeniskunjungan').prop('disabled', 'disabled');
+                var url = "{{ route('api.cek_nomorkartu') }}";
+                $.LoadingOverlay("show", {
+                    text: "Cek Data Pasien BPJS..."
+                });
+                var formData = {
+                    nomorkartu: nomorkartu,
+                };
+                $.get(url, formData, function(data) {
+                    if (data.metaData.code == 200) {
+                        $('#nik').val(data.response.peserta
+                            .nik).attr('readonly', true);
+                        $('#nama').val(data.response.peserta
+                            .nama).attr('readonly', true);
+                        $('#norm').val(data.response.peserta
+                            .mr.noMR).attr('readonly', true);
+                        $('#nohp').val(data.response.peserta
+                            .mr.noTelepon);
+                        $('#nomorkartu').attr('readonly', true);
+                        $('.nik').show();
+                        $('.nama').show();
+                        $('.norm').show();
+                        $('.nohp').show();
+                        if (jeniskunjungan == 1) {
+                            var url = "{{ route('api.rujukan_peserta') }}";
+                            var formData = {
+                                nomorkartu: nomorkartu,
+                            };
+                            $.get(url, formData, function(rujukan) {
+                                if (rujukan.metaData.code == 200) {
+                                    $.each(rujukan.response.rujukan, function(value) {
+                                        var tanggalkunjungan = rujukan.response
+                                            .rujukan[value].tglKunjungan;
+                                        var date3bulan = moment(tanggalkunjungan,
+                                                "YYYY-MM-DD").add(3, 'months')
+                                            .format('YYYY-MM-DD');
+                                        var today = moment().format('YYYY-MM-DD');
+                                        if (date3bulan > today) {
+                                            console.log(date3bulan + " " + today);
+                                            var time = "";
+                                            var disablee = "";
+                                        } else {
+                                            console.log("EXPIRED");
+                                            var time = "EXPIRED ";
+                                            var disablee = "disabled";
+                                        }
+                                        $('#nomorreferensi').append($(
+                                            "<option value='" + rujukan
+                                            .response.rujukan[
+                                                value].noKunjungan + "' " +
+                                            disablee + " >" + time +
+                                            rujukan
+                                            .response.rujukan[
+                                                value].noKunjungan + " " +
+                                            rujukan
+                                            .response.rujukan[
+                                                value].pelayanan.nama +
+                                            " POLI " +
+                                            rujukan
+                                            .response.rujukan[
+                                                value].poliRujukan.nama +
+                                            "</option>"
+                                        ));
+                                    });
+                                    $('.nomorreferensi').show();
+                                    $.LoadingOverlay("hide");
+                                    swal.fire(
+                                        'Success',
+                                        "Nomor Kartu " + nomorkartu + " Atas Nama " +
+                                        data
+                                        .response.peserta.nama +
+                                        " Data Rujukan Ditemukan",
+                                        'success'
+                                    );
+                                } else {
+                                    $.LoadingOverlay("hide");
+                                    swal.fire(
+                                        'Error',
+                                        data.metaData.message,
+                                        'error'
+                                    );
+                                }
+                            });
+                        }
+                        if (jeniskunjungan == 2) {
+                            alert('2')
+                            $.LoadingOverlay("hide");
+                        }
+                        if (jeniskunjungan == 3) {
+                            alert('3')
+                            $.LoadingOverlay("hide");
+                        }
+                        if (jeniskunjungan == 4) {
+                            alert('4')
+                            $.LoadingOverlay("hide");
+                        }
+                    } else {
+                        $.LoadingOverlay("hide");
+                        swal.fire(
+                            'Error',
+                            data.metaData.message,
+                            'error'
+                        );
+                    }
+                });
+            });
+            $('#btn_check_nik').click(function() {
+                var nik = $('#nik').val();
+                var url = "{{ route('api.cek_nik') }}";
+                $('#pilihjeniskunjungan').prop('disabled', 'disabled');
+                $.LoadingOverlay("show", {
+                    text: "Cek Data Pasien BPJS..."
+                });
+                var formData = {
+                    nik: nik,
+                };
+                $.get(url, formData, function(data) {
+                    console.log(data);
+                    if (data.metaData.code == 200) {
+                        console.log(data);
+                        $('#nik').val(data.response.peserta
+                            .nik).attr('readonly', true);
+                        $('#nama').val(data.response.peserta
+                            .nama).attr('readonly', true);
+                        $('#norm').val(data.response.peserta
+                            .mr.noMR).attr('readonly', true);
+                        $('#nohp').val(data.response.peserta
+                            .mr.noTelepon);
+                        $('#nomorkartu').val(data.response.peserta
+                            .noKartu).attr('readonly', true);
+                        $('.nomorkartu').show();
+                        $('.nik').show();
+                        $('.nama').show();
+                        $('.norm').show();
+                        $('.nohp').show();
+                        $.LoadingOverlay("hide");
+                        swal.fire(
+                            'Success',
+                            "Nomor NIK/KTP " + nik + " atas nama " + data.response.peserta
+                            .nama,
+                            'success'
+                        );
+                    } else {
+                        $.LoadingOverlay("hide");
+                        swal.fire(
+                            'Error',
+                            data.metaData.message,
+                            'error'
+                        );
 
-    <section id="hero" class="d-flex align-items-center">
-        <div class="container">
-            <h1>Pendaftaran Pasien</h1>
-            <h2>Melayani Pendaftaran Pasien Rawat Jalan<br>Secara Online Di Beberapa Poliklinik<br>Rumah Sakit Umum
-                Daerah Waled</h2>
-            {{-- <a href="{{route('pasien.create')}}" class="btn-get-started scrollto">Daftar Sebagai Pasien</a> --}}
-        </div>
-    </section><!-- End Hero -->
-
-    <main id="main">
-        <!-- ======= Why Us Section ======= -->
-        <section id="why-us" class="why-us">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-4 d-flex align-items-stretch">
-                        <div class="content">
-                            <h3>Bagaimana cara mendaftarkan Pasien Rawat Jalan secara Online ?</h3>
-                            <p>
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-                                incididunt ut labore et dolore magna aliqua. Duis aute irure dolor in reprehenderit
-                                Asperiores dolores sed et. Tenetur quia eos. Autem tempore quibusdam vel necessitatibus
-                                optio ad corporis.
-                            </p>
-                            <div class="text-center">
-                                <a href="{{ route('login') }}" class="more-btn">
-                                    @guest
-                                        Login
-                                    @else
-                                        Dashboard
-                                    @endguest
-                                    <i class="bx bx-chevron-right"></i>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-8 d-flex align-items-stretch">
-                        <div class="icon-boxes d-flex flex-column justify-content-center">
-                            <div class="row">
-                                <div class="col-xl-4 d-flex align-items-stretch">
-                                    <div class="icon-box mt-4 mt-xl-0">
-                                        <i class="bx bx-receipt"></i>
-                                        <h4>Informatif</h4>
-                                        <p>Consequuntur sunt aut quasi enim aliquam quae harum pariatur laboris nisi ut
-                                            aliquip</p>
-                                    </div>
-                                </div>
-                                <div class="col-xl-4 d-flex align-items-stretch">
-                                    <div class="icon-box mt-4 mt-xl-0">
-                                        <i class="bx bx-cube-alt"></i>
-                                        <h4>Scaleable</h4>
-                                        <p>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia
-                                            deserunt</p>
-                                    </div>
-                                </div>
-                                <div class="col-xl-4 d-flex align-items-stretch">
-                                    <div class="icon-box mt-4 mt-xl-0">
-                                        <i class="bx bx-images"></i>
-                                        <h4>Userfiendly</h4>
-                                        <p>Aut suscipit aut cum nemo deleniti aut omnis. Doloribus ut maiores omnis
-                                            facere</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div><!-- End .content-->
-                    </div>
-                </div>
-
-            </div>
-        </section><!-- End Why Us Section -->
-
-        <!-- ======= Appointment Section ======= -->
-        <section id="appointment" class="appointment section-bg">
-            <div class="container">
-                <div class="section-title">
-                    <h2>Pendaftaran Pasien Rawat Jalan</h2>
-                    <p>Magnam dolores commodi suscipit. Necessitatibus eius consequatur ex aliquid fuga eum quidem. Sit
-                        sint consectetur velit. Quisquam quos quisquam cupiditate. Et nemo qui impedit suscipit alias
-                        ea. Quia fugiat sit in iste officiis commodi quidem hic quas.</p>
-                </div>
-                <form action="forms/appointment.php" method="post" role="form" class="php-email-form">
-                    <div class="row">
-                        <div class="col-md-4 form-group mt-3">
-                            <select name="department" id="department" class="form-select">
-                                <option value="">Pilih Jenis Pasien</option>
-                                <option value="Department 1">Pasien JKN / BPJS</option>
-                                <option value="Department 2">Pasien Umum </option>
-                            </select>
-                            <div class="validate"></div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-4 form-group mt-3">
-                            <input type="datetime" name="date" class="form-control datepicker" id="date"
-                                placeholder="Appointment Date" data-rule="minlen:4"
-                                data-msg="Please enter at least 4 chars">
-                            <div class="validate"></div>
-                        </div>
-                        <div class="col-md-4 form-group mt-3">
-                            <select name="department" id="department" class="form-select">
-                                <option value="">Select Department</option>
-                                <option value="Department 1">Department 1</option>
-                                <option value="Department 2">Department 2</option>
-                                <option value="Department 3">Department 3</option>
-                            </select>
-                            <div class="validate"></div>
-                        </div>
-                        <div class="col-md-4 form-group mt-3">
-                            <select name="doctor" id="doctor" class="form-select">
-                                <option value="">Select Doctor</option>
-                                <option value="Doctor 1">Doctor 1</option>
-                                <option value="Doctor 2">Doctor 2</option>
-                                <option value="Doctor 3">Doctor 3</option>
-                            </select>
-                            <div class="validate"></div>
-                        </div>
-                    </div>
-                    <div class="form-group mt-3">
-                        <textarea class="form-control" name="message" rows="5" placeholder="Message (Optional)"></textarea>
-                        <div class="validate"></div>
-                    </div>
-                    <div class="mb-3">
-                        <div class="loading">Loading</div>
-                        <div class="error-message"></div>
-                        <div class="sent-message">Your appointment request has been sent successfully. Thank you!</div>
-                    </div>
-                    <div class="text-center"><button type="submit">Make an Appointment</button></div>
-                </form>
-
-            </div>
-        </section><!-- End Appointment Section -->
-
-    </main><!-- End #main -->
-
-    <!-- ======= Footer ======= -->
-    <footer id="footer">
-
-        {{-- <div class="footer-top">
-            <div class="container">
-                <div class="row">
-
-                    <div class="col-lg-3 col-md-6 footer-contact">
-                        <h3>SIM RSUD Waled</h3>
-                        <p>
-                            A108 Adam Street <br>
-                            New York, NY 535022<br>
-                            United States <br><br>
-                            <strong>Phone:</strong> +1 5589 55488 55<br>
-                            <strong>Email:</strong> info@example.com<br>
-                        </p>
-                    </div>
-
-                    <div class="col-lg-2 col-md-6 footer-links">
-                        <h4>Useful Links</h4>
-                        <ul>
-                            <li><i class="bx bx-chevron-right"></i> <a href="#">Home</a></li>
-                            <li><i class="bx bx-chevron-right"></i> <a href="#">About us</a></li>
-                            <li><i class="bx bx-chevron-right"></i> <a href="#">Services</a></li>
-                            <li><i class="bx bx-chevron-right"></i> <a href="#">Terms of service</a></li>
-                            <li><i class="bx bx-chevron-right"></i> <a href="#">Privacy policy</a></li>
-                        </ul>
-                    </div>
-
-                    <div class="col-lg-3 col-md-6 footer-links">
-                        <h4>Our Services</h4>
-                        <ul>
-                            <li><i class="bx bx-chevron-right"></i> <a href="#">Web Design</a></li>
-                            <li><i class="bx bx-chevron-right"></i> <a href="#">Web Development</a></li>
-                            <li><i class="bx bx-chevron-right"></i> <a href="#">Product Management</a></li>
-                            <li><i class="bx bx-chevron-right"></i> <a href="#">Marketing</a></li>
-                            <li><i class="bx bx-chevron-right"></i> <a href="#">Graphic Design</a></li>
-                        </ul>
-                    </div>
-
-                    <div class="col-lg-4 col-md-6 footer-newsletter">
-                        <h4>Join Our Newsletter</h4>
-                        <p>Tamen quem nulla quae legam multos aute sint culpa legam noster magna</p>
-                        <form action="" method="post">
-                            <input type="email" name="email"><input type="submit" value="Subscribe">
-                        </form>
-                    </div>
-
-                </div>
-            </div>
-        </div> --}}
-
-        <div class="container d-md-flex py-4">
-
-            <div class="me-md-auto text-center text-md-start">
-                <div class="copyright">
-                    &copy; Copyright <strong><span>SIM RSUD Waled</span></strong>. All Rights Reserved
-                </div>
-                <div class="credits">
-                    <!-- All the links in the footer should remain intact. -->
-                    <!-- You can delete the links only if you purchased the pro version. -->
-                    <!-- Licensing information: https://bootstrapmade.com/license/ -->
-                    <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/medilab-free-medical-bootstrap-theme/ -->
-                    Designed by <a href="#">TIM IT RSUD Waled</a>
-                </div>
-            </div>
-            <div class="social-links text-center text-md-right pt-3 pt-md-0">
-                <a href="#" class="twitter"><i class="bx bxl-twitter"></i></a>
-                <a href="#" class="facebook"><i class="bx bxl-facebook"></i></a>
-                <a href="#" class="instagram"><i class="bx bxl-instagram"></i></a>
-                <a href="#" class="google-plus"><i class="bx bxl-skype"></i></a>
-                <a href="#" class="linkedin"><i class="bx bxl-linkedin"></i></a>
-            </div>
-        </div>
-    </footer><!-- End Footer -->
-
-    <div id="preloader"></div>
-    <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i
-            class="bi bi-arrow-up-short"></i></a>
-
-    <!-- Vendor JS Files -->
-    <script src="{{ asset('assets/vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
-    <script src="{{ asset('assets/vendor/glightbox/js/glightbox.min.js') }}"></script>
-    <script src="{{ asset('assets/vendor/php-email-form/validate.js') }}"></script>
-    {{-- <script src="{{ asset('assets/vendor/purecounter/purecounter.js') }}"></script> --}}
-    <script src="{{ asset('assets/vendor/swiper/swiper-bundle.min.js') }}"></script>
-    <!-- Template Main JS File -->
-    <script src="{{ asset('assets/js/main.js') }}"></script>
-</body>
-</html>
+                    }
+                });
+            });
+            $('#nomorreferensi').change(function() {
+                var nomorreferensi = $('#nomorreferensi').find('option:selected').val();
+                if (nomorreferensi != 0) {
+                    var jeniskunjungan = $('#jeniskunjungan').val();
+                    $.LoadingOverlay("show", {
+                        text: "Cek Nomor Referensi..."
+                    });
+                    if (jeniskunjungan == 1) {
+                        var url = "{{ route('api.rujukan_jumlah_sep') }}";
+                        var formData = {
+                            nomorreferensi: nomorreferensi,
+                            jenisrujukan: 1,
+                        }
+                        $.get(url, formData, function(data) {
+                            if (data.metaData.code == 200) {
+                                if (data.response.jumlahSEP == 0) {
+                                    $.LoadingOverlay("hide");
+                                    swal.fire(
+                                        'Success',
+                                        data.metaData.message,
+                                        'success'
+                                    );
+                                } else {
+                                    $.LoadingOverlay("hide");
+                                    swal.fire({
+                                        title: 'Error!',
+                                        text: "Nomor Rujukan " + nomorreferensi +
+                                            " anda telah digunakan untuk kunjungan pertama, silahkan klik 'Reset' dan pilih jenis kunjungan lainnya.",
+                                        type: 'error',
+                                        allowOutsideClick: false,
+                                        allowEscapeKey: false
+                                    });
+                                }
+                            } else {
+                                $.LoadingOverlay("hide");
+                                swal.fire(
+                                    'Error',
+                                    data.metaData.message,
+                                    'error'
+                                );
+                            }
+                        });
+                    }
+                }
+            });
+            $('#reset').click(function() {
+                $('.nik').hide();
+                $('.nomorkartu').hide();
+                $('.nama').hide();
+                $('.norm').hide();
+                $('.nohp').hide();
+                $('.nomorreferensi').hide();
+                $('#nama').val('');
+                $('#norm').val('');
+                $('#nohp').val('');
+                $('#nik').val('').attr('readonly', false);
+                $('#nomorkartu').val('').attr('readonly', false);
+                $('#nomorreferensi').val(0).change();
+                $('#pilihjeniskunjungan').prop('disabled', false).val(0).change();
+                alert('reset');
+            });
+        });
+    </script>
+@endsection

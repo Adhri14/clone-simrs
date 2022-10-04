@@ -253,6 +253,13 @@ return [
             'icon'        => 'fas fa-info-circle',
             'submenu' => [
                 [
+                    'text' => 'Daftar Pasien',
+                    'icon'    => 'fas fa-user-plus',
+                    'shift'   => 'ml-2',
+                    'url'  => 'daftar_pasien',
+                    // 'can' => 'admin',
+                ],
+                [
                     'text' => 'Jadwal Dokter Poliklinik',
                     'icon'    => 'fas fa-calendar-alt',
                     'shift'   => 'ml-2',

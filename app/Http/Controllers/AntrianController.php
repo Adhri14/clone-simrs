@@ -44,6 +44,28 @@ class AntrianController extends Controller
             'jadwal' => $jadwal,
         ]);
     }
+    public function console_jadwaldokter($poli, $tanggal)
+    {
+        $poli = Poliklinik::with(['jadwals'])->firstWhere('kodesubspesialis', $poli);
+        $jadwals = $poli->jadwals->where('hari', Carbon::parse($tanggal)->dayOfWeek)
+            ->where('kodesubspesialis', $poli->kodesubspesialis);
+        return response()->json($jadwals);
+    }
+    public function daftar_pasien()
+    {
+        // $unit = UnitDB::where('KDPOLI', "!=", null)
+        //     ->where('kode_unit', "!=", "1002")
+        //     ->get();
+
+        $poli = Poliklinik::where('status', 1)->get();
+        // $poli =   UnitDB::firstWhere('KDPOLI', $request->kodepoli);
+        // $dokters = ParamedisDB::where('unit', $poli->kode_unit)
+        //     ->where('kode_dokter_jkn', "!=", null)
+        //     ->get();
+        return view('simrs.daftar_pasien', [
+            "poli" => $poli,
+        ]);
+    }
     public function cek_post()
     {
         try {
@@ -170,13 +192,6 @@ class AntrianController extends Controller
             $printer->cut();
             $printer->close();
         }
-    }
-    public function console_jadwaldokter($poli, $tanggal)
-    {
-        $poli = Poliklinik::with(['jadwals'])->firstWhere('kodesubspesialis', $poli);
-        $jadwals = $poli->jadwals->where('hari', Carbon::parse($tanggal)->dayOfWeek)
-            ->where('kodesubspesialis', $poli->kodesubspesialis);
-        return response()->json($jadwals);
     }
     public function tambah_offline($poli, $dokter, $jadwal)
     {
