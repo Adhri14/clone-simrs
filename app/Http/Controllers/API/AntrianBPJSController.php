@@ -519,21 +519,21 @@ class AntrianBPJSController extends Controller
             // "nomorreferensi" => "numeric",
             "nomorkartu" => "required|numeric|digits:13",
         ]);
-        if ($validator->fails()) {
-            $request['notif'] = "function ambil_antrian error validator : " . $validator->errors()->first();
-            $wa->send_notif($request);
-            $response = [
-                'metadata' => [
-                    'code' => 201,
-                    'message' => $validator->errors()->first(),
-                ],
-            ];
-            return $response;
-        }
+        // if ($validator->fails()) {
+        //     $request['notif'] = "function ambil_antrian error ".$request->method." validator : " . $validator->errors()->first();
+        //     $wa->send_notif($request);
+        //     $response = [
+        //         'metadata' => [
+        //             'code' => 201,
+        //             'message' => $validator->errors()->first(),
+        //         ],
+        //     ];
+        //     return $response;
+        // }
         dd($request->all());
         // check backdate
         // if (Carbon::parse($request->tanggalperiksa)->endOfDay()->isPast()) {
-        //     $request['notif'] = "function ambil_antrian error backdate";
+        //     $request['notif'] = "function ambil_antrian error ".$request->method." backdate";
         //     $wa->send_notif($request);
         //     return [
         //         "metadata" => [
@@ -543,7 +543,7 @@ class AntrianBPJSController extends Controller
         //     ];
         // }
         // if (Carbon::parse($request->tanggalperiksa) >  Carbon::now()->addDay(7)) {
-        //     $request['notif'] = "function ambil_antrian error overdate";
+        //     $request['notif'] = "function ambil_antrian error ".$request->method." overdate";
         //     $wa->send_notif($request);
         //     return [
         //         "metadata" => [
@@ -559,7 +559,7 @@ class AntrianBPJSController extends Controller
         //     ->where('taskid', '<=', 4)
         //     ->count();
         // if ($antrian_nik) {
-        //     $request['notif'] = "function ambil_antrian error antrian " . $request->method . " nik sama : \nNoRM : " . $request->norm . "\nNIK : " . $request->nik . " Poli : " . $request->kodepoli;
+        //     $request['notif'] = "function ambil_antrian error ".$request->method." antrian " . $request->method . " nik sama : \nNoRM : " . $request->norm . "\nNIK : " . $request->nik . " Poli : " . $request->kodepoli;
         //     $wa->send_notif($request);
         //     return $response = [
         //         "metadata" => [
@@ -571,7 +571,7 @@ class AntrianBPJSController extends Controller
         // // cek pasien baru hit info pasien baru
         // $pasien = PasienDB::where('no_Bpjs',  $request->nomorkartu)->first();
         // if (empty($pasien)) {
-        //     $request['notif'] = "function ambil_antrian error pasien tidak ditemukan : " . $request->nomorkartu;
+        //     $request['notif'] = "function ambil_antrian error ".$request->method." pasien tidak ditemukan : " . $request->nomorkartu;
         //     $wa->send_notif($request);
         //     return $response = [
         //         "metadata" => [
@@ -582,7 +582,7 @@ class AntrianBPJSController extends Controller
         // }
         // // cek no kartu sesuai tidak
         // else if ($pasien->no_Bpjs != $request->nomorkartu || $pasien->nik_bpjs != $request->nik) {
-        //     $request['notif'] = "function ambil_antrian error data pasien bermasalah : \nNoRM : " . $pasien->no_rm . " = " . $pasien->nama_px . "\nNokartu : " . $request->nomorkartu . " != " . $pasien->no_Bpjs . "\nNik : " . $request->nik . " != " . $pasien->nik_bpjs;
+        //     $request['notif'] = "function ambil_antrian error ".$request->method." data pasien bermasalah : \nNoRM : " . $pasien->no_rm . " = " . $pasien->nama_px . "\nNokartu : " . $request->nomorkartu . " != " . $pasien->no_Bpjs . "\nNik : " . $request->nik . " != " . $pasien->nik_bpjs;
         //     $wa->send_notif($request);
         //     // return $response = [
         //     //     "metadata" => [
@@ -605,7 +605,7 @@ class AntrianBPJSController extends Controller
         //                 $request['nomorrujukan'] = $response->response->sep->provPerujuk->noRujukan;
         //                 // cek surat kontrol orang lain
         //                 if ($request->nomorkartu != $response->response->sep->peserta->noKartu) {
-        //                     $request['notif'] = "function ambil_antrian error data no kartu pasien bermasalah : " . $request->nomorkartu . " != " . $response->response->sep->peserta->noKartu;
+        //                     $request['notif'] = "function ambil_antrian error ".$request->method." data no kartu pasien bermasalah : " . $request->nomorkartu . " != " . $response->response->sep->peserta->noKartu;
         //                     $wa->send_notif($request);
         //                     return [
         //                         "metadata" => [
@@ -615,7 +615,7 @@ class AntrianBPJSController extends Controller
         //                     ];
         //                 }
         //                 if (Carbon::parse($response->response->tglRencanaKontrol) != Carbon::parse($request->tanggalperiksa)) {
-        //                     $request['notif'] = "function ambil_antrian error data tanggal rencana kontrol berbeda";
+        //                     $request['notif'] = "function ambil_antrian error ".$request->method." data tanggal rencana kontrol berbeda";
         //                     $wa->send_notif($request);
         //                     return [
         //                         "metadata" => [
@@ -625,7 +625,7 @@ class AntrianBPJSController extends Controller
         //                     ];
         //                 }
         //             } else {
-        //                 $request['notif'] = "function ambil_antrian error surat kontrol " . $response->metaData->message;
+        //                 $request['notif'] = "function ambil_antrian error ".$request->method." surat kontrol " . $response->metaData->message;
         //                 $wa->send_notif($request);
         //                 return [
         //                     "metadata" => [
@@ -649,7 +649,7 @@ class AntrianBPJSController extends Controller
         //                 $jumlah_sep  = $vclaim->rujukan_jumlah_sep($request);
         //                 // gagal jumlah sep rujukan
         //                 if ($jumlah_sep->metaData->code != 200) {
-        //                     $request['notif'] = "function ambil_antrian error jumlah sep rujukan " . $jumlah_sep->metaData->message;
+        //                     $request['notif'] = "function ambil_antrian error ".$request->method." jumlah sep rujukan " . $jumlah_sep->metaData->message;
         //                     $wa->send_notif($request);
         //                     return [
         //                         "metadata" => [
@@ -664,7 +664,7 @@ class AntrianBPJSController extends Controller
         //                         if ($response->metaData->code == 200) {
         //                             // cek rujukan orang lain
         //                             if ($request->nomorkartu != $response->response->rujukan->peserta->noKartu) {
-        //                                 $request['notif'] = "function ambil_antrian error data no kartu pasien bermasalah : " . $request->nomorkartu . " != " . $response->response->sep->peserta->noKartu;
+        //                                 $request['notif'] = "function ambil_antrian error ".$request->method." data no kartu pasien bermasalah : " . $request->nomorkartu . " != " . $response->response->sep->peserta->noKartu;
         //                                 $wa->send_notif($request);
         //                                 return [
         //                                     "metadata" => [
@@ -674,7 +674,7 @@ class AntrianBPJSController extends Controller
         //                                 ];
         //                             }
         //                         } else {
-        //                             $request['notif'] = "function ambil_antrian error rujukan " . $response->metaData->message;
+        //                             $request['notif'] = "function ambil_antrian error ".$request->method." rujukan " . $response->metaData->message;
         //                             $wa->send_notif($request);
         //                             return [
         //                                 "metadata" => [
@@ -686,7 +686,7 @@ class AntrianBPJSController extends Controller
         //                     }
         //                     // jumlah sep lebih dari 1
         //                     else {
-        //                         $request['notif'] = "function ambil_antrian error rujukan lebih dari 1 kunjungan";
+        //                         $request['notif'] = "function ambil_antrian error ".$request->method." rujukan lebih dari 1 kunjungan";
         //                         $wa->send_notif($request);
         //                         return [
         //                             "metadata" => [
@@ -729,7 +729,7 @@ class AntrianBPJSController extends Controller
         //         }
         //         // jika dokter tidak ada
         //         else if ($jadwal == null) {
-        //             $request['notif'] = "function ambil_antrian error null jadwal.";
+        //             $request['notif'] = "function ambil_antrian error ".$request->method." null jadwal.";
         //             $wa->send_notif($request);
         //             $response = [
         //                 "metadata" => [
@@ -740,7 +740,7 @@ class AntrianBPJSController extends Controller
         //             return $response;
         //         }
         //     } else {
-        //         $request['notif'] = "function ambil_antrian error tidak ada jadwal kodepoli " . $request->kodepoli . " tanggal periksa " . $request->tanggalperiksa;
+        //         $request['notif'] = "function ambil_antrian error ".$request->method." tidak ada jadwal kodepoli " . $request->kodepoli . " tanggal periksa " . $request->tanggalperiksa;
         //         $wa->send_notif($request);
         //         $response = [
         //             "metadata" => [
@@ -985,7 +985,7 @@ class AntrianBPJSController extends Controller
             "nomorkartu" => "required|numeric|digits:13",
         ]);
         if ($validator->fails()) {
-            $request['notif'] = "function ambil_antrian error validator : " . $validator->errors()->first();
+            $request['notif'] = "function ambil_antrian error " . $request->method . " validator : " . $validator->errors()->first();
             $wa->send_notif($request);
             $response = [
                 'metadata' => [
@@ -997,7 +997,7 @@ class AntrianBPJSController extends Controller
         }
         // check backdate
         if (Carbon::parse($request->tanggalperiksa)->endOfDay()->isPast()) {
-            $request['notif'] = "function ambil_antrian error backdate";
+            $request['notif'] = "function ambil_antrian error " . $request->method . " backdate";
             $wa->send_notif($request);
             return [
                 "metadata" => [
@@ -1007,7 +1007,7 @@ class AntrianBPJSController extends Controller
             ];
         }
         if (Carbon::parse($request->tanggalperiksa) >  Carbon::now()->addDay(7)) {
-            $request['notif'] = "function ambil_antrian error overdate";
+            $request['notif'] = "function ambil_antrian error " . $request->method . " overdate";
             $wa->send_notif($request);
             return [
                 "metadata" => [
@@ -1023,7 +1023,7 @@ class AntrianBPJSController extends Controller
             ->where('taskid', '<=', 4)
             ->count();
         if ($antrian_nik) {
-            $request['notif'] = "function ambil_antrian error antrian " . $request->method . " nik sama : \nNoRM : " . $request->norm . "\nNIK : " . $request->nik . " Poli : " . $request->kodepoli;
+            $request['notif'] = "function ambil_antrian error " . $request->method . " antrian " . $request->method . " nik sama : \nNoRM : " . $request->norm . "\nNIK : " . $request->nik . " Poli : " . $request->kodepoli;
             $wa->send_notif($request);
             return $response = [
                 "metadata" => [
@@ -1035,7 +1035,7 @@ class AntrianBPJSController extends Controller
         // cek pasien baru hit info pasien baru
         $pasien = PasienDB::where('no_Bpjs',  $request->nomorkartu)->first();
         if (empty($pasien)) {
-            $request['notif'] = "function ambil_antrian error pasien tidak ditemukan : " . $request->nomorkartu;
+            $request['notif'] = "function ambil_antrian error " . $request->method . " pasien tidak ditemukan : " . $request->nomorkartu;
             $wa->send_notif($request);
             return $response = [
                 "metadata" => [
@@ -1046,7 +1046,7 @@ class AntrianBPJSController extends Controller
         }
         // cek no kartu sesuai tidak
         else if ($pasien->no_Bpjs != $request->nomorkartu || $pasien->nik_bpjs != $request->nik) {
-            $request['notif'] = "function ambil_antrian error data pasien bermasalah : \nNoRM : " . $pasien->no_rm . " = " . $pasien->nama_px . "\nNokartu : " . $request->nomorkartu . " != " . $pasien->no_Bpjs . "\nNik : " . $request->nik . " != " . $pasien->nik_bpjs;
+            $request['notif'] = "function ambil_antrian error " . $request->method . " data pasien bermasalah : \nNoRM : " . $pasien->no_rm . " = " . $pasien->nama_px . "\nNokartu : " . $request->nomorkartu . " != " . $pasien->no_Bpjs . "\nNik : " . $request->nik . " != " . $pasien->nik_bpjs;
             $wa->send_notif($request);
             // return $response = [
             //     "metadata" => [
@@ -1069,7 +1069,7 @@ class AntrianBPJSController extends Controller
                         $request['nomorrujukan'] = $response->response->sep->provPerujuk->noRujukan;
                         // cek surat kontrol orang lain
                         if ($request->nomorkartu != $response->response->sep->peserta->noKartu) {
-                            $request['notif'] = "function ambil_antrian error data no kartu pasien bermasalah : " . $request->nomorkartu . " != " . $response->response->sep->peserta->noKartu;
+                            $request['notif'] = "function ambil_antrian error " . $request->method . " data no kartu pasien bermasalah : " . $request->nomorkartu . " != " . $response->response->sep->peserta->noKartu;
                             $wa->send_notif($request);
                             return [
                                 "metadata" => [
@@ -1079,7 +1079,7 @@ class AntrianBPJSController extends Controller
                             ];
                         }
                         if (Carbon::parse($response->response->tglRencanaKontrol) != Carbon::parse($request->tanggalperiksa)) {
-                            $request['notif'] = "function ambil_antrian error data tanggal rencana kontrol berbeda";
+                            $request['notif'] = "function ambil_antrian error " . $request->method . " data tanggal rencana kontrol berbeda";
                             $wa->send_notif($request);
                             return [
                                 "metadata" => [
@@ -1089,7 +1089,7 @@ class AntrianBPJSController extends Controller
                             ];
                         }
                     } else {
-                        $request['notif'] = "function ambil_antrian error surat kontrol " . $response->metaData->message;
+                        $request['notif'] = "function ambil_antrian error " . $request->method . " surat kontrol " . $response->metaData->message;
                         $wa->send_notif($request);
                         return [
                             "metadata" => [
@@ -1113,7 +1113,7 @@ class AntrianBPJSController extends Controller
                         $jumlah_sep  = $vclaim->rujukan_jumlah_sep($request);
                         // gagal jumlah sep rujukan
                         if ($jumlah_sep->metaData->code != 200) {
-                            $request['notif'] = "function ambil_antrian error jumlah sep rujukan " . $jumlah_sep->metaData->message;
+                            $request['notif'] = "function ambil_antrian error " . $request->method . " jumlah sep rujukan " . $jumlah_sep->metaData->message;
                             $wa->send_notif($request);
                             return [
                                 "metadata" => [
@@ -1128,7 +1128,7 @@ class AntrianBPJSController extends Controller
                                 if ($response->metaData->code == 200) {
                                     // cek rujukan orang lain
                                     if ($request->nomorkartu != $response->response->rujukan->peserta->noKartu) {
-                                        $request['notif'] = "function ambil_antrian error data no kartu pasien bermasalah : " . $request->nomorkartu . " != " . $response->response->sep->peserta->noKartu;
+                                        $request['notif'] = "function ambil_antrian error " . $request->method . " data no kartu pasien bermasalah : " . $request->nomorkartu . " != " . $response->response->sep->peserta->noKartu;
                                         $wa->send_notif($request);
                                         return [
                                             "metadata" => [
@@ -1138,7 +1138,7 @@ class AntrianBPJSController extends Controller
                                         ];
                                     }
                                 } else {
-                                    $request['notif'] = "function ambil_antrian error rujukan " . $response->metaData->message;
+                                    $request['notif'] = "function ambil_antrian error " . $request->method . " rujukan " . $response->metaData->message;
                                     $wa->send_notif($request);
                                     return [
                                         "metadata" => [
@@ -1150,7 +1150,7 @@ class AntrianBPJSController extends Controller
                             }
                             // jumlah sep lebih dari 1
                             else {
-                                $request['notif'] = "function ambil_antrian error rujukan lebih dari 1 kunjungan";
+                                $request['notif'] = "function ambil_antrian error " . $request->method . " rujukan lebih dari 1 kunjungan";
                                 $wa->send_notif($request);
                                 return [
                                     "metadata" => [
@@ -1193,7 +1193,7 @@ class AntrianBPJSController extends Controller
                 }
                 // jika dokter tidak ada
                 else if ($jadwal == null) {
-                    $request['notif'] = "function ambil_antrian error null jadwal.";
+                    $request['notif'] = "function ambil_antrian error " . $request->method . " null jadwal.";
                     $wa->send_notif($request);
                     $response = [
                         "metadata" => [
@@ -1204,7 +1204,7 @@ class AntrianBPJSController extends Controller
                     return $response;
                 }
             } else {
-                $request['notif'] = "function ambil_antrian error tidak ada jadwal kodepoli " . $request->kodepoli . " tanggal periksa " . $request->tanggalperiksa;
+                $request['notif'] = "function ambil_antrian error " . $request->method . " tidak ada jadwal kodepoli " . $request->kodepoli . " tanggal periksa " . $request->tanggalperiksa;
                 $wa->send_notif($request);
                 $response = [
                     "metadata" => [
