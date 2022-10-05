@@ -37,7 +37,7 @@
                     </x-slot>
                 </x-adminlte-input-date>
                 <x-adminlte-select2 name="kodepoli" label="Poliklinik">
-                    <option value="000" selected disabled>PILIH POLIKLINIK</option>
+                    <option value="0" selected>PILIH POLIKLINIK</option>
                     @foreach ($poli as $item)
                         <option value="{{ $item->kodesubspesialis }}">
                             {{ $item->kodesubspesialis }}
@@ -46,11 +46,11 @@
                         </option>
                     @endforeach
                 </x-adminlte-select2>
-                <x-adminlte-select name="kodedokter" id="kodedokter" label="Dokter">
+                <x-adminlte-select fgroup-class="kodedokter" name="kodedokter" id="kodedokter" label="Dokter">
                     <option disabled selected>PILIH DOKTER</option>
                 </x-adminlte-select>
             </x-adminlte-card>
-            <x-adminlte-card title="Data Pasien Rawat Jalan" theme="warning" collapsible>
+            <x-adminlte-card title="Data Pasien Rawat Jalan" class="datapasien" theme="warning" collapsible>
                 <x-adminlte-select name="pilihjeniskunjungan" id="pilihjeniskunjungan" label="Jenis Kunjungan Pasien">
                     <option value="0" selected>PILIH JENIS KUNJUNGAN PASIEN</option>
                     <option value="1">BPJS Rujukan Faskes 1</option>
@@ -60,7 +60,6 @@
                     <option value="5">UMUM (NON-JKN)</option>
                 </x-adminlte-select>
                 <input type="hidden" name="jeniskunjungan" id="jeniskunjungan">
-                {{-- <p class="text-success">Keterangan Aktif</p> --}}
                 <x-adminlte-input fgroup-class="nama" name="nama" label="Nama Pasien" />
                 <x-adminlte-input fgroup-class="norm" name="norm" label="Nomor Rekam Medis Pasien" />
                 <x-adminlte-input fgroup-class="nomorkartu" name="nomorkartu" label="No Kartu BPJS" type="number">
@@ -100,7 +99,6 @@
             <x-adminlte-textarea name="keterangan" placeholder="Masukan keterangan libur." label="Keterangan" />
         </form>
         <x-slot name="footerSlot">
-            <x-adminlte-button form="myform" class="mr-auto" type="submit" theme="success" label="Simpan" />
             <x-adminlte-button theme="danger" label="Kembali" data-dismiss="modal" />
         </x-slot>
     </x-adminlte-modal> --}}
@@ -112,6 +110,8 @@
     <script src="{{ asset('vendor/sweetalert2/sweetalert2.all.min.js') }}"></script>
     <script>
         $(function() {
+            $('.kodedokter').hide();
+            $('.datapasien').hide();
             $('.nik').hide();
             $('.nomorkartu').hide();
             $('.nama').hide();
@@ -121,31 +121,57 @@
             $('#kodepoli').change(function() {
                 var tanggalperiksa = $('#tanggalperiksa').val();
                 var kodepoli = $('#kodepoli').find('option:selected').val();
-                var url =
-                    "{{ route('antrian.index') }}" + "/console_jadwaldokter/" + kodepoli +
-                    "/" + tanggalperiksa;
-                $.LoadingOverlay("show");
-                $.get(url, function(data) {
-                    $('#kodedokter').find('option').remove();
-                    console.log(data);
-                    $.each(data, function(value) {
-                        if (data[value].libur == "1") {
-                            var libur = "LIBUR " +
-                                data[value].jadwal;
-                            var disablee = "disabled";
+                if (kodepoli != 0) {
+                    var url =
+                        "{{ route('antrian.index') }}" + "/console_jadwaldokter/" + kodepoli +
+                        "/" + tanggalperiksa;
+                    $.LoadingOverlay("show");
+                    $.get(url, function(data) {
+                        $('#kodedokter').find('option').remove();
+                        $('.kodedokter').show();
+                        if (data.length != 0) {
+                            $('#kodedokter').append($(
+                                "<option value='0'>PILIH DOKTER</option>"));
+                            $.each(data, function(value) {
+                                if (data[value].libur == "1") {
+                                    var libur = "LIBUR " +
+                                        data[value].jadwal;
+                                    var disablee = "disabled";
+                                } else {
+                                    var libur = "" +
+                                        data[value].jadwal;
+                                    var disablee = "";
+                                }
+                                $('#kodedokter').append($(
+                                    "<option value='" + data[value].kodedokter +
+                                    "' " + disablee + " > " + libur +
+                                    " " + data[value]
+                                    .namadokter + "</option>"));
+                                $.LoadingOverlay("hide", true);
+                            });
                         } else {
-                            var libur = "" +
-                                data[value].jadwal;
-                            var disablee = "";
+                            $.LoadingOverlay("hide", true);
+                            swal.fire(
+                                'Error',
+                                "Tidak Ada Jadwal Dokter Poliklinik " + kodepoli +
+                                " di Tanggal " +
+                                tanggalperiksa,
+                                'error'
+                            );
                         }
-                        $('#kodedokter').append($(
-                            "<option value='" + data[value].kodedokter +
-                            "' " + disablee + " > " + libur +
-                            " " + data[value]
-                            .namadokter + "</option>"));
                     });
-                    $.LoadingOverlay("hide", true);
-                });
+                } else {
+                    $('#kodedokter').find('option').remove();
+                    $('.kodedokter').hide();
+                }
+            });
+            $('#kodedokter').change(function() {
+                var kodedokter = $('#kodedokter').find('option:selected').val();
+                if (kodedokter != 0) {
+                    $('.datapasien').show();
+                } else {
+                    $('.datapasien').hide();
+                }
             });
             $('#pilihjeniskunjungan').change(function() {
                 var jeniskunjungan = $('#pilihjeniskunjungan').find('option:selected').val();
@@ -378,7 +404,6 @@
                 $('#nomorkartu').val('').attr('readonly', false);
                 $('#nomorreferensi').val(0).change();
                 $('#pilihjeniskunjungan').prop('disabled', false).val(0).change();
-                alert('reset');
             });
         });
     </script>

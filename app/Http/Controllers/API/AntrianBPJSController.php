@@ -472,7 +472,6 @@ class AntrianBPJSController extends Controller
             $antriannonjkn = Antrian::where('kodepoli', $request->kodepoli)
                 ->where('tanggalperiksa', $request->tanggalperiksa)
                 ->where('jenispasien', "NON-JKN")->count();
-
             $response = [
                 "response" => [
                     "namapoli" => $jadwal->namapoli,
