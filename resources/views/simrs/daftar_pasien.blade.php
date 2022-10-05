@@ -18,69 +18,76 @@
                     </ul>
                 </x-adminlte-alert>
             @endif
-            <x-adminlte-card title="Jadwal Dokter Poliklinik Rawat Jalan" theme="warning" collapsible>
-                @php
-                    $config = [
-                        'format' => 'YYYY-MM-DD',
-                        'dayViewHeaderFormat' => 'MMM YYYY',
-                        'minDate' => "js:moment().add(-1, 'days')",
-                        'maxDate' => "js:moment().add(6, 'days')",
-                        'daysOfWeekDisabled' => [0],
-                    ];
-                @endphp
-                <x-adminlte-input-date name="tanggalperiksa" label="Tanggal Periksa" :config="$config"
-                    placeholder="Pilih Tanggal Surat Kontrol ..." value="{{ Carbon\Carbon::now()->format('Y-m-d') }}">
-                    <x-slot name="prependSlot">
-                        <div class="input-group-text bg-primary">
-                            <i class="fas fa-calendar-alt"></i>
-                        </div>
+            <form action="{{ route('api.ambil_antrean') }}" id="formDaftarPasien" method="post">
+                @csrf
+                <x-adminlte-card title="Jadwal Dokter Poliklinik Rawat Jalan" theme="warning" collapsible>
+                    @php
+                        $config = [
+                            'format' => 'YYYY-MM-DD',
+                            'dayViewHeaderFormat' => 'MMM YYYY',
+                            'minDate' => "js:moment().add(-1, 'days')",
+                            'maxDate' => "js:moment().add(6, 'days')",
+                            'daysOfWeekDisabled' => [0],
+                        ];
+                    @endphp
+                    <x-adminlte-input-date name="tanggalperiksa" label="Tanggal Periksa" :config="$config"
+                        placeholder="Pilih Tanggal Surat Kontrol ..." value="{{ Carbon\Carbon::now()->format('Y-m-d') }}">
+                        <x-slot name="prependSlot">
+                            <div class="input-group-text bg-primary">
+                                <i class="fas fa-calendar-alt"></i>
+                            </div>
+                        </x-slot>
+                    </x-adminlte-input-date>
+                    <x-adminlte-select2 name="kodepoli" label="Poliklinik">
+                        <option value="0" selected>PILIH POLIKLINIK</option>
+                        @foreach ($poli as $item)
+                            <option value="{{ $item->kodesubspesialis }}">
+                                {{ $item->kodesubspesialis }}
+                                -
+                                {{ $item->namasubspesialis }}
+                            </option>
+                        @endforeach
+                    </x-adminlte-select2>
+                    <x-adminlte-select fgroup-class="kodedokter" name="kodedokter" id="kodedokter" label="Dokter" />
+                    <x-slot name="footerSlot">
+                        <x-adminlte-button icon="fas fa-sync" id="reset_jadwal" theme="danger" label="Reset Jadwal" />
                     </x-slot>
-                </x-adminlte-input-date>
-                <x-adminlte-select2 name="kodepoli" label="Poliklinik">
-                    <option value="0" selected>PILIH POLIKLINIK</option>
-                    @foreach ($poli as $item)
-                        <option value="{{ $item->kodesubspesialis }}">
-                            {{ $item->kodesubspesialis }}
-                            -
-                            {{ $item->namasubspesialis }}
-                        </option>
-                    @endforeach
-                </x-adminlte-select2>
-                <x-adminlte-select fgroup-class="kodedokter" name="kodedokter" id="kodedokter" label="Dokter">
-                    <option disabled selected>PILIH DOKTER</option>
-                </x-adminlte-select>
-            </x-adminlte-card>
-            <x-adminlte-card title="Data Pasien Rawat Jalan" class="datapasien" theme="warning" collapsible>
-                <x-adminlte-select name="pilihjeniskunjungan" id="pilihjeniskunjungan" label="Jenis Kunjungan Pasien">
-                    <option value="0" selected>PILIH JENIS KUNJUNGAN PASIEN</option>
-                    <option value="1">BPJS Rujukan Faskes 1</option>
-                    <option value="2">BPJS Rujukan Internal</option>
-                    <option value="3">BPJS Surat Kontrol</option>
-                    <option value="4">BPJS Rujukan Antar RS</option>
-                    <option value="5">UMUM (NON-JKN)</option>
-                </x-adminlte-select>
-                <input type="hidden" name="jeniskunjungan" id="jeniskunjungan">
-                <x-adminlte-input fgroup-class="nama" name="nama" label="Nama Pasien" />
-                <x-adminlte-input fgroup-class="norm" name="norm" label="Nomor Rekam Medis Pasien" />
-                <x-adminlte-input fgroup-class="nomorkartu" name="nomorkartu" label="No Kartu BPJS" type="number">
-                    <x-slot name="appendSlot">
-                        <x-adminlte-button name="btn_check_nomorkartu" id="btn_check_nomorkartu" theme="success"
-                            label="Cek" />
+                </x-adminlte-card>
+                <x-adminlte-card title="Data Pasien Rawat Jalan" class="datapasien" theme="warning" collapsible>
+                    <x-adminlte-select name="pilihjeniskunjungan" id="pilihjeniskunjungan" label="Jenis Kunjungan Pasien">
+                        <option value="0" selected>PILIH JENIS KUNJUNGAN PASIEN</option>
+                        <option value="1">BPJS Rujukan Faskes 1</option>
+                        <option value="2">BPJS Rujukan Internal</option>
+                        <option value="3">BPJS Surat Kontrol</option>
+                        <option value="4">BPJS Rujukan Antar RS</option>
+                        <option value="5">UMUM (NON-JKN)</option>
+                    </x-adminlte-select>
+                    <input type="hidden" name="jeniskunjungan" id="jeniskunjungan">
+                    <x-adminlte-input fgroup-class="nama" name="nama" label="Nama Pasien" />
+                    <x-adminlte-input fgroup-class="norm" name="norm" label="Nomor Rekam Medis Pasien" />
+                    <x-adminlte-input fgroup-class="nomorkartu" name="nomorkartu" label="No Kartu BPJS" type="number">
+                        <x-slot name="appendSlot">
+                            <x-adminlte-button name="btn_check_nomorkartu" id="btn_check_nomorkartu" theme="success"
+                                label="Cek" />
+                        </x-slot>
+                    </x-adminlte-input>
+                    <x-adminlte-input fgroup-class="nik" name="nik" label="NIK" type="number">
+                        <x-slot name="appendSlot">
+                            <x-adminlte-button name="btn_check_nik" id="btn_check_nik" theme="success" label="Cek" />
+                        </x-slot>
+                    </x-adminlte-input>
+                    <x-adminlte-input fgroup-class="nohp" name="nohp" label="Nomor HP Pasien" />
+                    <x-adminlte-select name="nomorreferensi" fgroup-class="nomorreferensi" label="Nomor Referensi">
+                        <option value="0" selected>PILIH NOMOR REFERENSI</option>
+                    </x-adminlte-select>
+                    <x-slot name="footerSlot">
+                        {{-- <x-adminlte-button icon="fas fa-user-md" id="daftar_pasien" theme="success" label="Daftar Pasien" /> --}}
+                        <button type="submit" form="formDaftarPasien" value="Submit"
+                            class="mr-auto btn btn-success withLoad">Buat Surat Kontrol</button>
+                        <x-adminlte-button icon="fas fa-sync" id="reset" theme="danger" label="Reset Pasien" />
                     </x-slot>
-                </x-adminlte-input>
-                <x-adminlte-input fgroup-class="nik" name="nik" label="NIK" type="number">
-                    <x-slot name="appendSlot">
-                        <x-adminlte-button name="btn_check_nik" id="btn_check_nik" theme="success" label="Cek" />
-                    </x-slot>
-                </x-adminlte-input>
-                <x-adminlte-input fgroup-class="nohp" name="nohp" label="Nomor HP Pasien" />
-                <x-adminlte-select name="nomorreferensi" fgroup-class="nomorreferensi" label="Nomor Referensi">
-                    <option value="0" selected>PILIH NOMOR REFERENSI</option>
-                </x-adminlte-select>
-                <x-slot name="footerSlot">
-                    <x-adminlte-button icon="fas fa-sync" id="reset" theme="danger" label="Reset" />
-                </x-slot>
-            </x-adminlte-card>
+                </x-adminlte-card>
+            </form>
         </div>
     </div>
     {{-- <x-adminlte-modal id="modalCustom" title="Tambah Jadwal Libur" theme="success" v-centered static-backdrop>
@@ -166,9 +173,38 @@
                 }
             });
             $('#kodedokter').change(function() {
+                var tanggalperiksa = $('#tanggalperiksa').val();
+                var kodepoli = $('#kodepoli').find('option:selected').val();
                 var kodedokter = $('#kodedokter').find('option:selected').val();
                 if (kodedokter != 0) {
-                    $('.datapasien').show();
+                    var url = "{{ route('api.status_antrean') }}";
+                    var formData = {
+                        tanggalperiksa: tanggalperiksa,
+                        kodepoli: kodepoli,
+                        kodedokter: kodedokter,
+                    };
+                    $.LoadingOverlay("show");
+                    $.get(url, formData, function(data) {
+                        $.LoadingOverlay("hide");
+                        if (data.metadata.code == 200) {
+                            $.LoadingOverlay("hide");
+                            $('.datapasien').show();
+                            swal.fire(
+                                'Success',
+                                "Dokter " + kodedokter + " telah dipilih. Sisa kuota " + data
+                                .response
+                                .sisaantrean + " pasien.",
+                                'success'
+                            );
+                        } else {
+                            $.LoadingOverlay("hide");
+                            swal.fire(
+                                'Error',
+                                data.metadata.message,
+                                'error'
+                            );
+                        }
+                    });
                 } else {
                     $('.datapasien').hide();
                 }
@@ -194,9 +230,7 @@
                 var jeniskunjungan = $('#jeniskunjungan').val();
                 $('#pilihjeniskunjungan').prop('disabled', 'disabled');
                 var url = "{{ route('api.cek_nomorkartu') }}";
-                $.LoadingOverlay("show", {
-                    text: "Cek Data Pasien BPJS..."
-                });
+                $.LoadingOverlay("show");
                 var formData = {
                     nomorkartu: nomorkartu,
                 };
@@ -302,9 +336,7 @@
                 var nik = $('#nik').val();
                 var url = "{{ route('api.cek_nik') }}";
                 $('#pilihjeniskunjungan').prop('disabled', 'disabled');
-                $.LoadingOverlay("show", {
-                    text: "Cek Data Pasien BPJS..."
-                });
+                $.LoadingOverlay("show");
                 var formData = {
                     nik: nik,
                 };
@@ -347,33 +379,59 @@
             });
             $('#nomorreferensi').change(function() {
                 var nomorreferensi = $('#nomorreferensi').find('option:selected').val();
+                var kodepoli = $('#kodepoli').find('option:selected').val();
                 if (nomorreferensi != 0) {
                     var jeniskunjungan = $('#jeniskunjungan').val();
-                    $.LoadingOverlay("show", {
-                        text: "Cek Nomor Referensi..."
-                    });
                     if (jeniskunjungan == 1) {
-                        var url = "{{ route('api.rujukan_jumlah_sep') }}";
                         var formData = {
                             nomorreferensi: nomorreferensi,
                             jenisrujukan: 1,
                         }
+                        $.LoadingOverlay("show");
+                        var url = "{{ route('api.rujukan_nomor') }}";
                         $.get(url, formData, function(data) {
                             if (data.metaData.code == 200) {
-                                if (data.response.jumlahSEP == 0) {
-                                    $.LoadingOverlay("hide");
-                                    swal.fire(
-                                        'Success',
-                                        data.metaData.message,
-                                        'success'
-                                    );
+                                if (data.response.rujukan.poliRujukan.kode == kodepoli) {
+                                    var url = "{{ route('api.rujukan_jumlah_sep') }}";
+                                    $.get(url, formData, function(data) {
+                                        if (data.metaData.code == 200) {
+                                            if (data.response.jumlahSEP == 0) {
+                                                $.LoadingOverlay("hide");
+                                                swal.fire(
+                                                    'Success',
+                                                    data.metaData.message,
+                                                    'success'
+                                                );
+                                            } else {
+                                                $.LoadingOverlay("hide");
+                                                swal.fire({
+                                                    icon: 'error',
+                                                    title: 'Error!',
+                                                    text: "Nomor Rujukan " +
+                                                        nomorreferensi +
+                                                        " anda telah digunakan untuk kunjungan pertama, silahkan klik 'Reset' dan pilih jenis kunjungan lainnya.",
+                                                    allowOutsideClick: false,
+                                                    allowEscapeKey: false
+                                                });
+                                            }
+                                        } else {
+                                            $.LoadingOverlay("hide");
+                                            swal.fire(
+                                                'Error',
+                                                data.metaData.message,
+                                                'error'
+                                            );
+                                        }
+                                    });
                                 } else {
                                     $.LoadingOverlay("hide");
                                     swal.fire({
+                                        icon: 'error',
                                         title: 'Error!',
-                                        text: "Nomor Rujukan " + nomorreferensi +
-                                            " anda telah digunakan untuk kunjungan pertama, silahkan klik 'Reset' dan pilih jenis kunjungan lainnya.",
-                                        type: 'error',
+                                        text: "Tujuan Nomor Rujukan " + nomorreferensi +
+                                            " ke POLI " + data.response.rujukan.poliRujukan
+                                            .kode + " berbeda dengan POLI " + kodepoli +
+                                            " tujuan anda.",
                                         allowOutsideClick: false,
                                         allowEscapeKey: false
                                     });
@@ -403,6 +461,25 @@
                 $('#nik').val('').attr('readonly', false);
                 $('#nomorkartu').val('').attr('readonly', false);
                 $('#nomorreferensi').val(0).change();
+                $('#pilihjeniskunjungan').prop('disabled', false).val(0).change();
+            });
+            $('#reset_jadwal').click(function() {
+                $('.nik').hide();
+                $('.nomorkartu').hide();
+                $('.nama').hide();
+                $('.norm').hide();
+                $('.nohp').hide();
+                $('.datapasien').hide();
+                $('.kodedokter').hide();
+                $('.nomorreferensi').hide();
+                $('#nama').val('');
+                $('#norm').val('');
+                $('#nohp').val('');
+                $('#nik').val('').attr('readonly', false);
+                $('#nomorkartu').val('').attr('readonly', false);
+                $('#nomorreferensi').val(0).change();
+                $('#kodedokter').find('option').remove();
+                $('#kodepoli').val(0).change();
                 $('#pilihjeniskunjungan').prop('disabled', false).val(0).change();
             });
         });

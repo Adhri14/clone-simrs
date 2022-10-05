@@ -37,6 +37,9 @@ Route::prefix('antrian')->group(function () {
     Route::post('listtask', [AntrianBPJSController::class, 'list_waktu_task']);
     Route::get('dashboard_tanggal', [AntrianBPJSController::class, 'dashboard_tanggal']);
     Route::get('dashboard_bulan', [AntrianBPJSController::class, 'dashboard_bulan']);
+
+    Route::get('status_antrean', [AntrianBPJSController::class, 'status_antrean'])->name('api.status_antrean');
+    Route::post('ambil_antrean', [AntrianBPJSController::class, 'ambil_antrean'])->name('api.ambil_antrean');
 });
 
 Route::get('token', [AntrianBPJSController::class, 'token']);
