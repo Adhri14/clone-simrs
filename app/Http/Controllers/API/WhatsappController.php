@@ -804,16 +804,18 @@ class WhatsappController extends Controller
             // jika berhasil
             else {
                 $vclaim = new VclaimBPJSController();
-                $request['nomorreferensi'] = $suratkontrol->sep->provPerujuk->noRujukan;
-                $request['asalRujukan'] = $suratkontrol->sep->provPerujuk->asalRujukan;
-                if ($request->asalRujukan == 2) {
-                    $rujukan  = $vclaim->rujukan_rs_nomor($request);
-                    // dd($suratkontrol, $request->nomorreferensi,  $rujukan);
-                } else {
-                    $rujukan  = $vclaim->rujukan_nomor($request);
-                }
+                // $request['nomorreferensi'] = $suratkontrol->sep->provPerujuk->noRujukan;
+                // $request['asalRujukan'] = $suratkontrol->sep->provPerujuk->asalRujukan;
+                // if ($request->asalRujukan == 2) {
+                //     $rujukan  = $vclaim->rujukan_rs_nomor($request);
+                //     // dd($suratkontrol, $request->nomorreferensi,  $rujukan);
+                // } else {
+                //     $rujukan  = $vclaim->rujukan_nomor($request);
+                // }
+                $request['nomorkartu'] = $suratkontrol->sep->peserta->noKartu;
+                $peserta = $vclaim->peserta_nomorkartu($request);
                 $request['nomorreferensi'] = $nomorsuratkontrol;
-                $peserta = $rujukan->response->rujukan->peserta;
+                $peserta = $peserta->response->peserta;
                 $request['nomorkartu'] = $peserta->noKartu;
                 $request['nik'] = $peserta->nik;
                 $request['nohp'] = $request->number;
@@ -880,15 +882,17 @@ class WhatsappController extends Controller
             // // jika berhasil
             else {
                 $vclaim = new VclaimBPJSController();
-                $request['nomorreferensi'] = $suratkontrol->sep->provPerujuk->noRujukan;
-                $request['asalRujukan'] = $suratkontrol->sep->provPerujuk->asalRujukan;
-                if ($request->asalRujukan == 2) {
-                    $rujukan  = $vclaim->rujukan_rs_nomor($request);
-                } else {
-                    $rujukan  = $vclaim->rujukan_nomor($request);
-                }
+                // $request['nomorreferensi'] = $suratkontrol->sep->provPerujuk->noRujukan;
+                // $request['asalRujukan'] = $suratkontrol->sep->provPerujuk->asalRujukan;
+                // if ($request->asalRujukan == 2) {
+                //     $rujukan  = $vclaim->rujukan_rs_nomor($request);
+                // } else {
+                //     $rujukan  = $vclaim->rujukan_nomor($request);
+                // }
+                $request['nomorkartu'] = $suratkontrol->sep->peserta->noKartu;
+                $peserta = $vclaim->peserta_nomorkartu($request);
                 $request['nomorreferensi'] = $nomorsuratkontrol;
-                $peserta = $rujukan->response->rujukan->peserta;
+                $peserta = $peserta->response->peserta;
                 $request['nomorkartu'] = $peserta->noKartu;
                 $request['nik'] = $peserta->nik;
                 $request['nohp'] = $request->number;
