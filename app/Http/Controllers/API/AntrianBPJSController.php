@@ -1685,7 +1685,7 @@ class AntrianBPJSController extends Controller
                                 $request['tujuanKunj'] = "2";
                                 $request['flagProcedure'] = "";
                                 $request['kdPenunjang'] = "";
-                                $request['assesmentPel'] = "5";
+                                $request['assesmentPel'] = "2";
                                 $request['noSurat'] = $request->nomorsuratkontrol; // get antrian
                                 $request['kodeDPJP'] = $suratkontrol->response->kodeDokter;
                                 $request['dpjpLayan'] =  $suratkontrol->response->kodeDokter;
