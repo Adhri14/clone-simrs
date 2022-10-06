@@ -1300,20 +1300,23 @@ class AntrianController extends Controller
     }
     public function laporan_kunjungan_poliklinik(Request $request)
     {
+
+        $response = null;
         $kunjungans = null;
         if (isset($request->tanggal) && isset($request->kodepoli)) {
             $poli = UnitDB::where('KDPOLI', $request->kodepoli)->first();
             $kunjungans = KunjunganDB::whereDate('tgl_masuk', $request->tanggal)
                 ->where('kode_unit', $poli->kode_unit)
                 ->where('status_kunjungan',  2)
-                ->with(['dokter', 'unit', 'pasien', 'pasien.kecamatans', 'penjamin', 'surat_kontrol'])
+                ->with(['dokter', 'unit', 'pasien', 'diagnosapoli', 'pasien.kecamatans', 'penjamin', 'surat_kontrol'])
                 ->get();
+            $response = DB::connection('mysql2')->select("CALL SP_PANGGIL_PASIEN_RAWAT_JALAN_KUNJUNGAN('" . $poli->kode_unit . "','" . $request->tanggal . "')");
         }
-        // dd($kunjungans->first()->pasien->kecamatans);
         $unit = UnitDB::where('KDPOLI', "!=", null)->get();
         return view('simrs.antrian_laporan_kunjungan', [
             'kunjungans' => $kunjungans,
             'request' => $request,
+            'response' => $response,
             'unit' => $unit,
         ]);
     }
@@ -1451,9 +1454,11 @@ class AntrianController extends Controller
         $kunjungans = KunjunganDB::whereBetween('tgl_masuk', [Carbon::parse($tanggal_awal)->startOfDay(), Carbon::parse($tanggal_akhir)->endOfDay()])
             ->where('kode_unit', "!=", null)
             ->where('kode_unit', 'LIKE', '10%')
-            ->where('kode_unit', '!=', '1002')
+            ->where('kode_unit', '!=', 1002)
             ->where('kode_unit', "!=", 1023)
+            ->where('kode_unit', "!=", 1015)
             ->get();
+
 
         $units = UnitDB::where('KDPOLI', '!=', null)->get();
 

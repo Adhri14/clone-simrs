@@ -70,7 +70,7 @@
                                         ->isoFormat('dddd D MMMM YYYY') .
                                     '<br>User : ' .
                                     Auth::user()->name;
-                                $heads = ['No', 'No RM ', ' Nama', 'L', 'P', 'Alamat', 'Baru', 'Lama', 'Umum', 'JKN', 'Cara ', 'Diagnosa', 'Tindakan'];
+                                $heads = ['No', 'No RM ', ' Nama', 'L', 'P', 'Umur', 'Alamat', 'Baru', 'Lama', 'Umum', 'JKN', 'Cara ', 'Diagnosa', 'Tindakan'];
                                 $config = [
                                     // 'order' => ['2', 'desc'],
                                     'paging' => false,
@@ -103,6 +103,84 @@
                                         <td>{{ $item->pasien->nama_px }}</td>
                                         <td>{{ $item->pasien->jenis_kelamin == 'L' ? 'L' : '-' }}</td>
                                         <td>{{ $item->pasien->jenis_kelamin == 'P' ? 'P' : '-' }}</td>
+                                        <td></td>
+                                        <td>{{ $item->pasien->kecamatans->nama_kecamatan }}</td>
+                                        <td>{{ $item->counter == 1 ? 'Baru' : '-' }}</td>
+                                        <td>{{ $item->counter == 1 ? '-' : 'Lama' }}</td>
+                                        <td>{{ $item->no_sep ? '-' : 'UMUM' }}</td>
+                                        <td>{{ $item->no_sep ? 'JKN' : '-' }}</td>
+                                        <td>{{ $item->penjamin ? $item->penjamin->nama_penjamin_bpjs : 'MANDIRI' }}</td>
+                                        <td>{{ $item->diagnosapoli->diag_00 }}</td>
+                                        <td></td>
+                                    </tr>
+                                @endforeach
+                                <tfoot>
+                                    <tr>
+                                        <th colspan="4"> Total</th>
+                                        <th></th>
+                                        <th></th>
+                                        <th>{{ $kunjungans->where('counter', 1)->count() }}</th>
+                                        <th>{{ $kunjungans->where('counter', '!=', 1)->count() }}</th>
+                                        <th>{{ $kunjungans->where('no_sep', '==', null)->count() }}</th>
+                                        <th>{{ $kunjungans->where('no_sep', '!=', null)->count() }}</th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                    </tr>
+                                </tfoot>
+                            </x-adminlte-datatable>
+                            Warna teks hijau adalah kunjungan yang telah dibuatkan surat kontrol.
+                        </x-adminlte-card>
+
+                        <x-adminlte-card title="Kunjungan Poliklinik ({{ $kunjungans->count() }} Orang)" theme="primary"
+                            icon="fas fa-info-circle" collapsible>
+                            @php
+                                \Carbon\Carbon::setlocale(LC_ALL, 'IND');
+                                $message =
+                                    'Poliklinik : ' .
+                                    $request->kodepoli .
+                                    '-' .
+                                    $unit->firstWhere('KDPOLI', $request->kodepoli)->nama_unit .
+                                    '<br>Tanggal : ' .
+                                    \Carbon\Carbon::parse($request->tanggal)
+                                        ->locale('id')
+                                        ->isoFormat('dddd D MMMM YYYY') .
+                                    '<br>User : ' .
+                                    Auth::user()->name;
+                                $heads = ['No', 'No RM ', ' Nama', 'L', 'P', 'Umur', 'Alamat', 'Baru', 'Lama', 'Umum', 'JKN', 'Cara ', 'Diagnosa', 'Tindakan'];
+                                $config = [
+                                    // 'order' => ['2', 'desc'],
+                                    'paging' => false,
+                                    'buttons' => [
+                                        [
+                                            'extend' => 'colvis',
+                                            'className' => 'btn-info',
+                                        ],
+                                        [
+                                            'extend' => 'print',
+                                            'className' => 'btn-info',
+                                            'messageTop' => $message,
+                                            'orientation' => 'landscape',
+                                            'columns' => ':not(.select-checkbox)',
+                                            'footer' => true,
+                                        ],
+                                        [
+                                            'extend' => 'pdf',
+                                            'className' => 'btn-info',
+                                        ],
+                                    ],
+                                ];
+                            @endphp
+                            <x-adminlte-datatable id="table1" class="nowrap text-xs" :heads="$heads" :config="$config"
+                                striped bordered hoverable compressed with-buttons>
+                                @foreach ($kunjungans as $item)
+                                    <tr>
+                                        <td>{{ $loop->iteration }}</td>
+                                        <td>{{ $item->no_rm }}</td>
+                                        <td>{{ $item->pasien->nama_px }}</td>
+                                        <td>{{ $item->pasien->jenis_kelamin == 'L' ? 'L' : '-' }}</td>
+                                        <td>{{ $item->pasien->jenis_kelamin == 'P' ? 'P' : '-' }}</td>
+                                        <td></td>
                                         <td>{{ $item->pasien->kecamatans->nama_kecamatan }}</td>
                                         <td>{{ $item->counter == 1 ? 'Baru' : '-' }}</td>
                                         <td>{{ $item->counter == 1 ? '-' : 'Lama' }}</td>

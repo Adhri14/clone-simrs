@@ -50,6 +50,10 @@ class KunjunganDB extends Model
     {
         return $this->hasOne(PenjaminDB::class, 'kode_penjamin_simrs', 'kode_penjamin');
     }
+    public function diagnosapoli()
+    {
+        return $this->hasOne(DiagnosaPoli::class, 'kode_kunjungan', 'kode_kunjungan');
+    }
     // public function layanans()
     // {
     //     return $this->hasMany(LayananHeaderDB::class, 'kode_kunjungan', 'kode_kunjungan');
