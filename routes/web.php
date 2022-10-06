@@ -122,12 +122,14 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified', 'permiss
 Route::prefix('vclaim')->name('vclaim.')->middleware(['auth'])->group(function () {
     Route::get('/', [VclaimController::class, 'index'])->name('index');
     Route::get('monitoring_pelayanan_peserta', [VclaimController::class, 'monitoring_pelayanan_peserta'])->name('monitoring_pelayanan_peserta');
-    Route::delete('delete_sep/{noSep}', [VclaimController::class, 'delete_sep'])->name('delete_sep');
     Route::get('data_surat_kontrol', [VclaimController::class, 'data_surat_kontrol'])->name('data_surat_kontrol');
-    Route::delete('delete_surat_kontrol/{noSuratKontrol}', [VclaimController::class, 'delete_surat_kontrol'])->name('delete_surat_kontrol');
-    Route::post('buat_surat_kontrol', [VclaimController::class, 'buat_surat_kontrol'])->name('buat_surat_kontrol');
     Route::get('edit_surat_kontrol/{id}', [VclaimController::class, 'edit_surat_kontrol'])->name('edit_surat_kontrol');
+    Route::get('sep_internal', [VclaimController::class, 'sep_internal'])->name('sep_internal');
+    Route::post('buat_surat_kontrol', [VclaimController::class, 'buat_surat_kontrol'])->name('buat_surat_kontrol');
     Route::post('update_surat_kontrol', [VclaimController::class, 'update_surat_kontrol'])->name('update_surat_kontrol');
+    Route::delete('sep_internal_delete', [VclaimController::class, 'sep_internal_delete'])->name('sep_internal_delete');
+    Route::delete('delete_sep/{noSep}', [VclaimController::class, 'delete_sep'])->name('delete_sep');
+    Route::delete('delete_surat_kontrol/{noSuratKontrol}', [VclaimController::class, 'delete_surat_kontrol'])->name('delete_surat_kontrol');
 });
 
 Route::resource('poli', PoliklinikController::class)->only(['index', 'create', 'edit', 'show', 'store'])->middleware('permission:pelayanan-medis');

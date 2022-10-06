@@ -412,6 +412,13 @@ return [
                     'can' => 'bpjs',
                 ],
                 [
+                    'text' => 'SEP Internal',
+                    'icon'    => 'fas fa-id-card',
+                    'url'  => 'vclaim/sep_internal',
+                    'shift'   => 'ml-2',
+                    'can' => 'bpjs',
+                ],
+                [
                     'text' => 'Rujukan',
                     'icon'    => 'fas fa-id-card',
                     'url'  => 'vclaim/rujukan',

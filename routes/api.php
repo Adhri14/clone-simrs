@@ -81,7 +81,7 @@ Route::prefix('vclaim')->group(function () {
     Route::delete('delete_sep', [VclaimBPJSController::class, 'delete_sep']);
     Route::get('cari_sep', [VclaimBPJSController::class, 'cari_sep']);
     Route::get('sep_internal', [VclaimBPJSController::class, 'sep_internal']);
-    Route::delete('delete_sep_internal', [VclaimBPJSController::class, 'delete_sep_internal']);
+    Route::delete('sep_internal_delete', [VclaimBPJSController::class, 'sep_internal_delete'])->name('api.sep_internal_delete');
     // surat kontrol
     Route::post('insert_rencana_kontrol', [VclaimBPJSController::class, 'insert_rencana_kontrol']);
     Route::post('surat_kontrol_insert', [VclaimBPJSController::class, 'surat_kontrol_insert'])->name('api.surat_kontrol_insert');

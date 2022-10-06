@@ -168,6 +168,8 @@
                                 'error'
                             );
                         }
+                    }).fail(function(error) {
+                        alert(error);
                     });
                 } else {
                     $('#kodedokter').find('option').remove();
@@ -219,6 +221,8 @@
                                 'error'
                             );
                         }
+                    }).fail(function(error) {
+                        alert(error);
                     });
                 } else {
                     $('.datapasien').hide();
@@ -270,6 +274,11 @@
                             var formData = {
                                 nomorkartu: nomorkartu,
                             };
+                            $('#nomorreferensi').find('option')
+                                .remove();
+                            $('#nomorreferensi').append($(
+                                "<option value='0' selected>PILIH NOMOR REFERENSI</option>"
+                            ));
                             $.get(url, formData, function(rujukan) {
                                 if (rujukan.metaData.code == 200) {
                                     $.each(rujukan.response.rujukan, function(value) {
@@ -280,11 +289,9 @@
                                             .format('YYYY-MM-DD');
                                         var today = moment().format('YYYY-MM-DD');
                                         if (date3bulan > today) {
-                                            console.log(date3bulan + " " + today);
                                             var time = "";
                                             var disablee = "";
                                         } else {
-                                            console.log("EXPIRED");
                                             var time = "EXPIRED ";
                                             var disablee = "disabled";
                                         }
@@ -324,6 +331,8 @@
                                         'error'
                                     );
                                 }
+                            }).fail(function(error) {
+                                alert(error);
                             });
                         }
                         if (jeniskunjungan == 2) {
@@ -337,44 +346,38 @@
                                 tanggalperiksa: tanggalperiksa,
                                 formatfilter: 2,
                             };
+                            $('#nomorreferensi').find('option')
+                                .remove();
+                            $('#nomorreferensi').append($(
+                                "<option value='0' selected>PILIH NOMOR REFERENSI</option>"
+                            ));
                             $.get(url, formData, function(suratkontrols) {
-                                console.log(suratkontrols)
                                 if (suratkontrols.metaData.code == 200) {
-                                    console.log(suratkontrols)
-                                    // $.each(rujukan.response.rujukan, function(value) {
-                                    //     var tanggalkunjungan = rujukan.response
-                                    //         .rujukan[value].tglKunjungan;
-                                    //     var date3bulan = moment(tanggalkunjungan,
-                                    //             "YYYY-MM-DD").add(3, 'months')
-                                    //         .format('YYYY-MM-DD');
-                                    //     var today = moment().format('YYYY-MM-DD');
-                                    //     if (date3bulan > today) {
-                                    //         console.log(date3bulan + " " + today);
-                                    //         var time = "";
-                                    //         var disablee = "";
-                                    //     } else {
-                                    //         console.log("EXPIRED");
-                                    //         var time = "EXPIRED ";
-                                    //         var disablee = "disabled";
-                                    //     }
-                                    //     $('#nomorreferensi').append($(
-                                    //         "<option value='" + rujukan
-                                    //         .response.rujukan[
-                                    //             value].noKunjungan + "' " +
-                                    //         disablee + " >" + time +
-                                    //         rujukan
-                                    //         .response.rujukan[
-                                    //             value].noKunjungan + " " +
-                                    //         rujukan
-                                    //         .response.rujukan[
-                                    //             value].pelayanan.nama +
-                                    //         " POLI " +
-                                    //         rujukan
-                                    //         .response.rujukan[
-                                    //             value].poliRujukan.nama +
-                                    //         "</option>"
-                                    //     ));
-                                    // });
+                                    $.each(suratkontrols.response.list, function(value) {
+                                        console.log(suratkontrols);
+                                        $('#nomorreferensi').append($(
+                                            "<option value='" +
+                                            suratkontrols
+                                            .response.list[
+                                                value].noSuratKontrol +
+                                            "' >" +
+                                            suratkontrols
+                                            .response.list[
+                                                value].noSuratKontrol +
+                                            " " +
+                                            suratkontrols
+                                            .response.list[
+                                                value].tglRencanaKontrol +
+                                            " POLI " +
+                                            suratkontrols
+                                            .response.list[
+                                                value].namaPoliTujuan +
+                                            " " + suratkontrols
+                                            .response.list[
+                                                value].namaDokter +
+                                            "</option>"
+                                        ));
+                                    });
                                     $('.nomorreferensi').show();
                                     $.LoadingOverlay("hide");
                                     swal.fire(
@@ -382,7 +385,7 @@
                                         "Nomor Kartu " + nomorkartu + " Atas Nama " +
                                         data
                                         .response.peserta.nama +
-                                        " Data Rujukan Ditemukan",
+                                        " Data Surat Kontrol Ditemukan",
                                         'success'
                                     );
                                 } else {
@@ -394,6 +397,8 @@
                                         'error'
                                     );
                                 }
+                            }).fail(function(error) {
+                                alert(error);
                             });
                         }
                         if (jeniskunjungan == 4) {
@@ -408,6 +413,8 @@
                             'error'
                         );
                     }
+                }).fail(function(error) {
+                    alert(error);
                 });
             });
             $('#btn_check_nik').click(function() {
@@ -419,9 +426,7 @@
                     nik: nik,
                 };
                 $.get(url, formData, function(data) {
-                    console.log(data);
                     if (data.metaData.code == 200) {
-                        console.log(data);
                         $('#nik').val(data.response.peserta
                             .nik).attr('readonly', true);
                         $('#nama').val(data.response.peserta
@@ -453,13 +458,17 @@
                         );
 
                     }
+                }).fail(function(error) {
+                    alert(error);
                 });
             });
             $('#nomorreferensi').change(function() {
                 var nomorreferensi = $('#nomorreferensi').find('option:selected').val();
+                var kodedokter = $('#kodedokter').find('option:selected').val();
                 var kodepoli = $('#kodepoli').val();
+                var tanggalperiksa = $('#tanggalperiksa').val();
+                var jeniskunjungan = $('#jeniskunjungan').val();
                 if (nomorreferensi != 0) {
-                    var jeniskunjungan = $('#jeniskunjungan').val();
                     if (jeniskunjungan == 1) {
                         var formData = {
                             nomorreferensi: nomorreferensi,
@@ -500,6 +509,8 @@
                                                 'error'
                                             );
                                         }
+                                    }).fail(function(error) {
+                                        alert(error);
                                     });
                                 } else {
                                     $.LoadingOverlay("hide");
@@ -522,6 +533,70 @@
                                     'error'
                                 );
                             }
+                        }).fail(function(error) {
+                            alert(error);
+                        });
+                    }
+                    if (jeniskunjungan == 3) {
+                        var formData = {
+                            nomorreferensi: nomorreferensi,
+                        }
+                        $.LoadingOverlay("show");
+                        var url = "{{ route('api.surat_kontrol_nomor') }}";
+                        $.get(url, formData, function(data) {
+                            console.log(data);
+                            if (data.metaData.code == 200) {
+                                if (data.response.tglRencanaKontrol != tanggalperiksa) {
+                                    console.log('tanggal periksa berbeda');
+                                    $.LoadingOverlay("hide");
+                                    swal.fire(
+                                        'Error',
+                                        "Maaf tanggal periksa (" + tanggalperiksa +
+                                        ") anda berbeda dengan tanggal periksa yang terdaftar di Surat Kontrol (" +
+                                        data.response.tglRencanaKontrol +
+                                        "). Silahkan 'Reset Jadwal' pilihan jadwal anda sesuaikan dengan surat kontrol.",
+                                        'error'
+                                    );
+                                } else if (data.response.poliTujuan != kodepoli) {
+                                    console.log('poli berbeda');
+                                    $.LoadingOverlay("hide");
+                                    swal.fire(
+                                        'Error',
+                                        "Maaf poli tujuan (" + kodepoli +
+                                        ") anda berbeda dengan poli tujuan yang terdaftar di Surat Kontrol (" +
+                                        data.response.poliTujuan +
+                                        "). Silahkan 'Reset Jadwal' pilihan jadwal anda sesuaikan dengan surat kontrol.",
+                                        'error'
+                                    );
+                                } else if (data.response.kodeDokter != kodedokter) {
+                                    console.log('dokter berbeda');
+                                    $.LoadingOverlay("hide");
+                                    swal.fire(
+                                        'Error',
+                                        "Maaf dokter tujuan (" + kodedokter +
+                                        ") anda berbeda dengan dokter tujuan yang terdaftar di Surat Kontrol (" +
+                                        data.response.kodeDokter +
+                                        "). Silahkan 'Reset Jadwal' pilihan jadwal anda sesuaikan dengan surat kontrol.",
+                                        'error'
+                                    );
+                                } else {
+                                    $.LoadingOverlay("hide");
+                                    swal.fire(
+                                        'Success',
+                                        data.metaData.message,
+                                        'success'
+                                    );
+                                }
+                            } else {
+                                $.LoadingOverlay("hide");
+                                swal.fire(
+                                    'Error',
+                                    data.metaData.message,
+                                    'error'
+                                );
+                            }
+                        }).fail(function(error) {
+                            alert(error);
                         });
                     }
                 }

@@ -938,7 +938,7 @@ class VclaimBPJSController extends Controller
         }
         return $response;
     }
-    public function delete_sep_internal(Request $request)
+    public function sep_internal_delete(Request $request)
     {
         // checking request
         $validator = Validator::make(request()->all(), [
@@ -948,13 +948,7 @@ class VclaimBPJSController extends Controller
             "kdPoliTuj" => "required",
         ]);
         if ($validator->fails()) {
-            $response = [
-                'metaData' => [
-                    'code' => 400,
-                    'message' => $validator->errors()->first(),
-                ],
-            ];
-            return json_decode(json_encode($response));
+            return json_decode(json_encode(['metadata' => ['code' => 201, 'message' => $validator->errors()->first(),],]));
         }
         // delete sep
         $url = $this->baseUrl . "SEP/Internal/delete";
@@ -975,6 +969,10 @@ class VclaimBPJSController extends Controller
             ]),
         ]);
         $response = json_decode($response->getBody());
+        if ($response->metaData->code == 200) {
+            $decrypt = $this->stringDecrypt($signature['decrypt_key'], $response->response);
+            $response->response = json_decode($decrypt);
+        }
         return $response;
     }
 }

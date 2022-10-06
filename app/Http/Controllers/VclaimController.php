@@ -29,7 +29,7 @@ class VclaimController extends Controller
         }
         $monitoring = $api->monitoring_pelayanan_peserta($request);
 
-        $request['formatfilter'] = 1;
+        $request['formatfilter'] = 2;
         $suratkontrols = $api->surat_kontrol_peserta($request);
         if ($suratkontrols->metaData->code == 200) {
             $suratkontrols = $suratkontrols->response->list;
@@ -155,6 +155,30 @@ class VclaimController extends Controller
         $vclaim = new VclaimBPJSController();
         $response = $vclaim->surat_kontrol_delete($request);
         if ($response->metaData->code == '200') {
+            Alert::success('Success', 'Data berhasil dihapus. ' . $response->metaData->message);
+        } else {
+            Alert::error('Error', 'Data gagal dihapus. ' .  $response->metaData->message);
+        }
+        return redirect()->back();
+    }
+    public function sep_internal(Request $request)
+    {
+        $sepinternals = null;
+        $api = new VclaimBPJSController();
+        if ($request->nomorsep) {
+            $request['noSep'] = $request->nomorsep;
+            $sepinternals = $api->sep_internal($request);
+        }
+        return view('vclaim.sep_internal', [
+            'request' => $request,
+            'sepinternals' => $sepinternals,
+        ]);
+    }
+    public function sep_internal_delete(Request $request)
+    {
+        $api = new VclaimBPJSController();
+        $response = $api->sep_internal_delete($request);
+        if ($response->metaData->code == 200) {
             Alert::success('Success', 'Data berhasil dihapus. ' . $response->metaData->message);
         } else {
             Alert::error('Error', 'Data gagal dihapus. ' .  $response->metaData->message);
