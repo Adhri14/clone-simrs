@@ -30,4 +30,8 @@ class PasienDB extends Model
         "kode_kecamatan",
         "kode_desa",
     ];
+    public function kecamatans()
+    {
+        return $this->hasOne(Kecamatan::class, 'kode_kecamatan', 'kecamatan');
+    }
 }

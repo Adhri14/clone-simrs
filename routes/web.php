@@ -76,6 +76,7 @@ Route::prefix('antrian')->name('antrian.')->middleware(['auth'])->group(function
     Route::get('selesai_semua/{kodepoli}', [AntrianController::class, 'selesai_semua'])->name('selesai_semua')->middleware('permission:poliklinik');
     Route::get('surat_kontrol_poli', [AntrianController::class, 'surat_kontrol_poli'])->name('surat_kontrol_poli')->middleware('permission:poliklinik');
     Route::post('surat_kontrol_create', [AntrianController::class, 'surat_kontrol_create'])->name('surat_kontrol_create')->middleware('permission:poliklinik');
+    Route::get('laporan_kunjungan_poliklinik', [AntrianController::class, 'laporan_kunjungan_poliklinik'])->name('laporan_kunjungan_poliklinik')->middleware('permission:poliklinik');
     // farmasi
     Route::get('farmasi', [AntrianController::class, 'farmasi'])->name('farmasi')->middleware('permission:farmasi');
     Route::get('panggil_farmasi/{kodebooking}', [AntrianController::class, 'panggil_farmasi'])->name('panggil_farmasi')->middleware('permission:farmasi');
@@ -122,12 +123,14 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified', 'permiss
 Route::prefix('vclaim')->name('vclaim.')->middleware(['auth'])->group(function () {
     Route::get('/', [VclaimController::class, 'index'])->name('index');
     Route::get('monitoring_pelayanan_peserta', [VclaimController::class, 'monitoring_pelayanan_peserta'])->name('monitoring_pelayanan_peserta');
-    Route::delete('delete_sep/{noSep}', [VclaimController::class, 'delete_sep'])->name('delete_sep');
     Route::get('data_surat_kontrol', [VclaimController::class, 'data_surat_kontrol'])->name('data_surat_kontrol');
-    Route::delete('delete_surat_kontrol/{noSuratKontrol}', [VclaimController::class, 'delete_surat_kontrol'])->name('delete_surat_kontrol');
-    Route::post('buat_surat_kontrol', [VclaimController::class, 'buat_surat_kontrol'])->name('buat_surat_kontrol');
     Route::get('edit_surat_kontrol/{id}', [VclaimController::class, 'edit_surat_kontrol'])->name('edit_surat_kontrol');
+    Route::get('sep_internal', [VclaimController::class, 'sep_internal'])->name('sep_internal');
+    Route::post('buat_surat_kontrol', [VclaimController::class, 'buat_surat_kontrol'])->name('buat_surat_kontrol');
     Route::post('update_surat_kontrol', [VclaimController::class, 'update_surat_kontrol'])->name('update_surat_kontrol');
+    Route::delete('sep_internal_delete', [VclaimController::class, 'sep_internal_delete'])->name('sep_internal_delete');
+    Route::delete('delete_sep/{noSep}', [VclaimController::class, 'delete_sep'])->name('delete_sep');
+    Route::delete('delete_surat_kontrol/{noSuratKontrol}', [VclaimController::class, 'delete_surat_kontrol'])->name('delete_surat_kontrol');
 });
 
 Route::resource('poli', PoliklinikController::class)->only(['index', 'create', 'edit', 'show', 'store'])->middleware('permission:pelayanan-medis');

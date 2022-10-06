@@ -362,6 +362,13 @@ return [
                     'can' => 'poliklinik',
                 ],
                 [
+                    'text' => 'Laporan Kunjungan Poliklinik',
+                    'icon'    => 'fas fa-chart-line',
+                    'shift'   => 'ml-2',
+                    'url'  => 'antrian/laporan_kunjungan_poliklinik',
+                    'can' => 'poliklinik',
+                ],
+                [
                     'text' => 'Antrian Farmasi',
                     'icon'    => 'fas fa-pills',
                     'url'  => 'antrian/farmasi',
@@ -408,6 +415,13 @@ return [
                     'text' => 'Monitoring Pelayanan Peserta',
                     'icon'    => 'fas fa-id-card',
                     'url'  => 'vclaim/monitoring_pelayanan_peserta',
+                    'shift'   => 'ml-2',
+                    'can' => 'bpjs',
+                ],
+                [
+                    'text' => 'SEP Internal',
+                    'icon'    => 'fas fa-id-card',
+                    'url'  => 'vclaim/sep_internal',
                     'shift'   => 'ml-2',
                     'can' => 'bpjs',
                 ],

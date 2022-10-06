@@ -48,7 +48,7 @@ class KunjunganDB extends Model
     }
     public function penjamin()
     {
-        return $this->belongsTo(PenjaminDB::class, 'kode_penjamin', 'kode_penjamin');
+        return $this->hasOne(PenjaminDB::class, 'kode_penjamin_simrs', 'kode_penjamin');
     }
     // public function layanans()
     // {
