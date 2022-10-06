@@ -362,6 +362,13 @@ return [
                     'can' => 'poliklinik',
                 ],
                 [
+                    'text' => 'Laporan Kunjungan Poliklinik',
+                    'icon'    => 'fas fa-chart-line',
+                    'shift'   => 'ml-2',
+                    'url'  => 'antrian/laporan_kunjungan_poliklinik',
+                    'can' => 'poliklinik',
+                ],
+                [
                     'text' => 'Antrian Farmasi',
                     'icon'    => 'fas fa-pills',
                     'url'  => 'antrian/farmasi',

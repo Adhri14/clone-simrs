@@ -8,6 +8,7 @@ use App\Http\Controllers\API\WhatsappController;
 use App\Models\Antrian;
 use App\Models\Dokter;
 use App\Models\JadwalDokter;
+use App\Models\Kecamatan;
 use App\Models\KunjunganDB;
 use App\Models\LayananDB;
 use App\Models\LayananDetailDB;
@@ -1295,6 +1296,25 @@ class AntrianController extends Controller
             'unit' => $unit,
             'dokters' => $dokters,
             'surat_kontrols' => $surat_kontrols,
+        ]);
+    }
+    public function laporan_kunjungan_poliklinik(Request $request)
+    {
+        $kunjungans = null;
+        if (isset($request->tanggal) && isset($request->kodepoli)) {
+            $poli = UnitDB::where('KDPOLI', $request->kodepoli)->first();
+            $kunjungans = KunjunganDB::whereDate('tgl_masuk', $request->tanggal)
+                ->where('kode_unit', $poli->kode_unit)
+                ->where('status_kunjungan',  2)
+                ->with(['dokter', 'unit', 'pasien', 'pasien.kecamatans', 'penjamin', 'surat_kontrol'])
+                ->get();
+        }
+        // dd($kunjungans->first()->pasien->kecamatans);
+        $unit = UnitDB::where('KDPOLI', "!=", null)->get();
+        return view('simrs.antrian_laporan_kunjungan', [
+            'kunjungans' => $kunjungans,
+            'request' => $request,
+            'unit' => $unit,
         ]);
     }
     // farmasi
