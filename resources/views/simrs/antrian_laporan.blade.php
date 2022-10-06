@@ -230,7 +230,8 @@
                                     {{ $kunjungans->where('kode_unit', $unit->kode_unit)->count() }}
                                 </td>
                                 <td>
-                                    @if ($antrians->where('kodepoli', $unit->KDPOLI)->count() == 0)
+                                    @if ($antrians->where('kodepoli', $unit->KDPOLI)->count() == 0 ||
+                                        $kunjungans->where('kode_unit', $unit->kode_unit)->count() == 0)
                                         0
                                     @else
                                         {{ round(($antrians->where('kodepoli', $unit->KDPOLI)->count() / $kunjungans->where('kode_unit', $unit->kode_unit)->count()) * 100) }}
