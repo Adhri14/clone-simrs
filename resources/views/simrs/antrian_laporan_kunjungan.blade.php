@@ -58,7 +58,7 @@
                         <x-adminlte-card title="Kunjungan Poliklinik ({{ $kunjungans->count() }} Orang)" theme="primary"
                             icon="fas fa-info-circle" collapsible>
                             @php
-                                $message = 'Poliklinik : ' . $request->kodepoli . '-' . $unit->firstWhere('KDPOLI', $request->kodepoli)->nama_unit . '<br>Tanggal : ' . $request->tanggal;
+                                $message = 'Poliklinik : ' . $request->kodepoli . '-' . $unit->firstWhere('KDPOLI', $request->kodepoli)->nama_unit . '<br>Tanggal : ' . $request->tanggal . '<br>User : ' . Auth::user()->name;
                                 $heads = ['No', 'No RM ', ' Nama', 'L', 'P', 'Alamat', 'Baru', 'Lama', 'Umum', 'JKN', 'Cara ', 'Diagnosa', 'Tindakan'];
                                 $config = [
                                     // 'order' => ['2', 'desc'],
@@ -74,6 +74,7 @@
                                             'messageTop' => $message,
                                             'orientation' => 'landscape',
                                             'columns' => ':not(.select-checkbox)',
+                                            'footer' => true,
                                         ],
                                         [
                                             'extend' => 'pdf',
