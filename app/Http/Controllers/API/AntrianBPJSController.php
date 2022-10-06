@@ -1291,8 +1291,6 @@ class AntrianBPJSController extends Controller
                     $request['message'] = "*Antrian Berhasil di Daftarkan*\nAntrian anda berhasil didaftarkan melalui Layanan Online RSUD Waled dengan data sebagai berikut : \n\n*Kode Antrian :* " . $request->kodebooking .  "\n*Angka Antrian :* " . $request->angkaantrean .  "\n*Nomor Antrian :* " . $request->nomorantrean . "\n*Jenis Pasien :* " . $request->jenispasien .  "\n*Jenis Kunjungan :* " . $request->jeniskunjungan .  "\n\n*Nama :* " . $request->nama . "\n*Poliklinik :* " . $request->namapoli  . "\n*Dokter :* " . $request->namadokter  .  "\n*Jam Praktek :* " . $request->jampraktek  .  "\n*Tanggal Periksa :* " . $request->tanggalperiksa . "\n\nTerima kasih. Semoga sehat selalu.\nUntuk pertanyaan & pengaduan silahkan hubungi :\n*Humas RSUD Waled 08983311118*";
                     $request['number'] = $request->nohp;
                     $wa->send_message($request);
-                    $request['notif'] = 'Antrian berhasil didaftarkan melalui ' . $request->method . "LINE \n(" . $request->nama . "," . $request->namapoli .  "," . $request->tanggalperiksa . "," . $request->jeniskunjungan . ")";
-                    $wa->send_notif($request);
                     $response = [
                         "response" => [
                             "nomorantrean" => $request->nomorantrean,
@@ -1734,10 +1732,10 @@ class AntrianBPJSController extends Controller
                                 $request['tujuan'] =  $antrian->kodepoli; // get antrian
                                 $request['eksekutif'] =  0;
                                 // dpjp
-                                $request['tujuanKunj'] = "2";
+                                $request['tujuanKunj'] = "0";
                                 $request['flagProcedure'] = "";
                                 $request['kdPenunjang'] = "";
-                                $request['assesmentPel'] = "5";
+                                $request['assesmentPel'] = "";
                                 $request['noSurat'] = $request->nomorsuratkontrol; // get antrian
                                 $request['kodeDPJP'] = $suratkontrol->response->kodeDokter;
                                 $request['dpjpLayan'] =  $suratkontrol->response->kodeDokter;
