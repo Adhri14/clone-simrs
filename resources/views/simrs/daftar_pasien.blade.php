@@ -38,7 +38,7 @@
                             </div>
                         </x-slot>
                     </x-adminlte-input-date>
-                    <x-adminlte-select2 name="kodepoli" label="Poliklinik">
+                    <x-adminlte-select2 name="pilihkodepoli" id="pilihkodepoli" label="Poliklinik">
                         <option value="0" selected>PILIH POLIKLINIK</option>
                         @foreach ($poli as $item)
                             <option value="{{ $item->kodesubspesialis }}">
@@ -48,6 +48,7 @@
                             </option>
                         @endforeach
                     </x-adminlte-select2>
+                    <input type="hidden" name="kodepoli" id="kodepoli">
                     <x-adminlte-select fgroup-class="kodedokter" name="kodedokter" id="kodedokter" label="Dokter" />
                     <x-slot name="footerSlot">
                         <x-adminlte-button icon="fas fa-sync" id="reset_jadwal" theme="danger" label="Reset Jadwal" />
@@ -125,9 +126,10 @@
             $('.norm').hide();
             $('.nohp').hide();
             $('.nomorreferensi').hide();
-            $('#kodepoli').change(function() {
+            $('#pilihkodepoli').change(function() {
                 var tanggalperiksa = $('#tanggalperiksa').val();
-                var kodepoli = $('#kodepoli').find('option:selected').val();
+                var kodepoli = $('#pilihkodepoli').find('option:selected').val();
+                $('#kodepoli').val(kodepoli);
                 if (kodepoli != 0) {
                     var url =
                         "{{ route('antrian.index') }}" + "/console_jadwaldokter/" + kodepoli +
@@ -174,7 +176,8 @@
             });
             $('#kodedokter').change(function() {
                 var tanggalperiksa = $('#tanggalperiksa').val();
-                var kodepoli = $('#kodepoli').find('option:selected').val();
+                var kodepoli = $('#kodepoli').val();
+                $('#pilihkodepoli').prop('disabled', 'disabled');
                 var kodedokter = $('#kodedokter').find('option:selected').val();
                 if (kodedokter != 0) {
                     var url = "{{ route('api.status_antrean') }}";
@@ -187,15 +190,27 @@
                     $.get(url, formData, function(data) {
                         $.LoadingOverlay("hide");
                         if (data.metadata.code == 200) {
-                            $.LoadingOverlay("hide");
-                            $('.datapasien').show();
-                            swal.fire(
-                                'Success',
-                                "Dokter " + kodedokter + " telah dipilih. Sisa kuota " + data
-                                .response
-                                .sisaantrean + " pasien.",
-                                'success'
-                            );
+                            if (data.response.sisaantrean <= 0) {
+                                $.LoadingOverlay("hide");
+                                $('.datapasien').hide();
+                                swal.fire(
+                                    'Error',
+                                    "Mohon maaf kuota jadwal dokter sudah penuh",
+                                    'error'
+                                );
+                            } else {
+                                $.LoadingOverlay("hide");
+                                $('.datapasien').show();
+                                swal.fire(
+                                    'Success',
+                                    "Dokter " + kodedokter + " telah dipilih. Sisa kuota " +
+                                    data
+                                    .response
+                                    .sisaantrean + " pasien.",
+                                    'success'
+                                );
+                            }
+
                         } else {
                             $.LoadingOverlay("hide");
                             swal.fire(
@@ -228,6 +243,7 @@
             $('#btn_check_nomorkartu').click(function() {
                 var nomorkartu = $('#nomorkartu').val();
                 var jeniskunjungan = $('#jeniskunjungan').val();
+                var tanggalperiksa = $('#tanggalperiksa').val();
                 $('#pilihjeniskunjungan').prop('disabled', 'disabled');
                 var url = "{{ route('api.cek_nomorkartu') }}";
                 $.LoadingOverlay("show");
@@ -315,8 +331,70 @@
                             $.LoadingOverlay("hide");
                         }
                         if (jeniskunjungan == 3) {
-                            alert('3')
-                            $.LoadingOverlay("hide");
+                            var url = "{{ route('api.surat_kontrol_peserta') }}";
+                            var formData = {
+                                nomorkartu: nomorkartu,
+                                tanggalperiksa: tanggalperiksa,
+                                formatfilter: 2,
+                            };
+                            $.get(url, formData, function(suratkontrols) {
+                                console.log(suratkontrols)
+                                if (suratkontrols.metaData.code == 200) {
+                                    console.log(suratkontrols)
+                                    // $.each(rujukan.response.rujukan, function(value) {
+                                    //     var tanggalkunjungan = rujukan.response
+                                    //         .rujukan[value].tglKunjungan;
+                                    //     var date3bulan = moment(tanggalkunjungan,
+                                    //             "YYYY-MM-DD").add(3, 'months')
+                                    //         .format('YYYY-MM-DD');
+                                    //     var today = moment().format('YYYY-MM-DD');
+                                    //     if (date3bulan > today) {
+                                    //         console.log(date3bulan + " " + today);
+                                    //         var time = "";
+                                    //         var disablee = "";
+                                    //     } else {
+                                    //         console.log("EXPIRED");
+                                    //         var time = "EXPIRED ";
+                                    //         var disablee = "disabled";
+                                    //     }
+                                    //     $('#nomorreferensi').append($(
+                                    //         "<option value='" + rujukan
+                                    //         .response.rujukan[
+                                    //             value].noKunjungan + "' " +
+                                    //         disablee + " >" + time +
+                                    //         rujukan
+                                    //         .response.rujukan[
+                                    //             value].noKunjungan + " " +
+                                    //         rujukan
+                                    //         .response.rujukan[
+                                    //             value].pelayanan.nama +
+                                    //         " POLI " +
+                                    //         rujukan
+                                    //         .response.rujukan[
+                                    //             value].poliRujukan.nama +
+                                    //         "</option>"
+                                    //     ));
+                                    // });
+                                    $('.nomorreferensi').show();
+                                    $.LoadingOverlay("hide");
+                                    swal.fire(
+                                        'Success',
+                                        "Nomor Kartu " + nomorkartu + " Atas Nama " +
+                                        data
+                                        .response.peserta.nama +
+                                        " Data Rujukan Ditemukan",
+                                        'success'
+                                    );
+                                } else {
+                                    $('.nomorreferensi').hide();
+                                    $.LoadingOverlay("hide");
+                                    swal.fire(
+                                        'Error (3)',
+                                        suratkontrols.metaData.message,
+                                        'error'
+                                    );
+                                }
+                            });
                         }
                         if (jeniskunjungan == 4) {
                             alert('4')
@@ -379,7 +457,7 @@
             });
             $('#nomorreferensi').change(function() {
                 var nomorreferensi = $('#nomorreferensi').find('option:selected').val();
-                var kodepoli = $('#kodepoli').find('option:selected').val();
+                var kodepoli = $('#kodepoli').val();
                 if (nomorreferensi != 0) {
                     var jeniskunjungan = $('#jeniskunjungan').val();
                     if (jeniskunjungan == 1) {
@@ -481,6 +559,7 @@
                 $('#kodedokter').find('option').remove();
                 $('#kodepoli').val(0).change();
                 $('#pilihjeniskunjungan').prop('disabled', false).val(0).change();
+                $('#pilihkodepoli').prop('disabled', false).val(0).change();
             });
         });
     </script>

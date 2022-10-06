@@ -548,6 +548,7 @@ return [
             'text'        => 'Status Bridging BPJS',
             'url'         => 'status',
             'icon'        => 'fas fa-info-circle',
+            'can' => 'admin',
         ],
         // ['header' => 'account_settings'],
         // [
