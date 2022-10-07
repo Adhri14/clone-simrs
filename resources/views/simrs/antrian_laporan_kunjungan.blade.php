@@ -50,165 +50,207 @@
                         </div>
                     </div>
                     <x-adminlte-button type="submit" class="withLoad" theme="primary" label="Submit Antrian" />
+                    <button class="btn btn-success" onclick="printDiv('printMe')"><i class="fas fa-print"></i>
+                        Print
+                        Laporan</button>
                 </form>
             </x-adminlte-card>
             @if (isset($kunjungans))
-                <div class="row">
-                    <div class="col-md-12">
-                        <x-adminlte-card title="Kunjungan Poliklinik ({{ $kunjungans->count() }} Orang)" theme="primary"
-                            icon="fas fa-info-circle" collapsible>
-                            @php
-                                \Carbon\Carbon::setlocale(LC_ALL, 'IND');
-                                $message =
-                                    'Poliklinik : ' .
-                                    $request->kodepoli .
-                                    '-' .
-                                    $unit->firstWhere('KDPOLI', $request->kodepoli)->nama_unit .
-                                    '<br>Tanggal : ' .
-                                    \Carbon\Carbon::parse($request->tanggal)
-                                        ->locale('id')
-                                        ->isoFormat('dddd D MMMM YYYY') .
-                                    '<br>User : ' .
-                                    Auth::user()->name;
-                                $heads = ['No', 'No RM ', ' Nama', 'L', 'P', 'Umur', 'Alamat', 'Baru', 'Lama', 'Umum', 'JKN', 'Cara ', 'Diagnosa', 'Tindakan'];
-                                $config = [
-                                    // 'order' => ['2', 'desc'],
-                                    'paging' => false,
-                                    'buttons' => [
-                                        [
-                                            'extend' => 'colvis',
-                                            'className' => 'btn-info',
-                                        ],
-                                        [
-                                            'extend' => 'print',
-                                            'className' => 'btn-info',
-                                            'messageTop' => $message,
-                                            'orientation' => 'landscape',
-                                            'columns' => ':not(.select-checkbox)',
-                                            'footer' => true,
-                                        ],
-                                        [
-                                            'extend' => 'pdf',
-                                            'className' => 'btn-info',
-                                        ],
-                                    ],
-                                ];
-                            @endphp
-                            <x-adminlte-datatable id="table2" class="nowrap text-xs" :heads="$heads" :config="$config"
-                                striped bordered hoverable compressed with-buttons>
-                                @foreach ($kunjungans as $item)
+                <div id="printMe">
+                    <section class="invoice p-3 mb-3">
+                        <div class="row">
+                            <img src="{{ asset('vendor/adminlte/dist/img/rswaledico.png') }}" style="width: 100px">
+                            <div class="col">
+                                <b>RUMAH SAKIT UMUM DAERAH WALED</b><br>
+                                <b>KABUPATEN CIREBON</b><br>
+                                Jalan Raden Walangsungsang Kecamatan Waled Kabupaten Cirebon 45188<br>
+                                www.rsudwaled.id - brsud.waled@gmail.com - Call Center (0231) 661126
+                            </div>
+                        </div>
+                        <div class="row invoice-info">
+                            <div class="col-sm-12 invoice-col text-center">
+                                <b class="text-lg">SENSUS HARIAN KUNJUNGAN POLIKLINIK</b>
+                            </div>
+                            <div class="col-sm-4 invoice-col">
+                                <dl class="row">
+                                    <dt class="col-sm-4 m-0">Poliklinik</dt>
+                                    <dd class="col-sm-8 m-0"> :
+                                        <b>{{ $unit->firstWhere('KDPOLI', $request->kodepoli)->nama_unit }}</b>
+                                    </dd>
+                                    <dt class="col-sm-4 m-0">Tanggal</dt>
+                                    <dd class="col-sm-8 m-0"> :
+                                        <b>{{ \Carbon\Carbon::parse($request->tanggal)->locale('id')->isoFormat('dddd, D MMMM YYYY') }}</b>
+                                    </dd>
+                                    <dt class="col-sm-4  m-0">User</dt>
+                                    <dd class="col-sm-8  m-0"> :
+                                        <b>{{ Auth::user()->name }}</b>
+                                    </dd>
+                                    <dt class="col-sm-4  m-0">Waktu Cetak</dt>
+                                    <dd class="col-sm-8  m-0"> :
+                                        <b>{{ Carbon\Carbon::now() }}</b>
+                                    </dd>
+                                </dl>
+                            </div>
+                        </div>
+                        <div class="col-12 table-responsive">
+                            <table class="table table-sm text-xs">
+                                <thead>
                                     <tr>
-                                        <td>{{ $loop->iteration }}</td>
-                                        <td>{{ $item->no_rm }}</td>
-                                        <td>{{ $item->pasien->nama_px }}</td>
-                                        <td>{{ $item->pasien->jenis_kelamin == 'L' ? 'L' : '-' }}</td>
-                                        <td>{{ $item->pasien->jenis_kelamin == 'P' ? 'P' : '-' }}</td>
-                                        <td></td>
-                                        <td>{{ $item->pasien->kecamatans->nama_kecamatan }}</td>
-                                        <td>{{ $item->counter == 1 ? 'Baru' : '-' }}</td>
-                                        <td>{{ $item->counter == 1 ? '-' : 'Lama' }}</td>
-                                        <td>{{ $item->no_sep ? '-' : 'UMUM' }}</td>
-                                        <td>{{ $item->no_sep ? 'JKN' : '-' }}</td>
-                                        <td>{{ $item->penjamin ? $item->penjamin->nama_penjamin_bpjs : 'MANDIRI' }}</td>
-                                        <td>{{ $item->diagnosapoli->diag_00 }}</td>
-                                        <td></td>
+                                        <th>No</th>
+                                        <th>RM</th>
+                                        <th>Nama Pasien</th>
+                                        <th>Sex</th>
+                                        <th>Umur</th>
+                                        <th>Alamat</th>
+                                        <th>Status</th>
+                                        <th>Pasien</th>
+                                        <th>Cara Pembayaran</th>
+                                        <th>Diagnosa</th>
+                                        <th>Tindakan</th>
                                     </tr>
-                                @endforeach
-                                <tfoot>
-                                    <tr>
-                                        <th colspan="4"> Total</th>
-                                        <th></th>
-                                        <th></th>
-                                        <th>{{ $kunjungans->where('counter', 1)->count() }}</th>
-                                        <th>{{ $kunjungans->where('counter', '!=', 1)->count() }}</th>
-                                        <th>{{ $kunjungans->where('no_sep', '==', null)->count() }}</th>
-                                        <th>{{ $kunjungans->where('no_sep', '!=', null)->count() }}</th>
-                                        <th></th>
-                                        <th></th>
-                                        <th></th>
-                                    </tr>
-                                </tfoot>
-                            </x-adminlte-datatable>
-                            Warna teks hijau adalah kunjungan yang telah dibuatkan surat kontrol.
-                        </x-adminlte-card>
-
-                        <x-adminlte-card title="Kunjungan Poliklinik ({{ $kunjungans->count() }} Orang)" theme="primary"
-                            icon="fas fa-info-circle" collapsible>
-                            @php
-                                \Carbon\Carbon::setlocale(LC_ALL, 'IND');
-                                $message =
-                                    'Poliklinik : ' .
-                                    $request->kodepoli .
-                                    '-' .
-                                    $unit->firstWhere('KDPOLI', $request->kodepoli)->nama_unit .
-                                    '<br>Tanggal : ' .
-                                    \Carbon\Carbon::parse($request->tanggal)
-                                        ->locale('id')
-                                        ->isoFormat('dddd D MMMM YYYY') .
-                                    '<br>User : ' .
-                                    Auth::user()->name;
-                                $heads = ['No', 'No RM ', ' Nama', 'L', 'P', 'Umur', 'Alamat', 'Baru', 'Lama', 'Umum', 'JKN', 'Cara ', 'Diagnosa', 'Tindakan'];
-                                $config = [
-                                    // 'order' => ['2', 'desc'],
-                                    'paging' => false,
-                                    'buttons' => [
-                                        [
-                                            'extend' => 'colvis',
-                                            'className' => 'btn-info',
-                                        ],
-                                        [
-                                            'extend' => 'print',
-                                            'className' => 'btn-info',
-                                            'messageTop' => $message,
-                                            'orientation' => 'landscape',
-                                            'columns' => ':not(.select-checkbox)',
-                                            'footer' => true,
-                                        ],
-                                        [
-                                            'extend' => 'pdf',
-                                            'className' => 'btn-info',
-                                        ],
-                                    ],
-                                ];
-                            @endphp
-                            <x-adminlte-datatable id="table1" class="nowrap text-xs" :heads="$heads" :config="$config"
-                                striped bordered hoverable compressed with-buttons>
-                                @foreach ($kunjungans as $item)
-                                    <tr>
-                                        <td>{{ $loop->iteration }}</td>
-                                        <td>{{ $item->no_rm }}</td>
-                                        <td>{{ $item->pasien->nama_px }}</td>
-                                        <td>{{ $item->pasien->jenis_kelamin == 'L' ? 'L' : '-' }}</td>
-                                        <td>{{ $item->pasien->jenis_kelamin == 'P' ? 'P' : '-' }}</td>
-                                        <td></td>
-                                        <td>{{ $item->pasien->kecamatans->nama_kecamatan }}</td>
-                                        <td>{{ $item->counter == 1 ? 'Baru' : '-' }}</td>
-                                        <td>{{ $item->counter == 1 ? '-' : 'Lama' }}</td>
-                                        <td>{{ $item->no_sep ? '-' : 'UMUM' }}</td>
-                                        <td>{{ $item->no_sep ? 'JKN' : '-' }}</td>
-                                        <td>{{ $item->penjamin ? $item->penjamin->nama_penjamin_bpjs : 'MANDIRI' }}</td>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                @endforeach
-                                <tfoot>
-                                    <tr>
-                                        <th colspan="4"> Total</th>
-                                        <th></th>
-                                        <th></th>
-                                        <th>{{ $kunjungans->where('counter', 1)->count() }}</th>
-                                        <th>{{ $kunjungans->where('counter', '!=', 1)->count() }}</th>
-                                        <th>{{ $kunjungans->where('no_sep', '==', null)->count() }}</th>
-                                        <th>{{ $kunjungans->where('no_sep', '!=', null)->count() }}</th>
-                                        <th></th>
-                                        <th></th>
-                                        <th></th>
-                                    </tr>
-                                </tfoot>
-                            </x-adminlte-datatable>
-                            Warna teks hijau adalah kunjungan yang telah dibuatkan surat kontrol.
-                        </x-adminlte-card>
-                    </div>
+                                </thead>
+                                <tbody>
+                                    @foreach ($kunjungans as $item)
+                                        <tr>
+                                            <td>{{ $loop->iteration }}</td>
+                                            <td>{{ $item->no_rm }}</td>
+                                            <td>{{ $item->pasien->nama_px }}</td>
+                                            <td>{{ $item->pasien->jenis_kelamin == 'L' ? 'L' : 'P' }}
+                                            </td>
+                                            <td>{{ \Carbon\Carbon::parse($item->pasien->tgl_lahir)->age }}</td>
+                                            <td>{{ $item->pasien->kecamatans ? $item->pasien->kecamatans->nama_kecamatan : '' }}
+                                            </td>
+                                            <td>{{ $item->counter == 1 ? 'BARU' : 'LAMA' }}</td>
+                                            <td>{{ $item->no_sep ? 'JKN' : 'UMUM' }}</td>
+                                            <td>{{ $item->penjamin_simrs->nama_penjamin }}
+                                            </td>
+                                            <td>{{ $item->diagnosapoli ? $item->diagnosapoli->diag_00 : '' }}</td>
+                                            {{-- <td>{{ $response->where('KODE_KUNJUNGAN', $item->kode_kunjungan)->first()->diagx }} --}}
+                                            </td>
+                                            <td></td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="row">
+                            <div class="col-3 invoice-col table-responsive">
+                                <address>
+                                    <strong>Kunjungan berdasarkan Cara Pembayaran</strong>
+                                </address>
+                                <table class="table table-sm text-xs">
+                                    <thead>
+                                        <tr>
+                                            <th>Cara Pembayaran</th>
+                                            <th>Jml</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($kunjungans->groupBy('kode_penjamin') as $key => $item)
+                                            <tr>
+                                                <td>{{ $penjaminrs->where('kode_penjamin', $key)->first()->nama_penjamin }}
+                                                </td>
+                                                <td>{{ $item->count() }}</td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                    <thead>
+                                        <tr>
+                                            <th>Total</th>
+                                            <th>{{ $kunjungans->count() }}</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                            <div class="col-3 invoice-col table-responsive">
+                                <address>
+                                    <strong>Kunjungan berdasarkan Kelamin</strong>
+                                </address>
+                                <table class="table table-sm text-xs">
+                                    <thead>
+                                        <tr>
+                                            <th>Sex</th>
+                                            <th>Jml</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Laki-Laki</td>
+                                            <td>{{ $response->where('jenis_kelaminL', '!=', null)->count() }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Perempuan</td>
+                                            <td>{{ $response->where('jenis_kelaminP', '!=', null)->count() }}</td>
+                                        </tr>
+                                    </tbody>
+                                    <thead>
+                                        <tr>
+                                            <th>Total</th>
+                                            <th>{{ $kunjungans->count() }}</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                            <div class="col-3 invoice-col table-responsive">
+                                <address>
+                                    <strong>Kunjungan berdasarkan Status Pasien</strong>
+                                </address>
+                                <table class="table table-sm text-xs">
+                                    <thead>
+                                        <tr>
+                                            <th>Status</th>
+                                            <th>Jml</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Baru</td>
+                                            <td>{{ $kunjungans->where('counter', '==', 1)->count() }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Lama</td>
+                                            <td>{{ $kunjungans->where('counter', '!=', 1)->count() }}</td>
+                                        </tr>
+                                    </tbody>
+                                    <thead>
+                                        <tr>
+                                            <th>Total</th>
+                                            <th>{{ $kunjungans->count() }}</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                            <div class="col-3 invoice-col table-responsive">
+                                <address>
+                                    <strong>Kunjungan berdasarkan Jenis Pasien</strong>
+                                </address>
+                                <table class="table table-sm text-xs">
+                                    <thead>
+                                        <tr>
+                                            <th>Jenis</th>
+                                            <th>Jml</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>JKN / BPJS</td>
+                                            <td>{{ $kunjungans->where('no_sep', '!=', null)->count() }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Umum</td>
+                                            <td>{{ $kunjungans->where('no_sep', null)->count() }}</td>
+                                        </tr>
+                                    </tbody>
+                                    <thead>
+                                        <tr>
+                                            <th>Total</th>
+                                            <th>{{ $kunjungans->count() }}</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+                    </section>
                 </div>
             @endif
         </div>
@@ -219,3 +261,29 @@
 @section('plugins.Datatables', true)
 @section('plugins.DatatablesPlugins', true)
 @section('plugins.TempusDominusBs4', true)
+@section('js')
+    <script>
+        function printDiv(divName) {
+            var printContents = document.getElementById(divName).innerHTML;
+            var originalContents = document.body.innerHTML;
+            tampilan_print = document.body.innerHTML = printContents;
+            setTimeout('window.addEventListener("load", window.print());', 1000);
+        }
+    </script>
+@endsection
+@section('css')
+    <style type="text/css" media="print">
+        @media print {
+            @page {
+                size: landscape
+            }
+        }
+
+        table,
+        th,
+        td {
+            border: 1px solid #333333 !important;
+        }
+    </style>
+
+@endsection

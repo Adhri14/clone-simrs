@@ -22,6 +22,7 @@ use App\Models\TarifLayananDetailDB;
 use App\Models\TracerDB;
 use App\Models\TransaksiDB;
 use App\Models\UnitDB;
+use App\Models\PenjaminSimrs;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -1313,10 +1314,15 @@ class AntrianController extends Controller
             $response = DB::connection('mysql2')->select("CALL SP_PANGGIL_PASIEN_RAWAT_JALAN_KUNJUNGAN('" . $poli->kode_unit . "','" . $request->tanggal . "')");
         }
         $unit = UnitDB::where('KDPOLI', "!=", null)->get();
+        $penjaminrs = PenjaminSimrs::get();
+        $response = collect($response);
+        // dd($response);
+        // dd($response->where('KODE_KUNJUNGAN', $kunjungans->first()->kode_kunjungan)->first()->diagx);
         return view('simrs.antrian_laporan_kunjungan', [
             'kunjungans' => $kunjungans,
             'request' => $request,
             'response' => $response,
+            'penjaminrs' => $penjaminrs,
             'unit' => $unit,
         ]);
     }
@@ -1450,7 +1456,6 @@ class AntrianController extends Controller
         }
         $antrians = Antrian::whereBetween('tanggalperiksa', [$tanggal_awal, $tanggal_akhir])
             ->get();
-
         $kunjungans = KunjunganDB::whereBetween('tgl_masuk', [Carbon::parse($tanggal_awal)->startOfDay(), Carbon::parse($tanggal_akhir)->endOfDay()])
             ->where('kode_unit', "!=", null)
             ->where('kode_unit', 'LIKE', '10%')
@@ -1458,10 +1463,7 @@ class AntrianController extends Controller
             ->where('kode_unit', "!=", 1023)
             ->where('kode_unit', "!=", 1015)
             ->get();
-
-
         $units = UnitDB::where('KDPOLI', '!=', null)->get();
-
         // $polis = Poliklinik::where('status', 1)
         //     ->get();
         return view('simrs.antrian_laporan', [
