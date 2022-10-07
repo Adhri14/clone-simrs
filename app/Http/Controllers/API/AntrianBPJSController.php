@@ -1727,7 +1727,7 @@ class AntrianBPJSController extends Controller
                                 $request['ppkRujukan'] = $ppkRujukan; // get surat kontrol
                                 // diagnosa
                                 $request['catatan'] =  $diagnosa; // get surat kontrol
-                                $request['diagAwal'] =  $diagnosa; // get surat kontrol
+                                $request['diagAwal'] = str_replace(" ", "", explode('-', $diagnosa)[0]);
                                 // poli tujuan
                                 $request['tujuan'] =  $antrian->kodepoli; // get antrian
                                 $request['eksekutif'] =  0;

@@ -8,8 +8,15 @@
         <div class="col-12">
             <div class="row">
                 <div class="col-md-3">
-                    <x-adminlte-small-box title="{{ $total_pasien }}" text="Total Pasien" theme="success"
-                        icon="fas fa-users" />
+                    <x-adminlte-small-box title="{{ $total_pasien }}" text="Total Pasien" theme="success" icon="fas fa-users" />
+                </div>
+                <div class="col-md-3">
+                    <x-adminlte-small-box title="{{ $pasien_jkn }} {{ round(($pasien_jkn / $total_pasien) * 100) }}%"
+                        text="Pasien memiliki Kartu" theme="warning" icon="fas fa-users" />
+                </div>
+                <div class="col-md-3">
+                    <x-adminlte-small-box title="{{ $pasien_nik }} {{ round(($pasien_jkn / $total_pasien) * 100) }}%"
+                        text="Pasien memiliki NIK" theme="warning" icon="fas fa-users" />
                 </div>
             </div>
             @if ($errors->any())
@@ -53,7 +60,7 @@
                     <div class="row">
                         <div class="col-md-12">
                             @php
-                                $heads = ['Kode RM', 'NIK / BPJS', 'Nama Pasien', 'Gender', 'Umur', 'Alamat', 'Tgl Entry', 'Action'];
+                                $heads = ['Kode RM', 'BPJS', 'NIK', 'Nama Pasien', 'Gender', 'Umur', 'Alamat', 'Tgl Entry', 'Action'];
                                 $config['paging'] = false;
                                 $config['lengthMenu'] = false;
                                 $config['searching'] = false;
@@ -65,6 +72,7 @@
                                 @foreach ($pasiens as $item)
                                     <tr>
                                         <td>{{ $item->no_rm }}</td>
+                                        <td>{{ $item->no_Bpjs }}</td>
                                         <td>{{ $item->nik_bpjs }}</td>
                                         <td>{{ $item->nama_px }}</td>
                                         <td>{{ $item->jenis_kelamin }}</td>

@@ -734,8 +734,6 @@ class WhatsappController extends Controller
         $suratkontrol = $vclaim->surat_kontrol_peserta($request);
         $code = $suratkontrol->metaData->code;
         if ($code != 200) {
-            $request['notif'] = "7 peserta " . $nomorkartu . " surat kontrol error : " . $suratkontrol->metaData->message;
-            $this->send_notif($request);
             $request['message'] = "*7. Pilih Surat Kontrol*\nMohon maaf " . $suratkontrol->metaData->message;
             return $this->send_message($request);
         } else {
@@ -934,8 +932,6 @@ class WhatsappController extends Controller
         $request['nomorkartu'] = $nomorkartu;
         $rujukans = $vclaim->rujukan_rs_peserta($request);
         if ($rujukans->metaData->code != 200) {
-            $request['notif'] = "7 peserta " . $nomorkartu . " rujukan rs error : " . $rujukans->metaData->message;
-            $this->send_notif($request);
             $request['message'] = "*7. Rujukan Antar RS*\n Mohon maaf" . $rujukans->metaData->message;
             return $this->send_message($request);
         } else {

@@ -16,11 +16,15 @@ class PasienController extends Controller
             ->orWhere('nik_bpjs', 'LIKE', "%{$request->search}%")
             ->simplePaginate(20);
         $total_pasien = PasienDB::count();
+        $pasien_jkn = PasienDB::where('no_Bpjs', '!=', '')->count();
+        $pasien_nik = PasienDB::where('nik_bpjs', '!=', '')->count();
         // dd($total_pasien);
         return view('simrs.pasien_index', compact([
             'pasiens',
             'request',
             'total_pasien',
+            'pasien_jkn',
+            'pasien_nik',
         ]));
     }
     public function store(Request $request)

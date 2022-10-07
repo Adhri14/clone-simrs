@@ -83,7 +83,7 @@
                                     $config = [
                                         'format' => 'YYYY-MM-DD',
                                         'dayViewHeaderFormat' => 'MMM YYYY',
-                                        'minDate' => "js:moment().add(1, 'days')",
+                                        'minDate' => "js:moment()",
                                         'daysOfWeekDisabled' => [0],
                                     ];
                                 @endphp
