@@ -50,9 +50,6 @@
                         </div>
                     </div>
                     <x-adminlte-button type="submit" class="withLoad" theme="primary" label="Submit Antrian" />
-                    <button class="btn btn-success" onclick="printDiv('printMe')"><i class="fas fa-print"></i>
-                        Print
-                        Laporan</button>
                 </form>
             </x-adminlte-card>
             @if (isset($kunjungans))
@@ -103,7 +100,6 @@
                                         <th>Umur</th>
                                         <th>Alamat</th>
                                         <th>Status</th>
-                                        <th>Pasien</th>
                                         <th>Cara Pembayaran</th>
                                         <th>Diagnosa</th>
                                         <th>Tindakan</th>
@@ -121,7 +117,6 @@
                                             <td>{{ $item->pasien->kecamatans ? $item->pasien->kecamatans->nama_kecamatan : '' }}
                                             </td>
                                             <td>{{ $item->counter == 1 ? 'BARU' : 'LAMA' }}</td>
-                                            <td>{{ $item->no_sep ? 'JKN' : 'UMUM' }}</td>
                                             <td>{{ $item->penjamin_simrs->nama_penjamin }}
                                             </td>
                                             <td>{{ $item->diagnosapoli ? $item->diagnosapoli->diag_00 : '' }}</td>
@@ -136,12 +131,13 @@
                         <div class="row">
                             <div class="col-3 invoice-col table-responsive">
                                 <address>
-                                    <strong>Kunjungan berdasarkan Cara Pembayaran</strong>
+                                    <strong>Berdasarkan Cara Pembayaran</strong>
                                 </address>
                                 <table class="table table-sm text-xs">
                                     <thead>
                                         <tr>
-                                            <th>Cara Pembayaran</th>
+                                            <th>Pembayaran</th>
+                                            <th>Kelompok</th>
                                             <th>Jml</th>
                                         </tr>
                                     </thead>
@@ -150,9 +146,73 @@
                                             <tr>
                                                 <td>{{ $penjaminrs->where('kode_penjamin', $key)->first()->nama_penjamin }}
                                                 </td>
+                                                <td>
+                                                    @if ($penjaminrs->where('kode_penjamin', $key)->first()->kode_kelompok == 1)
+                                                        BPJS
+                                                    @endif
+                                                    @if ($penjaminrs->where('kode_penjamin', $key)->first()->kode_kelompok == 2)
+                                                        BPJS
+                                                    @endif
+                                                    @if ($penjaminrs->where('kode_penjamin', $key)->first()->kode_kelompok == 3)
+                                                        UMUM
+                                                    @endif
+                                                    @if ($penjaminrs->where('kode_penjamin', $key)->first()->kode_kelompok == 4)
+                                                        DINKES
+                                                    @endif
+                                                </td>
                                                 <td>{{ $item->count() }}</td>
                                             </tr>
                                         @endforeach
+                                    </tbody>
+                                    <thead>
+                                        <tr>
+                                            <th colspan="2">Total</th>
+                                            <th>{{ $kunjungans->count() }}</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                            <div class="col-3 invoice-col table-responsive">
+                                <address>
+                                    <strong>Berdasarkan Jenis Pasien</strong>
+                                </address>
+                                <table class="table table-sm text-xs">
+                                    <thead>
+                                        <tr>
+                                            <th>Jenis</th>
+                                            <th>Jml</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>JKN / BPJS</td>
+                                            @foreach ($kunjungans->groupBy('kode_penjamin') as $key => $item)
+                                                <td>{{ $penjaminrs->where('kode_penjamin', $key)->first()->nama_penjamin }}
+                                                </td>
+                                                <td>
+                                                    @if ($penjaminrs->where('kode_penjamin', $key)->first()->kode_kelompok == 1)
+                                                        BPJS
+                                                    @endif
+                                                    @if ($penjaminrs->where('kode_penjamin', $key)->first()->kode_kelompok == 2)
+                                                        BPJS
+                                                    @endif
+                                                    @if ($penjaminrs->where('kode_penjamin', $key)->first()->kode_kelompok == 3)
+                                                        UMUM
+                                                    @endif
+                                                    @if ($penjaminrs->where('kode_penjamin', $key)->first()->kode_kelompok == 4)
+                                                        DINKES
+                                                    @endif
+                                                </td>
+                                                <td>{{ $item->count() }}</td>
+                                            @endforeach
+                                            <td>
+                                                {{ $kunjungans->where('no_sep', '!=', null)->count() }}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Umum</td>
+                                            <td>{{ $kunjungans->where('no_sep', null)->count() }}</td>
+                                        </tr>
                                     </tbody>
                                     <thead>
                                         <tr>
@@ -164,7 +224,7 @@
                             </div>
                             <div class="col-3 invoice-col table-responsive">
                                 <address>
-                                    <strong>Kunjungan berdasarkan Kelamin</strong>
+                                    <strong>Berdasarkan Kelamin</strong>
                                 </address>
                                 <table class="table table-sm text-xs">
                                     <thead>
@@ -193,7 +253,7 @@
                             </div>
                             <div class="col-3 invoice-col table-responsive">
                                 <address>
-                                    <strong>Kunjungan berdasarkan Status Pasien</strong>
+                                    <strong>Berdasarkan Status Pasien</strong>
                                 </address>
                                 <table class="table table-sm text-xs">
                                     <thead>
@@ -220,38 +280,12 @@
                                     </thead>
                                 </table>
                             </div>
-                            <div class="col-3 invoice-col table-responsive">
-                                <address>
-                                    <strong>Kunjungan berdasarkan Jenis Pasien</strong>
-                                </address>
-                                <table class="table table-sm text-xs">
-                                    <thead>
-                                        <tr>
-                                            <th>Jenis</th>
-                                            <th>Jml</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>JKN / BPJS</td>
-                                            <td>{{ $kunjungans->where('no_sep', '!=', null)->count() }}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Umum</td>
-                                            <td>{{ $kunjungans->where('no_sep', null)->count() }}</td>
-                                        </tr>
-                                    </tbody>
-                                    <thead>
-                                        <tr>
-                                            <th>Total</th>
-                                            <th>{{ $kunjungans->count() }}</th>
-                                        </tr>
-                                    </thead>
-                                </table>
-                            </div>
                         </div>
                     </section>
                 </div>
+                <button class="btn btn-success" onclick="printDiv('printMe')"><i class="fas fa-print"></i>
+                    Print
+                    Laporan</button>
             @endif
         </div>
     </div>
