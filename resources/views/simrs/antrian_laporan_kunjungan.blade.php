@@ -102,9 +102,9 @@
                                         <th>Sex</th>
                                         <th>Umur</th>
                                         <th>Alamat</th>
-                                        <th>Status</th>
                                         <th>Pasien</th>
                                         <th>Cara Pembayaran</th>
+                                        <th>Kasus</th>
                                         <th>Diagnosa</th>
                                         <th>Tindakan</th>
                                     </tr>
@@ -120,10 +120,10 @@
                                             <td>{{ \Carbon\Carbon::parse($item->pasien->tgl_lahir)->age }}</td>
                                             <td>{{ $item->pasien->kecamatans ? $item->pasien->kecamatans->nama_kecamatan : '' }}
                                             </td>
-                                            <td>{{ $item->counter == 1 ? 'BARU' : 'LAMA' }}</td>
                                             <td>{{ $item->no_sep ? 'JKN' : 'UMUM' }}</td>
                                             <td>{{ $item->penjamin_simrs->nama_penjamin }}
                                             </td>
+                                            <td>{{ $item->counter == 1 ? 'BARU' : 'LAMA' }}</td>
                                             <td>{{ $item->diagnosapoli ? $item->diagnosapoli->diag_00 : '' }}</td>
                                             {{-- <td>{{ $response->where('KODE_KUNJUNGAN', $item->kode_kunjungan)->first()->diagx }} --}}
                                             </td>

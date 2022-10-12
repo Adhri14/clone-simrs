@@ -362,6 +362,13 @@ return [
                     'can' => 'poliklinik',
                 ],
                 [
+                    'text' => 'KPO Elektronik',
+                    'icon'    => 'fas fa-pills',
+                    'url'  => 'antrian/kpo',
+                    'shift'   => 'ml-2',
+                    'can' => 'poliklinik',
+                ],
+                [
                     'text' => 'Laporan Kunjungan Poliklinik',
                     'icon'    => 'fas fa-chart-line',
                     'shift'   => 'ml-2',
@@ -521,9 +528,16 @@ return [
                     'can' => 'rekam-medis',
                 ],
                 [
-                    'text' => 'Diagnosa',
-                    'icon'    => 'fas fa-user-injured',
-                    'url'  => 'diagnosa',
+                    'text' => 'Diagnosa ICD-10',
+                    'icon'    => 'fas fa-diagnoses',
+                    'url'  => 'icd10',
+                    'shift'   => 'ml-2',
+                    'can' => 'rekam-medis',
+                ],
+                [
+                    'text' => 'File Rekam Medis',
+                    'icon'    => 'fas fa-diagnoses',
+                    'url'  => 'filerm',
                     'shift'   => 'ml-2',
                     'can' => 'rekam-medis',
                 ],
@@ -794,6 +808,21 @@ return [
                     'type' => 'css',
                     'asset' => true,
                     'location' => 'vendor/daterangepicker/daterangepicker.css',
+                ],
+            ],
+        ],
+        'EkkoLightBox' => [
+            'active' => false,
+            'files' => [
+                [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' =>  'vendor/ekko-lightbox/ekko-lightbox.min.js',
+                ],
+                [
+                    'type' => 'css',
+                    'asset' => true,
+                    'location' =>  'vendor/ekko-lightbox/ekko-lightbox.css',
                 ],
             ],
         ],

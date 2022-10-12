@@ -3,6 +3,8 @@
 use App\Http\Controllers\AntrianController;
 use App\Http\Controllers\AntrianWAController;
 use App\Http\Controllers\DokterController;
+use App\Http\Controllers\FileRMController;
+use App\Http\Controllers\Icd10Controller;
 use App\Http\Controllers\JadwalDokterController;
 use App\Http\Controllers\JadwalLiburController;
 use App\Http\Controllers\JadwalOperasiController;
@@ -37,6 +39,7 @@ Route::get('daftar_pasien', function () {
 Auth::routes();
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get('/status', [App\Http\Controllers\HomeController::class, 'status'])->name('status');
+Route::get('/filerm', [FileRMController::class, 'index'])->name('filerm');
 
 Route::get('daftar_pasien', [AntrianController::class, 'daftar_pasien'])->name('daftar_pasien');
 Route::get('info_jadwaldokter', [JadwalDokterController::class, 'index'])->name('info_jadwaldokter');
@@ -75,6 +78,7 @@ Route::prefix('antrian')->name('antrian.')->middleware(['auth'])->group(function
     Route::get('selesai/{kodebooking}', [AntrianController::class, 'selesai'])->name('selesai')->middleware('permission:poliklinik');
     Route::get('selesai_semua/{kodepoli}', [AntrianController::class, 'selesai_semua'])->name('selesai_semua')->middleware('permission:poliklinik');
     Route::get('surat_kontrol_poli', [AntrianController::class, 'surat_kontrol_poli'])->name('surat_kontrol_poli')->middleware('permission:poliklinik');
+    Route::get('kpo', [AntrianController::class, 'kpo'])->name('kpo')->middleware('permission:poliklinik');
     Route::post('surat_kontrol_create', [AntrianController::class, 'surat_kontrol_create'])->name('surat_kontrol_create')->middleware('permission:poliklinik');
     Route::get('laporan_kunjungan_poliklinik', [AntrianController::class, 'laporan_kunjungan_poliklinik'])->name('laporan_kunjungan_poliklinik')->middleware('permission:poliklinik');
     // farmasi
@@ -143,3 +147,4 @@ Route::resource('pasien', PasienController::class)->middleware('permission:rekam
 Route::resource('tindakan', PasienController::class)->middleware('permission:rekam-medis');
 Route::resource('tarif_kelompok_layanan', TarifKelompokLayananController::class);
 Route::resource('tarif_layanan', TarifLayananController::class);
+Route::resource('icd10', Icd10Controller::class);

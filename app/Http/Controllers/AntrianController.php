@@ -7,6 +7,7 @@ use App\Http\Controllers\API\VclaimBPJSController;
 use App\Http\Controllers\API\WhatsappController;
 use App\Models\Antrian;
 use App\Models\Dokter;
+use App\Models\ICD10;
 use App\Models\JadwalDokter;
 use App\Models\Kecamatan;
 use App\Models\KunjunganDB;
