@@ -22,13 +22,25 @@
                                 </div>
                             </x-slot>
                         </x-adminlte-input>
-                        <i class="fas fa-qrcode fa-5x"></i>
+                        <i class="fas fa-qrcode fa-3x"></i>
                         <br>
-                        <h2>Status = <span id="status">-</span></h2>
+                        <label>Status = <span id="status">-</span></label>
                     </div>
                 </x-adminlte-card>
-                <x-adminlte-button icon="fas fa-sync" class="withLoad reload" theme="warning" label="Reload" />
-                <a href="{{ route('antrian.cek_post') }}" class="btn btn-warning">Test Printer</a>
+                <div class="row">
+                    <div class="col-md-6">
+                        <x-adminlte-info-box title="Daftar Pasien BPJS" text="Rujukan Pertama FKTP" theme="success" />
+                        <x-adminlte-info-box title="Daftar Pasien BPJS" text="Rujukan Pertama Antar RS" theme="success" />
+                        <x-adminlte-info-box title="Daftar Pasien BPJS" text="Rujukan Internal" theme="success" />
+                    </div>
+                    <div class="col-md-6">
+                        <x-adminlte-info-box title="Daftar Pasien BPJS" text="Surat Kontrol" theme="success" />
+                        <x-adminlte-info-box text="Daftar Pasien Umum" theme="success" />
+                        <x-adminlte-button icon="fas fa-sync" class="withLoad reload" theme="warning" label="Reload" />
+                        <a href="{{ route('antrian.cek_post') }}" class="btn btn-warning">Test Printer</a>
+                    </div>
+                </div>
+
             </div>
             {{-- ambil antrian offline --}}
             <div class="col-md-8">
@@ -36,7 +48,7 @@
                     <p hidden>{{ setlocale(LC_ALL, 'IND') }}</p>
                     <h6>Jadwal Dokter Poliklinik {{ \Carbon\Carbon::now()->formatLocalized('%A, %d %B %Y') }}</h6>
                     <div class="row">
-                        <div class="col-md-8">
+                        <div class="col-md-12">
                             @php
                                 $heads = ['Poliklinik', 'Dokter', 'Jadwal', 'Kuota', 'Antrian'];
                                 $config['order'] = ['5', 'asc'];
@@ -61,14 +73,7 @@
                                 @endforeach
                             </x-adminlte-datatable>
                         </div>
-                        <div class="col-md-4">
-                            <x-adminlte-info-box title="Daftar Pasien BPJS" text="Rujukan Pertama FKTP" theme="success" />
-                            <x-adminlte-info-box title="Daftar Pasien BPJS" text="Rujukan Internal" theme="success" />
-                            <x-adminlte-info-box title="Daftar Pasien BPJS" text="Surat Kontrol" theme="success" />
-                            <x-adminlte-info-box title="Daftar Pasien BPJS" text="Rujukan Pertama Antar RS"
-                                theme="success" />
-                            <x-adminlte-info-box text="Daftar Pasien Umum" theme="success" />
-                        </div>
+
                         {{-- @foreach ($poliklinik as $poli)
                                 <div class="col-md-3">
                                     <x-adminlte-info-box
