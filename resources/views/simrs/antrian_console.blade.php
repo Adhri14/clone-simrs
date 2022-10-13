@@ -60,13 +60,13 @@
                                     @foreach ($poli->jadwals->where('hari', \Carbon\Carbon::now()->dayOfWeek)->where('kodesubspesialis', $poli->kodesubspesialis) as $jadwal)
                                         <tr
                                             class="text-left
-                                            {{ $jadwal->libur == 1 ||$poli->antrians->where('tanggalperiksa', \Carbon\Carbon::now()->format('Y-m-d'))->where('taskid', '!=', 99)->count() >= $jadwal->kapasitaspasien? ' text-danger': ' text-black' }}
+                                            {{ $jadwal->libur == 1 ||$poli->antrians->where('tanggalperiksa', \Carbon\Carbon::now()->format('Y-m-d'))->where('taskid', '!=', 99)->where('kodedokter', $jadwal->kodedokter)->count() >= $jadwal->kapasitaspasien? ' text-danger': ' text-black' }}
                                            ">
                                             <td> {{ strtoupper($jadwal->namasubspesialis) }}</td>
                                             <td> {{ $jadwal->namadokter }} {{ $jadwal->libur ? '(TUTUP)' : '' }}</td>
                                             <td> {{ $jadwal->jadwal }}</td>
                                             <td> {{ $jadwal->kapasitaspasien }}</td>
-                                            <td> {{ $poli->antrians->where('tanggalperiksa', \Carbon\Carbon::now()->format('Y-m-d'))->where('taskid', '!=', 99)->count() }}
+                                            <td> {{ $poli->antrians->where('tanggalperiksa', \Carbon\Carbon::now()->format('Y-m-d'))->where('kodedokter', $jadwal->kodedokter)->where('taskid', '!=', 99)->count() }}
                                             </td>
                                         </tr>
                                     @endforeach
