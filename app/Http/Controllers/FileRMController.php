@@ -19,18 +19,16 @@ class FileRMController extends Controller
 
     public function create()
     {
-        $file = "2022-10-11_15-57-18.884.tif";
-        $im = new Imagick($file);
-        $im->setImageFormat('PNG');
+        // $file = "2022-10-11_15-57-18.884.tif";
+        // $im = new Imagick($file);
+        // $im->setImageFormat('PNG');
         // $format = $im->getImageFormat();
         // dd($format);
-        $im_blob =  $im->getImagesBlob();
+        // $im_blob =  $im->getImagesBlob();
         // dd($im_blob);
         // echo '<img src="data:image/jpg;base64,' . base64_encode($im_blob) . '" />';
 
-        return view('simrs.rekammedis.scanfile', [
-            'im_blob' => $im_blob,
-        ]);
+        return view('simrs.rekammedis.scanfile');
     }
 
     public function store(Request $request)

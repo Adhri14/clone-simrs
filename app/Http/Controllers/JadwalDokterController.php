@@ -74,7 +74,7 @@ class JadwalDokterController extends Controller
                 'kodepoli' => $poli->kodepoli,
                 'namapoli' => $poli->namapoli,
                 'namasubspesialis' => $poli->namasubspesialis,
-                'namadokter' => $dokter->namadokter,
+                'namadokter' =>  str_replace(',', '.', $dokter->namadokter),
                 'namahari' => $hari[$request->hari],
                 'jadwal' => $request->jadwal,
                 'libur' => $libur,

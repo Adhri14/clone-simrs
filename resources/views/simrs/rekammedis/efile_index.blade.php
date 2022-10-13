@@ -70,25 +70,25 @@
         <div class="row">
             <div class="col-md-6">
                 <div class="row">
-                    <dt class="col-sm-3">Pasien</dt>
-                    <dd class="col-sm-9">: </dd>
-                    <dt class="col-sm-3">BPJS / NIK</dt>
-                    <dd class="col-sm-9">: <span id="nomorkartu"></span> / <span id="nik"></span></dd>
+                    <dt class="col-sm-4">Pasien</dt>
+                    <dd class="col-sm-8">: </dd>
+                    <dt class="col-sm-4">BPJS / NIK</dt>
+                    <dd class="col-sm-8">: <span id="nomorkartu"></span> / <span id="nik"></span></dd>
                 </div>
             </div>
             <div class="col-md-6">
                 <div class="row">
-                    <dt class="col-sm-3">Nama Berkas</dt>
-                    <dd class="col-sm-9">:
+                    <dt class="col-sm-4">Nama Berkas</dt>
+                    <dd class="col-sm-8">:
                         <span id="namafile"></span> /
                         <span id="jenisberkas"></span>
                     </dd>
-                    <dt class="col-sm-3">Tanggal Scan</dt>
-                    <dd class="col-sm-9">: <span id="tanggalscan"></span></dd>
+                    <dt class="col-sm-4">Tanggal Scan</dt>
+                    <dd class="col-sm-8">: <span id="tanggalscan"></span></dd>
                 </div>
             </div>
         </div>
-        <iframe src="{{ asset('scanner/tmp/22101213221593383.pdf') }}" width="100%" height="500px">
+        <iframe src="{{ asset('scanner/tmp/22101311285454821.pdf') }}" width="100%" height="500px">
         </iframe>
     </x-adminlte-modal>
 @stop
