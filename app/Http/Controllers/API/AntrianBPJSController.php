@@ -1185,8 +1185,26 @@ class AntrianBPJSController extends Controller
             $jadwals = JadwalDokter::where("kodesubspesialis", $request->kodepoli)->where("hari",  Carbon::parse($request->tanggalperiksa)->dayOfWeek)->get();
             if ($jadwals->count() != 0) {
                 $jadwal = $jadwals->where('kodedokter', $request->kodedokter)->first();
+
                 // jika ada jadwal
                 if ($jadwal != null) {
+                    $kapasitas = $jadwal->kapasitaspasien;
+                    $jumlahantridokter = Antrian::where('tanggalperiksa', $request->tanggalperiksa)
+                        ->where('kodedokter', $jadwal->kodedokter)
+                        ->where('taskid', '!=', 99)
+                        ->count();
+                    if ($jumlahantridokter >= $kapasitas) {
+                        $request['notif'] = "function ambil_antrian error " . $request->method . " jadwal dokter penuh.";
+                        $wa->send_notif($request);
+                        $response = [
+                            "metadata" => [
+                                "code" => 201,
+                                "message" => "Antrian sudah penuh untuk dokter poliklinik ditanggal tersebut",
+                            ]
+                        ];
+                        return $response;
+                    }
+
                     // ambil data
                     $request['namapoli'] = $jadwal->namasubspesialis;
                     $request['namadokter'] = $jadwal->namadokter;
