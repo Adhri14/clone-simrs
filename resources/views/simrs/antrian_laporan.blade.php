@@ -42,7 +42,8 @@
                         icon="fas fa-users" />
                 </div>
                 <div class="col-md-3">
-                    <x-adminlte-small-box title="{{ round(($antrians->count() / $kunjungans->count()) * 100) }} % "
+                    <x-adminlte-small-box
+                        title="{{ $antrians->count() == 0 || $kunjungans->count() == 0 ? 0 : round(($antrians->count() / $kunjungans->count()) * 100) }} % "
                         text="Persentase Pemutakhir Data" theme="primary" icon="fas fa-users" />
                 </div>
             </div>
@@ -256,7 +257,8 @@
                             <th>{{ $antrians->where('taskid', '>', 7)->count() }}</th>
                             <th>{{ $antrians->count() }} </th>
                             <th>{{ $kunjungans->count() }} </th>
-                            <th>{{ round(($antrians->count() / $kunjungans->count()) * 100) }} % </th>
+                            <th>{{ $antrians->count() == 0 || $kunjungans->count() == 0 ? 0 : round(($antrians->count() / $kunjungans->count()) * 100) }}
+                                % </th>
                         </tr>
                     </tfoot>
                 </x-adminlte-datatable>

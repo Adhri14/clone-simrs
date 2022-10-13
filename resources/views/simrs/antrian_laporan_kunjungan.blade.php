@@ -186,7 +186,7 @@
                                     <tbody>
                                         <tr>
                                             <td>JKN / BPJS</td>
-                                            @foreach ($kunjungans->groupBy('kode_penjamin') as $key => $item)
+                                            {{-- @foreach ($kunjungans->groupBy('kode_penjamin') as $key => $item)
                                                 <td>{{ $penjaminrs->where('kode_penjamin', $key)->first()->nama_penjamin }}
                                                 </td>
                                                 <td>
@@ -204,7 +204,7 @@
                                                     @endif
                                                 </td>
                                                 <td>{{ $item->count() }}</td>
-                                            @endforeach
+                                            @endforeach --}}
                                             <td>
                                                 {{ $kunjungans->where('no_sep', '!=', null)->count() }}
                                             </td>
