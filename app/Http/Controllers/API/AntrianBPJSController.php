@@ -1620,6 +1620,16 @@ class AntrianBPJSController extends Controller
             $unit = UnitDB::firstWhere('KDPOLI', $antrian->kodepoli);
             $tarifkarcis = TarifLayananDetailDB::firstWhere('KODE_TARIF_DETAIL', $unit->kode_tarif_karcis);
             $tarifadm = TarifLayananDetailDB::firstWhere('KODE_TARIF_DETAIL', $unit->kode_tarif_adm);
+
+            if ($antrian->taskid == 3) {
+                $this->print_ulang($request);
+                return [
+                    "metadata" => [
+                        "message" => "Printer Ulang",
+                        "code" => 201,
+                    ],
+                ];
+            }
             if ($antrian->pasienbaru) {
                 $request['pasienbaru_print'] = 'BARU';
             } else {

@@ -54,6 +54,11 @@ class PasienController extends Controller
         $pasien = PasienDB::firstWhere('no_rm', $no_rm);
         return view('simrs.pasien_edit', compact('pasien'));
     }
+    public function caripasien(Request $request)
+    {
+        $pasien = PasienDB::firstWhere('no_rm', $request->norm);
+        return response()->json($pasien);
+    }
     public function destroy($no_rm)
     {
         $pasien = PasienDB::firstWhere('no_rm', $no_rm);

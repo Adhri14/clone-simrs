@@ -6,12 +6,11 @@
 @section('body')
 
     <div class="wrapper">
-        <div class="row p-3">
+        <div class="row p-1">
             {{-- checkin --}}
             <div class="col-md-4">
                 <x-adminlte-card title="Checkin Antrian RSUD Waled" theme="primary" icon="fas fa-qrcode">
                     <div class="text-center">
-                        <br>
                         <x-adminlte-input name="kodebooking" label="Silahkan scan QR Code Antrian atau masukan Kode Antrian"
                             placeholder="Masukan Kode Antrian untuk Checkin" igroup-size="lg">
                             <x-slot name="appendSlot">
@@ -23,21 +22,59 @@
                                 </div>
                             </x-slot>
                         </x-adminlte-input>
-                        <i class="fas fa-qrcode fa-10x"></i>
+                        <i class="fas fa-qrcode fa-3x"></i>
                         <br>
-                        <h2>Status = <span id="status">-</span></h2>
+                        <label>Status = <span id="status">-</span></label>
                     </div>
                 </x-adminlte-card>
+                <div class="row">
+                    <div class="col-md-6">
+                        <x-adminlte-info-box title="Daftar Pasien BPJS" text="Rujukan Pertama FKTP" theme="success" />
+                        <x-adminlte-info-box title="Daftar Pasien BPJS" text="Rujukan Pertama Antar RS" theme="success" />
+                        <x-adminlte-info-box title="Daftar Pasien BPJS" text="Rujukan Internal" theme="success" />
+                    </div>
+                    <div class="col-md-6">
+                        <x-adminlte-info-box title="Daftar Pasien BPJS" text="Surat Kontrol" theme="success" />
+                        <x-adminlte-info-box text="Daftar Pasien Umum" theme="success" />
+                        <x-adminlte-button icon="fas fa-sync" class="withLoad reload" theme="warning" label="Reload" />
+                        <a href="{{ route('antrian.cek_post') }}" class="btn btn-warning">Test Printer</a>
+                    </div>
+                </div>
+
             </div>
             {{-- ambil antrian offline --}}
             <div class="col-md-8">
                 <x-adminlte-card title="Ambil Antrian Ofline RSUD Waled" theme="primary" icon="fas fa-qrcode">
-                    <div class="text-center">
-                        <h6>Pilih Antrian Poliklinik</h6>
-                        <p hidden>{{ setlocale(LC_ALL, 'IND') }}</p>
-                        <h6>{{ \Carbon\Carbon::now()->formatLocalized('%A, %d %B %Y') }}</h6>
-                        <div class="row">
-                            @foreach ($poliklinik as $poli)
+                    <p hidden>{{ setlocale(LC_ALL, 'IND') }}</p>
+                    <h6>Jadwal Dokter Poliklinik {{ \Carbon\Carbon::now()->formatLocalized('%A, %d %B %Y') }}</h6>
+                    <div class="row">
+                        <div class="col-md-12">
+                            @php
+                                $heads = ['Poliklinik', 'Dokter', 'Jadwal', 'Kuota', 'Antrian'];
+                                $config['order'] = ['5', 'asc'];
+                            @endphp
+                            <x-adminlte-datatable id="table1" class="nowrap text-xs" :heads="$heads" :config="$config"
+                                striped bordered hoverable compressed>
+                                @foreach ($poliklinik as $poli)
+                                    {{-- <td>{{ $poli->namasubspesialis }}</td> --}}
+                                    @foreach ($poli->jadwals->where('hari', \Carbon\Carbon::now()->dayOfWeek)->where('kodesubspesialis', $poli->kodesubspesialis) as $jadwal)
+                                        <tr
+                                            class="text-left
+                                            {{ $jadwal->libur == 1 ||$poli->antrians->where('tanggalperiksa', \Carbon\Carbon::now()->format('Y-m-d'))->where('taskid', '!=', 99)->count() >= $jadwal->kapasitaspasien? ' text-danger': ' text-black' }}
+                                           ">
+                                            <td> {{ strtoupper($jadwal->namasubspesialis) }}</td>
+                                            <td> {{ $jadwal->namadokter }} {{ $jadwal->libur ? '(TUTUP)' : '' }}</td>
+                                            <td> {{ $jadwal->jadwal }}</td>
+                                            <td> {{ $jadwal->kapasitaspasien }}</td>
+                                            <td> {{ $poli->antrians->where('tanggalperiksa', \Carbon\Carbon::now()->format('Y-m-d'))->where('taskid', '!=', 99)->count() }}
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                @endforeach
+                            </x-adminlte-datatable>
+                        </div>
+
+                        {{-- @foreach ($poliklinik as $poli)
                                 <div class="col-md-3">
                                     <x-adminlte-info-box
                                         text="{{ $poli->antrians->where('tanggalperiksa', \Carbon\Carbon::now()->format('Y-m-d'))->where('taskid', '!=', 99)->count() }} / {{ $poli->jadwals->where('hari', \Carbon\Carbon::now()->dayOfWeek)->where('kodesubspesialis', $poli->kodesubspesialis)->sum('kapasitaspasien') }}"
@@ -45,11 +82,10 @@
                                         data-id="{{ $poli->kodesubspesialis }}"
                                         theme="{{ $poli->antrians->where('tanggalperiksa', \Carbon\Carbon::now()->format('Y-m-d'))->count() >=$poli->jadwals->where('hari', \Carbon\Carbon::now()->dayOfWeek)->where('kodesubspesialis', $poli->kodesubspesialis)->sum('kapasitaspasien')? 'danger': 'success' }}" />
                                 </div>
-                            @endforeach
-                        </div>
+                            @endforeach --}}
                     </div>
-                    <x-adminlte-button icon="fas fa-sync" class="withLoad reload" theme="success" label="Reload" />
-                    <a href="{{ route('antrian.cek_post') }}" class="btn btn-success">Test Printer</a>
+                    <div class="text-center">
+                    </div>
                 </x-adminlte-card>
             </div>
         </div>
@@ -62,6 +98,8 @@
     @include('sweetalert::alert')
 @stop
 {{-- @section('plugins.Sweetalert2', true); --}}
+@section('plugins.Datatables', true)
+
 @section('adminlte_js')
     <script src="{{ asset('vendor/loading-overlay/loadingoverlay.min.js') }}"></script>
     <script src="{{ asset('vendor/onscan.js/onscan.min.js') }}"></script>

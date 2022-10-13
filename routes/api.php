@@ -4,6 +4,7 @@ use App\Http\Controllers\AntrianController;
 use App\Http\Controllers\API\AntrianBPJSController;
 use App\Http\Controllers\API\VclaimBPJSController;
 use App\Http\Controllers\API\WhatsappController;
+use App\Http\Controllers\PasienController;
 use App\Http\Controllers\VclaimController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -21,6 +22,10 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
+});
+
+Route::prefix('vclaim')->group(function () {
+    Route::get('caripasien', [PasienController::class, 'caripasien'])->name('api.caripasien');
 });
 
 Route::prefix('antrian')->group(function () {
