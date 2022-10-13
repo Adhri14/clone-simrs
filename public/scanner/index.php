@@ -114,7 +114,7 @@
 
     <!-- Previous lines are same as demo-01, below is new addition to demo-02 -->
 
-    <form id="form1" action="http://127.0.0.1:8000/scanner/real.php?action=upload" method="POST" enctype="multipart/form-data" target="_blank">
+    <form id="form1" action="http://192.168.2.30/antrian/public/scanner/real.php?action=upload" method="POST" enctype="multipart/form-data" target="_blank">
         <input type="text" id="sample-field" name="sample-field" value="Test scan" />
         <input type="button" value="Submit" onclick="submitFormWithScannedImages();">
     </form>
