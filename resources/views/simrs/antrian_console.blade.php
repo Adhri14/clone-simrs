@@ -8,7 +8,7 @@
     <div class="wrapper">
         <div class="row p-1">
             {{-- checkin --}}
-            <div class="col-md-4">
+            <div class="col-md-5">
                 <x-adminlte-card title="Checkin Antrian RSUD Waled" theme="primary" icon="fas fa-qrcode">
                     <div class="text-center">
                         <x-adminlte-input name="kodebooking" label="Silahkan scan QR Code Antrian atau masukan Kode Antrian"
@@ -43,7 +43,7 @@
 
             </div>
             {{-- ambil antrian offline --}}
-            <div class="col-md-8">
+            <div class="col-md-7">
                 <x-adminlte-card title="Ambil Antrian Ofline RSUD Waled" theme="primary" icon="fas fa-qrcode">
                     <p hidden>{{ setlocale(LC_ALL, 'IND') }}</p>
                     <h6>Jadwal Dokter Poliklinik {{ \Carbon\Carbon::now()->formatLocalized('%A, %d %B %Y') }}</h6>
