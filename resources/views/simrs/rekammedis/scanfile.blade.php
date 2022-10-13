@@ -154,6 +154,7 @@
                 "output_settings": [{
                         "type": "return-base64",
                         "format": "pdf",
+                        "pdf_force_black_white": true,
                         "pdf_text_line": "By ${USERNAME} on ${DATETIME}"
                     },
                     {
@@ -299,7 +300,7 @@
                     $.LoadingOverlay("hide");
                     swal.fire(
                         'Success',
-                        "Pasien Nomor RM " + norm + " Ditemukan.",
+                        "Data Berhasil Disimpan dengan Nomor RM " + norm + ".",
                         'success'
                     );
                 } else {
