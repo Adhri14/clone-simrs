@@ -3,7 +3,7 @@
 @section('title', 'Scan E-File Rekam Medis')
 
 @section('content_header')
-    <h1>Scan E-File Rekam Medis</h1>
+    <h1>Scan E-Fileasdasd Rekam Medis</h1>
 @stop
 
 @section('content')
@@ -45,7 +45,7 @@
                         <option value="2">Rawan Jalan</option>
                         <option value="3">Penunjang</option>
                     </x-adminlte-select>
-                    <x-adminlte-input name="namafile" label="Nama E-File" placeholder="Nama File" />
+                    <x-adminlte-input name="namafile" label="Keterangan E-File" placeholder="Keterangan E-File" />
                     <x-adminlte-input-date name="tanggalscan" label="Tanggal Scan E-File" :config="$config"
                         value="{{ \Carbon\Carbon::now() }}">
                         <x-slot name="prependSlot">

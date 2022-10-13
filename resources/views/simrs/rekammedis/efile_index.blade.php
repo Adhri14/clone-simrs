@@ -57,8 +57,8 @@
                             <td>
                                 <a href="{{ $item->fileurl }}" target="_blank" class="btn btn-primary btn-xs"><i
                                         class=" fas fa-download"></i></a>
-                                <x-adminlte-button icon="fas fa-eye" theme="warning" class="btn-xs" label="Lihat"
-                                    data-toggle="modal" data-target="#modalMin" />
+                                <x-adminlte-button icon="fas fa-eye" theme="warning" class="btn-xs btnLihat" label="Lihat"
+                                    data-id="{{ $item->id }}" />
                             </td>
                         </tr>
                     @endforeach
@@ -66,12 +66,12 @@
             </x-adminlte-card>
         </div>
     </div>
-    <x-adminlte-modal id="modalMin" size="lg" theme="warning" title="E-File Rekam Medis">
+    <x-adminlte-modal id="modalFile" size="lg" theme="warning" title="E-File Rekam Medis">
         <div class="row">
             <div class="col-md-6">
                 <div class="row">
                     <dt class="col-sm-4">Pasien</dt>
-                    <dd class="col-sm-8">: </dd>
+                    <dd class="col-sm-8">: <span id="nama"></span> / <span id="norm"></span></dd>
                     <dt class="col-sm-4">BPJS / NIK</dt>
                     <dd class="col-sm-8">: <span id="nomorkartu"></span> / <span id="nik"></span></dd>
                 </div>
@@ -88,7 +88,7 @@
                 </div>
             </div>
         </div>
-        <iframe src="{{ asset('scanner/tmp/22101311285454821.pdf') }}" width="100%" height="500px">
+        <iframe id="fileurl" src="" width="100%" height="500px">
         </iframe>
     </x-adminlte-modal>
 @stop
@@ -106,47 +106,24 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
-            $('.btnLayani').click(function() {
-                var antrianid = $(this).data('id');
+            $('.btnLihat').click(function() {
+                var id = $(this).data('id');
                 $.LoadingOverlay("show");
-                $.get("{{ route('antrian.index') }}" + '/' + antrianid + '/edit', function(data) {
-                    // console.log(data);
-                    $('#kodebooking').html(data.kodebooking);
-                    $('#angkaantrean').html(data.angkaantrean);
-                    $('#nomorantrean').html(data.nomorantrean);
-                    $('#tanggalperiksa').html(data.tanggalperiksa);
+                var url = "{{ route('efilerm.index') }}" + '/' + id;
+                $.get(url, function(data) {
                     $('#norm').html(data.norm);
+                    $('#nama').html(data.nama);
                     $('#nik').html(data.nik);
                     $('#nomorkartu').html(data.nomorkartu);
-                    $('#nama').html(data.nama);
-                    $('#nohp').html(data.nohp);
-                    // $('#nomorreferensi').html(data.nomorreferensi);
-                    $('#nomorrujukan').html(data.nomorrujukan);
-                    $('#nomorsuratkontrol').html(data.nomorsuratkontrol);
-                    $('#nomorsep').html(data.nomorsep);
-                    $('#jenispasien').html(data.jenispasien);
-                    $('#namapoli').html(data.namapoli);
-                    $('#namadokter').html(data.namadokter);
-                    $('#jampraktek').html(data.jampraktek);
-                    $('#jeniskunjungan').html(data.jeniskunjungan);
-                    $('#user').html(data.user);
-                    $('#antrianid').val(antrianid);
-                    $('#namapoli').val(data.namapoli);
-                    $('#namap').val(data.kodepoli);
-                    $('#namadokter').val(data.namadokter);
-                    $('#kodepoli').val(data.kodepoli);
-                    $('#kodedokter').val(data.kodedokter);
-                    $('#jampraktek').val(data.jampraktek);
-                    // $('#kodepoli').val(data.kodepoli).trigger('change');
-                    $('#nomorsep_suratkontrol').val(data.nomorsep);
-                    $('#kodepoli_suratkontrol').val(data.kodepoli);
-                    $('#namapoli_suratkontrol').val(data.namapoli);
-                    $('#modalPelayanan').modal('show');
+                    $('#nomorantrean').html(data.nomorantrean);
+                    $('#namafile').html(data.namafile);
+                    $('#jenisberkas').html(data.jenisberkas);
+                    $('#jenisberkas').html(data.jenisberkas);
+                    $('#tanggalscan').html(data.tanggalscan);
+                    $("#fileurl").attr("src", data.fileurl);
+                    $('#modalFile').modal('show');
                     $.LoadingOverlay("hide", true);
                 })
-            });
-            $('.btnSuratKontrol').click(function() {
-                $('#modalKPO').modal('show');
             });
         });
     </script>

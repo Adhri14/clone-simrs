@@ -77,7 +77,8 @@ class FileRMController extends Controller
 
     public function show($id)
     {
-        //
+        $filerm = FileRekamMedis::find($id);
+        return response()->json($filerm);
     }
 
     public function edit($id)
