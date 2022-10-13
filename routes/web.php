@@ -39,7 +39,6 @@ Route::get('daftar_pasien', function () {
 Auth::routes();
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get('/status', [App\Http\Controllers\HomeController::class, 'status'])->name('status');
-Route::get('/filerm', [FileRMController::class, 'index'])->name('filerm');
 
 Route::get('daftar_pasien', [AntrianController::class, 'daftar_pasien'])->name('daftar_pasien');
 Route::get('info_jadwaldokter', [JadwalDokterController::class, 'index'])->name('info_jadwaldokter');
@@ -148,3 +147,4 @@ Route::resource('tindakan', PasienController::class)->middleware('permission:rek
 Route::resource('tarif_kelompok_layanan', TarifKelompokLayananController::class);
 Route::resource('tarif_layanan', TarifLayananController::class);
 Route::resource('icd10', Icd10Controller::class);
+Route::resource('efilerm', FileRMController::class);

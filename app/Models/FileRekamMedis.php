@@ -9,5 +9,16 @@ class FileRekamMedis extends Model
 {
     use HasFactory;
 
-
+    protected $fillable = [
+        'norm',
+        'nama',
+        'nomorkartu',
+        'nik',
+        'nohp',
+        'tanggallahir',
+        'jenisberkas',
+        'namafile',
+        'tanggalscan',
+        'fileurl',
+    ];
 }

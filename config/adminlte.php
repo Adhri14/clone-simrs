@@ -535,11 +535,14 @@ return [
                     'can' => 'rekam-medis',
                 ],
                 [
-                    'text' => 'File Rekam Medis',
+                    'text' => 'E-File Rekam Medis',
                     'icon'    => 'fas fa-diagnoses',
-                    'url'  => 'filerm',
                     'shift'   => 'ml-2',
                     'can' => 'rekam-medis',
+                    'url'  => 'efilerm',
+                    // 'active'  => ['efilerm', 'efilerm/create' ,'regex:@^antrian/poliklinik(\/[0-9]+)?+$@', 'regex:@^antrian/poliklinik(\/[0-9]+)?\/edit+$@',  'antrian/poliklinik/create'],
+                    'active'  => ['efilerm', 'efilerm/create'],
+
                 ],
                 [
                     'text' => 'Tindankan Prosedur',

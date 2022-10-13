@@ -15,12 +15,17 @@ return new class extends Migration
     {
         Schema::create('file_rekam_medis', function (Blueprint $table) {
             $table->id();
-            $table->dateTime('tanggal');
-            $table->string('nama');
             $table->string('norm');
-            $table->string('kode')->nullable();
-            $table->string('tipekunjungan')->nullable();
-            $table->string('counter')->nullable();
+            $table->string('nama');
+            $table->string('nomorkartu')->nullable();
+            $table->string('nik')->nullable();
+            $table->string('nohp')->nullable();
+            $table->string('tanggallahir')->nullable();
+
+            $table->string('jenisberkas');
+            $table->string('namafile');
+            $table->dateTime('tanggalscan');
+            $table->string('fileurl');
             $table->timestamps();
         });
     }
