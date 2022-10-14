@@ -90,8 +90,7 @@
                     <div class="col-md-3">
                         <x-adminlte-small-box
                             title="{{ $antrians->where('taskid', '<', 4)->where('taskid', '>=', 1)->count() }}"
-                            text="Sisa Antrian" theme="warning" icon="fas fa-sign-in-alt"
-                            {{-- url="{{ route('antrian.selesai_semua', $request->kodepoli ?? '0') }}" --}}
+                            text="Sisa Antrian" theme="warning" icon="fas fa-sign-in-alt" {{-- url="{{ route('antrian.selesai_semua', $request->kodepoli ?? '0') }}" --}}
                             url-text="Selesaikan Semua Antrian" />
                     </div>
                     <div class="col-md-3">
@@ -266,7 +265,12 @@
                             title="Antrian Pelayanan Poliklinik ({{ $antrians->where('taskid', 4)->count() }} Orang)">
                             @php
                                 $heads = ['Kodeboking', 'Kunjungan', 'Pasien', 'Action', 'SEP / Ref', 'Urutan'];
-                                $config['order'] = ['5', 'asc'];
+                                $config = [
+                                    'order' => ['5', 'acs'],
+                                    'paging' => false,
+                                    'scrollY' => '200px',
+                                    'scrollCollapse' => true,
+                                ];
                             @endphp
                             <x-adminlte-datatable id="table4" class="nowrap text-xs" :heads="$heads"
                                 :config="$config" striped bordered hoverable compressed>
@@ -611,7 +615,6 @@
                         </form>
                     </x-adminlte-modal>
                 @endif
-
             @endif
         </div>
     </div>
