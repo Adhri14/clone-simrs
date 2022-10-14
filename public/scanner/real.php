@@ -149,12 +149,12 @@ function handleUploadedFiles()
             if (is_array($fileSpec['tmp_name'])) { // multiple files with same name
                 foreach ($fileSpec['tmp_name'] as $index => $value) {
                     if ($fileSpec['error'][$index] == UPLOAD_ERR_OK) {
-                        array_push($fileUrls, doHandleUploadedFile($fileSpec['name'][$index], $fileSpec['type'][$index], $fileSpec['tmp_name'][$index], $fileSpec['error'][$index], $fileSpec['size'][$index]));
+                        array_push($fileUrls, doHandleUploadedFile($_POST["norm"] . '-' . $fileSpec['name'][$index], $fileSpec['type'][$index], $fileSpec['tmp_name'][$index], $fileSpec['error'][$index], $fileSpec['size'][$index]));
                     }
                 }
             } else {
                 if ($fileSpec['error'] == UPLOAD_ERR_OK) {
-                    array_push($fileUrls, doHandleUploadedFile($fileSpec['name'], $fileSpec['type'], $fileSpec['tmp_name'], $fileSpec['error'], $fileSpec['size']));
+                    array_push($fileUrls, doHandleUploadedFile($_POST["norm"] . '-' . $fileSpec['name'], $fileSpec['type'], $fileSpec['tmp_name'], $fileSpec['error'], $fileSpec['size']));
                 }
             }
         }
