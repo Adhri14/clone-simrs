@@ -30,12 +30,10 @@ Route::prefix('vclaim')->group(function () {
 
 Route::prefix('antrian')->group(function () {
     Route::get('signature', [AntrianBPJSController::class, 'signature']);
-    Route::prefix('ref')->group(function () {
-        Route::get('poli', [AntrianBPJSController::class, 'ref_poli']);
-        Route::get('dokter', [AntrianBPJSController::class, 'ref_dokter']);
-        Route::get('jadwal', [AntrianBPJSController::class, 'ref_jadwal_dokter']);
-        Route::post('updatejadwal', [AntrianBPJSController::class, 'update_jadwal_dokter']);
-    });
+    Route::get('ref_poli', [AntrianBPJSController::class, 'ref_poli']);
+    Route::get('ref_dokter', [AntrianBPJSController::class, 'ref_dokter']);
+    Route::get('ref_jadwal', [AntrianBPJSController::class, 'ref_jadwal_dokter']);
+    Route::post('ref_updatejadwal', [AntrianBPJSController::class, 'update_jadwal_dokter']);
     Route::post('tambah', [AntrianBPJSController::class, 'tambah_antrian']);
     Route::post('update', [AntrianBPJSController::class, 'update_antrian']);
     Route::post('batal', [AntrianBPJSController::class, 'batal_antrian_bpjs']);
