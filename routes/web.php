@@ -53,7 +53,6 @@ Route::prefix('antrian')->name('antrian.')->group(function () {
     Route::get('tambah_offline/{poli}/{dokter}/{jam}', [AntrianController::class, 'tambah_offline'])->name('tambah_offline');
     Route::get('checkin_update', [AntrianController::class, 'checkin_update'])->name('checkin_update');
 });
-
 Route::prefix('antrian')->name('antrian.')->middleware(['auth'])->group(function () {
     // console
     Route::get('laporan', [AntrianController::class, 'laporan'])->name('laporan');
@@ -101,20 +100,6 @@ Route::prefix('antrian')->name('antrian.')->middleware(['auth'])->group(function
     Route::get('baru_online/{kodebooking}', [AntrianController::class, 'baru_online'])->name('baru_online');
     Route::post('simpan_baru_online/{kodebooking}', [AntrianController::class, 'simpan_baru_online'])->name('simpan_baru_online');
     Route::get('baru_offline/{kodebooking}', [AntrianController::class, 'baru_offline'])->name('baru_offline');
-});
-
-Route::prefix('antrianwa')->name('antrianwa.')->middleware(['auth'])->group(function () {
-    Route::get('/', [AntrianWAController::class, 'index'])->name('index');
-    Route::get('poliklinik', [AntrianWAController::class, 'poliklinik'])->name('poliklinik');
-    Route::get('{tanggal}/panggil/{urutan}/{loket}/{lantai}', [AntrianWAController::class, 'panggil'])->name('panggil');
-    Route::get('{tanggal}/panggil_ulang/{urutan}//{loket}/{lantai}', [AntrianWAController::class, 'panggil_ulang'])->name('panggil_ulang');
-    Route::get('{tanggal}/selesai/{urutan}', [AntrianWAController::class, 'selesai'])->name('selesai');
-    Route::get('{tanggal}/batal/{urutan}', [AntrianWAController::class, 'batal'])->name('batal');
-    Route::get('daftar', [AntrianWAController::class, 'daftar'])->name('daftar');
-    Route::post('store', [AntrianWAController::class, 'store'])->name('store');
-    Route::get('tampil', [AntrianWAController::class, 'tampil'])->name('antrian.tampil');
-    Route::get('jadwal_poli', [AntrianWAController::class, 'jadwal_poli']);
-    Route::get('jadwal_poli_libur', [AntrianWAController::class, 'jadwal_poli_libur']);
 });
 // admin user role permission
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified', 'permission:admin'])->group(function () {

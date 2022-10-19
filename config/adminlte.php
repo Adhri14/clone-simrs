@@ -553,6 +553,21 @@ return [
                 ],
             ],
         ],
+        // KPO ELEKTRONIK
+        [
+            'text' => 'KPO Elektronik',
+            'icon'    => 'fas fa-drugs',
+            'can' => 'rekam-medis',
+            'submenu' => [
+                [
+                    'text' => 'Diagnosa ICD-10',
+                    'icon'    => 'fas fa-diagnoses',
+                    'url'  => 'icd10',
+                    'shift'   => 'ml-2',
+                    'can' => 'rekam-medis',
+                ],
+            ],
+        ],
         // USER ACCESS CONTROLL
         [
             'text'    => 'User Access Control',

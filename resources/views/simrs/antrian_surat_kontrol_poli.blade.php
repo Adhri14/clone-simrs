@@ -83,7 +83,7 @@
                                     $config = [
                                         'format' => 'YYYY-MM-DD',
                                         'dayViewHeaderFormat' => 'MMM YYYY',
-                                        'minDate' => "js:moment()",
+                                        'minDate' => 'js:moment()',
                                         'daysOfWeekDisabled' => [0],
                                     ];
                                 @endphp
@@ -161,8 +161,8 @@
                             'paging' => false,
                         ];
                     @endphp
-                    <x-adminlte-datatable id="table1" class="nowrap" :heads="$heads" :config="$config"  striped bordered hoverable
-                        compressed>
+                    <x-adminlte-datatable id="table1" class="nowrap" :heads="$heads" :config="$config" striped bordered
+                        hoverable compressed>
                         @foreach ($surat_kontrols as $item)
                             <tr>
                                 <td>{{ $item->tglTerbitKontrol }}</td>
