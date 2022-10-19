@@ -587,7 +587,7 @@ return [
                     'icon'    => 'fas fa-user-shield',
                     'url'  => 'admin/role',
                     'shift'   => 'ml-2',
-                    // 'active'  => ['admin/user', 'admin/user/create', 'regex:@^admin/user(\/[0-9]+)?+$@', 'regex:@^admin/user(\/[0-9]+)?\/edit+$@',],
+                    'active'  => ['admin/role', 'admin/role/create', 'regex:@^admin/role(\/[0-9]+)?+$@', 'regex:@^admin/role(\/[0-9]+)?\/edit+$@', 'regex:@^admin/permission(\/[0-9]+)?\/edit+$@'],
                     'can' => 'admin',
                 ],
             ],

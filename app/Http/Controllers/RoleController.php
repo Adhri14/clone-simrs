@@ -17,9 +17,9 @@ class RoleController extends Controller
         $permissions = $permissions::paginate(20);
         return view('simrs.role_index', compact(['roles', 'permissions', 'select', 'request']));
     }
-    public function edit($name)
+    public function edit(Role $role)
     {
-        $role = Role::with('permissions')->firstWhere('name', $name);
+        // $role = Role::with('permissions')->firstWhere('name', $name);
         $permissions = Permission::pluck('name', 'id');
         return view('simrs.role_edit', compact(['role', 'permissions']));
     }
@@ -34,9 +34,8 @@ class RoleController extends Controller
         Alert::success('Success Info', 'Success Message');
         return redirect()->route('admin.role.index');
     }
-    public function destroy($id)
+    public function destroy(Role $role)
     {
-        $role = Role::find($id);
         if ($role->users()->exists()) {
             Alert::error('Gagal Menghapus', 'Role masih memiliki user');
         } else {

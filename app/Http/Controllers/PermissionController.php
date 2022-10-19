@@ -18,14 +18,14 @@ class PermissionController extends Controller
         Alert::success('Success', 'Data Telah Disimpan');
         return redirect()->route('admin.role.index');
     }
-    public function edit($name)
+    public function edit(Permission $permission)
     {
-        $permission = Permission::firstWhere('name', $name);
+        // $permission = Permission::firstWhere('name', $name);
         return view('simrs.permission_edit', compact(['permission']));
     }
-    public function destroy($id)
+    public function destroy(Permission $permission)
     {
-        $permission = Permission::find($id);
+        // $permission = Permission::find($id);
         if ($permission->roles()->exists()) {
             Alert::error('Gagal Menghapus', 'Permission masih memiliki permission');
         } else {

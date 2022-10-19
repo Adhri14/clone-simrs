@@ -8,17 +8,14 @@
 
 @section('content')
     <div class="row">
+        <div class="col-md-3">
+            <x-adminlte-small-box title="{{ $roles->total() }}" text="Total Role" theme="success" icon="fas fa-users-cog" />
+        </div>
+        <div class="col-md-3">
+            <x-adminlte-small-box title="{{ $permissions->total() }}" text="Total Permission" theme="success"
+                icon="fas fa-user-shield" />
+        </div>
         <div class="col-12">
-            <div class="row">
-                <div class="col-md-3">
-                    <x-adminlte-small-box title="{{ $roles->total() }}" text="Total Role" theme="success"
-                        icon="fas fa-users-cog" />
-                </div>
-                <div class="col-md-3">
-                    <x-adminlte-small-box title="{{ $permissions->total() }}" text="Total Permission" theme="success"
-                        icon="fas fa-user-shield" />
-                </div>
-            </div>
             @if ($errors->any())
                 <x-adminlte-alert title="Ops Terjadi Masalah !" theme="danger" dismissable>
                     <ul>
@@ -64,8 +61,8 @@
                                         $config['info'] = false;
                                         $config['responsive'] = true;
                                     @endphp
-                                    <x-adminlte-datatable id="table1" :heads="$heads" :config="$config" hoverable bordered
-                                        compressed>
+                                    <x-adminlte-datatable id="table1" :heads="$heads" :config="$config" hoverable
+                                        bordered compressed>
                                         @foreach ($roles as $item)
                                             <tr>
                                                 <td>{{ $item->name }}</td>
@@ -81,10 +78,9 @@
                                                 </td>
                                                 <td>
                                                     <form action="{{ route('admin.role.destroy', $item) }}" method="POST">
-                                                        <x-adminlte-button class="btn-xs" theme="warning"
-                                                            icon="fas fa-edit" data-toggle="tooltip"
-                                                            title="Edit {{ $item->name }}"
-                                                            onclick="window.location='{{ route('admin.role.edit', $item->name) }}'" />
+                                                        <x-adminlte-button class="btn-xs" theme="warning" icon="fas fa-edit"
+                                                            data-toggle="tooltip" title="Edit {{ $item->name }}"
+                                                            onclick="window.location='{{ route('admin.role.edit', $item) }}'" />
                                                         @csrf
                                                         @method('DELETE')
                                                         <x-adminlte-button class="btn-xs" theme="danger"
@@ -148,8 +144,8 @@
                                         $config['info'] = false;
                                         $config['responsive'] = true;
                                     @endphp
-                                    <x-adminlte-datatable id="table2" :heads="$heads" :config="$config" hoverable bordered
-                                        compressed>
+                                    <x-adminlte-datatable id="table2" :heads="$heads" :config="$config" hoverable
+                                        bordered compressed>
                                         @foreach ($permissions as $item)
                                             <tr>
                                                 <td>
@@ -161,10 +157,9 @@
                                                 <td>
                                                     <form action="{{ route('admin.permission.destroy', $item) }}"
                                                         method="POST">
-                                                        <x-adminlte-button class="btn-xs" theme="warning"
-                                                            icon="fas fa-edit" data-toggle="tooltip"
-                                                            title="Edit {{ $item->name }}"
-                                                            onclick="window.location='{{ route('admin.permission.edit', $item->name) }}'" />
+                                                        <x-adminlte-button class="btn-xs" theme="warning" icon="fas fa-edit"
+                                                            data-toggle="tooltip" title="Edit {{ $item->name }}"
+                                                            onclick="window.location='{{ route('admin.permission.edit', $item) }}'" />
                                                         @csrf
                                                         @method('DELETE')
                                                         <x-adminlte-button class="btn-xs" theme="danger"
@@ -194,7 +189,6 @@
                     </x-adminlte-card>
                 </div>
             </div>
-
         </div>
     </div>
     <x-adminlte-modal id="modalCreate" title="Tambah Role" theme="success" v-centered static-backdrop scrollable>
