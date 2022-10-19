@@ -8,13 +8,10 @@
 
 @section('content')
     <div class="row">
+        <div class="col-md-3">
+            <x-adminlte-small-box title="{{ $users->total() }}" text="User Terdaftar" theme="success" icon="fas fa-users" />
+        </div>
         <div class="col-12">
-            <div class="row">
-                <div class="col-md-3">
-                    <x-adminlte-small-box title="{{ $users->total() }}" text="User Terdaftar" theme="success"
-                        icon="fas fa-users" />
-                </div>
-            </div>
             @if ($errors->any())
                 <x-adminlte-alert title="Ops Terjadi Masalah !" theme="danger" dismissable>
                     <ul>
@@ -30,12 +27,12 @@
                         <div class="col-md-8">
                             <x-adminlte-button label="Tambah" class="btn-sm" theme="success" title="Tambah User"
                                 icon="fas fa-plus" data-toggle="modal" data-target="#modalCustom" />
-                            <x-adminlte-button label="Export" class="btn-sm" theme="primary" title="Tooltip"
+                            {{-- <x-adminlte-button label="Export" class="btn-sm" theme="primary" title="Tooltip"
                                 icon="fas fa-print" />
                             <x-adminlte-button label="Import" class="btn-sm" theme="warning" title="Tooltip"
                                 icon="fas fa-upload" />
                             <x-adminlte-button label="Terhapus" class="btn-sm" theme="danger" title="Tooltip"
-                                icon="fas fa-trash-alt" />
+                                icon="fas fa-trash-alt" /> --}}
                         </div>
                         <div class="col-md-4">
                             <form action="{{ route('admin.user.index') }}" method="get">
@@ -89,7 +86,7 @@
                                         <td>
                                             <form action="{{ route('admin.user.destroy', $item) }}" method="POST">
                                                 <x-adminlte-button class="btn-xs" theme="warning" icon="fas fa-edit"
-                                                    onclick="window.location='{{ route('admin.user.edit', $item->username) }}'" />
+                                                    onclick="window.location='{{ route('admin.user.edit', $item) }}'" />
                                                 @csrf
                                                 @method('DELETE')
                                                 <x-adminlte-button class="btn-xs" theme="danger" icon="fas fa-trash-alt"

@@ -34,10 +34,18 @@
         @endempty
 
         {{-- Footer --}}
-        @hasSection('footer')
+        {{-- @hasSection('footer')
             @include('adminlte::partials.footer.footer')
-        @endif
-
+        @endif --}}
+        <footer class="main-footer">
+            <div class="float-right d-none d-sm-block">
+                <b>Version</b> 1.0.0
+            </div>
+            <strong>Copyright &copy; 2021-{{ \Carbon\Carbon::now()->year }} <a
+                    href="https://www.youtube.com/channel/UChC1vTX9iFXXavbwslx0kUA" target="_blank">SIM RSUD
+                    WALED</a>.</strong> All rights
+            reserved.
+        </footer>
         {{-- Right Control Sidebar --}}
         @if (config('adminlte.right_sidebar'))
             @include('adminlte::partials.sidebar.right-sidebar')
