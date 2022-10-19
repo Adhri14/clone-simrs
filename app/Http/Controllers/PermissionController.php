@@ -21,7 +21,7 @@ class PermissionController extends Controller
     public function edit(Permission $permission)
     {
         // $permission = Permission::firstWhere('name', $name);
-        return view('simrs.permission_edit', compact(['permission']));
+        return view('admin.permission_edit', compact(['permission']));
     }
     public function destroy(Permission $permission)
     {

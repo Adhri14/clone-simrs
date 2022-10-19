@@ -20,13 +20,13 @@ class UserController extends Controller
             })
             ->paginate(20);
         $roles = Role::pluck('name', 'id')->toArray();
-        return view('simrs.user_index', compact(['users', 'request', 'roles']))->with(['i' => 0]);
+        return view('admin.user_index', compact(['users', 'request', 'roles']))->with(['i' => 0]);
     }
     public function edit(User $user)
     {
         // $user = User::with('roles')->firstWhere('username', $user->username);
         $roles = Role::pluck('name', 'id');
-        return view('simrs.user_edit', compact(['user', 'roles']));
+        return view('admin.user_edit', compact(['user', 'roles']));
     }
     public function store(Request $request)
     {
@@ -63,7 +63,7 @@ class UserController extends Controller
         $cities = City::where('province_code', $user->province_id)->pluck('name', 'id')->all();
         $districts = District::where('city_code', $user->city_id)->pluck('name', 'id')->all();
         $villages = Village::where('district_code', $user->district_id)->pluck('name', 'id')->all();
-        return view('user::profile', compact(
+        return view('admin.user_profile'. compact(
             'user',
             'roles',
             'userRole',
