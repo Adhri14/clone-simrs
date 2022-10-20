@@ -17,6 +17,7 @@ use App\Http\Controllers\TarifKelompokLayananController;
 use App\Http\Controllers\TarifLayananController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VclaimController;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -39,6 +40,17 @@ Route::get('daftar_pasien', function () {
 Auth::routes();
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get('/status', [App\Http\Controllers\HomeController::class, 'status'])->name('status');
+Route::get("log-message", function () {
+    $message = "This is a sample message for Test.";
+    Log::emergency($message);
+    Log::alert($message);
+    Log::critical($message);
+    Log::error($message);
+    Log::warning($message);
+    Log::notice($message);
+    Log::info($message);
+    Log::debug($message);
+});
 
 Route::get('daftar_pasien', [AntrianController::class, 'daftar_pasien'])->name('daftar_pasien');
 Route::get('info_jadwaldokter', [JadwalDokterController::class, 'index'])->name('info_jadwaldokter');
@@ -107,6 +119,8 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified', 'permiss
     Route::resource('role', RoleController::class);
     Route::resource('permission', PermissionController::class);
 });
+Route::get('profile', [UserController::class, 'profile'])->name('profile');
+
 // vcalim
 Route::prefix('vclaim')->name('vclaim.')->middleware(['auth'])->group(function () {
     Route::get('/', [VclaimController::class, 'index'])->name('index');

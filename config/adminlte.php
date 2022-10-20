@@ -593,17 +593,24 @@ return [
             ],
         ],
         [
+            'text' => 'profile',
+            'url'  => 'profile',
+            'icon' => 'fas fa-fw fa-user',
+        ],
+        [
             'text'        => 'Status Bridging BPJS',
             'url'         => 'status',
             'icon'        => 'fas fa-info-circle',
             'can' => 'admin',
         ],
+        [
+            'text'        => 'Log Viewer',
+            'url'         => 'log-viewer',
+            'icon'        => 'fas fa-info-circle',
+            'can' => 'admin',
+        ],
         // ['header' => 'account_settings'],
-        // [
-        //     'text' => 'profile',
-        //     'url'  => 'profile',
-        //     'icon' => 'fas fa-fw fa-user',
-        // ],
+
         // [
         //     'text' => 'change_password',
         //     'url'  => 'password/reset',

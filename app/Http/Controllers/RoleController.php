@@ -15,13 +15,13 @@ class RoleController extends Controller
         $permissions = Permission::class;
         $select = $permissions::pluck('name', 'id')->toArray();
         $permissions = $permissions::paginate(20);
-        return view('simrs.role_index', compact(['roles', 'permissions', 'select', 'request']));
+        return view('admin.role_index', compact(['roles', 'permissions', 'select', 'request']));
     }
     public function edit(Role $role)
     {
         // $role = Role::with('permissions')->firstWhere('name', $name);
         $permissions = Permission::pluck('name', 'id');
-        return view('simrs.role_edit', compact(['role', 'permissions']));
+        return view('admin.role_edit', compact(['role', 'permissions']));
     }
     public function store(Request $request)
     {
