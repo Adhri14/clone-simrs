@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use RealRashid\SweetAlert\Facades\Alert;
@@ -55,25 +56,18 @@ class UserController extends Controller
     {
         $user = Auth::user();
         $roles = Role::pluck('name', 'name')->all();
-        $genders = Gender::pluck('name', 'name')->all();
-        $agamas = Agama::pluck('name', 'name')->all();
-        $perkawinans = Perkawinan::pluck('name', 'name')->all();
         $userRole = $user->roles->pluck('name', 'name')->all();
-        $provinces = Province::pluck('name', 'id');
-        $cities = City::where('province_code', $user->province_id)->pluck('name', 'id')->all();
-        $districts = District::where('city_code', $user->city_id)->pluck('name', 'id')->all();
-        $villages = Village::where('district_code', $user->district_id)->pluck('name', 'id')->all();
-        return view('admin.user_profile'. compact(
+        // $genders = Gender::pluck('name', 'name')->all();
+        // $agamas = Agama::pluck('name', 'name')->all();
+        // $perkawinans = Perkawinan::pluck('name', 'name')->all();
+        // $provinces = Province::pluck('name', 'id');
+        // $cities = City::where('province_code', $user->province_id)->pluck('name', 'id')->all();
+        // $districts = District::where('city_code', $user->city_id)->pluck('name', 'id')->all();
+        // $villages = Village::where('district_code', $user->district_id)->pluck('name', 'id')->all();
+        return view('admin.user_profile', compact(
             'user',
             'roles',
             'userRole',
-            'genders',
-            'agamas',
-            'perkawinans',
-            'provinces',
-            'cities',
-            'districts',
-            'villages',
         ));
     }
     public function profile_update(Request $request)
