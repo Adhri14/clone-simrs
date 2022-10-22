@@ -14,18 +14,17 @@ class KunjunganController extends Controller
 {
     public function index(Request $request)
     {
-        if (is_null($request->periode)) {
-            $request['periode'] = Carbon::today()->format('d-m-Y') . ' - ' . Carbon::now()->format('d-m-Y');
-        }
-        $tanggal = explode(' - ', $request->periode);
-        $tanggal_awal = Carbon::parse($tanggal[0]);
-        $tanggal_akhir = Carbon::parse($tanggal[1]);
 
-        $kunjungans = KunjunganDB::whereDate('tgl_masuk', '>=', $tanggal_awal)
-            ->whereDate('tgl_masuk', '<=', $tanggal_akhir)
-            ->with(['pasien', 'unit', 'penjamin'])
-            ->orderByDesc('tgl_masuk')
-            ->paginate();
+        if (empty($request->search)) {
+            $kunjungans = KunjunganDB::with(['pasien', 'unit', 'penjamin'])
+                ->orderByDesc('tgl_masuk')
+                ->paginate();
+        } else {
+            $kunjungans = KunjunganDB::with(['pasien', 'unit', 'penjamin'])
+                ->where('no_rm',  $request->search)
+                ->orderByDesc('tgl_masuk')
+                ->paginate();
+        }
 
         $status_kunjungan = StatusKunjunganDB::pluck('status_kunjungan', 'id');
         $alasan_masuk = AlasanMasukDB::pluck('alasan_masuk', 'id');
@@ -37,7 +36,6 @@ class KunjunganController extends Controller
             'status_kunjungan' => $status_kunjungan,
             'alasan_masuk' => $alasan_masuk,
             'alasan_pulang' => $alasan_pulang,
-            'tanggal' => $tanggal,
         ]);
     }
 

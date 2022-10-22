@@ -1,48 +1,16 @@
 @extends('adminlte::page')
 @section('title', 'Kunjungan')
 @section('content_header')
-    <h1>Kunjungan Periode {{ $tanggal[0] }} s/d {{ $tanggal[1] }}</h1>
+    <h1>Kunjungan</h1>
 @stop
 @section('content')
     <div class="row">
+        <div class="col-md-3">
+            <x-adminlte-small-box title="{{ $kunjungans->total() }}" text="Total Kunjungan" theme="success"
+                icon="fas fa-users" />
+        </div>
         <div class="col-12">
-            <div class="row">
-                <div class="col-md-3">
-                    <x-adminlte-small-box title="{{ $kunjungans->total() }}" text="Total Kunjungan" theme="success"
-                        icon="fas fa-users" />
-                </div>
-            </div>
-            @if ($errors->any())
-                <x-adminlte-alert title="Ops Terjadi Masalah !" theme="danger" dismissable>
-                    <ul>
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </x-adminlte-alert>
-            @endif
-            <x-adminlte-card title="Filter Data Kunjungan" theme="secondary" collapsible>
-                <form action="{{ route('kunjungan.index') }}" method="get">
-                    @php
-                        $config = [
-                            'locale' => ['format' => 'DD-MM-YYYY'],
-                        ];
-                    @endphp
-                    <x-adminlte-date-range name="periode" label="Periode" :config="$config" value="{{ $request->periode }}"
-                        enable-default-ranges>
-                        <x-slot name="prependSlot">
-                            <div class="input-group-text bg-primary">
-                                <i class="fas fa-calendar-alt"></i>
-                            </div>
-                        </x-slot>
-                        <x-slot name="appendSlot">
-                            <x-adminlte-button type="submit" theme="outline-primary" label="Submit Filter" />
-                        </x-slot>
-                    </x-adminlte-date-range>
-                </form>
-            </x-adminlte-card>
-            <x-adminlte-card title="Tabel Data Kunjungan Periode {{ $tanggal[0] }} s/d {{ $tanggal[1] }}"
-                theme="secondary" collapsible>
+            <x-adminlte-card title="Tabel Data Kunjungan" theme="secondary" collapsible>
                 <div class="dataTables_wrapper dataTable">
                     <div class="row">
                         <div class="col-md-8">
@@ -70,24 +38,30 @@
                     <div class="row">
                         <div class="col-md-12">
                             @php
-                                $heads = ['Tgl Masuk', 'Tgl Keluar', 'Kode Kunjungan', 'Kode RM', 'Nama Pasien', 'Unit', 'Penjamin', 'Alasan Masuk', 'Status', 'Action'];
+                                $heads = ['Counter', 'Tgl Masuk', 'Tgl Keluar', 'Kode Kunjungan', 'RM Pasien', 'Unit / Dokter', 'Penjamin', 'Alasan Masuk', 'Status', 'Action'];
                                 $config['paging'] = false;
                                 $config['lengthMenu'] = false;
                                 $config['searching'] = false;
                                 $config['info'] = false;
-                                $config['order'] = [[5, 'desc']];
+                                $config['order'] = [[1, 'desc']];
                             @endphp
                             <x-adminlte-datatable id="table1" class="nowrap" :heads="$heads" :config="$config"
                                 hoverable bordered compressed>
                                 @foreach ($kunjungans as $item)
                                     <tr>
+                                        <td>{{ $item->counter }}</td>
                                         <td>{{ $item->tgl_masuk }}</td>
                                         <td>{{ $item->tgl_keluar }}</td>
                                         <td>{{ $item->kode_kunjungan }}</td>
-                                        <td>{{ $item->no_rm }}</td>
-                                        <td>{{ $item->pasien->nama_px ?? '-' }}</td>
-                                        <td>{{ $item->unit->nama_unit ?? '-'}}</td>
-                                        <td>{{ $item->penjamin->nama_penjamin ?? '-' }}</td>
+                                        <td>
+                                            {{ $item->no_rm }} <br>
+                                            {{ $item->pasien->nama_px ?? '-' }}
+                                        </td>
+                                        <td>
+                                            {{ $item->unit->nama_unit ?? '-' }} <br>
+                                            {{ $item->dokter->nama_paramedis ?? '-' }}
+                                        </td>
+                                        <td>{{ $item->penjamin_simrs->nama_penjamin ?? '-' }}</td>
                                         <td>{{ $alasan_masuk[$item->id_alasan_masuk] ?? '-' }}</td>
                                         <td>{{ $status_kunjungan[$item->status_kunjungan] }}</td>
                                         <td>

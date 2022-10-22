@@ -29,6 +29,20 @@ class VclaimController extends Controller
         }
         $monitoring = $api->monitoring_pelayanan_peserta($request);
 
+        $rujukan_peserta  = $api->rujukan_peserta($request);
+        if ($rujukan_peserta->metaData->code == 200) {
+            $rujukan_peserta = $rujukan_peserta->response->rujukan;
+        } else {
+            $rujukan_peserta = null;
+        }
+
+        $rujukan_rs_peserta  = $api->rujukan_rs_peserta($request);
+        if ($rujukan_rs_peserta->metaData->code == 200) {
+            $rujukan_rs_peserta = $rujukan_rs_peserta->response->rujukan;
+        } else {
+            $rujukan_rs_peserta = null;
+        }
+
         $request['formatfilter'] = 2;
         $suratkontrols = $api->surat_kontrol_peserta($request);
         if ($suratkontrols->metaData->code == 200) {
@@ -36,11 +50,13 @@ class VclaimController extends Controller
         } else {
             $suratkontrols = null;
         }
+
         return view('vclaim.monitoring_pelayanan_peserta', [
             'request' => $request,
             'response' => $response,
             'monitoring' => $monitoring,
             'suratkontrols' => $suratkontrols,
+            'rujukan_peserta' => $rujukan_peserta,
         ]);
     }
     public function delete_sep($noSep, Request $request)
