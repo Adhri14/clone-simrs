@@ -5,12 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Poliklinik extends Model
+class PoliklinikDB extends Model
 {
     use HasFactory;
-
-    // protected $connection = 'mysql2';
-    // protected $table = 'jkn_poli';
+    protected $connection = 'mysql2';
+    protected $table = 'jkn_poli';
 
     protected $fillable = [
         'kodepoli',

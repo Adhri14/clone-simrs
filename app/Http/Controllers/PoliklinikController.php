@@ -6,6 +6,7 @@ use App\Http\Controllers\API\AntrianBPJSController;
 use App\Models\Dokter;
 use App\Models\JadwalPoli;
 use App\Models\Poliklinik;
+use App\Models\PoliklinikDB;
 use App\Models\UnitDB;
 use App\Models\User;
 use Carbon\Carbon;
@@ -42,7 +43,7 @@ class PoliklinikController extends Controller
                     'namasubspesialis' => $value->nmsubspesialis,
                     'subspesialis' => $subpesialis,
                     'lokasi' => 1,
-                    'lantaipendaftaran' => 1,
+                    'loket' => 1,
                     'status' => 0,
                 ]
             );
@@ -62,7 +63,7 @@ class PoliklinikController extends Controller
                     $poli->update([
                         'status' => 1,
                         'lokasi' => $lokasi,
-                        'lantaipendaftaran' => $loket,
+                        'loket' => $loket,
                     ]);
                     $user = User::updateOrCreate([
                         'email' => $poli->kodesubspesialis . '@gmail.com',
@@ -110,7 +111,7 @@ class PoliklinikController extends Controller
         }
         $poli->update([
             'lokasi' => $request->lokasi,
-            'lantaipendaftaran' => $request->lantaipendaftaran,
+            'loket' => $request->lantaipendaftaran,
             'status' => $request->status,
         ]);
         Alert::success('Success', 'Poliklinik ' . $poli->namasubspesialis . ' telah diperbaharui');

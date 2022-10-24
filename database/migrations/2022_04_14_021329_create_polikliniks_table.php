@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('namasubspesialis');
             $table->string('subspesialis');
             $table->string('lokasi');
-            $table->string('lantaipendaftaran');
+            $table->string('loket');
             $table->string('status')->default(0);
             $table->timestamps();
         });

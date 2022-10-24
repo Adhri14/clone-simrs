@@ -12,7 +12,7 @@
             <x-adminlte-card title="Poliklinik Aktif RSUD Waled" theme="info" icon="fas fa-info-circle" collapsible
                 maximizable>
                 @php
-                    $heads = ['Nama Poliklinik',  'Subspesialis', 'Lokasi', 'Daftar', 'Status'];
+                    $heads = ['Nama Poliklinik', 'Subspesialis', 'Lokasi', 'Daftar', 'Status'];
                     $config['paging'] = false;
                 @endphp
                 <x-adminlte-datatable id="table1" :heads="$heads" :config="$config" striped bordered hoverable
@@ -84,7 +84,7 @@
                         </tr>
                     @endforeach
                 </x-adminlte-datatable>
-                <a href="{{ route('poli.create') }}" class="btn btn-success">Refresh</a>
+                <a href="{{ route('poli.create') }}" class="btn btn-success">Create Poliklinik</a>
             </x-adminlte-card>
         </div>
     </div>
