@@ -68,7 +68,6 @@ class AntrianBPJSController extends Controller
         $url = env('ANTRIAN_URL') . "ref/poli";
         $signature = $this->signature();
         $response = Http::withHeaders($signature)
-            ->withOptions(["verify" => false])
             ->get($url);
         $response = json_decode($response);
         $decrypt = $this->stringDecrypt($signature['decrypt_key'], $response->response);
@@ -80,7 +79,6 @@ class AntrianBPJSController extends Controller
         $url = env('ANTRIAN_URL') . "ref/dokter";
         $signature = $this->signature();
         $response = Http::withHeaders($signature)
-            ->withOptions(["verify" => false])
             ->get($url);
         $response = json_decode($response);
         $decrypt = $this->stringDecrypt($signature['decrypt_key'], $response->response);
@@ -94,7 +92,6 @@ class AntrianBPJSController extends Controller
         $url = env('ANTRIAN_URL') . "jadwaldokter/kodepoli/" . $request->kodepoli . "/tanggal/" . $request->tanggal;
         $signature = $this->signature();
         $response = Http::withHeaders($signature)
-            ->withOptions(["verify" => false])
             ->get($url);
         $response = json_decode($response);
         if ($response->metadata->code == 200) {
@@ -311,7 +308,6 @@ class AntrianBPJSController extends Controller
         $url = env('ANTRIAN_URL') . "dashboard/waktutunggu/tanggal/" . $request->tanggal . "/waktu/" . $request->waktu;
         $signature = $this->signature();
         $response = Http::withHeaders($signature)
-            ->withOptions(["verify" => false])
             ->get($url);
         $response = json_decode($response);
         return $response;

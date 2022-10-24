@@ -49,7 +49,6 @@ class VclaimBPJSController extends Controller
         $url = $this->baseUrl . "referensi/propinsi";
         $signature = $this->signature();
         $response = Http::withHeaders($signature)
-            ->withOptions(["verify" => false])
             ->get($url);
         $response = json_decode($response);
         if ($response->metaData->code == 200) {
@@ -63,7 +62,6 @@ class VclaimBPJSController extends Controller
         $url = $this->baseUrl . "referensi/kabupaten/propinsi/" . $request->provinsi;
         $signature = $this->signature();
         $response = Http::withHeaders($signature)
-            ->withOptions(["verify" => false])
             ->get($url);
         $response = json_decode($response);
         if ($response->metaData->code == 200) {
@@ -77,7 +75,6 @@ class VclaimBPJSController extends Controller
         $url = $this->baseUrl . "referensi/kecamatan/kabupaten/" . $request->kabupaten;
         $signature = $this->signature();
         $response = Http::withHeaders($signature)
-            ->withOptions(["verify" => false])
             ->get($url);
         $response = json_decode($response);
         if ($response->metaData->code == 200) {
@@ -113,7 +110,6 @@ class VclaimBPJSController extends Controller
         $url = $this->baseUrl . "monitoring/HistoriPelayanan/NoKartu/" . $request->nomorkartu . "/tglMulai/" . $tanggal_lama . "/tglAkhir/" . $tanggal_akhir;
         $signature = $this->signature();
         $response = Http::withHeaders($signature)
-            ->withOptions(["verify" => false])
             ->get($url);
         $response = json_decode($response);
         if ($response->metaData->code == 200) {
@@ -144,7 +140,6 @@ class VclaimBPJSController extends Controller
         $url = $this->baseUrl . "Peserta/nokartu/" . $request->nomorkartu . "/tglSEP/" . $request->tanggalperiksa;
         $signature = $this->signature();
         $response = Http::withHeaders($signature)
-            ->withOptions(["verify" => false])
             ->get($url);
         if ($response->status() != 200) {
             return json_decode(json_encode([
@@ -182,7 +177,6 @@ class VclaimBPJSController extends Controller
         $url = $this->baseUrl . "Peserta/nik/" . $request->nik . "/tglSEP/" . $request->tanggalperiksa;
         $signature = $this->signature();
         $response = Http::withHeaders($signature)
-            ->withOptions(["verify" => false])
             ->get($url);
         $response = json_decode($response);
         if ($response->metaData->code == 200) {
@@ -209,7 +203,6 @@ class VclaimBPJSController extends Controller
         $url = $this->baseUrl . "Rujukan/" . $request->nomorreferensi;
         $signature = $this->signature();
         $response = Http::withHeaders($signature)
-            ->withOptions(["verify" => false])
             ->get($url);
         $response = json_decode($response);
         if ($response->metaData->code == 200) {
@@ -237,7 +230,6 @@ class VclaimBPJSController extends Controller
         $url = $this->baseUrl . "Rujukan/List/Peserta/" . $request->nomorkartu;
         $signature = $this->signature();
         $response = Http::withHeaders($signature)
-            ->withOptions(["verify" => false])
             ->get($url);
         $response = json_decode($response);
         if ($response->metaData->code == 200) {
@@ -265,7 +257,6 @@ class VclaimBPJSController extends Controller
         $url = $this->baseUrl . "Rujukan/RS/" . $request->nomorreferensi;
         $signature = $this->signature();
         $response = Http::withHeaders($signature)
-            ->withOptions(["verify" => false])
             ->get($url);
         $response = json_decode($response);
         if ($response->metaData->code == 200) {
@@ -293,7 +284,6 @@ class VclaimBPJSController extends Controller
         $url = $this->baseUrl . "Rujukan/RS/List/Peserta/" . $request->nomorkartu;
         $signature = $this->signature();
         $response = Http::withHeaders($signature)
-            ->withOptions(["verify" => false])
             ->get($url);
         $response = json_decode($response);
         if ($response->metaData->code == 200) {
@@ -321,7 +311,6 @@ class VclaimBPJSController extends Controller
         $url = $this->baseUrl . "Rujukan/JumlahSEP/" . $request->jenisrujukan . "/" . $request->nomorreferensi;
         $signature = $this->signature();
         $response = Http::withHeaders($signature)
-            ->withOptions(["verify" => false])
             ->get($url);
         $response = json_decode($response);
         if ($response == null) {
@@ -549,7 +538,6 @@ class VclaimBPJSController extends Controller
         $url = $this->baseUrl . "RencanaKontrol/noSuratKontrol/" . $request->nomorreferensi;
         $signature = $this->signature();
         $response = Http::withHeaders($signature)
-            ->withOptions(["verify" => false])
             ->get($url);
         $response = json_decode($response);
         if ($response->metaData->code == 200) {
@@ -581,7 +569,6 @@ class VclaimBPJSController extends Controller
         $url = $this->baseUrl . "RencanaKontrol/ListRencanaKontrol/Bulan/" . sprintf("%02d", $bulan)  . "/Tahun/" . $tahun . "/Nokartu/" . $request->nomorkartu . "/filter/" . $request->formatfilter;
         $signature = $this->signature();
         $response = Http::withHeaders($signature)
-            ->withOptions(["verify" => false])
             ->get($url);
         $response = json_decode($response);
         if ($response->metaData->code == 200) {
@@ -610,7 +597,6 @@ class VclaimBPJSController extends Controller
         // dd($url);
         $signature = $this->signature();
         $response = Http::withHeaders($signature)
-            ->withOptions(["verify" => false])
             ->get($url);
         $response = json_decode($response);
         if ($response->metaData->code == 200) {
@@ -638,7 +624,6 @@ class VclaimBPJSController extends Controller
         $url = $this->baseUrl . "RencanaKontrol/ListSpesialistik/JnsKontrol/" . $request->jeniskontrol . "/nomor/" . $request->nomor . "/TglRencanaKontrol/" . $request->tanggalkontrol;
         $signature = $this->signature();
         $response = Http::withHeaders($signature)
-            ->withOptions(["verify" => false])
             ->get($url);
         $response = json_decode($response);
         if ($response->metaData->code == 200) {
@@ -666,7 +651,6 @@ class VclaimBPJSController extends Controller
         $url = $this->baseUrl . "RencanaKontrol/JadwalPraktekDokter/JnsKontrol/" . $request->jeniskontrol . "/KdPoli/" . $request->kodepoli . "/TglRencanaKontrol/" . $request->tanggalkontrol;
         $signature = $this->signature();
         $response = Http::withHeaders($signature)
-            ->withOptions(["verify" => false])
             ->get($url);
         $response = json_decode($response);
         if ($response->metaData->code == 200) {
@@ -938,7 +922,6 @@ class VclaimBPJSController extends Controller
         $url = $this->baseUrl . "SEP/" . $request->noSep;
         $signature = $this->signature();
         $response = Http::withHeaders($signature)
-            ->withOptions(["verify" => false])
             ->get($url);
         $response = json_decode($response);
         if ($response->metaData->code == 200) {
@@ -965,7 +948,6 @@ class VclaimBPJSController extends Controller
         $url = $this->baseUrl . "SEP/Internal/" . $request->noSep;
         $signature = $this->signature();
         $response = Http::withHeaders($signature)
-            ->withOptions(["verify" => false])
             ->get($url);
         $response = json_decode($response);
         if ($response->metaData->code == 200) {
