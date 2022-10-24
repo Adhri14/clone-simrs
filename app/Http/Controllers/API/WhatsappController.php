@@ -7,6 +7,7 @@ use App\Models\JadwalDokter;
 use App\Models\JadwalLiburPoliDB;
 use App\Models\PasienDB;
 use App\Models\Poliklinik;
+use App\Models\PoliklinikDB;
 use App\Models\UnitDB;
 use Carbon\Carbon;
 use GuzzleHttp\Client;
@@ -137,7 +138,7 @@ class WhatsappController extends Controller
                 $request['titletext'] = "Info Jadwal Poliklinik";
                 $request['buttontext'] = 'PILIH POLIKLINIK';
                 $rowpoli = null;
-                $poliklinik = Poliklinik::where('status', 1)->get('namasubspesialis');
+                $poliklinik = PoliklinikDB::where('status', 1)->get('namasubspesialis');
                 foreach ($poliklinik as  $value) {
                     $rowpoli =  $rowpoli . 'JADWAL_POLIKLINIK_' . $value->namasubspesialis  . ',';
                 }
@@ -319,7 +320,7 @@ class WhatsappController extends Controller
         $request['titletext'] = "1. Pilih Poliklinik Rawat Jalan";
         $request['buttontext'] = 'PILIH POLIKLINIK';
         $rowpoli = null;
-        $poliklinik = Poliklinik::where('status', 1)->get('namasubspesialis');
+        $poliklinik = PoliklinikDB::where('status', 1)->get('namasubspesialis');
         foreach ($poliklinik as  $value) {
             $rowpoli =  $rowpoli . 'POLIKLINIK_' . $value->namasubspesialis  . ',';
         }
