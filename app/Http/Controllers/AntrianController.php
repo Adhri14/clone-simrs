@@ -24,6 +24,7 @@ use App\Models\TracerDB;
 use App\Models\TransaksiDB;
 use App\Models\UnitDB;
 use App\Models\PenjaminSimrs;
+use App\Models\PoliklinikDB;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -39,7 +40,7 @@ class AntrianController extends Controller
     // console antrian
     public function console()
     {
-        $poliklinik = Poliklinik::with(['antrians', 'jadwals'])->where('status', 1)->get();
+        $poliklinik = PoliklinikDB::with(['antrians', 'jadwals'])->where('status', 1)->get();
         $now = Carbon::now();
         $jadwal = JadwalDokter::where('hari',  $now->dayOfWeek)->get();
         return view('simrs.antrian_console', [
@@ -49,7 +50,7 @@ class AntrianController extends Controller
     }
     public function console_jadwaldokter($poli, $tanggal)
     {
-        $poli = Poliklinik::with(['jadwals'])->firstWhere('kodesubspesialis', $poli);
+        $poli = PoliklinikDB::with(['jadwals'])->firstWhere('kodesubspesialis', $poli);
         $jadwals = $poli->jadwals->where('hari', Carbon::parse($tanggal)->dayOfWeek)
             ->where('kodesubspesialis', $poli->kodesubspesialis);
         return response()->json($jadwals);
@@ -60,7 +61,7 @@ class AntrianController extends Controller
         //     ->where('kode_unit', "!=", "1002")
         //     ->get();
 
-        $poli = Poliklinik::where('status', 1)->get();
+        $poli = PoliklinikDB::where('status', 1)->get();
         // $poli =   UnitDB::firstWhere('KDPOLI', $request->kodepoli);
         // $dokters = ParamedisDB::where('unit', $poli->kode_unit)
         //     ->where('kode_dokter_jkn', "!=", null)
@@ -203,7 +204,7 @@ class AntrianController extends Controller
             ->where('kodepoli', $poli)
             ->where('kodedokter', $dokter)
             ->count();
-        $poli = Poliklinik::where('kodesubspesialis', $poli)->first();
+        $poli = PoliklinikDB::where('kodesubspesialis', $poli)->first();
         $jadwal = $poli->jadwals->where('hari', Carbon::parse($tanggal)->dayOfWeek)->where('kodedokter', $dokter)->first();
         if ($jadwal->libur) {
             Alert::error('Error', 'Jadwal Dokter sedang Libur / Ditutup');
@@ -411,7 +412,7 @@ class AntrianController extends Controller
             $request['pasienbaru_print'] = "LAMA";
         }
         // get jadwal
-        $poli = Poliklinik::where('kodepoli', $request->kodepoli)->first();
+        $poli = PoliklinikDB::where('kodepoli', $request->kodepoli)->first();
         $request['lokasi'] =  $poli->lokasi;
         $request['lantaipendaftaran'] =  $poli->lantaipendaftaran;
         $jadwals = JadwalDokter::where("kodepoli", $request->kodepoli)->where("hari",  Carbon::parse($request->tanggalperiksa)->dayOfWeek)->get();
@@ -795,7 +796,7 @@ class AntrianController extends Controller
             ]);
         }
         // init
-        $poli = Poliklinik::where('kodesubspesialis', $request->kodepoli)->first();
+        $poli = PoliklinikDB::where('kodesubspesialis', $request->kodepoli)->first();
         $api = new AntrianBPJSController();
         // jika pasien jkn
         if (isset($request->nomorreferensi)) {
@@ -1103,7 +1104,7 @@ class AntrianController extends Controller
                 $antrians = $antrians->where('kodedokter', $request->kodedokter);
             }
         }
-        $polis = Poliklinik::where('status', 1)->get();
+        $polis = PoliklinikDB::where('status', 1)->get();
         if ($request->kodepoli == null) {
             $dokters = ParamedisDB::where('kode_dokter_jkn', "!=", null)
                 ->where('unit', "!=", null)
@@ -1336,7 +1337,7 @@ class AntrianController extends Controller
             $antrians = Antrian::whereDate('tanggalperiksa', $request->tanggal)
                 ->where('taskid', '>=', 3)->get();
         }
-        // $polis = Poliklinik::where('status', 1)->get();
+        // $polis = PoliklinikDB::where('status', 1)->get();
         // $dokters = Dokter::get();
         return view('simrs.antrian_farmasi', [
             'antrians' => $antrians,
@@ -1409,7 +1410,7 @@ class AntrianController extends Controller
     {
         dd($request->all());
         $antrian = Antrian::firstWhere('kodebooking', $kodebooking);
-        $poli = Poliklinik::get();
+        $poli = PoliklinikDB::get();
         return view('simrs.antrian_baru_offline', [
             'poli' => $poli,
             'antrian' => $antrian,
@@ -1417,7 +1418,7 @@ class AntrianController extends Controller
     }
     public function display_pendaftaran(Request $request)
     {
-        $poliklinik = Poliklinik::with(['antrians'])->where('status', 1)->get();
+        $poliklinik = PoliklinikDB::with(['antrians'])->where('status', 1)->get();
         return view('simrs.display_pendaftaran', [
             'poliklinik' => $poliklinik,
             'request' => $request,
@@ -1465,7 +1466,7 @@ class AntrianController extends Controller
             ->where('kode_unit', "!=", 1015)
             ->get();
         $units = UnitDB::where('KDPOLI', '!=', null)->get();
-        // $polis = Poliklinik::where('status', 1)
+        // $polis = PoliklinikDB::where('status', 1)
         //     ->get();
         return view('simrs.antrian_laporan', [
             'antrians' => $antrians,

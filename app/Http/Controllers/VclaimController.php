@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\API\VclaimBPJSController;
 use App\Models\Poliklinik;
+use App\Models\PoliklinikDB;
 use App\Models\SuratKontrol;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -105,7 +106,7 @@ class VclaimController extends Controller
         $request['nomorsep'] = $request->nomorsep_suratkontrol;
         $request['tanggalperiksa'] = $request->tanggal_suratkontrol;
         $request['kodepoli'] = $request->kodepoli_suratkontrol;
-        $poli = Poliklinik::where('kodesubspesialis', $request->kodepoli)->first();
+        $poli = PoliklinikDB::where('kodesubspesialis', $request->kodepoli)->first();
         $request['kodedokter'] = $request->kodedokter_suratkontrol;
         $vclaim = new VclaimBPJSController();
         $sk = $vclaim->insert_rencana_kontrol($request);

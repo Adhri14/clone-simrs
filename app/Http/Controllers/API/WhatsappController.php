@@ -111,6 +111,10 @@ class WhatsappController extends Controller
     {
         $pesan = strtoupper($request->message);
         switch ($pesan) {
+            case 'NOTIF':
+                $request['notif'] = "Test Send Notif";
+                return $this->send_notif($request);
+                break;
             case 'MESSAGE':
                 $request['message'] = "Test Send Message";
                 return $this->send_message($request);
@@ -135,7 +139,7 @@ class WhatsappController extends Controller
                 break;
             case 'INFO JADWAL POLIKLINIK':
                 $request['contenttext'] = "Link Jadwal Dokter Poliklinik : \nhttp://sim.rsudwaled.id/antrian/info_jadwaldokter \n\nLink Jadwal Libur Poliklinik : \nhttp://sim.rsudwaled.id/antrian/info_jadwallibur \n\nSilahkan pilih poliklinik yang tersedia untuk daftar online rawat jalan pasien dibawah ini.";
-                $request['titletext'] = "Info Jadwal Poliklinik";
+                $request['titletext'] = "Info Jadwal Dokter Poliklinik 🧑🏻‍⚕🏥";
                 $request['buttontext'] = 'PILIH POLIKLINIK';
                 $rowpoli = null;
                 $poliklinik = PoliklinikDB::where('status', 1)->get('namasubspesialis');
@@ -174,8 +178,8 @@ class WhatsappController extends Controller
                     for ($i = 0; $i < 6; $i++) {
                         $rowtanggal = $rowtanggal . ',' .  'TANGGAL_' . $now->addDay(1)->format('Y-m-d') . "#" . $poli;
                     }
-                    $request['contenttext'] = "Silahkan pilih tanggal rawat jalan poliklinik " . strtoupper($poli) . " dibawah ini.";
-                    $request['titletext'] = "2. Pilih Tanggal Kunjungan";
+                    $request['contenttext'] = "Silahkan pilih tanggal kunjungan rawat jalan Poliklinik _" . strtoupper($poli) . "_ dibawah ini.";
+                    $request['titletext'] = "2. Pilih Tanggal Kunjungan 🗓";
                     $request['buttontext'] = 'PILIH TANGGAL';
                     $request['rowtitle'] = $rowtanggal;
                     return $this->send_list($request);
@@ -190,9 +194,9 @@ class WhatsappController extends Controller
                     $jadwaldokters = JadwalDokter::where('hari', $hari)
                         ->where('namasubspesialis', $poli)->get();
                     if ($jadwaldokters->count() == 0) {
-                        $request['contenttext'] = "Mohon maaf tidak ada jadwal dokter poliklinik " . $poli . " di tanggal " . $tanggal->format('Y-m-d') . ".\n\nSilahkan pilih jadwal dokter poliklinik " . $poli . " pada tanggal tanggal yang lain dibawah ini.";
-                        $request['titletext'] = "2. Pilih Tanggal Lain Kunjungan";
-                        $request['buttontext'] = 'PILIH JADWAL POLIKLINIK';
+                        $request['contenttext'] = "Mohon maaf *Tidak Ada Jadwal Dokter* di Poliklinik _" . $poli . "_ pada tanggal " . $tanggal->format('Y-m-d') . " ❎🙏\n\nSilahkan pilih jadwal dokter poliklinik pada tanggal yang berbeda dibawah ini.";
+                        $request['titletext'] = "2. Pilih Tanggal Lain Kunjungan 🗓";
+                        $request['buttontext'] = 'PILIH TANGGAL';
                         $now = Carbon::now();
                         $rowhari = 'TANGGAL_' . $now->format('Y-m-d') . "#" . $poli;
                         for ($i = 0; $i < 6; $i++) {
@@ -202,10 +206,10 @@ class WhatsappController extends Controller
                         return $this->send_list($request);
                     }
                     foreach ($jadwaldokters as  $value) {
-                        $rowjadwaldokter = $rowjadwaldokter . $value->jadwal . " " . $value->namadokter . '_JADWAL.ID#' . $value->id . '#' . $tanggal->format('Y-m-d') . ',';
+                        $rowjadwaldokter = $rowjadwaldokter . $value->jadwal . " Dr." . $value->namadokter . ' _JADWAL.ID#' . $value->id . '#' . $tanggal->format('Y-m-d') . ',';
                     }
-                    $request['contenttext'] = "Silahkan pilih jadwal dokter poliklinik " . $poli . " pada tanggal " . $tanggal->format('Y-m-d') . " dibawah ini.";
-                    $request['titletext'] = "3. Pilih Jadwal Dokter";
+                    $request['contenttext'] = "Silahkan pilih jadwal dokter Poliklinik _" . $poli . "_ pada tanggal " . $tanggal->format('Y-m-d') . " dibawah ini.";
+                    $request['titletext'] = "3. Pilih Jadwal Dokter 🧑🏻‍⚕";
                     $request['buttontext'] = 'PILIH JADWAL DOKTER';
                     $request['rowtitle'] = $rowjadwaldokter;
                     return $this->send_list($request);
@@ -233,8 +237,8 @@ class WhatsappController extends Controller
                     }
                     // jika jadwal jalan
                     else {
-                        $request['titletext'] = "4. Pilih Jenis Pasien";
-                        $request['contenttext'] = "Jadwal dokter poliklinik yang anda pilih adalah sebagai berikut :\n\n*Poliklinik* : " . strtoupper($jadwaldokter->namasubspesialis) . "\n*Dokter* :  " . $jadwaldokter->namadokter . "\n*Jam Praktek* : " . $jadwaldokter->jadwal . "\n*Tanggal Periksa* :  " . $tanggal . "\n\nSilahakan pilih jenis pasien yang akan didaftarkan ini. \n\nCatatan :\nPasien JKN/BPJS : diharuskan memiliki rujukan faskes 1\nPasien UMUM : hanya pasien umum yang telah terdaftar saja dapat melakukan daftar online. Bagi yang belum terdaftar silahkan daftar langsung ditempat";
+                        $request['titletext'] = "4. Pilih Jenis Pasien 😷";
+                        $request['contenttext'] = "Jadwal dokter poliklinik yang anda pilih adalah sebagai berikut :\n\n*Poliklinik* : " . strtoupper($jadwaldokter->namasubspesialis) . "\n*Dokter* :  " . $jadwaldokter->namadokter . "\n*Jam Praktek* : " . $jadwaldokter->jadwal . "\n*Tanggal Periksa* :  " . $tanggal . "\n\nSilahakan pilih jenis pasien yang akan didaftarkan ini. \n\nCatatan :\nPasien JKN/BPJS : diharuskan memiliki rujukan faskes 1 yang masih aktif, atau Surat Kontol Poliklinik.\nPasien UMUM : hanya pasien umum yang telah terdaftar saja dapat melakukan daftar online. Bagi yang belum terdaftar silahkan daftar langsung ditempat";
                         $request['buttontext'] = 'PASIEN BPJS_' . $jadwalid . '#' . $tanggal . ',PASIEN UMUM_' . $jadwalid . '#' . $tanggal;
                         return $this->send_button($request);
                     }
@@ -242,7 +246,7 @@ class WhatsappController extends Controller
                 // 5. pilih jenis pasien, masukan rujukan
                 else if (substr($pesan, 0, 12) ==  'PASIEN BPJS_') {
                     $jadwalid = explode('_', $pesan)[1];
-                    $request['message'] = "*5. Ketik Format Pasien BPJS*\nUntuk pasien JKN/BPJS silahkan ketik nomor kartu 13 digit yang tertera pada kartu bpjs anda dengan format seperti berikut : \n\n_*Nomor Kartu*_#BPJS#" . $jadwalid . "\n(Contoh)\n_*0000067XX23XX*_#BPJS#" . $jadwalid . "\n\n Silahkan rubah nomor yang cetak miring tebal dengan nomor kartu BPJS/KIS pasien.";
+                    $request['message'] = "*5. Ketik Format Pasien BPJS*\nUntuk pasien JKN/BPJS silahkan ketik nomor kartu 13 digit yang tertera pada kartu bpjs anda dengan format seperti berikut : \n\n_*Nomor Kartu*_#BPJS#" . $jadwalid . "\n(Contoh)\n0000067XX23XX#BPJS#" . $jadwalid;
                     $this->send_message($request);
                     $request['message'] = "0000067XX23XX#BPJS#" . $jadwalid;
                     return $this->send_message($request);
@@ -250,12 +254,12 @@ class WhatsappController extends Controller
                 // 5. pilih jenis pasien, masukan nik
                 else if (substr($pesan, 0, 12) == 'PASIEN UMUM_') {
                     $jadwalid = explode('_', $pesan)[1];
-                    $request['message'] = "*5. Ketik Format Pasien Umum*\nUntuk pasien UMUM silahkan ketik nomor nik/ktp 16 digit yang tertera pada Kartu Tanda Penduduk (KTP) anda dengan format seperti berikut : \n\n_*NIK / KTP*_#UMUM#" . $jadwalid . "\n\n(Contoh)\n_*3209XXXX1234XXXX*_#UMUM#" . $jadwalid;
+                    $request['message'] = "*5. Ketik Format Pasien Umum*\nUntuk pasien UMUM silahkan ketik nomor nik/ktp 16 digit yang tertera pada Kartu Tanda Penduduk (KTP) anda dengan format seperti berikut : \n\n_*NIK / KTP*_#UMUM#" . $jadwalid . "\n\n(Contoh)\n3209XXXX1234XXXX#UMUM#" . $jadwalid;
                     $this->send_message($request);
                     $request['message'] = "3209XXXX1234XXXX#UMUM#" . $jadwalid;
                     return $this->send_message($request);
                 }
-                // 6. pilih jenis pasien, masukan nik
+                // 6. cek pasien umum
                 else if (str_contains($pesan, '#UMUM#')) {
                     return $this->konfirmasi_antrian_umum($pesan, $request);
                 }
@@ -305,8 +309,8 @@ class WhatsappController extends Controller
                 }
                 // default
                 else {
-                    $request['contenttext'] = "Mohon maaf pesan yang anda masukan tidak dapat diproses oleh sistem.\n\nSilahkan klik *MENU UTAMA* yang dapat diproses dibawah ini.\n\nUntuk pertanyaan & pengaduan silahkan hubungi :\n*Humas RSUD Waled 08983311118*";
-                    $request['titletext'] = "Layanan Whatsapp RSUD Waled";
+                    $request['contenttext'] = "Mohon maaf pesan yang anda kirim tidak dapat diproses oleh sistem ❎🙏\n\nUntuk pertanyaan & pengaduan silahkan hubungi :\n*Humas RSUD Waled 08983311118*\n\nSilahkan klik *MENU UTAMA* yang dapat diproses dibawah ini ⬇";
+                    $request['titletext'] = "Layanan Whatsapp RSUD Waled 📱🏥";
                     $request['buttontext'] = 'MENU UTAMA';
                     $request['rowtitle'] = 'INFO CARA PENDAFTARAN,DAFTAR PASIEN RAWAT JALAN,INFO JADWAL POLIKLINIK,PERTANYAAN DAN PENGADUAN';
                     return $this->send_list($request);
@@ -317,7 +321,7 @@ class WhatsappController extends Controller
     public function pilih_poli($pesan, Request $request)
     {
         $request['contenttext'] = "Silahkan pilih poliklinik yang tersedia untuk daftar online rawat jalan pasien dibawah ini.";
-        $request['titletext'] = "1. Pilih Poliklinik Rawat Jalan";
+        $request['titletext'] = "1. Pilih Poliklinik Rawat Jalan 🏥";
         $request['buttontext'] = 'PILIH POLIKLINIK';
         $rowpoli = null;
         $poliklinik = PoliklinikDB::where('status', 1)->get('namasubspesialis');
@@ -332,7 +336,6 @@ class WhatsappController extends Controller
         // init
         try {
             $request['nik'] = explode('#', $pesan)[0];
-            $tipepasien = "NON-JKN";
             $jadwalid = explode('#', $pesan)[2];
             $tanggalperiksa = explode('#', $pesan)[3];
             $jadwaldokter = JadwalDokter::find($jadwalid);
@@ -362,7 +365,7 @@ class WhatsappController extends Controller
                     $request['jeniskunjungan'] = 3;
                     $request['titletext'] = "6. Konfirmasi Pendaftaran Pasien UMUM / NON-JKN";
                     $request['contenttext'] = "Jadwal dokter poliklinik yang dipilih sebagai berikut :\n\n*Poliklinik* : " . strtoupper($jadwaldokter->namasubspesialis) . "\n*Dokter* :  " . $jadwaldokter->namadokter . "\n*Jam Praktek* : " . $jadwaldokter->jadwal . "\n*Tanggal Periksa* :  " . $tanggalperiksa . "\n\n*Nama Pasien* : " . $request->nama . "\n*Status* : *" . $request->status . "*\n*NIK* : " . $request->nik . "\n*No BPJS* : " . $request->nomorkartu . "\n*No RM* : " . $request->norm .  "\n\nSebagai konfirmasi bahwa data yang diatas adalah benar pasien yang akan didaftarkan. Silahakan pilih tombol dibawah ini.";
-                    $request['buttontext'] =  $request->nik . "#DAFTAR_UMUM#" . $jadwalid . "#" . $request->tanggalperiksa . ',BATAL PENDAFTARAN';
+                    $request['buttontext'] =  $request->nik . "#DAFTAR_UMUM#" . $jadwalid . "#" . $request->tanggalperiksa;
                     return $this->send_button($request);
                 } catch (\Throwable $th) {
                     $request['notif'] = '6 cek umum error : ' . $th->getMessage();

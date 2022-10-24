@@ -659,7 +659,7 @@ class AntrianBPJSController extends Controller
             $wa->send_notif($request);
             return $response = [
                 "metadata" => [
-                    "message" => "NIK atau Nomor Kartu Tidak Sesuai dengan Data RM, silahkan hubungi petugas pendaftaran untuk memperbaiki data di Rekam Medis.s",
+                    "message" => "NIK atau Nomor Kartu Tidak Sesuai dengan Data RM, silahkan hubungi petugas pendaftaran untuk memperbaiki data di Rekam Medis",
                     "code" => 201,
                 ],
             ];
