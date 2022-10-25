@@ -6,6 +6,7 @@ use App\Http\Controllers\API\AntrianBPJSController;
 use App\Models\Dokter;
 use App\Models\JadwalDokter;
 use App\Models\Poliklinik;
+use App\Models\PoliklinikDB;
 use Illuminate\Http\Request;
 use RealRashid\SweetAlert\Facades\Alert;
 
@@ -14,7 +15,7 @@ class JadwalDokterController extends Controller
 {
     public function index()
     {
-        $poli = Poliklinik::where('status', 1)->get();
+        $poli = PoliklinikDB::where('status', 1)->get();
         $dokters = Dokter::get();
         $jadwals = JadwalDokter::get();
         return view('simrs.jadwaldokter_index', [
@@ -27,7 +28,7 @@ class JadwalDokterController extends Controller
     {
         if ($request->method == 'GET') {
             $api = new AntrianBPJSController();
-            $polis = Poliklinik::where('status', 1)->get('kodesubspesialis');
+            $polis = PoliklinikDB::where('status', 1)->get('kodesubspesialis');
             $jumlah_jadwal = 0;
             foreach ($polis as $value) {
                 $request['kodepoli'] = $value->kodesubspesialis;
@@ -59,7 +60,7 @@ class JadwalDokterController extends Controller
         if ($request->method == "UPDATE") {
             $jadwal = JadwalDokter::find($request->idjadwal);
             // dd($jadwal);
-            $poli = Poliklinik::firstWhere('kodesubspesialis', $request->kodesubspesialis);
+            $poli = PoliklinikDB::firstWhere('kodesubspesialis', $request->kodesubspesialis);
             $dokter = Dokter::firstWhere('kodedokter', $request->kodedokter);
             $hari = ['MINGGU', 'SENIN', 'SELASA', 'RABU', 'KAMIS', 'JUMAT', 'SABTU'];
             if ($request->libur == "true") {
