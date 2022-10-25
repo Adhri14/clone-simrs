@@ -556,13 +556,20 @@ return [
         // KPO ELEKTRONIK
         [
             'text' => 'KPO Elektronik',
-            'icon'    => 'fas fa-drugs',
+            'icon'    => 'fas fa-prescription-bottle-alt',
             'can' => 'rekam-medis',
             'submenu' => [
                 [
-                    'text' => 'Diagnosa ICD-10',
-                    'icon'    => 'fas fa-diagnoses',
-                    'url'  => 'icd10',
+                    'text' => 'Aplikasi KPO',
+                    'icon'    => 'fas fa-pills',
+                    'url'  => 'kpo',
+                    'shift'   => 'ml-2',
+                    'can' => 'rekam-medis',
+                ],
+                [
+                    'text' => 'Obat',
+                    'icon'    => 'fas fa-pills',
+                    'url'  => 'obat',
                     'shift'   => 'ml-2',
                     'can' => 'rekam-medis',
                 ],

@@ -8,6 +8,7 @@ use App\Http\Controllers\Icd10Controller;
 use App\Http\Controllers\JadwalDokterController;
 use App\Http\Controllers\JadwalLiburController;
 use App\Http\Controllers\JadwalOperasiController;
+use App\Http\Controllers\KPOController;
 use App\Http\Controllers\KunjunganController;
 use App\Http\Controllers\PasienController;
 use App\Http\Controllers\PermissionController;
@@ -88,7 +89,6 @@ Route::prefix('antrian')->name('antrian.')->middleware(['auth'])->group(function
     Route::get('selesai/{kodebooking}', [AntrianController::class, 'selesai'])->name('selesai')->middleware('permission:poliklinik');
     Route::get('selesai_semua/{kodepoli}', [AntrianController::class, 'selesai_semua'])->name('selesai_semua')->middleware('permission:poliklinik');
     Route::get('surat_kontrol_poli', [AntrianController::class, 'surat_kontrol_poli'])->name('surat_kontrol_poli')->middleware('permission:poliklinik');
-    Route::get('kpo', [AntrianController::class, 'kpo'])->name('kpo')->middleware('permission:poliklinik');
     Route::post('surat_kontrol_create', [AntrianController::class, 'surat_kontrol_create'])->name('surat_kontrol_create')->middleware('permission:poliklinik');
     Route::get('laporan_kunjungan_poliklinik', [AntrianController::class, 'laporan_kunjungan_poliklinik'])->name('laporan_kunjungan_poliklinik')->middleware('permission:poliklinik');
     // farmasi
@@ -147,3 +147,4 @@ Route::resource('tarif_kelompok_layanan', TarifKelompokLayananController::class)
 Route::resource('tarif_layanan', TarifLayananController::class);
 Route::resource('icd10', Icd10Controller::class);
 Route::resource('efilerm', FileRMController::class);
+Route::resource('kpo', KPOController::class);
