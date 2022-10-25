@@ -1235,11 +1235,11 @@ class AntrianBPJSController extends Controller
         // jika antrian ditemukan
         if (isset($antrian)) {
             // check backdate
-            if (Carbon::parse($antrian->tanggalperiksa)->endOfDay()->isPast()) {
+            if (!Carbon::parse($antrian->tanggalperiksa)->isToday()) {
                 return [
                     "metadata" => [
                         "code" => 201,
-                        "message" => "Tanggal periksa sudah terlewat"
+                        "message" => "Tanggal periksa bukan hari ini."
                     ]
                 ];
             }

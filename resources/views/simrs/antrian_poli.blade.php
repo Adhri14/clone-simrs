@@ -105,7 +105,7 @@
                             title="Antrian Tunggu Poliklinik ({{ $antrians->where('taskid', '!=', 4)->count() }} Orang)"
                             theme="warning" icon="fas fa-info-circle" collapsible>
                             @php
-                                $heads = ['Kodeboking', 'Kunjungan', 'Pasien', 'Action', 'SEP / Ref', 'Status'];
+                                $heads = ['Kodeboking', 'Kunjungan', 'Pasien', 'Action', 'SEP / Ref', 'Status', 'Action'];
                                 $config['order'] = ['5', 'asc'];
                             @endphp
                             <x-adminlte-datatable id="table2" class="nowrap text-xs" :heads="$heads" :config="$config"
@@ -254,6 +254,11 @@
                                             @if ($item->taskid == 99)
                                                 <span class="badge bg-danger">{{ $item->taskid }}. Batal</span>
                                             @endif
+                                        </td>
+                                        <td>
+                                            <x-adminlte-button class="btn-xs" theme="danger" icon="fas fa-times"
+                                                data-toggle="tooltop" title="Batal Antrian {{ $item->nomorantrean }}"
+                                                onclick="window.location='{{ route('antrian.batal_antrian', $item->kodebooking) }}'" />
                                         </td>
                                     </tr>
                                 @endforeach
