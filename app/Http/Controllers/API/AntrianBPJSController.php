@@ -1628,6 +1628,13 @@ class AntrianBPJSController extends Controller
                     $antrian->update([
                         "kode_kunjungan" => $kunjungan->kode_kunjungan,
                     ]);
+                    // insert tracer tc_tracer_header
+                    $tracerbaru = TracerDB::create([
+                        'kode_kunjungan' => $kunjungan->kode_kunjungan,
+                        'tgl_tracer' => $now->format('Y-m-d'),
+                        'id_status_tracer' => 1,
+                        'cek_tracer' => "N",
+                    ]);
                 } catch (\Throwable $th) {
                     //throw $th;
                     return [
@@ -1644,13 +1651,6 @@ class AntrianBPJSController extends Controller
                         "status_api" => $request->status_api,
                         "keterangan" => $request->keterangan,
                         "taskid1" => $now,
-                    ]);
-                    // insert tracer tc_tracer_header
-                    $tracerbaru = TracerDB::create([
-                        'kode_kunjungan' => $kunjungan->kode_kunjungan,
-                        'tgl_tracer' => $now->format('Y-m-d'),
-                        'id_status_tracer' => 1,
-                        'cek_tracer' => "N",
                     ]);
                     // print antrian
                     $print_karcis = new AntrianController();
