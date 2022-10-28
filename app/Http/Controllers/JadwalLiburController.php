@@ -13,7 +13,6 @@ use RealRashid\SweetAlert\Facades\Alert;
 
 class JadwalLiburController extends Controller
 {
-    //
     public function index(Request $request)
     {
         $jadwals = JadwalLiburPoliDB::with(['unit', 'unit.antrians'])

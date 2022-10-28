@@ -18,13 +18,16 @@ class PasienController extends Controller
         $total_pasien = PasienDB::count();
         $pasien_jkn = PasienDB::where('no_Bpjs', '!=', '')->count();
         $pasien_nik = PasienDB::where('nik_bpjs', '!=', '')->count();
-        // dd($total_pasien);
+        $pasien_laki = PasienDB::where('jenis_kelamin', 'L')->count();
+        $pasien_perempuan = PasienDB::where('jenis_kelamin', 'P')->count();
         return view('simrs.pasien_index', compact([
             'pasiens',
             'request',
             'total_pasien',
             'pasien_jkn',
             'pasien_nik',
+            'pasien_laki',
+            'pasien_perempuan',
         ]));
     }
     public function store(Request $request)
@@ -45,6 +48,22 @@ class PasienController extends Controller
             'nama_px' => $request->nama,
             'tempat_lahir' => $request->tempat_lahir,
             'tgl_lahir' => $request->tanggal_lahir,
+        ]);
+        Alert::success('Success', 'Data Pasien Telah Disimpan');
+        return redirect()->route('pasien.index');
+    }
+    public function update(Request $request, PasienDB $pasien)
+    {
+        $request->validate([
+            'nik' => 'required',
+            'nokartu' => 'required',
+            'nama' => 'required',
+            'norm' => 'required',
+        ]);
+        $pasien->update([
+            'nik_bpjs' => $request->nik,
+            'no_Bpjs' => $request->nokartu,
+            'nama_px' => $request->nama,
         ]);
         Alert::success('Success', 'Data Pasien Telah Disimpan');
         return redirect()->route('pasien.index');
