@@ -1072,54 +1072,60 @@ class AntrianBPJSController extends Controller
         // cek jika pasien baru
         if (empty($pasien)) {
             // proses pendaftaran baru
-            try {
-                // checking norm terakhir
-                $pasien_terakhir = PasienDB::latest()->first()->no_rm;
-                $request['status'] = 1;
-                $request['norm'] = $pasien_terakhir + 1;
-                // insert pasien
-                PasienDB::create(
-                    [
-                        "no_Bpjs" => $request->nomorkartu,
-                        "nik_bpjs" => $request->nik,
-                        "no_rm" => $request->norm,
-                        // "nomorkk" => $request->nomorkk,
-                        "nama_px" => $request->nama,
-                        "jenis_kelamin" => $request->jeniskelamin,
-                        "tgl_lahir" => $request->tanggallahir,
-                        "no_tlp" => $request->nohp,
-                        "alamat" => $request->alamat,
-                        "kode_propinsi" => $request->kodeprop,
-                        // "namaprop" => $request->namaprop,
-                        "kode_kabupaten" => $request->kodedati2,
-                        // "namadati2" => $request->namadati2,
-                        "kode_kecamatan" => $request->kodekec,
-                        // "namakec" => $request->namakec,
-                        "kode_desa" => $request->kodekel,
-                        // "namakel" => $request->namakel,
-                        // "rw" => $request->rw,
-                        // "rt" => $request->rt,
-                        // "status" => $request->status,
-                    ]
-                );
-                return  $response = [
-                    "response" => [
-                        "norm" => $request->norm,
-                    ],
-                    "metadata" => [
-                        "message" => "Ok",
-                        "code" => 200,
-                    ],
-                ];
-            } catch (\Throwable $th) {
-                $response = [
-                    "metadata" => [
-                        "message" => "Gagal Error Code " . $th->getMessage(),
-                        "code" => 201,
-                    ],
-                ];
-                return $response;
-            }
+            // try {
+            //     // checking norm terakhir
+            //     $pasien_terakhir = PasienDB::latest()->first()->no_rm;
+            //     $request['status'] = 1;
+            //     $request['norm'] = $pasien_terakhir + 1;
+            //     // insert pasien
+            //     PasienDB::create(
+            //         [
+            //             "no_Bpjs" => $request->nomorkartu,
+            //             "nik_bpjs" => $request->nik,
+            //             "no_rm" => $request->norm,
+            //             // "nomorkk" => $request->nomorkk,
+            //             "nama_px" => $request->nama,
+            //             "jenis_kelamin" => $request->jeniskelamin,
+            //             "tgl_lahir" => $request->tanggallahir,
+            //             "no_tlp" => $request->nohp,
+            //             "alamat" => $request->alamat,
+            //             "kode_propinsi" => $request->kodeprop,
+            //             // "namaprop" => $request->namaprop,
+            //             "kode_kabupaten" => $request->kodedati2,
+            //             // "namadati2" => $request->namadati2,
+            //             "kode_kecamatan" => $request->kodekec,
+            //             // "namakec" => $request->namakec,
+            //             "kode_desa" => $request->kodekel,
+            //             // "namakel" => $request->namakel,
+            //             // "rw" => $request->rw,
+            //             // "rt" => $request->rt,
+            //             // "status" => $request->status,
+            //         ]
+            //     );
+            //     return  $response = [
+            //         "response" => [
+            //             "norm" => $request->norm,
+            //         ],
+            //         "metadata" => [
+            //             "message" => "Ok",
+            //             "code" => 200,
+            //         ],
+            //     ];
+            // } catch (\Throwable $th) {
+            //     $response = [
+            //         "metadata" => [
+            //             "message" => "Gagal Error Code " . $th->getMessage(),
+            //             "code" => 201,
+            //         ],
+            //     ];
+            //     return $response;
+            // }
+            return [
+                'metadata' => [
+                    'code' => 201,
+                    'message' => 'Mohon maaf untuk pasien baru tidak bisa didaftarkan secara online',
+                ],
+            ];
         }
         // cek jika pasien lama
         else {

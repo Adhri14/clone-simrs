@@ -285,7 +285,7 @@
                         </div>
                     </section>
                 </div>
-                <button class="btn btn-success" onclick="printDiv('printMe')"><i class="fas fa-print"></i>
+                <button class="btn btn-success" onclick="printDiv('printMe')">Print<i class="fas fa-print"></i>
                     Print
                     Laporan</button>
             @endif

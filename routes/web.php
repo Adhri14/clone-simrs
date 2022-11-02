@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\AntrianController;
-use App\Http\Controllers\AntrianWAController;
 use App\Http\Controllers\DokterController;
 use App\Http\Controllers\FileRMController;
 use App\Http\Controllers\Icd10Controller;
@@ -13,6 +12,7 @@ use App\Http\Controllers\KunjunganController;
 use App\Http\Controllers\PasienController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\PoliklinikController;
+use App\Http\Controllers\RekamMedis\IndexController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\TarifKelompokLayananController;
 use App\Http\Controllers\TarifLayananController;
@@ -144,6 +144,7 @@ Route::resource('kunjungan', KunjunganController::class)->middleware('permission
 Route::resource('pasien', PasienController::class)->middleware('permission:rekam-medis');
 Route::get('pasien_daerah', [PasienController::class, 'pasien_daerah'])->name('pasien_daerah');
 Route::get('pasien_demografi', [PasienController::class, 'pasien_demografi'])->name('pasien_demografi');
+Route::get('index_penyakit_rajal', [IndexController::class, 'index_penyakit_rajal'])->name('index_penyakit_rajal');
 
 Route::resource('tindakan', PasienController::class)->middleware('permission:rekam-medis');
 Route::resource('tarif_kelompok_layanan', TarifKelompokLayananController::class);

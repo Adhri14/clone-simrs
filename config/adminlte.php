@@ -541,6 +541,21 @@ return [
                     'can' => 'rekam-medis',
                 ],
                 [
+                    'text' => 'Laporan Index',
+                    'icon'    => 'fas fa-chart-bar',
+                    'shift'   => 'ml-2',
+                    'can' => 'rekam-medis',
+                    'submenu' => [
+                        [
+                            'text' => 'Index Penyakit Rawat Jalan',
+                            'icon'    => 'fas fa-disease',
+                            'url'  => 'index_penyakit_rajal',
+                            'shift'   => 'ml-3',
+                            'can' => 'rekam-medis',
+                        ],
+                    ]
+                ],
+                [
                     'text' => 'Diagnosa ICD-10',
                     'icon'    => 'fas fa-diagnoses',
                     'url'  => 'icd10',
