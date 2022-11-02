@@ -1123,7 +1123,7 @@ class AntrianBPJSController extends Controller
             return [
                 'metadata' => [
                     'code' => 201,
-                    'message' => 'Mohon maaf untuk pasien baru tidak bisa didaftarkan secara online',
+                    'message' => 'Mohon maaf untuk pasien baru tidak bisa didaftarkan secara online. Silahkan daftar secara offline dengan datang ke Rumah Sakit',
                 ],
             ];
         }
