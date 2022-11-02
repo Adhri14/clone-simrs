@@ -142,6 +142,9 @@ Route::resource('jadwallibur', JadwalLiburController::class)->middleware(['auth'
 Route::resource('jadwaloperasi', JadwalOperasiController::class)->only(['index', 'store', 'edit'])->middleware('permission:pelayanan-medis');
 Route::resource('kunjungan', KunjunganController::class)->middleware('permission:rekam-medis');
 Route::resource('pasien', PasienController::class)->middleware('permission:rekam-medis');
+Route::get('pasien_daerah', [PasienController::class, 'pasien_daerah'])->name('pasien_daerah');
+Route::get('pasien_demografi', [PasienController::class, 'pasien_demografi'])->name('pasien_demografi');
+
 Route::resource('tindakan', PasienController::class)->middleware('permission:rekam-medis');
 Route::resource('tarif_kelompok_layanan', TarifKelompokLayananController::class);
 Route::resource('tarif_layanan', TarifLayananController::class);

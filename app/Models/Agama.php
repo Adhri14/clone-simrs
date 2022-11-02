@@ -5,12 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Kabupaten extends Model
+class Agama extends Model
 {
     use HasFactory;
     protected $connection = 'mysql2';
-    protected $table = 'mt_kabupaten_kota';
-    protected $primaryKey = 'kode_kabupaten_kota';
+    protected $table = 'mt_agama';
+    protected $primaryKey = 'ID';
     public $incrementing = false;
     protected $keyType = 'string';
 }

@@ -243,6 +243,11 @@ return [
         ],
         ['header' => 'MENU UTAMA'],
         [
+            'text'        => 'Landing Page',
+            'url'         => '',
+            'icon'        => 'fas fa-home',
+        ],
+        [
             'text'        => 'Dashboard',
             'url'         => 'home',
             'icon'        => 'fas fa-home',
@@ -526,6 +531,13 @@ return [
                     'url'  => 'pasien',
                     'shift'   => 'ml-2',
                     'active'  => ['pasien', 'pasien/create', 'regex:@^pasien(\/[0-9]+)?+$@', 'regex:@^pasien(\/[0-9]+)?\/edit+$@',],
+                    'can' => 'rekam-medis',
+                ],
+                [
+                    'text' => 'Demografi Pasien',
+                    'icon'    => 'fas fa-user-injured',
+                    'url'  => 'pasien_daerah',
+                    'shift'   => 'ml-2',
                     'can' => 'rekam-medis',
                 ],
                 [

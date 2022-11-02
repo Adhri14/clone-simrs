@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Agama;
 use App\Models\PasienDB;
+use App\Models\Pekerjaan;
+use App\Models\Pendidikan;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class PasienController extends Controller
@@ -84,5 +88,61 @@ class PasienController extends Controller
         $pasien->delete();
         Alert::success('Success', 'Data Pasien Telah Dihapus');
         return redirect()->route('pasien.index');
+    }
+    public function pasien_daerah(Request $request)
+    {
+        $pasiens_kecamatan = PasienDB::select('kode_kecamatan', DB::raw('count(*) as total'))
+            ->where('kode_kecamatan', '!=', null)
+            ->where('kode_kecamatan', '!=', 0)
+            ->groupBy('kode_kecamatan')
+            ->orderBy('total', 'desc')
+            ->limit(20)
+            ->get();
+        $pasiens_kabupaten = PasienDB::select('kode_kabupaten', DB::raw('count(*) as total'))
+            ->where('kode_kabupaten', '!=', null)
+            ->where('kode_kabupaten', '!=', 0)
+            ->groupBy('kode_kabupaten')
+            ->orderBy('total', 'desc')
+            ->limit(20)
+            ->get();
+        $pasiens_pendidikan = PasienDB::select('pendidikan', DB::raw('count(*) as total'))
+            ->where('pendidikan', '!=', null)
+            ->where('pendidikan', '!=', 0)
+            ->groupBy('pendidikan')
+            ->orderBy('total', 'desc')
+            ->get();
+        $pendidikan = Pendidikan::get();
+        $pasiens_pekerjaan = PasienDB::select('pekerjaan', DB::raw('count(*) as total'))
+            ->where('pekerjaan', '!=', null)
+            ->where('pekerjaan', '!=', 0)
+            ->groupBy('pekerjaan')
+            ->orderBy('total', 'desc')
+            ->get();
+        $pekerjaan = Pekerjaan::get();
+        $pasiens_agama = PasienDB::select('agama', DB::raw('count(*) as total'))
+            ->where('agama', '!=', null)
+            ->where('agama', '!=', 0)
+            ->groupBy('agama')
+            ->orderBy('total', 'desc')
+            ->get();
+        $agama = Agama::get();
+        // dd($pasiens_pekerjaan);
+        // dd($pasiens_pendidikan->where('pendidikan', 15)->first()->total);
+        // dd($pasiens_pendidikan);
+        $pasiens_laki = PasienDB::where('jenis_kelamin', 'L')->count();
+        $pasiens_perempuan = PasienDB::where('jenis_kelamin', 'P')->count();
+
+        return view('simrs.pasien_daerah', compact([
+            'pasiens_kecamatan',
+            'pasiens_kabupaten',
+            'pasiens_laki',
+            'pasiens_perempuan',
+            'pendidikan',
+            'pasiens_pendidikan',
+            'pasiens_pekerjaan',
+            'pekerjaan',
+            'pasiens_agama',
+            'agama',
+        ]));
     }
 }
