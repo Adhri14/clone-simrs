@@ -182,7 +182,6 @@ class AntrianController extends Controller
             $printer->text("No. RM : " . $request->norm . "\n");
             $printer->text("No. Telepon : " . $request->nohp . "\n");
             $printer->text("Jenis Peserta : " . $sep->sep->peserta->jnsPeserta . " \n\n");
-
             $printer->text("Jenis Pelayanan : " . $sep->sep->jnsPelayanan . " \n");
             $printer->text("Poli / Spesialis : " . $sep->sep->poli . "\n");
             $printer->text("Hak Kelas : " . $sep->sep->kelasRawat . " \n");
