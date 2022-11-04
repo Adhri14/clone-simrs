@@ -168,7 +168,9 @@ class AntrianController extends Controller
             $printer->setJustification(Printer::JUSTIFY_CENTER);
             $printer->text("Nomor SEP :\n");
             $printer->setTextSize(2, 2);
+            $printer->setEmphasis(true);
             $printer->text($sep->sep->noSep . "\n");
+            $printer->setEmphasis(false);
             $printer->setTextSize(1, 1);
             $printer->qrCode($sep->sep->noSep, Printer::QR_ECLEVEL_L, 10, Printer::QR_MODEL_2);
             $printer->text("Tgl SEP : " . $sep->sep->tglSep . " \n");
