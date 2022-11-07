@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
@@ -15,13 +16,19 @@ class UserController extends Controller
 {
     public function index(Request $request)
     {
+        $users_total = User::count();
         $users = User::with(['roles'])
             ->where(function ($query) use ($request) {
                 $query->where('name', "like", "%" . $request->search . "%");
             })
-            ->paginate(20);
-        $roles = Role::pluck('name', 'id')->toArray();
-        return view('admin.user_index', compact(['users', 'request', 'roles']))->with(['i' => 0]);
+            ->simplePaginate();
+        $roles = Role::pluck('name');
+        return view('admin.user_index', compact([
+            'request',
+            'users_total',
+            'users',
+            'roles',
+        ]));
     }
     public function edit(User $user)
     {
@@ -32,7 +39,9 @@ class UserController extends Controller
     {
         $request->validate([
             'username' => 'required|alpha_dash|unique:users,username,' . $request->id,
+            'email' => 'required|email|unique:users,email,' . $request->id,
             'name' => 'required',
+            'role' => 'required',
         ]);
         if (!empty($request['password'])) {
             $request['password'] = Hash::make($request['password']);
@@ -42,14 +51,14 @@ class UserController extends Controller
         $user = User::updateOrCreate(['id' => $request->id], $request->except(['_token', 'id', 'role']));
         DB::table('model_has_roles')->where('model_id', $request->id)->delete();
         $user->assignRole($request->role);
-        Alert::success('Success', 'Data Telah Disimpan');
-        return redirect()->route('admin.user.index');
+        Alert::success('Success', 'Data User Disimpan');
+        return redirect()->route('user.index');
     }
     public function destroy(User $user)
     {
         $user->delete();
         Alert::success('Success', 'Data Telah Dihapus');
-        return redirect()->route('admin.user.index');
+        return redirect()->route('user.index');
     }
     public function profile()
     {

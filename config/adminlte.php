@@ -603,6 +603,37 @@ return [
                 ],
             ],
         ],
+        // RESOURCE CONTROL
+        [
+            'text'    => 'Integrasi Satu Sehat',
+            'icon'    => 'fas fa-cogs',
+            'can' => 'admin',
+            'submenu' => [
+                [
+                    'text' => 'Status',
+                    'icon'    => 'fas fa-info-circle',
+                    'url'  => 'satusehat/status',
+                    'shift'   => 'ml-2',
+                    'can' => 'admin',
+                ],
+                [
+                    'text' => 'Patient',
+                    'icon'    => 'fas fa-user-injured',
+                    'url'  => 'satusehat/patient',
+                    'shift'   => 'ml-2',
+                    'can' => 'admin',
+                    // 'active'  => ['patient', 'patient/create', 'regex:@^patient(\/[0-9]+)?+$@', 'regex:@^patient(\/[0-9]+)?\/edit+$@',],
+                ],
+                [
+                    'text' => 'Practitioner',
+                    'icon'    => 'fas fa-user-md',
+                    'url'  => 'satusehat/practitioner',
+                    'shift'   => 'ml-2',
+                    'can' => 'admin',
+                    // 'active'  => ['practitioner', 'practitioner/create', 'regex:@^practitioner(\/[0-9]+)?+$@', 'regex:@^practitioner(\/[0-9]+)?\/edit+$@',],
+                ],
+            ],
+        ],
         // USER ACCESS CONTROLL
         [
             'text'    => 'User Access Control',
@@ -612,17 +643,17 @@ return [
                 [
                     'text' => 'User',
                     'icon'    => 'fas fa-users',
-                    'url'  => 'admin/user',
+                    'url'  => 'user',
                     'shift'   => 'ml-2',
                     'can' => 'admin',
-                    'active'  => ['admin/user', 'admin/user/create', 'regex:@^admin/user(\/[0-9]+)?+$@', 'regex:@^admin/user(\/[0-9]+)?\/edit+$@',],
+                    'active'  => ['user', 'user/create', 'regex:@^user(\/[0-9]+)?+$@', 'regex:@^user(\/[0-9]+)?\/edit+$@',],
                 ],
                 [
                     'text' => 'Role & Permission',
                     'icon'    => 'fas fa-user-shield',
-                    'url'  => 'admin/role',
+                    'url'  => 'role',
                     'shift'   => 'ml-2',
-                    'active'  => ['admin/role', 'admin/role/create', 'regex:@^admin/role(\/[0-9]+)?+$@', 'regex:@^admin/role(\/[0-9]+)?\/edit+$@', 'regex:@^admin/permission(\/[0-9]+)?\/edit+$@'],
+                    'active'  => ['role', 'role/create', 'regex:@^role(\/[0-9]+)?+$@', 'regex:@^role(\/[0-9]+)?\/edit+$@', 'regex:@^permission(\/[0-9]+)?\/edit+$@'],
                     'can' => 'admin',
                 ],
             ],
@@ -633,10 +664,25 @@ return [
             'icon' => 'fas fa-fw fa-user',
         ],
         [
-            'text'        => 'Status Bridging BPJS',
-            'url'         => 'status',
+            'text'        => 'Integration System',
             'icon'        => 'fas fa-info-circle',
             'can' => 'admin',
+            'submenu' => [
+                [
+                    'text'        => 'Status Bridging BPJS',
+                    'url'         => 'bridging/bpjs_status',
+                    'shift'   => 'ml-2',
+                    'icon'        => 'fas fa-info-circle',
+                    'can' => 'admin',
+                ],
+                [
+                    'text'        => 'Bridging Satu Sehat',
+                    'url'         => 'satusehat/status',
+                    'shift'   => 'ml-2',
+                    'icon'        => 'fas fa-info-circle',
+                    'can' => 'admin',
+                ],
+            ]
         ],
         [
             'text'        => 'Log Viewer',

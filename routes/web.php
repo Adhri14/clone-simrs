@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\Admin\PermissionController;
+use App\Http\Controllers\Admin\RoleController;
+use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\AntrianController;
 use App\Http\Controllers\DokterController;
 use App\Http\Controllers\FileRMController;
@@ -10,13 +13,12 @@ use App\Http\Controllers\JadwalOperasiController;
 use App\Http\Controllers\KPOController;
 use App\Http\Controllers\KunjunganController;
 use App\Http\Controllers\PasienController;
-use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\PoliklinikController;
 use App\Http\Controllers\RekamMedis\IndexController;
-use App\Http\Controllers\RoleController;
+use App\Http\Controllers\SatuSehat\PatientController;
+use App\Http\Controllers\SatuSehat\TokenController;
 use App\Http\Controllers\TarifKelompokLayananController;
 use App\Http\Controllers\TarifLayananController;
-use App\Http\Controllers\UserController;
 use App\Http\Controllers\VclaimController;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
@@ -113,13 +115,7 @@ Route::prefix('antrian')->name('antrian.')->middleware(['auth'])->group(function
     Route::post('simpan_baru_online/{kodebooking}', [AntrianController::class, 'simpan_baru_online'])->name('simpan_baru_online');
     Route::get('baru_offline/{kodebooking}', [AntrianController::class, 'baru_offline'])->name('baru_offline');
 });
-// admin user role permission
-Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified', 'permission:admin'])->group(function () {
-    Route::resource('user', UserController::class);
-    Route::resource('role', RoleController::class);
-    Route::resource('permission', PermissionController::class);
-});
-Route::get('profile', [UserController::class, 'profile'])->name('profile');
+
 
 // vcalim
 Route::prefix('vclaim')->name('vclaim.')->middleware(['auth'])->group(function () {
@@ -154,3 +150,16 @@ Route::resource('efilerm', FileRMController::class);
 Route::resource('kpo', KPOController::class);
 Route::get('kpo/tanggal/{tanggal}', [KPOController::class, 'kunjungan_tanggal'])->name('kpo.kunjungan_tanggal');
 
+Route::prefix('satusehat')->middleware(['auth'])->name('satusehat.')->group(function () {
+    Route::get('status', [TokenController::class, 'status'])->name('status');
+    Route::get('refresh_token', [TokenController::class, 'refresh_token'])->name('refresh_token');
+    Route::resource('patient', PatientController::class);
+    Route::resource('practitioner', PratitionerController::class);
+});
+// admin user role permission
+Route::middleware(['auth', 'verified', 'permission:admin'])->group(function () {
+    Route::resource('user', UserController::class);
+    Route::resource('role', RoleController::class);
+    Route::resource('permission', PermissionController::class);
+});
+Route::get('profile', [UserController::class, 'profile'])->name('profile');

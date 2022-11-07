@@ -19,7 +19,7 @@
                 </x-adminlte-alert>
             @endif
             <x-adminlte-card title="Role {{ $role->name }}" theme="secondary">
-                <form action="{{ route('admin.role.store') }}" id="myform" method="post">
+                <form action="{{ route('role.store') }}" id="myform" method="post">
                     @csrf
                     <input name="id" value="{{ $role->id }}" hidden />
                     <x-adminlte-input name="name" value="{{ $role->name }}" label="Nama" placeholder="Nama Lengkap"

@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
@@ -11,11 +12,9 @@ class RoleController extends Controller
 {
     public function index(Request $request)
     {
-        $roles = Role::with(['permissions'])->paginate();
-        $permissions = Permission::class;
-        $select = $permissions::pluck('name', 'id')->toArray();
-        $permissions = $permissions::paginate(20);
-        return view('admin.role_index', compact(['roles', 'permissions', 'select', 'request']));
+        $roles = Role::with(['permissions'])->get();
+        $permissions = Permission::get();
+        return view('admin.role_index', compact(['roles', 'permissions', 'request']));
     }
     public function edit(Role $role)
     {
@@ -32,7 +31,7 @@ class RoleController extends Controller
         $role->syncPermissions();
         $role->syncPermissions($request->permission);
         Alert::success('Success Info', 'Success Message');
-        return redirect()->route('admin.role.index');
+        return redirect()->route('role.index');
     }
     public function destroy(Role $role)
     {
@@ -42,6 +41,6 @@ class RoleController extends Controller
             $role->delete();
             Alert::success('Success', 'Role Telah Dihapus');
         }
-        return redirect()->route('admin.role.index');
+        return redirect()->route('role.index');
     }
 }

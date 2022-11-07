@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Permission;
 use Illuminate\Support\Str;
@@ -16,7 +17,7 @@ class PermissionController extends Controller
         ]);
         Permission::updateOrCreate(['id' => $request->id], ['name' => Str::slug($request->name)]);
         Alert::success('Success', 'Data Telah Disimpan');
-        return redirect()->route('admin.role.index');
+        return redirect()->route('role.index');
     }
     public function edit(Permission $permission)
     {
@@ -32,6 +33,6 @@ class PermissionController extends Controller
             $permission->delete();
             Alert::success('Success', 'Permission Telah Dihapus');
         }
-        return redirect()->route('admin.role.index');
+        return redirect()->route('role.index');
     }
 }

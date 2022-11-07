@@ -19,7 +19,7 @@
                 </x-adminlte-alert>
             @endif
             <x-adminlte-card title="Permssion {{ $permission->name }}" theme="secondary">
-                <form action="{{ route('admin.permission.store') }}" id="myform" method="post">
+                <form action="{{ route('permission.store') }}" id="myform" method="post">
                     @csrf
                     <input name="id" value="{{ $permission->id }}" hidden />
                     <x-adminlte-input name="name" value="{{ $permission->name }}" label="Nama" placeholder="Nama Lengkap"
