@@ -10,12 +10,23 @@
     <div class="row">
         <div class="col-4">
             <x-adminlte-card title="Data Pasien" theme="warning" collapsible>
-                <x-adminlte-input fgroup-class="norm" name="norm" label="No RM" type="number">
-                    <x-slot name="appendSlot">
-                        <x-adminlte-button onclick="cekPasien();" theme="success" label="Cek" />
+                @php
+                    $config = ['format' => 'YYYY-MM-DD'];
+                @endphp
+                <x-adminlte-input-date name="tanggal" id="tanggal" label="Tanggal Kunjungan" :config="$config"
+                    value="{{ \Carbon\Carbon::parse($request->tanggal)->format('Y-m-d') }}">
+                    <x-slot name="prependSlot">
+                        <div class="input-group-text bg-primary">
+                            <i class="fas fa-calendar-alt"></i>
+                        </div>
                     </x-slot>
-                </x-adminlte-input>
+                    <x-slot name="appendSlot">
+                        <x-adminlte-button theme="success" class="cariPasien" label="Cari Pasien" />
+                    </x-slot>
+                </x-adminlte-input-date>
                 <dl class="row">
+                    <dt class="col-sm-3">No RM</dt>
+                    <dd class="col-sm-9">: -</dd>
                     <dt class="col-sm-3">Nama</dt>
                     <dd class="col-sm-9">: -</dd>
                     <dt class="col-sm-3">Alamat</dt>
@@ -29,7 +40,6 @@
                     <dt class="col-sm-3">Nama</dt>
                     <dd class="col-sm-9">: -</dd>
                 </dl>
-
             </x-adminlte-card>
             <div class="card card-primary card-tabs">
                 <div class="card-header p-0 pt-1">
@@ -360,7 +370,46 @@
             </div>
         </div>
     </div>
+    <x-adminlte-modal id="kunjunganPasien" size="lg" title="Daftar Kunjungnan Pasien" theme="success"
+        icon="fas fa-user-md">
+        <dl class="row">
+            <dt class="col-sm-2">Tgl Kunjungan</dt>
+            <dd class="col-sm-10">: <span id="tanggalKunjungan"></span></dd>
+        </dl>
+        @php
+            $heads = ['No RM', 'Nama Pasien', 'Unit', 'Dokter', 'Action'];
+            $config['order'] = ['5', 'asc'];
+        @endphp
+        <x-adminlte-datatable id="table1" class="nowrap text-xs" :heads="$heads" :config="$config" striped bordered
+            hoverable compressed>
 
+            @isset($kunjungans)
+                @foreach ($kunjungan as $item)
+                    <tr>
+                        <td></td>
+                    </tr>
+                @endforeach
+            @endisset
+        </x-adminlte-datatable>
+    </x-adminlte-modal>
 @stop
 
 @section('plugins.Select2', true)
+@section('plugins.TempusDominusBs4', true)
+@section('js')
+    <script>
+        $(function() {
+            $('.cariPasien').click(function() {
+                var tanggal = $('#tanggal').val();
+                $('#tanggalKunjungan').html(tanggal);
+                var url =
+                    "{{ route('kpo.index') }}" + "/tanggal/" + tanggal;
+                alert(url);
+                // $.LoadingOverlay("show");
+                // $.LoadingOverlay("show");
+                // $('#kunjunganPasien').modal('show');
+
+            });
+        });
+    </script>
+@endsection

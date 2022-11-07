@@ -25,8 +25,7 @@ class UserController extends Controller
     }
     public function edit(User $user)
     {
-        // $user = User::with('roles')->firstWhere('username', $user->username);
-        $roles = Role::pluck('name', 'id');
+        $roles = Role::pluck('name');
         return view('admin.user_edit', compact(['user', 'roles']));
     }
     public function store(Request $request)

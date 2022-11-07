@@ -152,3 +152,5 @@ Route::resource('tarif_layanan', TarifLayananController::class);
 Route::resource('icd10', Icd10Controller::class);
 Route::resource('efilerm', FileRMController::class);
 Route::resource('kpo', KPOController::class);
+Route::get('kpo/tanggal/{tanggal}', [KPOController::class, 'kunjungan_tanggal'])->name('kpo.kunjungan_tanggal');
+
