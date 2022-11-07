@@ -1,17 +1,17 @@
 @extends('adminlte::page')
-@section('title', 'Patient')
+@section('title', 'Practitioner')
 @section('content_header')
-    <h1>Patient</h1>
+    <h1>Practitioner</h1>
 @stop
 @section('content')
     <div class="row">
         <div class="col-12">
-            <x-adminlte-card title="Filter Patient" theme="secondary" collapsible>
-                <form action="{{ route('satusehat.patient.index') }}" method="get">
-                    <x-adminlte-input name="nik" label="NIK Pasien" placeholder="Masukan NIK Pasien"
+            <x-adminlte-card title="Filter Practitioner" theme="secondary" collapsible>
+                <form action="{{ route('satusehat.practitioner.index') }}" method="get">
+                    <x-adminlte-input name="nik" label="NIK Practitioner" placeholder="Masukan NIK Practitioner"
                         value="{{ $request->nik }}">
                         <x-slot name="appendSlot">
-                            <x-adminlte-button type="submit" class="withLoad" theme="primary" label="Cari Pasien" />
+                            <x-adminlte-button type="submit" class="withLoad" theme="primary" label="Cari Practitioner" />
                         </x-slot>
                         <x-slot name="prependSlot">
                             <div class="input-group-text text-primary">
@@ -20,11 +20,11 @@
                         </x-slot>
                     </x-adminlte-input>
                 </form>
-                <form action="{{ route('satusehat.patient.index') }}" method="get">
-                    <x-adminlte-input name="id" label="ID IHS Pasien" placeholder="Masukan ID IHS Pasien"
+                <form action="{{ route('satusehat.practitioner.index') }}" method="get">
+                    <x-adminlte-input name="id" label="ID Practitioner" placeholder="Masukan ID Practitioner"
                         value="{{ $request->id }}">
                         <x-slot name="appendSlot">
-                            <x-adminlte-button type="submit" class="withLoad" theme="primary" label="Cari Pasien" />
+                            <x-adminlte-button type="submit" class="withLoad" theme="primary" label="Cari Practitioner" />
                         </x-slot>
                         <x-slot name="prependSlot">
                             <div class="input-group-text text-primary">
@@ -35,10 +35,10 @@
                 </form>
             </x-adminlte-card>
         </div>
-        @isset($patient)
+        @isset($practitioner)
             <div class="col-md-4">
-                <x-adminlte-profile-widget name="{{ $patient->name[0]->text }}" desc="{{ $patient->id }}" theme="primary"
-                    img="https://picsum.photos/id/1/100">
+                <x-adminlte-profile-widget name="{{ $practitioner->name[0]->text }}" desc="{{ $practitioner->id }}"
+                    theme="primary" img="https://picsum.photos/id/1/100">
                     {{-- <x-adminlte-profile-col-item title="Followers" text="125" url="#" />
                     <x-adminlte-profile-col-item title="Following" text="243" url="#" />
                     <x-adminlte-profile-col-item title="Posts" text="37" url="#" /> --}}
@@ -46,11 +46,11 @@
                         <li class="nav-item">
                             <b class="nav-link">
                                 Nama
-                                <b class="float-right ">{{ $patient->name[0]->text }}</b>
+                                <b class="float-right ">{{ $practitioner->name[0]->text }}</b>
                             </b>
                         </li>
-                        @isset($patient->identifier)
-                            @foreach ($patient->identifier as $item)
+                        @isset($practitioner->identifier)
+                            @foreach ($practitioner->identifier as $item)
                                 <li class="nav-item">
                                     <b class="nav-link">
                                         <a href="{{ $item->system }}"> Identifier </a>
@@ -59,8 +59,8 @@
                                 </li>
                             @endforeach
                         @endisset
-                        @isset($patient->telecom)
-                            @foreach ($patient->telecom as $item)
+                        @isset($practitioner->telecom)
+                            @foreach ($practitioner->telecom as $item)
                                 <li class="nav-item">
                                     <b class="nav-link">
                                         {{ Str::ucfirst($item->system) }}
@@ -70,10 +70,10 @@
                             @endforeach
                         @endisset
                         <li class="nav-item">
-                            <b class="nav-link">Gender <b class="float-right ">{{ $patient->gender }}</b></b>
+                            <b class="nav-link">Gender <b class="float-right ">{{ $practitioner->gender }}</b></b>
                         </li>
-                        @isset($patient->address)
-                            @foreach ($patient->address as $item)
+                        @isset($practitioner->address)
+                            @foreach ($practitioner->address as $item)
                                 <li class="nav-item">
                                     <b class="nav-link">
                                         Kab / Kota
@@ -84,7 +84,7 @@
                         @endisset
                         <li class="nav-item">
                             <b class="nav-link">Last Update <b
-                                    class="float-right ">{{ \Carbon\Carbon::parse($patient->meta->lastUpdated) }}</b></b>
+                                    class="float-right ">{{ \Carbon\Carbon::parse($practitioner->meta->lastUpdated) }}</b></b>
                         </li>
                     </ul>
                 </x-adminlte-profile-widget>
