@@ -28,7 +28,7 @@
             <div class="col-12">
                 <x-adminlte-card title="Data Organization" theme="secondary" collapsible>
                     @php
-                        $heads = ['Nama', 'Identifier', 'Part Of', 'Phone', 'Kota / Kab', 'PostCode', 'Status', 'Last Update', 'Action'];
+                        $heads = ['Identifier', 'Nama', 'Part Of', 'Phone', 'Kota / Kab', 'PostCode', 'Status', 'Last Update', 'Action'];
                         $config['scrollY'] = '300px';
                         $config['scrollCollapse'] = true;
                         $config['paging'] = false;
@@ -37,7 +37,6 @@
                     <x-adminlte-datatable id="table1" :heads="$heads" :config="$config" hoverable bordered compressed>
                         @foreach ($organization->entry as $item)
                             <tr>
-                                <td>{{ $item->resource->name }}</td>
                                 <td>
                                     @isset($item->resource->identifier)
                                         @foreach ($item->resource->identifier as $identifier)
@@ -45,6 +44,7 @@
                                         @endforeach
                                     @endisset
                                 </td>
+                                <td>{{ $item->resource->name }}</td>
                                 <td>
                                     {{ $item->resource->partOf->reference }}
                                 </td>
@@ -134,7 +134,6 @@
                 </div>
             </div>
         </form>
-
         <x-slot name="footerSlot">
             <x-adminlte-button id="btnStore" class="mr-auto" icon="fas fa-save" theme="success" label="Simpan" />
             <x-adminlte-button id="btnUpdate" class="mr-auto" icon="fas fa-edit" theme="warning" label="Update" />
@@ -197,25 +196,35 @@
             });
             $('#btnStore').click(function(e) {
                 $.LoadingOverlay("show");
+                e.preventDefault();
+                $.ajax({
+                    data: $('#formOrganization').serialize(),
+                    url: "{{ route('api.satusehat.organization_store') }}",
+                    type: "POST",
+                    dataType: 'json',
+                    success: function(data) {
+                        console.log(data);
+                        swal.fire(
+                            'Success',
+                            'Data Berhasil Disimpan',
+                            'success'
+                        ).then(okay => {
+                            if (okay) {
+                                $.LoadingOverlay("show");
+                                location.reload();
+                            }
+                        });
+                    },
+                    error: function(data) {
+                        swal.fire(
+                            data.statusText + ' ' + data.status,
+                            data.responseJSON.original.data,
+                            'error'
+                        );
+                    }
+                });
                 $.LoadingOverlay("hide");
-                // e.preventDefault();
-                // $.ajax({
-                //     data: $('#productForm').serialize(),
-                //     url: "{{ route('satusehat.organization.store') }}",
-                //     type: "POST",
-                //     dataType: 'json',
-                //     success: function(data) {
 
-                //         $('#productForm').trigger("reset");
-                //         $('#ajaxModel').modal('hide');
-                //         table.draw();
-
-                //     },
-                //     error: function(data) {
-                //         console.log('Error:', data);
-                //         $('#saveBtn').html('Save Changes');
-                //     }
-                // });
             });
             $('#btnUpdate').click(function(e) {
                 $.LoadingOverlay("show");

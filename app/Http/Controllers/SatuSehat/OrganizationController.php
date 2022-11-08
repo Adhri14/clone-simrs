@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
+use Laravolt\Indonesia\Models\City;
 use Laravolt\Indonesia\Models\Province;
 use RealRashid\SweetAlert\Facades\Alert;
 
@@ -25,7 +26,7 @@ class OrganizationController extends ApiController
                 Alert::error('Error', $response->statusText());
             }
         }
-        $provinsi = Province::pluck('name','code');
+        $provinsi = Province::pluck('name', 'code');
         return view('satusehat.organization', compact([
             'request',
             'organization',
@@ -71,7 +72,22 @@ class OrganizationController extends ApiController
         $response = Http::withToken($token)->get($url);
         return response()->json($response->json(), $response->status());
     }
-    public function craete_organization(Request $request)
+    public function organization_store(Request $request)
+    {
+
+        $response = $this->organization_create($request);
+        return response()->json($response, $response->status());
+
+        // return 'asd';
+        // dd($response);
+        // if ($response->successful()) {
+        //     Alert::success('Success', 'Create Organization Berhasil');
+        // } else {
+        //     Alert::error('Error', 'Create Organization Gagal');
+        // }
+        // return redirect()->route('satusehat.organization.index');
+    }
+    public function organization_create(Request $request)
     {
         $validator = Validator::make(request()->all(), [
             "identifier" => "required",
@@ -81,15 +97,15 @@ class OrganizationController extends ApiController
             "url" => "required",
             "address" => "required",
             "postalCode" => "required",
-            "cityText" => "required",
             "province" => "required",
             "city" => "required",
             "district" => "required",
             "village" => "required",
         ]);
         if ($validator->fails()) {
-            return $this->sendError('Data Belum Lengkap', $validator->errors(), 400);
+            return $this->sendError('Data Belum Lengkap', $validator->errors()->first(), 400);
         }
+        $request['cityText'] = City::firstWhere('code', $request->city)->name;
         $token = session()->get('tokenSatuSehat');
         $url =  env('SATUSEHAT_BASE_URL') . "/Organization";
         $data = [
@@ -171,6 +187,6 @@ class OrganizationController extends ApiController
             ]
         ];
         $response = Http::withToken($token)->post($url, $data);
-        return response()->json($response, $response->status());
+        return response()->json($response->json(), $response->status());
     }
 }
