@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
+use Laravolt\Indonesia\Models\Province;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class OrganizationController extends ApiController
@@ -24,9 +25,11 @@ class OrganizationController extends ApiController
                 Alert::error('Error', $response->statusText());
             }
         }
+        $provinsi = Province::pluck('name','code');
         return view('satusehat.organization', compact([
             'request',
-            'organization'
+            'organization',
+            'provinsi',
         ]));
     }
     public function edit($id)
@@ -71,6 +74,7 @@ class OrganizationController extends ApiController
     public function craete_organization(Request $request)
     {
         $validator = Validator::make(request()->all(), [
+            "identifier" => "required",
             "name" => "required",
             "phone" => "required",
             "email" => "required",
@@ -95,7 +99,7 @@ class OrganizationController extends ApiController
                 [
                     "use" => "official",
                     "system" => "http://sys-ids.kemkes.go.id/organization/" . env('SATUSEHAT_ORGANIZATION_ID'),
-                    "value" => env('SATUSEHAT_ORGANIZATION_ID')
+                    "value" => $request->identifier
                 ]
             ],
             "type" => [
@@ -135,7 +139,7 @@ class OrganizationController extends ApiController
                         $request->address
                     ],
                     "city" => $request->cityText,
-                    "postalCode" => $request->posatalCode,
+                    "postalCode" => $request->postalCode,
                     "country" => "ID",
                     "extension" => [
                         [

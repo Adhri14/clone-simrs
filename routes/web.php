@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\LaravotLocationController;
 use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\UserController;
@@ -166,5 +167,8 @@ Route::middleware(['auth', 'verified', 'permission:admin'])->group(function () {
     Route::resource('user', UserController::class);
     Route::resource('role', RoleController::class);
     Route::resource('permission', PermissionController::class);
+    Route::get('get_city', [LaravotLocationController::class, 'get_city'])->name('get_city');
+    Route::get('get_district', [LaravotLocationController::class, 'get_district'])->name('get_district');
+    Route::get('get_village', [LaravotLocationController::class, 'get_village'])->name('get_village');
 });
 Route::get('profile', [UserController::class, 'profile'])->name('profile');
