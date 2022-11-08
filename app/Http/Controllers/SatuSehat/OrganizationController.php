@@ -42,7 +42,6 @@ class OrganizationController extends ApiController
             'organization'
         ]));
     }
-
     public function store(Request $request)
     {
 
@@ -60,14 +59,14 @@ class OrganizationController extends ApiController
         $token = Session::get('tokenSatuSehat');
         $url =  env('SATUSEHAT_BASE_URL') . "/Organization/" . $id;
         $response = Http::withToken($token)->get($url);
-        return response($response, $response->status());
+        return response()->json($response->json(), $response->status());
     }
     public function organization_part_of($id)
     {
         $token = Session::get('tokenSatuSehat');
         $url =  env('SATUSEHAT_BASE_URL') . "/Organization?partof=" . $id;
         $response = Http::withToken($token)->get($url);
-        return response($response, $response->status());
+        return response()->json($response->json(), $response->status());
     }
     public function craete_organization(Request $request)
     {

@@ -20,21 +20,8 @@
                         </x-slot>
                     </x-adminlte-input>
                 </form>
-                {{-- <form action="{{ route('satusehat.organization.index') }}" method="get">
-                    <x-adminlte-input name="id" label="ID IHS Pasien" placeholder="Masukan ID IHS Pasien"
-                        value="{{ $request->id }}">
-                        <x-slot name="appendSlot">
-                            <x-adminlte-button type="submit" class="withLoad" theme="primary" label="Cari Pasien" />
-                        </x-slot>
-                        <x-slot name="prependSlot">
-                            <div class="input-group-text text-primary">
-                                <i class="fas fa-search"></i>
-                            </div>
-                        </x-slot>
-                    </x-adminlte-input>
-                </form> --}}
                 <x-adminlte-button label="Create Organization" theme="success" title="Create Organization"
-                    icon="fas fa-plus" data-toggle="modal" data-target="#createOrganization" />
+                    icon="fas fa-plus" id="btnCreateOrganization" />
             </x-adminlte-card>
         </div>
         @if (isset($organization->total))
@@ -95,9 +82,9 @@
                                     {{ \Carbon\Carbon::parse($item->resource->meta->lastUpdated) }}
                                 </td>
                                 <td>
-                                    <x-adminlte-button class="btn-xs" theme="warning" icon="fas fa-edit"
+                                    <x-adminlte-button class="btn-xs btnEdit" theme="warning" icon="fas fa-edit"
                                         title="Edit User {{ $item->resource->name }}"
-                                        onclick="window.location='{{ route('satusehat.organization.edit', $item->resource->id) }}'" />
+                                        data-id="{{ $item->resource->id }}" />
                                 </td>
                             </tr>
                         @endforeach
@@ -105,88 +92,37 @@
                 </x-adminlte-card>
             </div>
         @endif
-        {{-- @isset($patient)
-            <div class="col-md-4">
-                <x-adminlte-profile-widget name="{{ $patient->name[0]->text }}" desc="{{ $patient->id }}" theme="primary"
-                    img="https://picsum.photos/id/1/100">
-                    <x-adminlte-profile-col-item title="Followers" text="125" url="#" />
-                    <x-adminlte-profile-col-item title="Following" text="243" url="#" />
-                    <x-adminlte-profile-col-item title="Posts" text="37" url="#" />
-                    <ul class="nav flex-column col-md-12">
-                        <li class="nav-item">
-                            <b class="nav-link">
-                                Nama
-                                <b class="float-right ">{{ $patient->name[0]->text }}</b>
-                            </b>
-                        </li>
-                        @isset($patient->identifier)
-                            @foreach ($patient->identifier as $item)
-                                <li class="nav-item">
-                                    <b class="nav-link">
-                                        <a href="{{ $item->system }}"> Identifier </a>
-                                        <b class="float-right ">{{ $item->value }}</b>
-                                    </b>
-                                </li>
-                            @endforeach
-                        @endisset
-                        @isset($patient->telecom)
-                            @foreach ($patient->telecom as $item)
-                                <li class="nav-item">
-                                    <b class="nav-link">
-                                        {{ Str::ucfirst($item->system) }}
-                                        <b class="float-right ">{{ $item->value }}</b>
-                                    </b>
-                                </li>
-                            @endforeach
-                        @endisset
-                        <li class="nav-item">
-                            <b class="nav-link">Gender <b class="float-right ">{{ $patient->gender }}</b></b>
-                        </li>
-                        @isset($patient->address)
-                            @foreach ($patient->address as $item)
-                                <li class="nav-item">
-                                    <b class="nav-link">
-                                        Kab / Kota
-                                        <b class="float-right ">{{ $item->city }}</b>
-                                    </b>
-                                </li>
-                            @endforeach
-                        @endisset
-                        <li class="nav-item">
-                            <b class="nav-link">Last Update <b
-                                    class="float-right ">{{ \Carbon\Carbon::parse($patient->meta->lastUpdated) }}</b></b>
-                        </li>
-                    </ul>
-                </x-adminlte-profile-widget>
-            </div>
-        @endisset --}}
     </div>
 
-    <x-adminlte-modal id="createOrganization" title="Create Organization" size="lg" theme="success" v-centered>
-        <form action="{{ route('satusehat.organization.store') }}" id="formCreateOrganization" method="POST">
-            @csrf
-            <div class="row">
-                <div class="col-6">
-                    <x-adminlte-input name="organization_id" label="ID Organization"
-                        value="{{ env('SATUSEHAT_ORGANIZATION_ID') }}" readonly enable-old-support required />
-                    <x-adminlte-input name="organization_name" label="Part Of Organization"
-                        value="{{ env('SATUSEHAT_ORGANIZATION_NAME') }}" readonly enable-old-support required />
-                    <x-adminlte-input name="name" label="Nama" enable-old-support required />
-                    <x-adminlte-input name="phone" label="No Telepon" enable-old-support required />
-                    <x-adminlte-input name="email" type="email" label="Email" enable-old-support required />
-                    <x-adminlte-input name="url" label="Url Website" enable-old-support required />
+    <x-adminlte-modal id="modalOrganization" title="Organization" size="lg" theme="success" v-centered>
+        <div class="row">
+            <div class="col-6">
+                <div class="row">
+                    <div class="col-6">
+                        <x-adminlte-input name="organization_id" label="ID Organization"
+                            value="{{ env('SATUSEHAT_ORGANIZATION_ID') }}" readonly enable-old-support required />
+                    </div>
+                    <div class="col-6">
+                        <x-adminlte-input name="organization_name" label="Part Of Organization"
+                            value="{{ env('SATUSEHAT_ORGANIZATION_NAME') }}" readonly enable-old-support required />
+                    </div>
                 </div>
-                <div class="col-6">
-                    <x-adminlte-input name="postalCode" label="Postal Code" enable-old-support required />
-                    <x-adminlte-input name="postalCode" label="Postal Code" enable-old-support required />
-                    <x-adminlte-input name="postalCode" label="Postal Code" enable-old-support required />
-
-                </div>
+                <input type="hidden" name="id" id="id">
+                <x-adminlte-input name="identifier" label="Identifier" enable-old-support required />
+                <x-adminlte-input name="name" label="Nama" enable-old-support required />
+                <x-adminlte-input name="phone" label="No Telepon" enable-old-support required />
+                <x-adminlte-input name="email" type="email" label="Email" enable-old-support required />
+                <x-adminlte-input name="url" label="Url Website" enable-old-support required />
             </div>
-        </form>
+            <div class="col-6">
+                {{-- <x-adminlte-input name="postalCode" label="Postal Code" enable-old-support required />
+                <x-adminlte-input name="postalCode" label="Postal Code" enable-old-support required />
+                <x-adminlte-input name="postalCode" label="Postal Code" enable-old-support required /> --}}
+            </div>
+        </div>
         <x-slot name="footerSlot">
-            <x-adminlte-button form="formCreateOrganization" class="mr-auto" type="submit" theme="success"
-                label="Simpan" />
+            <x-adminlte-button id="btnStore" class="mr-auto" icon="fas fa-save" theme="success" label="Simpan" />
+            <x-adminlte-button id="btnUpdate" class="mr-auto" icon="fas fa-edit" theme="warning" label="Update" />
             <x-adminlte-button theme="danger" label="Kembali" data-dismiss="modal" />
         </x-slot>
     </x-adminlte-modal>
@@ -195,3 +131,66 @@
 @section('plugins.Datatables', true)
 @section('plugins.Select2', true)
 @section('plugins.TempusDominusBs4', true)
+
+@section('js')
+    <script>
+        $(function() {
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+            $('#btnCreateOrganization').click(function() {
+                $.LoadingOverlay("show");
+                $('#btnStore').show();
+                $('#btnUpdate').hide();
+                $('#modalOrganization').modal('show');
+                $.LoadingOverlay("hide");
+            });
+            $('body').on('click', '.btnEdit', function() {
+                $.LoadingOverlay("show");
+                var id = $(this).data('id');
+                var url = "{{ route('api.satusehat.organization_index') }}" + "/" + id;
+                $.get(url, function(response) {
+                    console.log(response);
+                    $('#id').val(response.id);
+                    $('#identifier').val(response.identifier[0].value);
+                    $('#name').val(response.name);
+                    $('#phone').val(response.telecom[0].value);
+                    $('#email').val(response.telecom[1].value);
+                    $('#url').val(response.telecom[2].value);
+                    $('#btnStore').hide();
+                    $('#btnUpdate').show();
+                    $('#modalOrganization').modal('show');
+                    $.LoadingOverlay("hide");
+                })
+            });
+            $('#btnStore').click(function(e) {
+                $.LoadingOverlay("show");
+                $.LoadingOverlay("hide");
+                // e.preventDefault();
+                // $.ajax({
+                //     data: $('#productForm').serialize(),
+                //     url: "{{ route('satusehat.organization.store') }}",
+                //     type: "POST",
+                //     dataType: 'json',
+                //     success: function(data) {
+
+                //         $('#productForm').trigger("reset");
+                //         $('#ajaxModel').modal('hide');
+                //         table.draw();
+
+                //     },
+                //     error: function(data) {
+                //         console.log('Error:', data);
+                //         $('#saveBtn').html('Save Changes');
+                //     }
+                // });
+            });
+            $('#btnUpdate').click(function(e) {
+                $.LoadingOverlay("show");
+                $.LoadingOverlay("hide");
+            });
+        });
+    </script>
+@endsection

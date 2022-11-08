@@ -5,6 +5,7 @@ use App\Http\Controllers\API\AntrianBPJSController;
 use App\Http\Controllers\API\VclaimBPJSController;
 use App\Http\Controllers\API\WhatsappController;
 use App\Http\Controllers\PasienController;
+use App\Http\Controllers\SatuSehat\OrganizationController;
 use App\Http\Controllers\VclaimController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -101,4 +102,10 @@ Route::prefix('wa')->group(function () {
     Route::get('index', [WhatsappController::class, 'index']);
     Route::post('send_message', [WhatsappController::class, 'send_message']);
     Route::post('daftar_antrian', [WhatsappController::class, 'daftar_antrian']);
+});
+
+
+Route::prefix('satusehat')->name('api.satusehat.')->group(function () {
+    Route::get('organization/', [OrganizationController::class, 'index'])->name('organization_index');
+    Route::get('organization/{id}', [OrganizationController::class, 'organization_by_id'])->name('organization_by_id');
 });
