@@ -108,5 +108,6 @@ Route::prefix('wa')->group(function () {
 Route::prefix('satusehat')->name('api.satusehat.')->group(function () {
     Route::get('organization/', [OrganizationController::class, 'index'])->name('organization_index');
     Route::get('organization/{id}', [OrganizationController::class, 'organization_by_id'])->name('organization_by_id');
-    Route::post('organization/store', [OrganizationController::class, 'organization_store'])->name('organization_store');
+    Route::post('organization/store', [OrganizationController::class, 'organization_store_api'])->name('organization_store_api');
+    Route::put('organization/update/{id}', [OrganizationController::class, 'organization_update_api'])->name('organization_update_api');
 });

@@ -93,21 +93,12 @@
             </div>
         @endif
     </div>
-
     <x-adminlte-modal id="modalOrganization" title="Organization" size="lg" theme="success" v-centered>
         <form name="formOrganization" id="formOrganization">
             <div class="row">
                 <div class="col-6">
-                    <div class="row">
-                        <div class="col-6">
-                            <x-adminlte-input name="organization_id" label="ID Organization"
-                                value="{{ env('SATUSEHAT_ORGANIZATION_ID') }}" readonly enable-old-support />
-                        </div>
-                        <div class="col-6">
-                            <x-adminlte-input name="organization_name" label="Part Of Organization"
-                                value="{{ env('SATUSEHAT_ORGANIZATION_NAME') }}" readonly enable-old-support />
-                        </div>
-                    </div>
+                    <x-adminlte-input name="organization_id" label="Part Of Organization"
+                        value="Organization/{{ env('SATUSEHAT_ORGANIZATION_ID') }}" readonly enable-old-support />
                     <input type="hidden" name="id" id="id">
                     <x-adminlte-input name="identifier" label="Identifier" enable-old-support />
                     <x-adminlte-input name="name" label="Nama" enable-old-support />
@@ -176,6 +167,7 @@
                     $('#url').val(response.telecom[2].value);
                     $('#address').val(response.address[0].line[0]);
                     $('#postalCode').val(response.address[0].postalCode);
+                    $('#organization_id').val(response.partOf.reference);
                     $("#province").val(response.address[0].extension[0].extension[0].valueCode)
                         .change();
                     $("#city").append($(new Option(response.address[0].extension[0]
@@ -199,11 +191,10 @@
                 e.preventDefault();
                 $.ajax({
                     data: $('#formOrganization').serialize(),
-                    url: "{{ route('api.satusehat.organization_store') }}",
+                    url: "{{ route('api.satusehat.organization_store_api') }}",
                     type: "POST",
                     dataType: 'json',
                     success: function(data) {
-                        console.log(data);
                         swal.fire(
                             'Success',
                             'Data Berhasil Disimpan',
@@ -224,10 +215,37 @@
                     }
                 });
                 $.LoadingOverlay("hide");
-
             });
             $('#btnUpdate').click(function(e) {
                 $.LoadingOverlay("show");
+                e.preventDefault();
+                var id = $('#id').val();
+                var url = "{{ route('api.satusehat.organization_index') }}" + "/update/" + id;
+                $.ajax({
+                    data: $('#formOrganization').serialize(),
+                    url: url,
+                    type: "PUT",
+                    dataType: 'json',
+                    success: function(data) {
+                        swal.fire(
+                            'Success',
+                            'Data Berhasil Disimpan',
+                            'success'
+                        ).then(okay => {
+                            if (okay) {
+                                $.LoadingOverlay("show");
+                                location.reload();
+                            }
+                        });
+                    },
+                    error: function(data) {
+                        swal.fire(
+                            data.statusText + ' ' + data.status,
+                            data.responseJSON.original.data,
+                            'error'
+                        );
+                    }
+                });
                 $.LoadingOverlay("hide");
             });
             $("#city").select2({
