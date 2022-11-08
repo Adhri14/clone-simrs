@@ -640,6 +640,22 @@ return [
                     'can' => 'admin',
                     // 'active'  => ['practitioner', 'practitioner/create', 'regex:@^practitioner(\/[0-9]+)?+$@', 'regex:@^practitioner(\/[0-9]+)?\/edit+$@',],
                 ],
+                [
+                    'text' => 'Location',
+                    'icon'    => 'fas fa-hospital',
+                    'url'  => 'satusehat/location',
+                    'shift'   => 'ml-2',
+                    'can' => 'admin',
+                    // 'active'  => ['practitioner', 'practitioner/create', 'regex:@^practitioner(\/[0-9]+)?+$@', 'regex:@^practitioner(\/[0-9]+)?\/edit+$@',],
+                ],
+                [
+                    'text' => 'Encounter',
+                    'icon'    => 'fas fa-hospital',
+                    'url'  => 'satusehat/encounter',
+                    'shift'   => 'ml-2',
+                    'can' => 'admin',
+                    // 'active'  => ['practitioner', 'practitioner/create', 'regex:@^practitioner(\/[0-9]+)?+$@', 'regex:@^practitioner(\/[0-9]+)?\/edit+$@',],
+                ],
             ],
         ],
         // USER ACCESS CONTROLL
