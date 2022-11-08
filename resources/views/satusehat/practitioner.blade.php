@@ -1,5 +1,5 @@
 @extends('adminlte::page')
-@section('title', 'Practitioner')
+@section('title', 'Practitioner - Satu Sehat')
 @section('content_header')
     <h1>Practitioner</h1>
 @stop

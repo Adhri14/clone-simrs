@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Status Bridging Satu Sehat')
+@section('title', 'Status Bridging - Satu Sehat')
 
 @section('content_header')
     <h1 class="m-0 text-dark">Status Bridging Satu Sehat</h1>
