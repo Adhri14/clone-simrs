@@ -15,6 +15,7 @@ use App\Http\Controllers\KunjunganController;
 use App\Http\Controllers\PasienController;
 use App\Http\Controllers\PoliklinikController;
 use App\Http\Controllers\RekamMedis\IndexController;
+use App\Http\Controllers\SatuSehat\OrganizationController;
 use App\Http\Controllers\SatuSehat\PatientController;
 use App\Http\Controllers\SatuSehat\PractitionerController;
 use App\Http\Controllers\SatuSehat\TokenController;
@@ -156,6 +157,7 @@ Route::prefix('satusehat')->middleware(['auth'])->name('satusehat.')->group(func
     Route::get('refresh_token', [TokenController::class, 'refresh_token'])->name('refresh_token');
     Route::resource('patient', PatientController::class);
     Route::resource('practitioner', PractitionerController::class);
+    Route::resource('organization', OrganizationController::class);
 });
 // admin user role permission
 Route::middleware(['auth', 'verified', 'permission:admin'])->group(function () {
