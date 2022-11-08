@@ -417,42 +417,7 @@ return [
                 ],
             ],
         ],
-        // MENU VCLAIM
-        [
-            'text'    => 'VClaim BPJS',
-            'icon'    => 'fas fa-sign-in-alt',
-            'can' => 'bpjs',
-            'submenu' => [
-                [
-                    'text' => 'Monitoring Pelayanan Peserta',
-                    'icon'    => 'fas fa-id-card',
-                    'url'  => 'vclaim/monitoring_pelayanan_peserta',
-                    'shift'   => 'ml-2',
-                    'can' => 'bpjs',
-                ],
-                [
-                    'text' => 'SEP Internal',
-                    'icon'    => 'fas fa-id-card',
-                    'url'  => 'vclaim/sep_internal',
-                    'shift'   => 'ml-2',
-                    'can' => 'bpjs',
-                ],
-                [
-                    'text' => 'Rujukan',
-                    'icon'    => 'fas fa-id-card',
-                    'url'  => 'vclaim/rujukan',
-                    'shift'   => 'ml-2',
-                    'can' => 'bpjs',
-                ],
-                [
-                    'text' => 'Data Surat Kontrol',
-                    'icon'    => 'fas fa-id-card',
-                    'url'  => 'vclaim/data_surat_kontrol',
-                    'shift'   => 'ml-2',
-                    'can' => 'bpjs',
-                ],
-            ],
-        ],
+
         // PELAYANAN MEDIS
         [
             'text' => 'Pelayanan Medis',
@@ -603,10 +568,61 @@ return [
                 ],
             ],
         ],
-        // RESOURCE CONTROL
+        // ANTRIAN BPJS
+        [
+            'text'    => 'Integrasi Antrian BPJS',
+            'icon'    => 'fas fa-project-diagram',
+            'can' => 'bpjs',
+            'submenu' => [
+                [
+                    'text' => 'Status',
+                    'icon'    => 'fas fa-info-circle',
+                    'url'  => 'bpjs/antrian/status',
+                    'shift'   => 'ml-2',
+                    'can' => 'admin',
+                ],
+            ],
+        ],
+        // VCLAIM BPJS
+        [
+            'text'    => 'Integrasi VClaim BPJS',
+            'icon'    => 'fas fa-project-diagram',
+            'can' => 'bpjs',
+            'submenu' => [
+                [
+                    'text' => 'Monitoring Pelayanan Peserta',
+                    'icon'    => 'fas fa-id-card',
+                    'url'  => 'vclaim/monitoring_pelayanan_peserta',
+                    'shift'   => 'ml-2',
+                    'can' => 'bpjs',
+                ],
+                [
+                    'text' => 'SEP Internal',
+                    'icon'    => 'fas fa-id-card',
+                    'url'  => 'vclaim/sep_internal',
+                    'shift'   => 'ml-2',
+                    'can' => 'bpjs',
+                ],
+                [
+                    'text' => 'Rujukan',
+                    'icon'    => 'fas fa-id-card',
+                    'url'  => 'vclaim/rujukan',
+                    'shift'   => 'ml-2',
+                    'can' => 'bpjs',
+                ],
+                [
+                    'text' => 'Data Surat Kontrol',
+                    'icon'    => 'fas fa-id-card',
+                    'url'  => 'vclaim/data_surat_kontrol',
+                    'shift'   => 'ml-2',
+                    'can' => 'bpjs',
+                ],
+            ],
+        ],
+        // SATU SEHAT
         [
             'text'    => 'Integrasi Satu Sehat',
-            'icon'    => 'fas fa-cogs',
+            'icon'    => 'fas fa-project-diagram',
             'can' => 'admin',
             'submenu' => [
                 [
@@ -642,7 +658,7 @@ return [
                 ],
                 [
                     'text' => 'Location',
-                    'icon'    => 'fas fa-hospital',
+                    'icon'    => 'fas fa-map-marked-alt',
                     'url'  => 'satusehat/location',
                     'shift'   => 'ml-2',
                     'can' => 'admin',
@@ -650,11 +666,53 @@ return [
                 ],
                 [
                     'text' => 'Encounter',
-                    'icon'    => 'fas fa-hospital',
+                    'icon'    => 'fas fa-hand-holding-medical',
                     'url'  => 'satusehat/encounter',
                     'shift'   => 'ml-2',
                     'can' => 'admin',
-                    // 'active'  => ['practitioner', 'practitioner/create', 'regex:@^practitioner(\/[0-9]+)?+$@', 'regex:@^practitioner(\/[0-9]+)?\/edit+$@',],
+                ],
+                [
+                    'text' => 'Condition',
+                    'icon'    => 'fas fa-heartbeat',
+                    'url'  => 'satusehat/condition',
+                    'shift'   => 'ml-2',
+                    'can' => 'admin',
+                ],
+            ],
+        ],
+        // MODUL TESTING
+        [
+            'text'    => 'Modul Testing',
+            'icon'    => 'fas fa-cogs',
+            'can' => 'admin',
+            'submenu' => [
+                [
+                    'text' => 'Scan QR Code',
+                    'icon'    => 'fas fa-qrcode',
+                    'url'  => 'qrcode',
+                    'shift'   => 'ml-2',
+                    'can' => 'admin',
+                ],
+                [
+                    'text' => 'Thermal Printer',
+                    'icon'    => 'fas fa-print',
+                    'url'  => 'thermal_printer',
+                    'shift'   => 'ml-2',
+                    'can' => 'admin',
+                ],
+                [
+                    'text' => 'Scan File',
+                    'icon'    => 'fas fa-print',
+                    'url'  => 'thermal_printer',
+                    'shift'   => 'ml-2',
+                    'can' => 'admin',
+                ],
+                [
+                    'text' => 'Invoice Print',
+                    'icon'    => 'fas fa-receipt',
+                    'url'  => 'thermal_printer',
+                    'shift'   => 'ml-2',
+                    'can' => 'admin',
                 ],
             ],
         ],
@@ -686,27 +744,6 @@ return [
             'text' => 'profile',
             'url'  => 'profile',
             'icon' => 'fas fa-fw fa-user',
-        ],
-        [
-            'text'        => 'Integration System',
-            'icon'        => 'fas fa-info-circle',
-            'can' => 'admin',
-            'submenu' => [
-                [
-                    'text'        => 'Status Bridging BPJS',
-                    'url'         => 'bridging/bpjs_status',
-                    'shift'   => 'ml-2',
-                    'icon'        => 'fas fa-info-circle',
-                    'can' => 'admin',
-                ],
-                [
-                    'text'        => 'Bridging Satu Sehat',
-                    'url'         => 'satusehat/status',
-                    'shift'   => 'ml-2',
-                    'icon'        => 'fas fa-info-circle',
-                    'can' => 'admin',
-                ],
-            ]
         ],
         [
             'text'        => 'Log Viewer',

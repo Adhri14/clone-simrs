@@ -154,21 +154,31 @@ Route::resource('efilerm', FileRMController::class);
 Route::resource('kpo', KPOController::class);
 Route::get('kpo/tanggal/{tanggal}', [KPOController::class, 'kunjungan_tanggal'])->name('kpo.kunjungan_tanggal');
 
-Route::prefix('satusehat')->middleware(['auth'])->name('satusehat.')->group(function () {
-    Route::get('status', [TokenController::class, 'status'])->name('status');
-    Route::get('refresh_token', [TokenController::class, 'refresh_token'])->name('refresh_token');
-    Route::resource('patient', PatientController::class);
-    Route::resource('practitioner', PractitionerController::class);
-    Route::resource('organization', OrganizationController::class);
-    Route::resource('location', LocationController::class);
-});
-// admin user role permission
-Route::middleware(['auth', 'verified', 'permission:admin'])->group(function () {
-    Route::resource('user', UserController::class);
-    Route::resource('role', RoleController::class);
-    Route::resource('permission', PermissionController::class);
+// auth
+Route::middleware('auth')->group(function () {
     Route::get('get_city', [LaravotLocationController::class, 'get_city'])->name('get_city');
     Route::get('get_district', [LaravotLocationController::class, 'get_district'])->name('get_district');
     Route::get('get_village', [LaravotLocationController::class, 'get_village'])->name('get_village');
+    // admin
+    Route::middleware('permission:admin')->group(function () {
+        Route::resource('user', UserController::class);
+        Route::resource('role', RoleController::class);
+        Route::resource('permission', PermissionController::class);
+    });
+    // bpjs
+    Route::prefix('bpjs')->name('bpjs.')->group(function () {
+        Route::prefix('antrian')->name('antrian.')->group(function () {
+            Route::get('status', [TokenController::class, 'status'])->name('status');
+        });
+    });
+    // satu sehat
+    Route::prefix('satusehat')->name('satusehat.')->group(function () {
+        Route::get('status', [TokenController::class, 'status'])->name('status');
+        Route::get('refresh_token', [TokenController::class, 'refresh_token'])->name('refresh_token');
+        Route::resource('patient', PatientController::class);
+        Route::resource('practitioner', PractitionerController::class);
+        Route::resource('organization', OrganizationController::class);
+        Route::resource('location', LocationController::class);
+    });
 });
 Route::get('profile', [UserController::class, 'profile'])->name('profile');
