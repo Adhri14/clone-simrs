@@ -33,31 +33,18 @@ class OrganizationController extends ApiController
             'provinsi',
         ]));
     }
-    public function edit($id)
+    // API SIMRS
+    public function organization_store_api(Request $request)
     {
-        $response = $this->organization_by_id($id);
-        if ($response->status() == 200) {
-            $organization = json_decode($response->content());
-            Alert::success('Success', 'Organization Ditemukan');
-        } else {
-            Alert::error('Error', $response->statusText());
-        }
-        return view('satusehat.organization_edit', compact([
-            'organization'
-        ]));
+        $response = $this->organization_create($request);
+        return response()->json($response, $response->status());
     }
-    public function store(Request $request)
+    public function organization_update_api($id, Request $request)
     {
-
-        $response = $this->craete_organization($request);
-        dd($response);
-        // if ($response->successful()) {
-        //     Alert::success('Success', 'Create Organization Berhasil');
-        // } else {
-        //     Alert::error('Error', 'Create Organization Gagal');
-        // }
-        // return redirect()->route('satusehat.organization.index');
+        $response = $this->organization_update($id, $request);
+        return response()->json($response, $response->status());
     }
+    // API SATU SEHAT
     public function organization_by_id($id)
     {
         $token = Session::get('tokenSatuSehat');
@@ -71,16 +58,6 @@ class OrganizationController extends ApiController
         $url =  env('SATUSEHAT_BASE_URL') . "/Organization?partof=" . $id;
         $response = Http::withToken($token)->get($url);
         return response()->json($response->json(), $response->status());
-    }
-    public function organization_store_api(Request $request)
-    {
-        $response = $this->organization_create($request);
-        return response()->json($response, $response->status());
-    }
-    public function organization_update_api($id, Request $request)
-    {
-        $response = $this->organization_update($id, $request);
-        return response()->json($response, $response->status());
     }
     public function organization_create(Request $request)
     {

@@ -47,6 +47,7 @@ class PractitionerController extends Controller
             'practitioner'
         ]));
     }
+    // API SATU SEHAT
     public function practitioner_by_nik($nik)
     {
         $token = Session::get('tokenSatuSehat');

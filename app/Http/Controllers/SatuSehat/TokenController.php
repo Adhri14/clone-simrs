@@ -26,6 +26,7 @@ class TokenController extends Controller
         }
         return redirect()->route('satusehat.status');
     }
+    // API SATU SEHAT
     public function token()
     {
         $url =  env('SATUSEHAT_AUTH_URL') . "/accesstoken?grant_type=client_credentials";

@@ -47,6 +47,7 @@ class PatientController extends Controller
             'patient'
         ]));
     }
+    // API SATU SEHAT
     public function patient_by_nik($nik)
     {
         $token = Session::get('tokenSatuSehat');
