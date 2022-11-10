@@ -18,11 +18,11 @@ class TokenController extends Controller
     }
     public function refresh_token()
     {
-        $token = $this->token();
-        if ($token->isSuccessful()) {
-            Alert::success('Success', 'Refresh Token Berhasil');
+        $response = $this->token();
+        if ($response->status() == 200) {
+            Alert::success($response->statusText());
         } else {
-            Alert::error('Error', 'Refresh Token Gagal');
+            Alert::error($response->statusText().' '. $response->status());
         }
         return redirect()->route('satusehat.status');
     }
@@ -39,6 +39,6 @@ class TokenController extends Controller
             Session::put('TimestampSatuSehat', Carbon::now());
             Log::notice('Auth Token Satu Sehat : ' . $json->access_token);
         }
-        return response($response);
+        return response()->json($response->json(), $response->status());
     }
 }
