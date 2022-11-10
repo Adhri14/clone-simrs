@@ -24,7 +24,7 @@
                     icon="fas fa-plus" id="btnCreateOrganization" />
             </x-adminlte-card>
         </div>
-        @if (isset($organization->total))
+        @if (isset($organization))
             <div class="col-12">
                 <x-adminlte-card title="Data Organization" theme="secondary" collapsible>
                     @php
@@ -35,7 +35,7 @@
                         $config['info'] = false;
                     @endphp
                     <x-adminlte-datatable id="table1" :heads="$heads" :config="$config" hoverable bordered compressed>
-                        @foreach ($organization->entry as $item)
+                        @foreach ($organization as $item)
                             <tr>
                                 <td>
                                     @isset($item->resource->identifier)

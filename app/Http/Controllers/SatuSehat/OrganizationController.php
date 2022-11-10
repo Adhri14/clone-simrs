@@ -19,11 +19,16 @@ class OrganizationController extends ApiController
         $organization = null;
         if (isset($request->partOf)) {
             $response = $this->organization_part_of($request->partOf);
+            $data = $response->getData();
             if ($response->status() == 200) {
-                $organization = json_decode($response->content());
-                Alert::success('Success', 'Organization Ditemukan');
+                if ($data->total) {
+                    $organization = $data->entry;
+                    Alert::success($response->statusText(), 'Part Of Organization Ditemukan ' . $data->total . ' Data');
+                } else {
+                    Alert::error($response->statusText(), 'Part Of Organization Ditemukan 0 Data');
+                }
             } else {
-                Alert::error('Error', $response->statusText());
+                Alert::error($response->statusText() . ' ' . $response->status());
             }
         }
         $provinsi = Province::pluck('name', 'code');
