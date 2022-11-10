@@ -4,6 +4,7 @@ namespace App\Http\Controllers\SatuSehat;
 
 use App\Http\Controllers\API\ApiController;
 use App\Http\Controllers\Controller;
+use App\Models\SIMRS\Organization;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Session;
@@ -42,6 +43,29 @@ class OrganizationController extends ApiController
     public function organization_store_api(Request $request)
     {
         $response = $this->organization_create($request);
+        if ($response->isSuccessful()) {
+            $request['cityText'] = City::firstWhere('code', $request->city)->name;
+            $data = [
+                'part_of_id' => $request->organization_id,
+                'satusehat_uuid' => $response->getData()->id,
+                'identifier_id' => $request->identifier,
+                // telecom
+                'phone' => $request->phone,
+                'email' => $request->email,
+                'url' => $request->url,
+                // address
+                'province_id' => $request->province,
+                'city_id' => $request->city,
+                'district_id' => $request->district,
+                'village_id' => $request->village,
+                'city' => $request->cityText,
+                'line' => $request->address,
+                'postalCode' => $request->postalCode,
+                // resource
+                'name' => $request->name,
+            ];
+            Organization::create($data);
+        }
         return response()->json($response, $response->status());
     }
     public function organization_update_api($id, Request $request)
@@ -71,7 +95,7 @@ class OrganizationController extends ApiController
             "identifier" => "required",
             "name" => "required",
             "phone" => "required",
-            "email" => "required",
+            "email" => "required|email",
             "url" => "required",
             "address" => "required",
             "postalCode" => "required",
@@ -83,7 +107,6 @@ class OrganizationController extends ApiController
         if ($validator->fails()) {
             return $this->sendError('Data Belum Lengkap', $validator->errors()->first(), 400);
         }
-        $request['cityText'] = City::firstWhere('code', $request->city)->name;
         $token = session()->get('tokenSatuSehat');
         $url =  env('SATUSEHAT_BASE_URL') . "/Organization";
         $data = [

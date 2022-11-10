@@ -135,7 +135,8 @@
 
 @section('plugins.Datatables', true)
 @section('plugins.Select2', true)
-@section('plugins.TempusDominusBs4', true)
+@section('plugins.Sweetalert2', true)
+{{-- @section('plugins.TempusDominusBs4', true) --}}
 
 @section('js')
     <script>
@@ -283,7 +284,7 @@
                     delay: 250,
                     data: function(params) {
                         code = $("#city").find(":selected").val();
-                        if (code.length != 0) {
+                        if (code != null) {
                             return {
                                 code: code,
                                 search: params.term // search term
@@ -309,7 +310,7 @@
                     delay: 250,
                     data: function(params) {
                         code = $("#district").find(":selected").val();
-                        if (code.length != 0) {
+                        if (code != null) {
                             return {
                                 code: code,
                                 search: params.term // search term
