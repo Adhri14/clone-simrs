@@ -83,7 +83,7 @@
                             @endforeach
                         @endisset
                         <li class="nav-item">
-                            <b class="nav-link">Last Update <b
+                            <b class="nav-link">Last Update IHS<b
                                     class="float-right ">{{ \Carbon\Carbon::parse($patient->meta->lastUpdated) }}</b></b>
                         </li>
                     </ul>

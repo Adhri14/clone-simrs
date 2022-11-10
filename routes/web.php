@@ -16,6 +16,7 @@ use App\Http\Controllers\KunjunganController;
 use App\Http\Controllers\PasienController;
 use App\Http\Controllers\PoliklinikController;
 use App\Http\Controllers\RekamMedis\IndexController;
+use App\Http\Controllers\SatuSehat\EncounterController;
 use App\Http\Controllers\SatuSehat\LocationController;
 use App\Http\Controllers\SatuSehat\OrganizationController;
 use App\Http\Controllers\SatuSehat\PatientController;
@@ -175,10 +176,11 @@ Route::middleware('auth')->group(function () {
     Route::prefix('satusehat')->name('satusehat.')->group(function () {
         Route::get('status', [TokenController::class, 'status'])->name('status');
         Route::get('refresh_token', [TokenController::class, 'refresh_token'])->name('refresh_token');
-        Route::resource('patient', PatientController::class);
-        Route::resource('practitioner', PractitionerController::class);
-        Route::resource('organization', OrganizationController::class);
-        Route::resource('location', LocationController::class);
+        Route::resource('patient', PatientController::class)->only(['index']);
+        Route::resource('practitioner', PractitionerController::class)->only(['index']);
+        Route::resource('organization', OrganizationController::class)->only(['index']);
+        Route::resource('location', LocationController::class)->only(['index']);
+        Route::resource('encounter', EncounterController::class)->only(['index']);
     });
 });
 Route::get('profile', [UserController::class, 'profile'])->name('profile');

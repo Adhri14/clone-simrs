@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\SatuSehat;
 
 use App\Http\Controllers\Controller;
+use App\Models\SIMRS\Patient;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Session;
@@ -13,7 +14,6 @@ class PatientController extends Controller
     public function index(Request $request)
     {
         $patient = null;
-        $token = new TokenController();
         if (isset($request->nik)) {
             $response = $this->patient_by_nik($request->nik);
             $data = $response->getData();
@@ -25,7 +25,7 @@ class PatientController extends Controller
                     Alert::error('Not Found', 'Pasien Tidak Ditemukan');
                 }
             } else {
-                Alert::error($response->reason() . ' ' . $response->status());
+                Alert::error($response->statusText() . ' ' . $response->status());
             }
         }
         if (isset($request->id)) {
@@ -39,12 +39,12 @@ class PatientController extends Controller
                     Alert::error('Not Found', 'Pasien Tidak Ditemukan');
                 }
             } else {
-                Alert::error($response->reason() . ' ' . $response->status());
+                Alert::error($response->statusText() . ' ' . $response->status());
             }
         }
         return view('satusehat.patient', compact([
             'request',
-            'patient'
+            'patient',
         ]));
     }
     // API SATU SEHAT

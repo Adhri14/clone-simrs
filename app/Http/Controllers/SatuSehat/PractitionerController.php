@@ -25,7 +25,7 @@ class PractitionerController extends Controller
                     Alert::error('Not Found', 'Practitioner Tidak Ditemukan');
                 }
             } else {
-                Alert::error($response->reason() . ' ' . $response->status());
+                Alert::error($response->statusText() . ' ' . $response->status());
             }
         }
         if (isset($request->id)) {
@@ -39,7 +39,7 @@ class PractitionerController extends Controller
                     Alert::error('Not Found', 'Practitioner Tidak Ditemukan');
                 }
             } else {
-                Alert::error($response->reason() . ' ' . $response->status());
+                Alert::error($response->statusText() . ' ' . $response->status());
             }
         }
         return view('satusehat.practitioner', compact([

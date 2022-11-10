@@ -98,8 +98,8 @@
             <div class="row">
                 <div class="col-6">
                     <x-adminlte-input name="organization_id" label="Part Of Organization"
-                        value="Organization/{{ env('SATUSEHAT_ORGANIZATION_ID') }}" readonly enable-old-support />
-                    <input type="hidden" name="id" id="id">
+                        value="Organization/{{ env('SATUSEHAT_ORGANIZATION_ID') }}" enable-old-support />
+                    <x-adminlte-input name="id" label="ID" enable-old-support readonly />
                     <x-adminlte-input name="identifier" label="Identifier" enable-old-support />
                     <x-adminlte-input name="name" label="Nama" enable-old-support />
                     <x-adminlte-input name="phone" label="No Telepon" enable-old-support />

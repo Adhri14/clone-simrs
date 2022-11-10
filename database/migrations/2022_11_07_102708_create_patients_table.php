@@ -15,6 +15,35 @@ return new class extends Migration
     {
         Schema::create('patients', function (Blueprint $table) {
             $table->id();
+            // identifier
+            $table->string('ihs_id')->nullable();
+            $table->string('nik_id')->nullable();
+            $table->string('rm_id')->nullable();
+            $table->string('bpjs_id')->nullable();
+            // name
+            $table->string('name')->nullable();
+            // telecom
+            $table->string('phone')->nullable();
+            $table->string('email')->nullable();
+            // address
+            $table->string('country')->nullable();
+            $table->string('city')->nullable();
+            $table->string('province_id')->nullable();
+            $table->string('city_id')->nullable();
+            $table->string('district_id')->nullable();
+            $table->string('village')->nullable();
+            $table->string('line')->nullable();
+            $table->string('postalCode')->nullable();
+            // photo
+            $table->string('photo_id')->nullable();
+            // resource
+            $table->boolean('active')->nullable();
+            $table->string('gender')->nullable();
+            $table->date('birthDate')->nullable();
+            $table->boolean('deceasedBoolean')->nullable(); #kematian
+            $table->dateTime('deceasedDateTime')->nullable(); #tanggal kematian
+            $table->string('maritalStatus')->nullable(); #status menikah
+            $table->string('communication')->nullable(); #bahasa
             $table->timestamps();
         });
     }

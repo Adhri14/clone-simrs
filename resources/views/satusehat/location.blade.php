@@ -168,24 +168,6 @@
             $('#btnStore').click(function(e) {
                 $.LoadingOverlay("show");
                 $.LoadingOverlay("hide");
-                // e.preventDefault();
-                // $.ajax({
-                //     data: $('#productForm').serialize(),
-                //     url: "{{ route('satusehat.organization.store') }}",
-                //     type: "POST",
-                //     dataType: 'json',
-                //     success: function(data) {
-
-                //         $('#productForm').trigger("reset");
-                //         $('#ajaxModel').modal('hide');
-                //         table.draw();
-
-                //     },
-                //     error: function(data) {
-                //         console.log('Error:', data);
-                //         $('#saveBtn').html('Save Changes');
-                //     }
-                // });
             });
             $('#btnUpdate').click(function(e) {
                 $.LoadingOverlay("show");
