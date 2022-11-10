@@ -33,10 +33,12 @@ class OrganizationController extends ApiController
             }
         }
         $provinsi = Province::pluck('name', 'code');
+        $organization_simrs = Organization::simplePaginate();
         return view('satusehat.organization', compact([
             'request',
             'organization',
             'provinsi',
+            'organization_simrs',
         ]));
     }
     // API SIMRS
@@ -71,6 +73,33 @@ class OrganizationController extends ApiController
     public function organization_update_api($id, Request $request)
     {
         $response = $this->organization_update($id, $request);
+        if ($response->isSuccessful()) {
+            $request['cityText'] = City::firstWhere('code', $request->city)->name;
+            $data = [
+                'part_of_id' => $request->organization_id,
+                'identifier_id' => $request->identifier,
+                // telecom
+                'phone' => $request->phone,
+                'email' => $request->email,
+                'url' => $request->url,
+                // address
+                'province_id' => $request->province,
+                'city_id' => $request->city,
+                'district_id' => $request->district,
+                'village_id' => $request->village,
+                'city' => $request->cityText,
+                'line' => $request->address,
+                'postalCode' => $request->postalCode,
+                // resource
+                'name' => $request->name,
+            ];
+            Organization::updateOrCreate(
+                [
+                    'satusehat_uuid' => $response->getData()->id,
+                ],
+                $data
+            );
+        }
         return response()->json($response, $response->status());
     }
     // API SATU SEHAT

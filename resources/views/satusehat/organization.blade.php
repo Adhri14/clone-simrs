@@ -6,7 +6,7 @@
 @section('content')
     <div class="row">
         <div class="col-12">
-            <x-adminlte-card title="Filter Organization" theme="secondary" collapsible>
+            <x-adminlte-card title="Filter Pencarian Organization Satu Sehat" theme="secondary" collapsible>
                 <form action="{{ route('satusehat.organization.index') }}" method="get">
                     <x-adminlte-input name="partOf" label="Part Of Organization" placeholder="Masukan ID Part Of Organization"
                         value="{{ $request->partOf }}">
@@ -26,17 +26,20 @@
         </div>
         @if (isset($organization))
             <div class="col-12">
-                <x-adminlte-card title="Data Organization" theme="secondary" collapsible>
+                <x-adminlte-card title="Pencarian Data Organization Satu Sehat" theme="secondary" collapsible>
                     @php
-                        $heads = ['Identifier', 'Nama', 'Part Of', 'Phone', 'Kota / Kab', 'PostCode', 'Status', 'Last Update', 'Action'];
+                        $heads = ['Part Of Organization', 'Identifier', 'Nama', 'Phone', 'Email', 'Kota / Kab', 'Status', 'Last Update', 'Action'];
                         $config['scrollY'] = '300px';
                         $config['scrollCollapse'] = true;
                         $config['paging'] = false;
                         $config['info'] = false;
                     @endphp
-                    <x-adminlte-datatable id="table1" :heads="$heads" :config="$config" hoverable bordered compressed>
+                    <x-adminlte-datatable id="table1" class="text-xs" :heads="$heads" :config="$config" hoverable bordered compressed>
                         @foreach ($organization as $item)
                             <tr>
+                                <td>
+                                    {{ $item->resource->partOf->reference }}
+                                </td>
                                 <td>
                                     @isset($item->resource->identifier)
                                         @foreach ($item->resource->identifier as $identifier)
@@ -45,9 +48,6 @@
                                     @endisset
                                 </td>
                                 <td>{{ $item->resource->name }}</td>
-                                <td>
-                                    {{ $item->resource->partOf->reference }}
-                                </td>
                                 <td>
                                     @isset($item->resource->telecom)
                                         @foreach ($item->resource->telecom as $telecom)
@@ -58,16 +58,18 @@
                                     @endisset
                                 </td>
                                 <td>
-                                    @isset($item->resource->address)
-                                        @foreach ($item->resource->address as $address)
-                                            {{ $address->city }}
+                                    @isset($item->resource->telecom)
+                                        @foreach ($item->resource->telecom as $telecom)
+                                            @if ($telecom->system == 'email')
+                                                {{ $telecom->value }}
+                                            @endif
                                         @endforeach
                                     @endisset
                                 </td>
                                 <td>
                                     @isset($item->resource->address)
                                         @foreach ($item->resource->address as $address)
-                                            {{ $address->postalCode }}
+                                            {{ $address->city }}
                                         @endforeach
                                     @endisset
                                 </td>
@@ -92,6 +94,37 @@
                 </x-adminlte-card>
             </div>
         @endif
+        <div class="col-12">
+            <x-adminlte-card title="Data Organization SIMRS" theme="secondary" collapsible>
+                @php
+                    $heads = ['Part Of Organization', 'Identifier', 'Nama', 'Phone', 'Email', 'Kota / Kab', 'Status', 'Last Update'];
+                    $config['scrollY'] = '300px';
+                    $config['scrollCollapse'] = true;
+                    $config['paging'] = false;
+                    $config['info'] = false;
+                @endphp
+                <x-adminlte-datatable id="table2" class="text-xs" :heads="$heads" :config="$config" hoverable bordered compressed>
+                    @foreach ($organization_simrs as $organization)
+                        <tr>
+                            <td>{{ $organization->part_of_id }}</td>
+                            <td>{{ $organization->identifier_id }}</td>
+                            <td>{{ $organization->name }}</td>
+                            <td>{{ $organization->phone }}</td>
+                            <td>{{ $organization->email }}</td>
+                            <td>{{ $organization->city }}</td>
+                            <td>
+                                @if ($organization->active)
+                                    Aktif
+                                @else
+                                    Tidak Aktif
+                                @endif
+                            </td>
+                            <td>{{ $organization->updated_at }}</td>
+                        </tr>
+                    @endforeach
+                </x-adminlte-datatable>
+            </x-adminlte-card>
+        </div>
     </div>
     <x-adminlte-modal id="modalOrganization" title="Organization" size="lg" theme="success" v-centered>
         <form name="formOrganization" id="formOrganization">

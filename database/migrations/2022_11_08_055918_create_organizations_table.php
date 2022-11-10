@@ -16,9 +16,9 @@ return new class extends Migration
         Schema::create('organizations', function (Blueprint $table) {
             $table->id();
             // identifier
-            $table->string('part_of_id')->nullable();
-            $table->uuid('satusehat_uuid')->nullable()->unique();
-            $table->string('identifier_id')->nullable();
+            $table->string('part_of_id')->index()->nullable();
+            $table->uuid('satusehat_uuid')->index()->nullable()->unique();
+            $table->string('identifier_id')->index()->nullable();
             // telecom
             $table->string('phone')->nullable();
             $table->string('email')->nullable();
