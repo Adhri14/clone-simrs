@@ -16,15 +16,16 @@ class PatientController extends Controller
         $token = new TokenController();
         if (isset($request->nik)) {
             $response = $this->patient_by_nik($request->nik);
+            $data = $response->getData();
             if ($response->status() == 200) {
-                if ($response->json('total')) {
-                    $patient = json_decode($response)->entry[0]->resource;
-                    Alert::success('Success', 'Pasien Ditemukan (' . $patient->id . ')');
+                if ($data->total) {
+                    $patient = $data->entry[0]->resource;
+                    Alert::success($response->statusText(),  $data->total . ' Pasien Ditemukan');
                 } else {
-                    Alert::error('Error', 'Pasien Tidak Ditemukan');
+                    Alert::error('Not Found', 'Pasien Tidak Ditemukan');
                 }
             } else {
-                Alert::error('Error', $response->reason());
+                Alert::error($response->reason().' '.$response->status());
             }
         }
         if (isset($request->id)) {
@@ -33,7 +34,7 @@ class PatientController extends Controller
                 $patient = json_decode($response);
                 Alert::success('Success', 'Pasien Ditemukan');
             } else {
-                Alert::error('Error', $response->reason());
+                Alert::error($response->reason().' '.$response->status());
             }
         }
         return view('satusehat.patient', compact([
@@ -46,7 +47,7 @@ class PatientController extends Controller
         $token = Session::get('tokenSatuSehat');
         $url =  env('SATUSEHAT_BASE_URL') . "/Patient?identifier=https://fhir.kemkes.go.id/id/nik|" . $nik;
         $response = Http::withToken($token)->get($url);
-        return $response;
+        return response()->json($response->json(), $response->status());
     }
     public function patient_by_id($id)
     {
