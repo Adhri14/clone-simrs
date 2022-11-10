@@ -16,24 +16,30 @@ class PractitionerController extends Controller
         $token = new TokenController();
         if (isset($request->nik)) {
             $response = $this->practitioner_by_nik($request->nik);
+            $data = $response->getData();
             if ($response->status() == 200) {
-                if ($response->json('total')) {
-                    $practitioner = json_decode($response)->entry[0]->resource;
-                    Alert::success('Success', 'Practitioner Ditemukan (' . $practitioner->id . ')');
+                if ($data->total) {
+                    $practitioner = $data->entry[0]->resource;
+                    Alert::success($response->statusText(), 'Practitioner Ditemukan');
                 } else {
-                    Alert::error('Error', 'Practitioner Tidak Ditemukan');
+                    Alert::error('Not Found', 'Practitioner Tidak Ditemukan');
                 }
             } else {
-                Alert::error('Error', $response->reason());
+                Alert::error($response->reason() . ' ' . $response->status());
             }
         }
         if (isset($request->id)) {
             $response = $this->practitioner_by_id($request->id);
-            if ($response->json('resourceType') == "Practitioner") {
-                $practitioner = json_decode($response);
-                Alert::success('Success', 'Pasien Ditemukan');
+            $data = $response->getData();
+            if ($response->status() == 200) {
+                if ($data->resourceType == "Practitioner") {
+                    $practitioner = $data;
+                    Alert::success($response->statusText(), ' Practitioner Ditemukan');
+                } else {
+                    Alert::error('Not Found', 'Practitioner Tidak Ditemukan');
+                }
             } else {
-                Alert::error('Error', $response->reason());
+                Alert::error($response->reason() . ' ' . $response->status());
             }
         }
         return view('satusehat.practitioner', compact([
@@ -46,13 +52,13 @@ class PractitionerController extends Controller
         $token = Session::get('tokenSatuSehat');
         $url =  env('SATUSEHAT_BASE_URL') . "/Practitioner?identifier=https://fhir.kemkes.go.id/id/nik|" . $nik;
         $response = Http::withToken($token)->get($url);
-        return $response;
+        return response()->json($response->json(), $response->status());
     }
     public function practitioner_by_id($id)
     {
         $token = Session::get('tokenSatuSehat');
         $url =  env('SATUSEHAT_BASE_URL') . "/Practitioner/" . $id;
         $response = Http::withToken($token)->get($url);
-        return $response;
+        return response()->json($response->json(), $response->status());
     }
 }

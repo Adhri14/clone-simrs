@@ -20,7 +20,7 @@ class PatientController extends Controller
             if ($response->status() == 200) {
                 if ($data->total) {
                     $patient = $data->entry[0]->resource;
-                    Alert::success($response->statusText(), ' Pasien Ditemukan');
+                    Alert::success($response->statusText(), 'Pasien Ditemukan');
                 } else {
                     Alert::error('Not Found', 'Pasien Tidak Ditemukan');
                 }
