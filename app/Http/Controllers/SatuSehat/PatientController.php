@@ -20,21 +20,26 @@ class PatientController extends Controller
             if ($response->status() == 200) {
                 if ($data->total) {
                     $patient = $data->entry[0]->resource;
-                    Alert::success($response->statusText(),  $data->total . ' Pasien Ditemukan');
+                    Alert::success($response->statusText(), ' Pasien Ditemukan');
                 } else {
                     Alert::error('Not Found', 'Pasien Tidak Ditemukan');
                 }
             } else {
-                Alert::error($response->reason().' '.$response->status());
+                Alert::error($response->reason() . ' ' . $response->status());
             }
         }
         if (isset($request->id)) {
             $response = $this->patient_by_id($request->id);
-            if ($response->json('resourceType') == "Patient") {
-                $patient = json_decode($response);
-                Alert::success('Success', 'Pasien Ditemukan');
+            $data = $response->getData();
+            if ($response->status() == 200) {
+                if ($data->resourceType == "Patient") {
+                    $patient = $data;
+                    Alert::success($response->statusText(), ' Pasien Ditemukan');
+                } else {
+                    Alert::error('Not Found', 'Pasien Tidak Ditemukan');
+                }
             } else {
-                Alert::error($response->reason().' '.$response->status());
+                Alert::error($response->reason() . ' ' . $response->status());
             }
         }
         return view('satusehat.patient', compact([
@@ -54,6 +59,6 @@ class PatientController extends Controller
         $token = Session::get('tokenSatuSehat');
         $url =  env('SATUSEHAT_BASE_URL') . "/Patient/" . $id;
         $response = Http::withToken($token)->get($url);
-        return $response;
+        return response()->json($response->json(), $response->status());
     }
 }
