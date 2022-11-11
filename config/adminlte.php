@@ -518,6 +518,13 @@ return [
                             'shift'   => 'ml-3',
                             'can' => 'rekam-medis',
                         ],
+                        [
+                            'text' => 'Index Dokter',
+                            'icon'    => 'fas fa-user-md',
+                            'url'  => 'index_dokter',
+                            'shift'   => 'ml-3',
+                            'can' => 'rekam-medis',
+                        ],
                     ]
                 ],
                 [

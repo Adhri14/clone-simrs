@@ -7,6 +7,7 @@ use App\Http\Controllers\API\WhatsappController;
 use App\Http\Controllers\PasienController;
 use App\Http\Controllers\SatuSehat\LocationController;
 use App\Http\Controllers\SatuSehat\OrganizationController;
+use App\Http\Controllers\SIMRS\ICD10Controller;
 use App\Http\Controllers\VclaimController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -103,6 +104,10 @@ Route::prefix('wa')->group(function () {
     Route::get('index', [WhatsappController::class, 'index']);
     Route::post('send_message', [WhatsappController::class, 'send_message']);
     Route::post('daftar_antrian', [WhatsappController::class, 'daftar_antrian']);
+});
+
+Route::prefix('simrs')->name('api.simrs.')->group(function () {
+    Route::get('get_icd10', [ICD10Controller::class, 'get_icd10'])->name('get_icd10');
 });
 
 

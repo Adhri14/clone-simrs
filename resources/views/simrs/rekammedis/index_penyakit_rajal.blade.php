@@ -6,6 +6,28 @@
     <h1>Index Penyakit Rawat Jalan</h1>
 @stop
 
+@section('css')
+    <style type="text/css" media="print">
+        @media print {
+            @page {
+                size: landscape
+            }
+        }
+
+        table,
+        th,
+        td {
+            border: 1px solid #333333 !important;
+        }
+
+        hr {
+            color: #333333 !important;
+            border: 1px solid #333333 !important;
+            line-height: 1.5;
+        }
+    </style>
+@endsection
+
 @section('content')
     <div class="row">
         <div class="col-12">
@@ -27,14 +49,14 @@
                                 </x-slot>
                             </x-adminlte-date-range>
                         </div>
-                        <div class="col-md-3">
-                            <x-adminlte-input name="diagnosa" value="{{ $request->diagnosa }}" label="Diagcosa ICD-10">
+                        <div class="col-md-9">
+                            <x-adminlte-select2 name="diagnosa" label="Diagnosa Utama ICD-10">
                                 <x-slot name="prependSlot">
                                     <div class="input-group-text bg-primary">
                                         <i class="fas fa-disease"></i>
                                     </div>
                                 </x-slot>
-                            </x-adminlte-input>
+                            </x-adminlte-select2>
                         </div>
                     </div>
                     <x-adminlte-button type="submit" class="withLoad" theme="success" label="Submit Pencarian"
@@ -55,6 +77,7 @@
                                 www.rsudwaled.id - brsud.waled@gmail.com - Call Center (0231) 661126
                             </div>
                         </div>
+                        <hr width="100%" hight="20px" color="black" size="50px" />
                         <div class="row invoice-info">
                             <div class="col-sm-12 invoice-col text-center">
                                 <b class="text-lg">LAPORAN INDEX PENYAKIT RAWAT JALAN</b>
@@ -94,6 +117,7 @@
                             <table class="table table-sm text-xs">
                                 <thead>
                                     <tr>
+                                        <th rowspan="2">No</th>
                                         <th rowspan="2">Tgl Kunjg.</th>
                                         <th rowspan="2">RM</th>
                                         <th rowspan="2">Nama</th>
@@ -101,7 +125,7 @@
                                         <th rowspan="2">Unit</th>
                                         <th rowspan="2">Pasien</th>
                                         <th rowspan="2">Kasus</th>
-                                        <th rowspan="2">Diagnosa ICD-10</th>
+                                        <th rowspan="2">Diag Lainnya</th>
                                         <th rowspan="2">Dokter</th>
                                     </tr>
                                     <tr>
@@ -119,6 +143,7 @@
                                 <tbody>
                                     @foreach ($diagnosa as $item)
                                         <tr>
+                                            <td>{{ $loop->iteration }}</td>
                                             <td>{{ $item->tgl_masuk_kunjungan }}</td>
                                             <td>{{ $item->no_rm }}</td>
                                             <td>{{ $item->pasien->nama_px }}</td>
@@ -126,42 +151,42 @@
                                                 $umur_day = \Carbon\Carbon::parse($item->pasien->tgl_lahir)->diffInDays(\Carbon\Carbon::parse($item->tgl_masuk_kunjungan));
                                                 $umur_tahun = \Carbon\Carbon::parse($item->pasien->tgl_lahir)->diffInYears(\Carbon\Carbon::parse($item->tgl_masuk_kunjungan));
                                             @endphp
-                                            <td>
+                                            <td class="text-center">
                                                 @if ($umur_day < 28)
                                                     <b> 1</b>
                                                 @endif
                                             </td>
-                                            <td>
+                                            <td class="text-center">
                                                 @if ($umur_tahun < 1)
                                                     <b> 1</b>
                                                 @endif
                                             </td>
-                                            <td>
+                                            <td class="text-center">
                                                 @if ($umur_tahun > 1 && $umur_tahun < 5)
                                                     <b> 1</b>
                                                 @endif
                                             </td>
-                                            <td>
+                                            <td class="text-center">
                                                 @if ($umur_tahun > 5 && $umur_tahun < 15)
                                                     <b> 1</b>
                                                 @endif
                                             </td>
-                                            <td>
+                                            <td class="text-center">
                                                 @if ($umur_tahun > 15 && $umur_tahun < 25)
                                                     <b> 1</b>
                                                 @endif
                                             </td>
-                                            <td>
+                                            <td class="text-center">
                                                 @if ($umur_tahun > 25 && $umur_tahun < 45)
                                                     <b> 1</b>
                                                 @endif
                                             </td>
-                                            <td>
+                                            <td class="text-center">
                                                 @if ($umur_tahun > 45 && $umur_tahun < 65)
                                                     <b> 1</b>
                                                 @endif
                                             </td>
-                                            <td>
+                                            <td class="text-center">
                                                 @if ($umur_tahun > 65)
                                                     <b> 1</b>
                                                 @endif
@@ -182,7 +207,7 @@
                                                 @endif
                                             </td>
                                             <td>
-                                                {{ $item->diag_utama }} - {{ $item->diag_utama_desc }}
+                                                {{ $item->diag_utama }}
                                             </td>
                                             <td>{{ $item->dokter ? $item->dokter->nama_paramedis : null }}</td>
                                         </tr>
@@ -199,9 +224,9 @@
 @stop
 
 @section('plugins.Datatables', true)
-@section('plugins.DatatablesPlugins', true)
 @section('plugins.DateRangePicker', true)
-@section('plugins.Chartjs', true)
+@section('plugins.Select2', true)
+
 @section('js')
     <script>
         function printDiv(divName) {
@@ -211,20 +236,33 @@
             setTimeout('window.addEventListener("load", window.print());', 1000);
         }
     </script>
-@endsection
-@section('css')
-    <style type="text/css" media="print">
-        @media print {
-            @page {
-                size: landscape
-            }
-        }
-
-        table,
-        th,
-        td {
-            border: 1px solid #333333 !important;
-        }
-    </style>
+    <script>
+        $(function() {
+            $(document).ready(function() {
+                $("#diagnosa").append($(new Option("{{ $request->diagnosa }}",
+                    "{{ $request->diagnosa }}")));
+            });
+            $("#diagnosa").select2({
+                theme: "bootstrap4",
+                ajax: {
+                    url: "{{ route('api.simrs.get_icd10') }}",
+                    type: "get",
+                    dataType: 'json',
+                    delay: 250,
+                    data: function(params) {
+                        return {
+                            search: params.term // search term
+                        };
+                    },
+                    processResults: function(response) {
+                        return {
+                            results: response
+                        };
+                    },
+                    cache: true
+                }
+            });
+        });
+    </script>
 
 @endsection
