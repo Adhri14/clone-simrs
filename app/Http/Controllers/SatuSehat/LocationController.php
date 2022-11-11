@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\SIMRS\Location;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 use Laravolt\Indonesia\Models\City;
 use Laravolt\Indonesia\Models\Province;
@@ -26,10 +27,12 @@ class LocationController extends ApiController
             }
         }
         $provinsi = Province::pluck('name', 'code');
+        $location_simrs = Location::simplePaginate();
         return view('satusehat.location', compact([
             'request',
             'location',
             'provinsi',
+            'location_simrs',
         ]));
     }
     // API SIMRS
@@ -171,6 +174,13 @@ class LocationController extends ApiController
             ]
         ];
         $response = Http::withToken($token)->post($url, $data);
+        return response()->json($response->json(), $response->status());
+    }
+    public function edit($id)
+    {
+        $token = Session::get('tokenSatuSehat');
+        $url =  env('SATUSEHAT_BASE_URL') . "/Location/" . $id;
+        $response = Http::withToken($token)->get($url);
         return response()->json($response->json(), $response->status());
     }
 }

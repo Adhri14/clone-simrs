@@ -85,7 +85,7 @@
                                 </td>
                                 <td>
                                     <x-adminlte-button class="btn-xs btnEdit" theme="warning" icon="fas fa-edit"
-                                        title="Edit User {{ $item->resource->name }}"
+                                        title="Edit Organization {{ $item->resource->name }}"
                                         data-id="{{ $item->resource->id }}" />
                                 </td>
                             </tr>

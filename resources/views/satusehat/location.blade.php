@@ -95,7 +95,7 @@
         <div class="col-12">
             <x-adminlte-card title="Data Location SIMRS" theme="secondary" collapsible>
                 @php
-                    $heads = ['Part Of Location', 'Identifier', 'Nama', 'Phone', 'Email', 'Kota / Kab', 'Status', 'Last Update'];
+                    $heads = ['Part Of Location', 'Identifier', 'Nama', 'Longitude', 'Latitude', 'Kota / Kab', 'Status', 'Last Update', 'Action'];
                     $config['scrollY'] = '300px';
                     $config['scrollCollapse'] = true;
                     $config['paging'] = false;
@@ -103,6 +103,23 @@
                 @endphp
                 <x-adminlte-datatable id="table2" class="text-xs" :heads="$heads" :config="$config" hoverable bordered
                     compressed>
+                    @foreach ($location_simrs as $location)
+                        <tr>
+                            <td>{{ $location->part_of_id }}</td>
+                            <td>{{ $location->identifier_id }}</td>
+                            <td>{{ $location->name }}</td>
+                            <td>{{ $location->longitude }}</td>
+                            <td>{{ $location->latitude }}</td>
+                            <td>{{ $location->city }}</td>
+                            <td>{{ $location->status }}</td>
+                            <td>{{ $location->updated_at }}</td>
+                            <td>
+                                <x-adminlte-button class="btn-xs btnEdit" theme="warning" icon="fas fa-edit"
+                                    title="Edit Location {{ $location->name }}"
+                                    data-id="{{ $location->satusehat_uuid }}" />
+                            </td>
+                        </tr>
+                    @endforeach
                 </x-adminlte-datatable>
             </x-adminlte-card>
         </div>
@@ -171,20 +188,38 @@
             $('body').on('click', '.btnEdit', function() {
                 $.LoadingOverlay("show");
                 var id = $(this).data('id');
-                var url = "{{ route('api.satusehat.organization_index') }}" + "/" + id;
+                var url = "{{ route('satusehat.location.index') }}" + "/" + id + "/edit";
                 $.get(url, function(response) {
-                    console.log(response);
                     $('#id').val(response.id);
                     $('#identifier').val(response.identifier[0].value);
                     $('#name').val(response.name);
+                    $('#description').val(response.description);
                     $('#phone').val(response.telecom[0].value);
                     $('#email').val(response.telecom[1].value);
                     $('#url').val(response.telecom[2].value);
+                    $('#address').val(response.address.line[0]);
+                    $('#longitude').val(response.position.longitude);
+                    $('#latitude').val(response.position.latitude);
+                    $('#postalCode').val(response.address.postalCode);
+                    $('#organization_id').val(response.managingOrganization.reference);
+                    $("#province").val(response.address.extension[0].extension[0].valueCode)
+                        .change();
+                    $("#city").append($(new Option(response.address.extension[0]
+                        .extension[1].valueCode, response.address.extension[0]
+                        .extension[1].valueCode)));
+                    $("#district").append($(new Option(response.address.extension[0]
+                        .extension[2].valueCode, response.address.extension[0]
+                        .extension[2].valueCode)));
+                    $("#village").append($(new Option(response.address.extension[0]
+                        .extension[3].valueCode, response.address.extension[0]
+                        .extension[3].valueCode)));
+
                     $('#btnStore').hide();
                     $('#btnUpdate').show();
                     $('#modalLocation').modal('show');
                     $.LoadingOverlay("hide");
-                })
+                });
+
             });
             $('#btnStore').click(function(e) {
                 $.LoadingOverlay("show");
@@ -219,6 +254,34 @@
             });
             $('#btnUpdate').click(function(e) {
                 $.LoadingOverlay("show");
+                e.preventDefault();
+                var id = $('#id').val();
+                var url = "{{ route('api.satusehat.organization_index') }}" + "/update/" + id;
+                // $.ajax({
+                //     data: $('#formOrganization').serialize(),
+                //     url: url,
+                //     type: "PUT",
+                //     dataType: 'json',
+                //     success: function(data) {
+                //         swal.fire(
+                //             'Success',
+                //             'Data Berhasil Disimpan',
+                //             'success'
+                //         ).then(okay => {
+                //             if (okay) {
+                //                 $.LoadingOverlay("show");
+                //                 location.reload();
+                //             }
+                //         });
+                //     },
+                //     error: function(data) {
+                //         swal.fire(
+                //             data.statusText + ' ' + data.status,
+                //             data.responseJSON.original.data,
+                //             'error'
+                //         );
+                //     }
+                // });
                 $.LoadingOverlay("hide");
             });
             $("#city").select2({

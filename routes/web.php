@@ -179,7 +179,7 @@ Route::middleware('auth')->group(function () {
         Route::resource('patient', PatientController::class)->only(['index']);
         Route::resource('practitioner', PractitionerController::class)->only(['index']);
         Route::resource('organization', OrganizationController::class)->only(['index']);
-        Route::resource('location', LocationController::class)->only(['index']);
+        Route::resource('location', LocationController::class)->only(['index', 'edit']);
         Route::resource('encounter', EncounterController::class)->only(['index']);
     });
 });
