@@ -5,6 +5,7 @@ use App\Http\Controllers\API\AntrianBPJSController;
 use App\Http\Controllers\API\VclaimBPJSController;
 use App\Http\Controllers\API\WhatsappController;
 use App\Http\Controllers\PasienController;
+use App\Http\Controllers\SatuSehat\LocationController;
 use App\Http\Controllers\SatuSehat\OrganizationController;
 use App\Http\Controllers\VclaimController;
 use Illuminate\Http\Request;
@@ -110,4 +111,6 @@ Route::prefix('satusehat')->name('api.satusehat.')->group(function () {
     Route::get('organization/{id}', [OrganizationController::class, 'organization_by_id'])->name('organization_by_id');
     Route::post('organization/store', [OrganizationController::class, 'organization_store_api'])->name('organization_store_api');
     Route::put('organization/update/{id}', [OrganizationController::class, 'organization_update_api'])->name('organization_update_api');
+    Route::post('location/store', [LocationController::class, 'location_store_api'])->name('location_store_api');
+    Route::put('location/update/{id}', [LocationController::class, 'location_update_api'])->name('location_update_api');
 });
