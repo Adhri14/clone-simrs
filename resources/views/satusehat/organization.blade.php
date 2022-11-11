@@ -191,7 +191,6 @@
                 var id = $(this).data('id');
                 var url = "{{ route('api.satusehat.organization_index') }}" + "/" + id;
                 $.get(url, function(response) {
-                    console.log(response);
                     $('#id').val(response.id);
                     $('#identifier').val(response.identifier[0].value);
                     $('#name').val(response.name);

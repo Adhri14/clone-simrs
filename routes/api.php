@@ -112,8 +112,8 @@ Route::prefix('satusehat')->name('api.satusehat.')->group(function () {
     Route::post('organization/store', [OrganizationController::class, 'organization_store_api'])->name('organization_store_api');
     Route::put('organization/update/{id}', [OrganizationController::class, 'organization_update_api'])->name('organization_update_api');
 
-
     Route::get('location/', [LocationController::class, 'index'])->name('location_index');
+    // Route::get('location/show/{id}', [LocationController::class, 'edit'])->name('location_id');
     Route::post('location/store', [LocationController::class, 'location_store_api'])->name('location_store_api');
     Route::put('location/update/{id}', [LocationController::class, 'location_update_api'])->name('location_update_api');
 });

@@ -219,7 +219,6 @@
                     $('#modalLocation').modal('show');
                     $.LoadingOverlay("hide");
                 });
-
             });
             $('#btnStore').click(function(e) {
                 $.LoadingOverlay("show");
@@ -256,32 +255,33 @@
                 $.LoadingOverlay("show");
                 e.preventDefault();
                 var id = $('#id').val();
-                var url = "{{ route('api.satusehat.organization_index') }}" + "/update/" + id;
-                // $.ajax({
-                //     data: $('#formOrganization').serialize(),
-                //     url: url,
-                //     type: "PUT",
-                //     dataType: 'json',
-                //     success: function(data) {
-                //         swal.fire(
-                //             'Success',
-                //             'Data Berhasil Disimpan',
-                //             'success'
-                //         ).then(okay => {
-                //             if (okay) {
-                //                 $.LoadingOverlay("show");
-                //                 location.reload();
-                //             }
-                //         });
-                //     },
-                //     error: function(data) {
-                //         swal.fire(
-                //             data.statusText + ' ' + data.status,
-                //             data.responseJSON.original.data,
-                //             'error'
-                //         );
-                //     }
-                // });
+                var url = "{{ route('api.satusehat.location_index') }}" + "/update/" + id;
+                $.ajax({
+                    data: $('#formOrganization').serialize(),
+                    url: url,
+                    type: "PUT",
+                    dataType: 'json',
+                    success: function(data) {
+                        swal.fire(
+                            'Success',
+                            'Data Berhasil Disimpan',
+                            'success'
+                        ).then(okay => {
+                            if (okay) {
+                                $.LoadingOverlay("show");
+                                location.reload();
+                            }
+                        });
+                    },
+                    error: function(data) {
+                        console.log(data);
+                        swal.fire(
+                            data.statusText + ' ' + data.status,
+                            data.responseJSON.original.data,
+                            'error'
+                        );
+                    }
+                });
                 $.LoadingOverlay("hide");
             });
             $("#city").select2({
