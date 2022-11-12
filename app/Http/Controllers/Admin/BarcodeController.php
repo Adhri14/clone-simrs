@@ -19,8 +19,8 @@ class BarcodeController extends Controller
             $request['barcode'] = $uniqid;
         }
         $generator = new BarcodeGeneratorJPG();
-        QrCode::backgroundColor(225, 250, 255)->size(250)->format('png')->merge('rsudwaled_icon_qrcode.png', .15, true)->generate($request->barcode, "qrcode_test.png");
-        file_put_contents('barcode_test.png', $generator->getBarcode($request->barcode, $generator::TYPE_CODE_128,  3, 100,));
+        QrCode::backgroundColor(225, 250, 255)->size(250)->format('png')->merge('rsudwaled_icon_qrcode.png', .15, true)->generate($request->barcode, "storage/qrcode_test.png");
+        file_put_contents('storage/barcode_test.png', $generator->getBarcode($request->barcode, $generator::TYPE_CODE_128,  3, 100,));
         return view('admin.barcode', compact([
             'request',
         ]));
