@@ -71,33 +71,34 @@ class LocationController extends ApiController
     public function location_update_api($id, Request $request)
     {
         $response = $this->location_update($id, $request);
-        // if ($response->isSuccessful()) {
-        //     $request['cityText'] = City::firstWhere('code', $request->city)->name;
-        //     $data = [
-        //         'part_of_id' => $request->organization_id,
-        //         'identifier_id' => $request->identifier,
-        //         // telecom
-        //         'phone' => $request->phone,
-        //         'email' => $request->email,
-        //         'url' => $request->url,
-        //         // address
-        //         'province_id' => $request->province,
-        //         'city_id' => $request->city,
-        //         'district_id' => $request->district,
-        //         'village_id' => $request->village,
-        //         'city' => $request->cityText,
-        //         'line' => $request->address,
-        //         'postalCode' => $request->postalCode,
-        //         // resource
-        //         'name' => $request->name,
-        //     ];
-        //     Organization::updateOrCreate(
-        //         [
-        //             'satusehat_uuid' => $response->getData()->id,
-        //         ],
-        //         $data
-        //     );
-        // }
+        if ($response->isSuccessful()) {
+            $request['cityText'] = City::firstWhere('code', $request->city)->name;
+            $data = [
+                'part_of_id' => $request->organization_id,
+                'satusehat_uuid' => $response->getData()->id,
+                'identifier_id' => $request->identifier,
+                // telecom
+                'phone' => $request->phone,
+                'email' => $request->email,
+                'url' => $request->url,
+                // address
+                'province_id' => $request->province,
+                'city_id' => $request->city,
+                'district_id' => $request->district,
+                'village_id' => $request->village,
+                'city' => $request->cityText,
+                'line' => $request->address,
+                'postalCode' => $request->postalCode,
+                // position
+                'longitude' => $request->longitude,
+                'latitude' => $request->latitude,
+                // resource
+                'name' => $request->name,
+                'description' => $request->description,
+            ];
+            $organization =  Location::firstWhere('satusehat_uuid', $id);
+            $organization->update($data);
+        }
         return response()->json($response, $response->status());
     }
     // API SATU SEHAT
@@ -125,6 +126,7 @@ class LocationController extends ApiController
         }
         $request['cityText'] = City::firstWhere('code', $request->city)->name;
         $organization_id = explode('/', $request->organization_id);
+
         $token = session()->get('tokenSatuSehat');
         $url =  env('SATUSEHAT_BASE_URL') . "/Location";
         $data = [
@@ -221,8 +223,9 @@ class LocationController extends ApiController
             "organization_id" => "required",
             "identifier" => "required",
             "name" => "required",
+            "description" => "required",
             "phone" => "required",
-            "email" => "required",
+            "email" => "required|email",
             "url" => "required",
             "address" => "required",
             "postalCode" => "required",
@@ -230,36 +233,30 @@ class LocationController extends ApiController
             "city" => "required",
             "district" => "required",
             "village" => "required",
+            "longitude" => "required",
+            "latitude" => "required",
         ]);
         if ($validator->fails()) {
             return $this->sendError('Data Belum Lengkap', $validator->errors()->first(), 400);
         }
         $request['cityText'] = City::firstWhere('code', $request->city)->name;
+        $organization_id = explode('/', $request->organization_id);
+
         $token = session()->get('tokenSatuSehat');
         $url =  env('SATUSEHAT_BASE_URL') . "/Location/" . $id;
         $data = [
-            "resourceType" => "Organization",
+            "resourceType" => "Location",
             "id" => $id,
-            "active" => true,
             "identifier" => [
                 [
-                    "use" => "official",
-                    "system" => "http://sys-ids.kemkes.go.id/" . $request->organization_id,
+                    "system" => "http://sys-ids.kemkes.go.id/location/" . $organization_id[1],
                     "value" => $request->identifier,
                 ]
             ],
-            "type" => [
-                [
-                    "coding" => [
-                        [
-                            "system" => "http://terminology.hl7.org/CodeSystem/organization-type",
-                            "code" => "dept",
-                            "display" => "Hospital Department"
-                        ]
-                    ]
-                ]
-            ],
+            "status" => $request->status,
             "name" => $request->name,
+            "description" => $request->description,
+            "mode" => "instance",
             "telecom" => [
                 [
                     "system" => "phone",
@@ -268,52 +265,62 @@ class LocationController extends ApiController
                 ],
                 [
                     "system" => "email",
-                    "value" => $request->email,
-                    "use" => "work"
+                    "value" =>  $request->email,
                 ],
                 [
                     "system" => "url",
-                    "value" => $request->url,
+                    "value" =>  $request->url,
                     "use" => "work"
                 ]
             ],
             "address" => [
-                [
-                    "use" => "work",
-                    "type" => "both",
-                    "line" => [
-                        $request->address,
-                    ],
-                    "city" => $request->cityText,
-                    "postalCode" => $request->postalCode,
-                    "country" => "ID",
-                    "extension" => [
-                        [
-                            "url" => "https://fhir.kemkes.go.id/r4/StructureDefinition/administrativeCode",
-                            "extension" => [
-                                [
-                                    "url" => "province",
-                                    "valueCode" => $request->province,
-                                ],
-                                [
-                                    "url" => "city",
-                                    "valueCode" =>  $request->city,
-                                ],
-                                [
-                                    "url" => "district",
-                                    "valueCode" => $request->district,
-                                ],
-                                [
-                                    "url" => "village",
-                                    "valueCode" => $request->village,
-                                ]
-                            ]
+                "use" => "work",
+                "line" => [
+                    $request->address,
+                ],
+                "city" =>  $request->cityText,
+                "postalCode" =>  $request->postalCode,
+                "country" => "ID",
+                "extension" => [
+                    [
+                        "url" => "https://fhir.kemkes.go.id/r4/StructureDefinition/administrativeCode",
+                        "extension" => [
+                            [
+                                "url" => "province",
+                                "valueCode" =>  $request->province,
+                            ],
+                            [
+                                "url" => "city",
+                                "valueCode" =>  $request->city,
+                            ],
+                            [
+                                "url" => "district",
+                                "valueCode" =>  $request->district,
+                            ],
+                            [
+                                "url" => "village",
+                                "valueCode" =>  $request->village,
+                            ],
                         ]
                     ]
                 ]
             ],
-            "partOf" => [
-                "reference" =>  $request->organization_id,
+            "physicalType" => [
+                "coding" => [
+                    [
+                        "system" => "http://terminology.hl7.org/CodeSystem/location-physical-type",
+                        "code" => "ro",
+                        "display" => "Room"
+                    ]
+                ]
+            ],
+            "position" => [
+                "longitude" =>  floatval($request->longitude),
+                "latitude" => floatval($request->latitude),
+                "altitude" => 0
+            ],
+            "managingOrganization" => [
+                "reference" => $request->organization_id,
             ]
         ];
         $response = Http::withToken($token)->put($url, $data);
