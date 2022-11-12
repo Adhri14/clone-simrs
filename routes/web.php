@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\BarcodeController;
 use App\Http\Controllers\Admin\LaravotLocationController;
 use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\RoleController;
@@ -156,11 +157,13 @@ Route::resource('efilerm', FileRMController::class);
 Route::resource('kpo', KPOController::class);
 Route::get('kpo/tanggal/{tanggal}', [KPOController::class, 'kunjungan_tanggal'])->name('kpo.kunjungan_tanggal');
 
+// SIMRS
+Route::get('get_city', [LaravotLocationController::class, 'get_city'])->name('get_city');
+Route::get('get_district', [LaravotLocationController::class, 'get_district'])->name('get_district');
+Route::get('get_village', [LaravotLocationController::class, 'get_village'])->name('get_village');
+Route::get('barcode', [BarcodeController::class, 'index'])->name('barcode');
 // auth
 Route::middleware('auth')->group(function () {
-    Route::get('get_city', [LaravotLocationController::class, 'get_city'])->name('get_city');
-    Route::get('get_district', [LaravotLocationController::class, 'get_district'])->name('get_district');
-    Route::get('get_village', [LaravotLocationController::class, 'get_village'])->name('get_village');
     // admin
     Route::middleware('permission:admin')->group(function () {
         Route::resource('user', UserController::class);

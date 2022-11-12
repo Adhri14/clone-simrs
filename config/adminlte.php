@@ -701,6 +701,13 @@ return [
                     'can' => 'admin',
                 ],
                 [
+                    'text' => 'Barcode',
+                    'icon'    => 'fas fa-barcode',
+                    'url'  => 'barcode',
+                    'shift'   => 'ml-2',
+                    'can' => 'admin',
+                ],
+                [
                     'text' => 'Thermal Printer',
                     'icon'    => 'fas fa-print',
                     'url'  => 'thermal_printer',
