@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers\SatuSehat;
 
-use App\Http\Controllers\Controller;
-use App\Models\SIMRS\Patient;
+use App\Http\Controllers\API\ApiController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Validator;
 use RealRashid\SweetAlert\Facades\Alert;
 
-class PatientController extends Controller
+class PatientController extends ApiController
 {
     public function index(Request $request)
     {
@@ -53,6 +53,29 @@ class PatientController extends Controller
         $token = Session::get('tokenSatuSehat');
         $url =  env('SATUSEHAT_BASE_URL') . "/Patient?identifier=https://fhir.kemkes.go.id/id/nik|" . $nik;
         $response = Http::withToken($token)->get($url);
+        if ($response->status() == 401) {
+            $token = new TokenController();
+            $token->token();
+        }
+        return response()->json($response->json(), $response->status());
+    }
+    public function patient_by_name(Request $request)
+    {
+        $validator = Validator::make(request()->all(), [
+            "birthdate" => "required",
+            "gender" => "required",
+            "name" => "required",
+        ]);
+        if ($validator->fails()) {
+            return $this->sendError('Data Belum Lengkap', $validator->errors()->first(), 400);
+        }
+        $token = Session::get('tokenSatuSehat');
+        $url =  env('SATUSEHAT_BASE_URL') . "/Patient?name=" . $request->name . "&birthdate=" . $request->birthdate . "&gender=" . $request->gender;
+        $response = Http::withToken($token)->get($url);
+        if ($response->status() == 401) {
+            $token = new TokenController();
+            $token->token();
+        }
         return response()->json($response->json(), $response->status());
     }
     public function patient_by_id($id)
@@ -60,6 +83,10 @@ class PatientController extends Controller
         $token = Session::get('tokenSatuSehat');
         $url =  env('SATUSEHAT_BASE_URL') . "/Patient/" . $id;
         $response = Http::withToken($token)->get($url);
-        return response()->json($response->json(), $response->status());
+        if ($response->status() == 401) {
+            $token = new TokenController();
+            $token->token();
+        }
+        return response()->json($response->json(), $response->response());
     }
 }

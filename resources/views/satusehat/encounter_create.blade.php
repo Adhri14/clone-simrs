@@ -30,7 +30,7 @@
             </x-adminlte-card>
         </div>
     </div>
-    <x-adminlte-modal id="modalPatient" title="Pencarian Pasien" size="xl" theme="success" v-centered>
+    <x-adminlte-modal id="modalPatient" title="Pencarian Pasien" size="xl" theme="warning" v-centered>
         <div class="row">
             <div class="col-12">
                 <x-adminlte-card title="Pencarian Patient" theme="secondary" collapsible>
@@ -47,7 +47,7 @@
                             </x-slot>
                         </x-adminlte-input>
                     </form>
-                    <form name="formPatientByNIK" id="formPatientByNIK">
+                    <form name="formPatientByName" id="formPatientByName">
                         <div class="row">
                             <div class="col-3">
                                 @php
@@ -79,25 +79,18 @@
                 </x-adminlte-card>
             </div>
             <div class="col-12">
-                {{-- <x-adminlte-card title="Hasil Pencarian Patient" theme="secondary" collapsible>
-                    @php
-                        $heads = ['Identifier', 'Nama', 'Gender', 'Action'];
-                    @endphp
-                    <x-adminlte-datatable id="table1" class="text-xs" :heads="$heads" :config="$config" hoverable
-                        bordered compressed>
-                    </x-adminlte-datatable>
-                </x-adminlte-card> --}}
-
-                <table class="table table-bordered table-sm table-striped" id="table1">
-                    <thead>
-                        <th>Identifier</th>
-                        <th>NIK</th>
-                        <th>Nama</th>
-                        <th>Gender</th>
-                        <th>Status</th>
-                        <th>Action</th>
-                    </thead>
-                </table>
+                <x-adminlte-card title="Hasil Pencarian Patient" theme="secondary" collapsible>
+                    <table class="table table-bordered table-sm table-striped" id="table1">
+                        <thead>
+                            <th>Identifier</th>
+                            <th>NIK</th>
+                            <th>Nama</th>
+                            <th>Gender</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </thead>
+                    </table>
+                </x-adminlte-card>
             </div>
         </div>
         <x-slot name="footerSlot">
@@ -110,7 +103,6 @@
 @section('plugins.Select2', true)
 @section('plugins.TempusDominusBs4', true)
 @section('plugins.Sweetalert2', true)
-
 @section('js')
     <script>
         $(function() {
@@ -126,12 +118,18 @@
             });
             $('#btnPatientByName').click(function() {
                 $.LoadingOverlay("show");
-                var nik = $('#nik').val();
+                var birthdate = $('#birthdate').val();
+                var gender = $('#gender').find(":selected").val();
+                var name = $('#name').val();
+                var data = $('#formPatientByName').serialize();
                 $.ajax({
-                    url: "{{ route('api.satusehat.patient_index') }}" + "/nik/" + nik,
+                    url: "{{ route('api.satusehat.patient_by_name') }}",
+                    data: data,
                     type: "GET",
                     dataType: 'json',
                     success: function(data) {
+                        console.log(data);
+                        $('#table1').find("tr:gt(0)").empty();
                         $.each(data.entry, function(key, value) {
                             console.log(key, value.resource);
                             if (value.resource.active) {
@@ -139,29 +137,38 @@
                             } else {
                                 var status = "Non-aktif";
                             }
-                            $('#table1').find("tr:gt(0)").empty();
-                            $('#table1').append('<tr><td>' + value.resource.identifier[
+                            $('#table1').append('<tr><td>' + value.resource
+                                .identifier[
                                     0]
-                                .value + '</td><td>' + value.resource.identifier[
+                                .value + '</td><td>' + value.resource
+                                .identifier[
                                     1]
                                 .value + ' </td><td>' + value.resource.name[0]
                                 .text + '</td><td>' + value.resource.gender +
                                 '</td><td>' + status + '</td><td>' +
                                 "<button class='btn btn-warning btn-xs'>Pilih</button> </td></tr>"
                             );
-
-
                         })
-                        swal.fire(
-                            'Success',
-                            'Pasien Berhasil Ditemukan',
-                            'success'
-                        );
+                        if (data.total > 0) {
+                            swal.fire(
+                                'Success',
+                                'Ditemukan ' + data.total + ' Pasien',
+                                'success'
+                            );
+                        } else {
+                            swal.fire(
+                                'Not Found',
+                                'Ditemukan ' + data.total + ' Pasien',
+                                'error'
+                            );
+
+                        }
                     },
                     error: function(data) {
+                        console.log(data);
                         swal.fire(
-                            'Error',
                             data.statusText + ' ' + data.status,
+                            data.responseJSON.data,
                             'error'
                         );
                     }
