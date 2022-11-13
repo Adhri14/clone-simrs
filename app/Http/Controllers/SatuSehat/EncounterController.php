@@ -13,6 +13,12 @@ class EncounterController extends Controller
             'request',
         ]));
     }
+    public function create(Request $request)
+    {
+        return view('satusehat.encounter_create', compact([
+            'request',
+        ]));
+    }
 
     public function encounter_craete(Request $request)
     {

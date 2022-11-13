@@ -669,7 +669,6 @@ return [
                     'url'  => 'satusehat/location',
                     'shift'   => 'ml-2',
                     'can' => 'admin',
-                    // 'active'  => ['practitioner', 'practitioner/create', 'regex:@^practitioner(\/[0-9]+)?+$@', 'regex:@^practitioner(\/[0-9]+)?\/edit+$@',],
                 ],
                 [
                     'text' => 'Encounter',
@@ -677,6 +676,7 @@ return [
                     'url'  => 'satusehat/encounter',
                     'shift'   => 'ml-2',
                     'can' => 'admin',
+                    'active'  => ['satusehat/encounter', 'satusehat/encounter/create', ],
                 ],
                 [
                     'text' => 'Condition',

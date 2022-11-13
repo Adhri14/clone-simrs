@@ -1,0 +1,407 @@
+@extends('adminlte::page')
+@section('title', 'Encounter Create - Satu Sehat')
+@section('content_header')
+    <h1>Encounter Create</h1>
+@stop
+@section('content')
+    <div class="row">
+        <div class="col-6">
+            <x-adminlte-card title="Data Encounter" theme="secondary" collapsible>
+                <form action="{{ route('satusehat.organization.index') }}" method="get">
+                    <div class="row">
+                        <div class="col-6">
+                            <x-adminlte-input name="id_patient" igroup-size="sm" label="Identifier Patient"
+                                placeholder="ID Patient" readonly>
+                                <x-slot name="prependSlot">
+                                    <x-adminlte-button id="btnPatient" theme="primary" label="Cari Patient" />
+                                </x-slot>
+                            </x-adminlte-input>
+                        </div>
+                        <div class="col-6">
+                            <x-adminlte-input name="name_patient" igroup-size="sm" label="Nama Patient"
+                                placeholder="Nama Patient" readonly>
+                            </x-adminlte-input>
+                        </div>
+                    </div>
+
+                </form>
+                <x-adminlte-button label="Create Encounter" theme="success" title="Create Encounter" icon="fas fa-plus"
+                    onclick="window.location='{{ route('satusehat.encounter.create') }}'" />
+            </x-adminlte-card>
+        </div>
+    </div>
+    <x-adminlte-modal id="modalPatient" title="Pencarian Pasien" size="xl" theme="success" v-centered>
+        <div class="row">
+            <div class="col-12">
+                <x-adminlte-card title="Pencarian Patient" theme="secondary" collapsible>
+                    <form name="formPatientByNIK" id="formPatientByNIK">
+                        <x-adminlte-input name="nik" igroup-size="sm" label="NIK Pasien"
+                            placeholder="Masukan NIK Pasien">
+                            <x-slot name="appendSlot">
+                                <x-adminlte-button id="btnPatientByNIK" theme="primary" label="Cari Pasien" />
+                            </x-slot>
+                            <x-slot name="prependSlot">
+                                <div class="input-group-text text-primary">
+                                    <i class="fas fa-search"></i>
+                                </div>
+                            </x-slot>
+                        </x-adminlte-input>
+                    </form>
+                    <form name="formPatientByNIK" id="formPatientByNIK">
+                        <div class="row">
+                            <div class="col-3">
+                                @php
+                                    $config = ['format' => 'YYYY-MM'];
+                                @endphp
+                                <x-adminlte-input-date name="birthdate" igroup-size="sm" label="Bulan Lahir"
+                                    placeholder="Tahun Bulan Lahir" :config="$config" />
+                            </div>
+                            <div class="col-3">
+                                <x-adminlte-select name="gender" igroup-size="sm" label="Gender">
+                                    <option disabled selected>Pilih Jenis Kelamin</option>
+                                    <option value="male">Laki-laki</option>
+                                    <option value="female">Perempuan</option>
+                                    <option value="other">Lainnya</option>
+                                    <option value="unknown">Tidak Diketahui</option>
+                                </x-adminlte-select>
+                            </div>
+                            <div class="col-6">
+                                <x-adminlte-input name="name" label="Nama Pasien" igroup-size="sm"
+                                    placeholder="Nama Pasien">
+                                    <x-slot name="appendSlot">
+                                        <x-adminlte-button id="btnPatientByName" theme="primary" label="Cari Pasien" />
+                                    </x-slot>
+                                </x-adminlte-input>
+                            </div>
+
+                        </div>
+                    </form>
+                </x-adminlte-card>
+            </div>
+            <div class="col-12">
+                {{-- <x-adminlte-card title="Hasil Pencarian Patient" theme="secondary" collapsible>
+                    @php
+                        $heads = ['Identifier', 'Nama', 'Gender', 'Action'];
+                    @endphp
+                    <x-adminlte-datatable id="table1" class="text-xs" :heads="$heads" :config="$config" hoverable
+                        bordered compressed>
+                    </x-adminlte-datatable>
+                </x-adminlte-card> --}}
+
+                <table class="table table-bordered table-sm table-striped" id="table1">
+                    <thead>
+                        <th>Identifier</th>
+                        <th>NIK</th>
+                        <th>Nama</th>
+                        <th>Gender</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </thead>
+                </table>
+            </div>
+        </div>
+        <x-slot name="footerSlot">
+            <x-adminlte-button theme="danger" label="Kembali" data-dismiss="modal" />
+        </x-slot>
+    </x-adminlte-modal>
+@stop
+
+@section('plugins.Datatables', true)
+@section('plugins.Select2', true)
+@section('plugins.TempusDominusBs4', true)
+@section('plugins.Sweetalert2', true)
+
+@section('js')
+    <script>
+        $(function() {
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+            $('#btnPatient').click(function() {
+                $.LoadingOverlay("show");
+                $('#modalPatient').modal('show');
+                $.LoadingOverlay("hide");
+            });
+            $('#btnPatientByName').click(function() {
+                $.LoadingOverlay("show");
+                var nik = $('#nik').val();
+                $.ajax({
+                    url: "{{ route('api.satusehat.patient_index') }}" + "/nik/" + nik,
+                    type: "GET",
+                    dataType: 'json',
+                    success: function(data) {
+                        $.each(data.entry, function(key, value) {
+                            console.log(key, value.resource);
+                            if (value.resource.active) {
+                                var status = "Aktif";
+                            } else {
+                                var status = "Non-aktif";
+                            }
+                            $('#table1').find("tr:gt(0)").empty();
+                            $('#table1').append('<tr><td>' + value.resource.identifier[
+                                    0]
+                                .value + '</td><td>' + value.resource.identifier[
+                                    1]
+                                .value + ' </td><td>' + value.resource.name[0]
+                                .text + '</td><td>' + value.resource.gender +
+                                '</td><td>' + status + '</td><td>' +
+                                "<button class='btn btn-warning btn-xs'>Pilih</button> </td></tr>"
+                            );
+
+
+                        })
+                        swal.fire(
+                            'Success',
+                            'Pasien Berhasil Ditemukan',
+                            'success'
+                        );
+                    },
+                    error: function(data) {
+                        swal.fire(
+                            'Error',
+                            data.statusText + ' ' + data.status,
+                            'error'
+                        );
+                    }
+                });
+                $.LoadingOverlay("hide");
+            });
+            $('#btnPatientByNIK').click(function() {
+                $.LoadingOverlay("show");
+                var nik = $('#nik').val();
+                if (nik == '') {
+                    alert('Silahkan isi NIK terlebih dahulu !');
+                } else {
+                    $.ajax({
+                        url: "{{ route('api.satusehat.patient_index') }}" + "/nik/" + nik,
+                        type: "GET",
+                        dataType: 'json',
+                        success: function(data) {
+                            $('#table1').find("tr:gt(0)").empty();
+                            $.each(data.entry, function(key, value) {
+                                console.log(key, value.resource);
+                                if (value.resource.active) {
+                                    var status = "Aktif";
+                                } else {
+                                    var status = "Non-aktif";
+                                }
+                                $('#table1').append('<tr><td>' + value.resource
+                                    .identifier[
+                                        0]
+                                    .value + '</td><td>' + value.resource
+                                    .identifier[
+                                        1]
+                                    .value + ' </td><td>' + value.resource.name[0]
+                                    .text + '</td><td>' + value.resource.gender +
+                                    '</td><td>' + status + '</td><td>' +
+                                    "<button class='btn btn-warning btn-xs'>Pilih</button> </td></tr>"
+                                );
+                            })
+                            if (data.total > 0) {
+                                swal.fire(
+                                    'Success',
+                                    'Ditemukan ' + data.total + ' Pasien',
+                                    'success'
+                                );
+                            } else {
+                                swal.fire(
+                                    'Not Found',
+                                    'Ditemukan ' + data.total + ' Pasien',
+                                    'error'
+                                );
+
+                            }
+                        },
+                        error: function(data) {
+                            swal.fire(
+                                'Error',
+                                data.statusText + ' ' + data.status,
+                                'error'
+                            );
+                        }
+                    });
+                }
+                $.LoadingOverlay("hide");
+            });
+            // $('body').on('click', '.btnEdit', function() {
+            //     $.LoadingOverlay("show");
+            //     var id = $(this).data('id');
+            //     var url = "{{ route('satusehat.location.index') }}" + "/" + id + "/edit";
+            //     $.get(url, function(response) {
+            //         $('#id').val(response.id);
+            //         $('#identifier').val(response.identifier[0].value);
+            //         $('#name').val(response.name);
+            //         $('#description').val(response.description);
+            //         $('#phone').val(response.telecom[0].value);
+            //         $('#email').val(response.telecom[1].value);
+            //         $('#url').val(response.telecom[2].value);
+            //         $('#address').val(response.address.line[0]);
+            //         $('#longitude').val(response.position.longitude);
+            //         $('#latitude').val(response.position.latitude);
+            //         $('#postalCode').val(response.address.postalCode);
+            //         $('#organization_id').val(response.managingOrganization.reference);
+            //         $("#province").val(response.address.extension[0].extension[0].valueCode)
+            //             .change();
+            //         $("#city").append($(new Option(response.address.extension[0]
+            //             .extension[1].valueCode, response.address.extension[0]
+            //             .extension[1].valueCode)));
+            //         $("#district").append($(new Option(response.address.extension[0]
+            //             .extension[2].valueCode, response.address.extension[0]
+            //             .extension[2].valueCode)));
+            //         $("#village").append($(new Option(response.address.extension[0]
+            //             .extension[3].valueCode, response.address.extension[0]
+            //             .extension[3].valueCode)));
+
+            //         $('#btnStore').hide();
+            //         $('#btnUpdate').show();
+            //         $('#modalLocation').modal('show');
+            //         $.LoadingOverlay("hide");
+            //     });
+            // });
+            // $('#btnStore').click(function(e) {
+            //     $.LoadingOverlay("show");
+            //     e.preventDefault();
+            //     $.ajax({
+            //         data: $('#formOrganization').serialize(),
+            //         url: "{{ route('api.satusehat.location_store_api') }}",
+            //         type: "POST",
+            //         dataType: 'json',
+            //         success: function(data) {
+            //             swal.fire(
+            //                 'Success',
+            //                 'Data Berhasil Disimpan',
+            //                 'success'
+            //             ).then(okay => {
+            //                 if (okay) {
+            //                     $.LoadingOverlay("show");
+            //                     location.reload();
+            //                 }
+            //             });
+            //         },
+            //         error: function(data) {
+            //             console.log(data);
+            //             swal.fire(
+            //                 data.statusText + ' ' + data.status,
+            //                 data.responseJSON.original.data,
+            //                 'error'
+            //             );
+            //         }
+            //     });
+            //     $.LoadingOverlay("hide");
+            // });
+            // $('#btnUpdate').click(function(e) {
+            //     $.LoadingOverlay("show");
+            //     e.preventDefault();
+            //     var id = $('#id').val();
+            //     var url = "{{ route('api.satusehat.location_index') }}" + "/update/" + id;
+            //     $.ajax({
+            //         data: $('#formOrganization').serialize(),
+            //         url: url,
+            //         type: "PUT",
+            //         dataType: 'json',
+            //         success: function(data) {
+            //             swal.fire(
+            //                 'Success',
+            //                 'Data Berhasil Disimpan',
+            //                 'success'
+            //             ).then(okay => {
+            //                 if (okay) {
+            //                     $.LoadingOverlay("show");
+            //                     location.reload();
+            //                 }
+            //             });
+            //         },
+            //         error: function(data) {
+            //             console.log(data);
+            //             swal.fire(
+            //                 data.statusText + ' ' + data.status,
+            //                 data.responseJSON.original.data,
+            //                 'error'
+            //             );
+            //         }
+            //     });
+            //     $.LoadingOverlay("hide");
+            // });
+            // $("#city").select2({
+            //     theme: "bootstrap4",
+            //     ajax: {
+            //         url: "{{ route('get_city') }}",
+            //         type: "get",
+            //         dataType: 'json',
+            //         delay: 250,
+            //         data: function(params) {
+            //             code = $("#province").find(":selected").val();
+            //             if (code.length != 0) {
+            //                 return {
+            //                     code: code,
+            //                     search: params.term // search term
+            //                 };
+            //             } else {
+            //                 return alert('Silahkan Pilih Provinsi Terlebih Dahulu !')
+            //             }
+            //         },
+            //         processResults: function(response) {
+            //             return {
+            //                 results: response
+            //             };
+            //         },
+            //         cache: true
+            //     }
+            // });
+            // $("#district").select2({
+            //     theme: "bootstrap4",
+            //     ajax: {
+            //         url: "{{ route('get_district') }}",
+            //         type: "get",
+            //         dataType: 'json',
+            //         delay: 250,
+            //         data: function(params) {
+            //             code = $("#city").find(":selected").val();
+            //             if (code != null) {
+            //                 return {
+            //                     code: code,
+            //                     search: params.term // search term
+            //                 };
+            //             } else {
+            //                 return alert('Silahkan Pilih Kota / Kabupaten Terlebih Dahulu !')
+            //             }
+            //         },
+            //         processResults: function(response) {
+            //             return {
+            //                 results: response
+            //             };
+            //         },
+            //         cache: true
+            //     }
+            // });
+            // $("#village").select2({
+            //     theme: "bootstrap4",
+            //     ajax: {
+            //         url: "{{ route('get_village') }}",
+            //         type: "get",
+            //         dataType: 'json',
+            //         delay: 250,
+            //         data: function(params) {
+            //             code = $("#district").find(":selected").val();
+            //             if (code != null) {
+            //                 return {
+            //                     code: code,
+            //                     search: params.term // search term
+            //                 };
+            //             } else {
+            //                 return alert('Silahkan Pilih Kecamatan Terlebih Dahulu !')
+            //             }
+            //         },
+            //         processResults: function(response) {
+            //             return {
+            //                 results: response
+            //             };
+            //         },
+            //         cache: true
+            //     }
+            // });
+        });
+    </script>
+@endsection

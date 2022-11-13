@@ -6,8 +6,8 @@
 @section('content')
     <div class="row">
         <div class="col-12">
-            <x-adminlte-card title="Filter Organization" theme="secondary" collapsible>
-                <form action="{{ route('satusehat.organization.index') }}" method="get">
+            <x-adminlte-card title="Data Encounter" theme="secondary" collapsible>
+                {{-- <form action="{{ route('satusehat.organization.index') }}" method="get">
                     <x-adminlte-input name="partOf" label="Part Of Organization" placeholder="Masukan ID Part Of Organization"
                         value="{{ $request->partOf }}">
                         <x-slot name="appendSlot">
@@ -19,9 +19,9 @@
                             </div>
                         </x-slot>
                     </x-adminlte-input>
-                </form>
-                <x-adminlte-button label="Create Organization" theme="success" title="Create Organization"
-                    icon="fas fa-plus" id="btnCreateOrganization" />
+                </form> --}}
+                <x-adminlte-button label="Create Encounter" theme="success" title="Create Encounter" icon="fas fa-plus"
+                    onclick="window.location='{{ route('satusehat.encounter.create') }}'" />
             </x-adminlte-card>
         </div>
     </div>

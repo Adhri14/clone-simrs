@@ -7,6 +7,7 @@ use App\Http\Controllers\API\WhatsappController;
 use App\Http\Controllers\PasienController;
 use App\Http\Controllers\SatuSehat\LocationController;
 use App\Http\Controllers\SatuSehat\OrganizationController;
+use App\Http\Controllers\SatuSehat\PatientController;
 use App\Http\Controllers\SIMRS\ICD10Controller;
 use App\Http\Controllers\VclaimController;
 use Illuminate\Http\Request;
@@ -112,6 +113,11 @@ Route::prefix('simrs')->name('api.simrs.')->group(function () {
 
 
 Route::prefix('satusehat')->name('api.satusehat.')->group(function () {
+
+    Route::get('patient/', [PatientController::class, 'index'])->name('patient_index');
+    Route::get('patient/nik/{nik}', [PatientController::class, 'patient_by_nik'])->name('patient_by_nik');
+
+
     Route::get('organization/', [OrganizationController::class, 'index'])->name('organization_index');
     Route::get('organization/{id}', [OrganizationController::class, 'organization_by_id'])->name('organization_by_id');
     Route::post('organization/store', [OrganizationController::class, 'organization_store_api'])->name('organization_store_api');
