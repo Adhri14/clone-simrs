@@ -140,7 +140,7 @@ class EncounterController extends Controller
             "location" => [
                 [
                     "location" => [
-                        "reference" => "Location/3399561c-ee8f-4b89-b33b-716c78c78f40",
+                        "reference" => "Location/3399|561c-ee8f-4b89-b33b-716c78c78f40",
                         "display" => "Ruang 1A, Poliklinik Bedah Rawat Jalan Terpadu, Lantai 2, Gedung G"
                     ]
                 ]

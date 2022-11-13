@@ -54,8 +54,8 @@ class PatientController extends ApiController
         $url =  env('SATUSEHAT_BASE_URL') . "/Patient?identifier=https://fhir.kemkes.go.id/id/nik|" . $nik;
         $response = Http::withToken($token)->get($url);
         if ($response->status() == 401) {
-            $token = new TokenController();
-            $token->token();
+            $refresh_token = new TokenController();
+            $refresh_token->token();
         }
         return response()->json($response->json(), $response->status());
     }
@@ -73,8 +73,8 @@ class PatientController extends ApiController
         $url =  env('SATUSEHAT_BASE_URL') . "/Patient?name=" . $request->name . "&birthdate=" . $request->birthdate . "&gender=" . $request->gender;
         $response = Http::withToken($token)->get($url);
         if ($response->status() == 401) {
-            $token = new TokenController();
-            $token->token();
+            $refresh_token = new TokenController();
+            $refresh_token->token();
         }
         return response()->json($response->json(), $response->status());
     }
@@ -84,9 +84,9 @@ class PatientController extends ApiController
         $url =  env('SATUSEHAT_BASE_URL') . "/Patient/" . $id;
         $response = Http::withToken($token)->get($url);
         if ($response->status() == 401) {
-            $token = new TokenController();
-            $token->token();
+            $refresh_token = new TokenController();
+            $refresh_token->token();
         }
-        return response()->json($response->json(), $response->response());
+        return response()->json($response->json(), $response->status());
     }
 }

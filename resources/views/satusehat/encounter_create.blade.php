@@ -146,7 +146,9 @@
                                 .value + ' </td><td>' + value.resource.name[0]
                                 .text + '</td><td>' + value.resource.gender +
                                 '</td><td>' + status + '</td><td>' +
-                                "<button class='btn btn-warning btn-xs'>Pilih</button> </td></tr>"
+                                "<button class='btn btn-warning btn-xs btnPilihPatient' data-id=" +
+                                value.resource.identifier[0].value +
+                                ">Pilih</button> </td></tr>"
                             );
                         })
                         if (data.total > 0) {
@@ -203,7 +205,9 @@
                                     .value + ' </td><td>' + value.resource.name[0]
                                     .text + '</td><td>' + value.resource.gender +
                                     '</td><td>' + status + '</td><td>' +
-                                    "<button class='btn btn-warning btn-xs'>Pilih</button> </td></tr>"
+                                    "<button class='btn btn-warning btn-xs btnPilihPatient' data-id=" +
+                                    value.resource.identifier[0].value +
+                                    ">Pilih</button> </td></tr>"
                                 );
                             })
                             if (data.total > 0) {
@@ -232,41 +236,28 @@
                 }
                 $.LoadingOverlay("hide");
             });
-            // $('body').on('click', '.btnEdit', function() {
-            //     $.LoadingOverlay("show");
-            //     var id = $(this).data('id');
-            //     var url = "{{ route('satusehat.location.index') }}" + "/" + id + "/edit";
-            //     $.get(url, function(response) {
-            //         $('#id').val(response.id);
-            //         $('#identifier').val(response.identifier[0].value);
-            //         $('#name').val(response.name);
-            //         $('#description').val(response.description);
-            //         $('#phone').val(response.telecom[0].value);
-            //         $('#email').val(response.telecom[1].value);
-            //         $('#url').val(response.telecom[2].value);
-            //         $('#address').val(response.address.line[0]);
-            //         $('#longitude').val(response.position.longitude);
-            //         $('#latitude').val(response.position.latitude);
-            //         $('#postalCode').val(response.address.postalCode);
-            //         $('#organization_id').val(response.managingOrganization.reference);
-            //         $("#province").val(response.address.extension[0].extension[0].valueCode)
-            //             .change();
-            //         $("#city").append($(new Option(response.address.extension[0]
-            //             .extension[1].valueCode, response.address.extension[0]
-            //             .extension[1].valueCode)));
-            //         $("#district").append($(new Option(response.address.extension[0]
-            //             .extension[2].valueCode, response.address.extension[0]
-            //             .extension[2].valueCode)));
-            //         $("#village").append($(new Option(response.address.extension[0]
-            //             .extension[3].valueCode, response.address.extension[0]
-            //             .extension[3].valueCode)));
-
-            //         $('#btnStore').hide();
-            //         $('#btnUpdate').show();
-            //         $('#modalLocation').modal('show');
-            //         $.LoadingOverlay("hide");
-            //     });
-            // });
+            $('body').on('click', '.btnPilihPatient', function() {
+                $.LoadingOverlay("show");
+                var id = $(this).data('id');
+                $.ajax({
+                    url: "{{ route('api.satusehat.patient_index') }}" + "/id/" + id,
+                    type: "GET",
+                    dataType: 'json',
+                    success: function(data) {
+                        console.log(data);
+                        $.LoadingOverlay("hide");
+                    },
+                    error: function(data) {
+                        console.log(data);
+                        swal.fire(
+                            data.statusText + ' ' + data.status,
+                            data.responseJSON.data,
+                            'error'
+                        );
+                        $.LoadingOverlay("hide");
+                    }
+                });
+            });
             // $('#btnStore').click(function(e) {
             //     $.LoadingOverlay("show");
             //     e.preventDefault();

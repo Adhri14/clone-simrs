@@ -113,11 +113,10 @@ Route::prefix('simrs')->name('api.simrs.')->group(function () {
 
 
 Route::prefix('satusehat')->name('api.satusehat.')->group(function () {
-
     Route::get('patient/', [PatientController::class, 'index'])->name('patient_index');
     Route::get('patient/nik/{nik}', [PatientController::class, 'patient_by_nik'])->name('patient_by_nik');
+    Route::get('patient/id/{id}', [PatientController::class, 'patient_by_id'])->name('patient_by_id');
     Route::get('patient/name', [PatientController::class, 'patient_by_name'])->name('patient_by_name');
-
 
     Route::get('organization/', [OrganizationController::class, 'index'])->name('organization_index');
     Route::get('organization/{id}', [OrganizationController::class, 'organization_by_id'])->name('organization_by_id');
