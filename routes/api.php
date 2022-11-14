@@ -8,6 +8,7 @@ use App\Http\Controllers\PasienController;
 use App\Http\Controllers\SatuSehat\LocationController;
 use App\Http\Controllers\SatuSehat\OrganizationController;
 use App\Http\Controllers\SatuSehat\PatientController;
+use App\Http\Controllers\SatuSehat\PractitionerController;
 use App\Http\Controllers\SIMRS\ICD10Controller;
 use App\Http\Controllers\VclaimController;
 use Illuminate\Http\Request;
@@ -117,6 +118,11 @@ Route::prefix('satusehat')->name('api.satusehat.')->group(function () {
     Route::get('patient/nik/{nik}', [PatientController::class, 'patient_by_nik'])->name('patient_by_nik');
     Route::get('patient/id/{id}', [PatientController::class, 'patient_by_id'])->name('patient_by_id');
     Route::get('patient/name', [PatientController::class, 'patient_by_name'])->name('patient_by_name');
+
+    Route::get('practitioner/', [PractitionerController::class, 'index'])->name('practitioner_index');
+    Route::get('practitioner/nik/{nik}', [PractitionerController::class, 'practitioner_by_nik'])->name('practitioner_by_nik');
+    Route::get('practitioner/id/{id}', [PractitionerController::class, 'practitioner_by_id'])->name('practitioner_by_id');
+    Route::get('practitioner/name', [PractitionerController::class, 'practitioner_by_name'])->name('practitioner_by_name');
 
     Route::get('organization/', [OrganizationController::class, 'index'])->name('organization_index');
     Route::get('organization/{id}', [OrganizationController::class, 'organization_by_id'])->name('organization_by_id');

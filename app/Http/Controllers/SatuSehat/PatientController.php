@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\SatuSehat;
 
 use App\Http\Controllers\API\ApiController;
+use App\Models\SIMRS\Token;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Session;
@@ -50,7 +51,7 @@ class PatientController extends ApiController
     // API SATU SEHAT
     public function patient_by_nik($nik)
     {
-        $token = Session::get('tokenSatuSehat');
+        $token = Token::latest()->first()->access_token;
         $url =  env('SATUSEHAT_BASE_URL') . "/Patient?identifier=https://fhir.kemkes.go.id/id/nik|" . $nik;
         $response = Http::withToken($token)->get($url);
         if ($response->status() == 401) {
@@ -69,7 +70,7 @@ class PatientController extends ApiController
         if ($validator->fails()) {
             return $this->sendError('Data Belum Lengkap', $validator->errors()->first(), 400);
         }
-        $token = Session::get('tokenSatuSehat');
+        $token = Token::latest()->first()->access_token;
         $url =  env('SATUSEHAT_BASE_URL') . "/Patient?name=" . $request->name . "&birthdate=" . $request->birthdate . "&gender=" . $request->gender;
         $response = Http::withToken($token)->get($url);
         if ($response->status() == 401) {
@@ -80,7 +81,7 @@ class PatientController extends ApiController
     }
     public function patient_by_id($id)
     {
-        $token = Session::get('tokenSatuSehat');
+        $token = Token::latest()->first()->access_token;
         $url =  env('SATUSEHAT_BASE_URL') . "/Patient/" . $id;
         $response = Http::withToken($token)->get($url);
         if ($response->status() == 401) {

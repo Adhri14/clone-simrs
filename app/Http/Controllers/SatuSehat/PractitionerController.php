@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\SatuSehat;
 
 use App\Http\Controllers\Controller;
+use App\Models\SIMRS\Token;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Session;
@@ -50,16 +51,24 @@ class PractitionerController extends Controller
     // API SATU SEHAT
     public function practitioner_by_nik($nik)
     {
-        $token = Session::get('tokenSatuSehat');
+        $token = Token::latest()->first()->access_token;
         $url =  env('SATUSEHAT_BASE_URL') . "/Practitioner?identifier=https://fhir.kemkes.go.id/id/nik|" . $nik;
         $response = Http::withToken($token)->get($url);
+        if ($response->status() == 401) {
+            $refresh_token = new TokenController();
+            $refresh_token->token();
+        }
         return response()->json($response->json(), $response->status());
     }
     public function practitioner_by_id($id)
     {
-        $token = Session::get('tokenSatuSehat');
+        $token = Token::latest()->first()->access_token;
         $url =  env('SATUSEHAT_BASE_URL') . "/Practitioner/" . $id;
         $response = Http::withToken($token)->get($url);
+        if ($response->status() == 401) {
+            $refresh_token = new TokenController();
+            $refresh_token->token();
+        }
         return response()->json($response->json(), $response->status());
     }
 }
