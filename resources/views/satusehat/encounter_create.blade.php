@@ -10,7 +10,7 @@
                 <form action="{{ route('satusehat.organization.index') }}" method="get">
                     <div class="row">
                         <div class="col-6">
-                            <x-adminlte-input name="id_patient" igroup-size="sm" label="Identifier Patient"
+                            <x-adminlte-input name="patient_id" igroup-size="sm" label="Identifier Patient"
                                 placeholder="ID Patient" readonly>
                                 <x-slot name="prependSlot">
                                     <x-adminlte-button id="btnPatient" theme="primary" label="Cari Patient" />
@@ -18,7 +18,7 @@
                             </x-adminlte-input>
                         </div>
                         <div class="col-6">
-                            <x-adminlte-input name="name_patient" igroup-size="sm" label="Nama Patient"
+                            <x-adminlte-input name="patient_name" igroup-size="sm" label="Nama Patient"
                                 placeholder="Nama Patient" readonly>
                             </x-adminlte-input>
                         </div>
@@ -244,7 +244,9 @@
                     type: "GET",
                     dataType: 'json',
                     success: function(data) {
-                        console.log(data);
+                        $('#patient_id').val(data.id);
+                        $('#patient_name').val(data.name[0].text);
+                        $('#modalPatient').modal('hide');
                         $.LoadingOverlay("hide");
                     },
                     error: function(data) {
