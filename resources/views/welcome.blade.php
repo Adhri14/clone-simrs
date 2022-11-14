@@ -13,11 +13,6 @@
     <link href="{{ asset('assets/img/logo rs waled ico.png') }}" rel="icon">
     <link href="{{ asset('assets/img/logo rs waled ico.png') }}" rel="apple-touch-icon">
 
-    <!-- Google Fonts -->
-    {{-- <link
-        href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
-        rel="stylesheet"> --}}
-
     <!-- Vendor CSS Files -->
     <link href="{{ asset('assets/vendor/animate.css/animate.min.css') }}" rel="stylesheet">
     <link href="{{ asset('assets/vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
@@ -31,16 +26,16 @@
     <!-- Template Main CSS File -->
     <link href="{{ asset('assets/css/style.css') }}" rel="stylesheet">
 
-    <!-- =======================================================
-  * Template Name: Medilab - v4.6.0
-  * Template URL: https://bootstrapmade.com/medilab-free-medical-bootstrap-theme/
-  * Author: BootstrapMade.com
-  * License: https://bootstrapmade.com/license/
-  ======================================================== -->
+    <style>
+        .about .video-box {
+            background: url('rsud-waled-sejarah-scaled.jpg') center center no-repeat;
+            background-size: cover;
+            min-height: 500px;
+        }
+    </style>
 </head>
 
 <body>
-
     <!-- ======= Top Bar ======= -->
     <div id="topbar" class="d-flex align-items-center fixed-top">
         <div class="container d-flex justify-content-between">
@@ -56,7 +51,6 @@
             </div>
         </div>
     </div>
-
     <header id="header" class="fixed-top">
         <div class="container d-flex align-items-center">
             <a href="/" class="logo m-2"><img src="{{ asset('assets/img/logo rs waled ico.png') }}"
@@ -77,7 +71,6 @@
             </a>
         </div>
     </header>
-
     <section id="hero" class="d-flex align-items-center">
         <div class="container">
             <h1>SIM RSUD Waled</h1>
@@ -85,7 +78,6 @@
             {{-- <a href="{{route('pasien.create')}}" class="btn-get-started scrollto">Daftar Sebagai Pasien</a> --}}
         </div>
     </section><!-- End Hero -->
-
     <main id="main">
         <!-- ======= Why Us Section ======= -->
         <section id="why-us" class="why-us">
@@ -95,10 +87,11 @@
                         <div class="content">
                             <h3>Apa sih SIM RSUD Waled ?</h3>
                             <p>
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-                                incididunt ut labore et dolore magna aliqua. Duis aute irure dolor in reprehenderit
-                                Asperiores dolores sed et. Tenetur quia eos. Autem tempore quibusdam vel necessitatibus
-                                optio ad corporis.
+                                SIMRS adalah suatu sistem teknologi informasi komunikasi yang
+                                memproses dan mengintegrasikan seluruh alur proses pelayanan
+                                Rumah Sakit dalam bentuk jaringan koordinasi, pelaporan dan
+                                prosedur administrasi untuk memperoleh informasi secara tepat dan
+                                akurat, dan merupakan bagian dari Sistem Informasi Kesehatan.
                             </p>
                             <div class="text-center">
                                 <a href="{{ route('login') }}" class="more-btn">
@@ -187,20 +180,18 @@
             </div>
         </section><!-- End About Section -->
     </main><!-- End #main -->
-
     <!-- ======= Footer ======= -->
     <footer id="footer">
-
-        {{-- <div class="footer-top">
+        <div class="footer-top">
             <div class="container">
                 <div class="row">
 
                     <div class="col-lg-3 col-md-6 footer-contact">
-                        <h3>SIM RSUD Waled</h3>
+                        <h3>RSUD Waled</h3>
                         <p>
-                            A108 Adam Street <br>
-                            New York, NY 535022<br>
-                            United States <br><br>
+                            Jl. Prabu Kiansantang No.4 <br>
+                            Kecamatan Waled Kabupaten Cirebon<br>
+                            Jawa Barat 45187 <br><br>
                             <strong>Phone:</strong> +1 5589 55488 55<br>
                             <strong>Email:</strong> info@example.com<br>
                         </p>
@@ -218,13 +209,10 @@
                     </div>
 
                     <div class="col-lg-3 col-md-6 footer-links">
-                        <h4>Our Services</h4>
+                        <h4>Services Integration</h4>
                         <ul>
-                            <li><i class="bx bx-chevron-right"></i> <a href="#">Web Design</a></li>
-                            <li><i class="bx bx-chevron-right"></i> <a href="#">Web Development</a></li>
-                            <li><i class="bx bx-chevron-right"></i> <a href="#">Product Management</a></li>
-                            <li><i class="bx bx-chevron-right"></i> <a href="#">Marketing</a></li>
-                            <li><i class="bx bx-chevron-right"></i> <a href="#">Graphic Design</a></li>
+                            <li><i class="bx bx-chevron-right"></i> <a href="#">Vclaim & Antrian BPJS</a></li>
+                            <li><i class="bx bx-chevron-right"></i> <a href="#">Satu Sehat Kemenkes</a></li>
                         </ul>
                     </div>
 
@@ -238,7 +226,7 @@
 
                 </div>
             </div>
-        </div> --}}
+        </div>
 
         <div class="container d-md-flex py-4">
 
@@ -246,7 +234,7 @@
                 <div class="copyright">
                     &copy; Copyright <strong><span>SIM RSUD Waled</span></strong>. All Rights Reserved
                 </div>
-                <div class="credits">
+                <div class="cblackits">
                     <!-- All the links in the footer should remain intact. -->
                     <!-- You can delete the links only if you purchased the pro version. -->
                     <!-- Licensing information: https://bootstrapmade.com/license/ -->
@@ -263,21 +251,17 @@
             </div>
         </div>
     </footer><!-- End Footer -->
-
     <div id="preloader"></div>
     <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i
             class="bi bi-arrow-up-short"></i></a>
-
     <!-- Vendor JS Files -->
     <script src="{{ asset('assets/vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('assets/vendor/glightbox/js/glightbox.min.js') }}"></script>
     <script src="{{ asset('assets/vendor/php-email-form/validate.js') }}"></script>
     {{-- <script src="{{ asset('assets/vendor/purecounter/purecounter.js') }}"></script> --}}
     <script src="{{ asset('assets/vendor/swiper/swiper-bundle.min.js') }}"></script>
-
     <!-- Template Main JS File -->
     <script src="{{ asset('assets/js/main.js') }}"></script>
-
 </body>
 
 </html>
