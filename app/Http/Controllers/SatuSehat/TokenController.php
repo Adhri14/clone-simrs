@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\SatuSehat;
 
 use App\Http\Controllers\Controller;
+use App\Models\SIMRS\Token;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
@@ -14,7 +15,10 @@ class TokenController extends Controller
 {
     public function status()
     {
-        return view('satusehat.status');
+        $token = Token::latest()->first();
+        return view('satusehat.status',compact([
+            'token'
+        ]));
     }
     public function refresh_token()
     {
@@ -35,10 +39,16 @@ class TokenController extends Controller
             'client_secret' => env('SATUSEHAT_SECRET_ID'),
         ]);
         if ($response->successful()) {
-            $json = json_decode($response);
-            Session::put('tokenSatuSehat', $json->access_token);
-            Session::put('TimestampSatuSehat', Carbon::now());
-            Log::notice('Auth Token Satu Sehat : ' . $json->access_token);
+            $json = $response->json();
+            // dd($json['access_token']);
+            Token::create([
+                'access_token' => $json['access_token'],
+                'application_name'=> $json['application_name'],
+                'organization_name'=> $json['organization_name'],
+                'token_type'=> $json['token_type'],
+                'issued_at'=> $json['issued_at'],
+            ]);
+            Log::notice('Auth Token Satu Sehat : ' . $json['access_token']);
         }
         return response()->json($response->json(), $response->status());
     }
