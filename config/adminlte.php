@@ -710,14 +710,14 @@ return [
                 [
                     'text' => 'Scan File',
                     'icon'    => 'fas fa-print',
-                    'url'  => 'thermal_printer',
+                    'url'  => 'scan_file',
                     'shift'   => 'ml-2',
                     'can' => 'admin',
                 ],
                 [
                     'text' => 'Invoice Print',
                     'icon'    => 'fas fa-receipt',
-                    'url'  => 'thermal_printer',
+                    'url'  => 'invoice',
                     'shift'   => 'ml-2',
                     'can' => 'admin',
                 ],
