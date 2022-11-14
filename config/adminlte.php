@@ -694,16 +694,9 @@ return [
             'can' => 'admin',
             'submenu' => [
                 [
-                    'text' => 'Barcode & QR Code',
-                    'icon'    => 'fas fa-barcode',
-                    'url'  => 'barcode',
-                    'shift'   => 'ml-2',
-                    'can' => 'admin',
-                ],
-                [
-                    'text' => 'Scan QR Code',
+                    'text' => 'Bar & QR Code Scanner',
                     'icon'    => 'fas fa-qrcode',
-                    'url'  => 'qrcode',
+                    'url'  => 'bar_qr_scanner',
                     'shift'   => 'ml-2',
                     'can' => 'admin',
                 ],

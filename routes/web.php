@@ -161,7 +161,7 @@ Route::get('kpo/tanggal/{tanggal}', [KPOController::class, 'kunjungan_tanggal'])
 Route::get('get_city', [LaravotLocationController::class, 'get_city'])->name('get_city');
 Route::get('get_district', [LaravotLocationController::class, 'get_district'])->name('get_district');
 Route::get('get_village', [LaravotLocationController::class, 'get_village'])->name('get_village');
-Route::get('barcode', [BarcodeController::class, 'index'])->name('barcode');
+Route::get('bar_qr_scanner', [BarcodeController::class, 'scanner'])->name('bar_qr_scanner');
 // auth
 Route::middleware('auth')->group(function () {
     // admin
