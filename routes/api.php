@@ -5,6 +5,7 @@ use App\Http\Controllers\API\AntrianBPJSController;
 use App\Http\Controllers\API\VclaimBPJSController;
 use App\Http\Controllers\API\WhatsappController;
 use App\Http\Controllers\PasienController;
+use App\Http\Controllers\SatuSehat\EncounterController;
 use App\Http\Controllers\SatuSehat\LocationController;
 use App\Http\Controllers\SatuSehat\OrganizationController;
 use App\Http\Controllers\SatuSehat\PatientController;
@@ -133,4 +134,7 @@ Route::prefix('satusehat')->name('api.satusehat.')->group(function () {
     // Route::get('location/show/{id}', [LocationController::class, 'edit'])->name('location_id');
     Route::post('location/store', [LocationController::class, 'location_store_api'])->name('location_store_api');
     Route::put('location/update/{id}', [LocationController::class, 'location_update_api'])->name('location_update_api');
+
+    Route::get('encounter/', [EncounterController::class, 'index'])->name('encounter_index');
+    Route::post('encounter/store', [EncounterController::class, 'encounter_store_api'])->name('encounter_store_api');
 });

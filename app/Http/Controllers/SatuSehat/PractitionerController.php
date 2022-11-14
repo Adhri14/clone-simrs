@@ -14,7 +14,6 @@ class PractitionerController extends Controller
     public function index(Request $request)
     {
         $practitioner = null;
-        $token = new TokenController();
         if (isset($request->nik)) {
             $response = $this->practitioner_by_nik($request->nik);
             $data = $response->getData();

@@ -38,6 +38,12 @@
                             </x-adminlte-input>
                         </div>
                     </div>
+                    <x-adminlte-select2 name="location_id" label="Location">
+                        <option value="" selected disabled>Pilih Location</option>
+                        @foreach ($location as $code => $name)
+                            <option value="{{ $code }}">{{ $name }}</option>
+                        @endforeach
+                    </x-adminlte-select2>
                 </form>
                 <x-adminlte-button label="Create Encounter" theme="success" title="Create Encounter" icon="fas fa-plus"
                     onclick="window.location='{{ route('satusehat.encounter.create') }}'" />
@@ -485,148 +491,10 @@
                     }
                 });
             });
-            // $('#btnStore').click(function(e) {
-            //     $.LoadingOverlay("show");
-            //     e.preventDefault();
-            //     $.ajax({
-            //         data: $('#formOrganization').serialize(),
-            //         url: "{{ route('api.satusehat.location_store_api') }}",
-            //         type: "POST",
-            //         dataType: 'json',
-            //         success: function(data) {
-            //             swal.fire(
-            //                 'Success',
-            //                 'Data Berhasil Disimpan',
-            //                 'success'
-            //             ).then(okay => {
-            //                 if (okay) {
-            //                     $.LoadingOverlay("show");
-            //                     location.reload();
-            //                 }
-            //             });
-            //         },
-            //         error: function(data) {
-            //             console.log(data);
-            //             swal.fire(
-            //                 data.statusText + ' ' + data.status,
-            //                 data.responseJSON.original.data,
-            //                 'error'
-            //             );
-            //         }
-            //     });
-            //     $.LoadingOverlay("hide");
-            // });
-            // $('#btnUpdate').click(function(e) {
-            //     $.LoadingOverlay("show");
-            //     e.preventDefault();
-            //     var id = $('#id').val();
-            //     var url = "{{ route('api.satusehat.location_index') }}" + "/update/" + id;
-            //     $.ajax({
-            //         data: $('#formOrganization').serialize(),
-            //         url: url,
-            //         type: "PUT",
-            //         dataType: 'json',
-            //         success: function(data) {
-            //             swal.fire(
-            //                 'Success',
-            //                 'Data Berhasil Disimpan',
-            //                 'success'
-            //             ).then(okay => {
-            //                 if (okay) {
-            //                     $.LoadingOverlay("show");
-            //                     location.reload();
-            //                 }
-            //             });
-            //         },
-            //         error: function(data) {
-            //             console.log(data);
-            //             swal.fire(
-            //                 data.statusText + ' ' + data.status,
-            //                 data.responseJSON.original.data,
-            //                 'error'
-            //             );
-            //         }
-            //     });
-            //     $.LoadingOverlay("hide");
-            // });
-            // $("#city").select2({
-            //     theme: "bootstrap4",
-            //     ajax: {
-            //         url: "{{ route('get_city') }}",
-            //         type: "get",
-            //         dataType: 'json',
-            //         delay: 250,
-            //         data: function(params) {
-            //             code = $("#province").find(":selected").val();
-            //             if (code.length != 0) {
-            //                 return {
-            //                     code: code,
-            //                     search: params.term // search term
-            //                 };
-            //             } else {
-            //                 return alert('Silahkan Pilih Provinsi Terlebih Dahulu !')
-            //             }
-            //         },
-            //         processResults: function(response) {
-            //             return {
-            //                 results: response
-            //             };
-            //         },
-            //         cache: true
-            //     }
-            // });
-            // $("#district").select2({
-            //     theme: "bootstrap4",
-            //     ajax: {
-            //         url: "{{ route('get_district') }}",
-            //         type: "get",
-            //         dataType: 'json',
-            //         delay: 250,
-            //         data: function(params) {
-            //             code = $("#city").find(":selected").val();
-            //             if (code != null) {
-            //                 return {
-            //                     code: code,
-            //                     search: params.term // search term
-            //                 };
-            //             } else {
-            //                 return alert('Silahkan Pilih Kota / Kabupaten Terlebih Dahulu !')
-            //             }
-            //         },
-            //         processResults: function(response) {
-            //             return {
-            //                 results: response
-            //             };
-            //         },
-            //         cache: true
-            //     }
-            // });
-            // $("#village").select2({
-            //     theme: "bootstrap4",
-            //     ajax: {
-            //         url: "{{ route('get_village') }}",
-            //         type: "get",
-            //         dataType: 'json',
-            //         delay: 250,
-            //         data: function(params) {
-            //             code = $("#district").find(":selected").val();
-            //             if (code != null) {
-            //                 return {
-            //                     code: code,
-            //                     search: params.term // search term
-            //                 };
-            //             } else {
-            //                 return alert('Silahkan Pilih Kecamatan Terlebih Dahulu !')
-            //             }
-            //         },
-            //         processResults: function(response) {
-            //             return {
-            //                 results: response
-            //             };
-            //         },
-            //         cache: true
-            //     }
-            // });
+            $('#btnCreateEncounter').click(function() {
+                $.LoadingOverlay("show");
+                $.LoadingOverlay("hide");
+            });
         });
     </script>
 @endsection

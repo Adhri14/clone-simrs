@@ -5,6 +5,7 @@ namespace App\Http\Controllers\SatuSehat;
 use App\Http\Controllers\API\ApiController;
 use App\Http\Controllers\Controller;
 use App\Models\SIMRS\Location;
+use App\Models\SIMRS\Token;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Session;
@@ -127,7 +128,7 @@ class LocationController extends ApiController
         $request['cityText'] = City::firstWhere('code', $request->city)->name;
         $organization_id = explode('/', $request->organization_id);
 
-        $token = session()->get('tokenSatuSehat');
+        $token = Token::latest()->first()->access_token;
         $url =  env('SATUSEHAT_BASE_URL') . "/Location";
         $data = [
             "resourceType" => "Location",
@@ -212,7 +213,7 @@ class LocationController extends ApiController
     }
     public function edit($id)
     {
-        $token = Session::get('tokenSatuSehat');
+        $token = Token::latest()->first()->access_token;
         $url =  env('SATUSEHAT_BASE_URL') . "/Location/" . $id;
         $response = Http::withToken($token)->get($url);
         return response()->json($response->json(), $response->status());
@@ -242,7 +243,7 @@ class LocationController extends ApiController
         $request['cityText'] = City::firstWhere('code', $request->city)->name;
         $organization_id = explode('/', $request->organization_id);
 
-        $token = session()->get('tokenSatuSehat');
+        $token = Token::latest()->first()->access_token;
         $url =  env('SATUSEHAT_BASE_URL') . "/Location/" . $id;
         $data = [
             "resourceType" => "Location",
