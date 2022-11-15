@@ -187,7 +187,7 @@ Route::middleware('auth')->group(function () {
         Route::resource('practitioner', PractitionerController::class)->only(['index']);
         Route::resource('organization', OrganizationController::class)->only(['index']);
         Route::resource('location', LocationController::class)->only(['index', 'edit']);
-        Route::resource('encounter', EncounterController::class)->only(['index', 'create']);
+        Route::resource('encounter', EncounterController::class)->only(['index', 'create', 'store']);
     });
 });
 Route::get('profile', [UserController::class, 'profile'])->name('profile');

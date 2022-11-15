@@ -2,12 +2,17 @@
 
 namespace App\Http\Controllers\SatuSehat;
 
+use App\Http\Controllers\API\ApiController;
 use App\Http\Controllers\Controller;
+use App\Models\SIMRS\Encounter;
 use App\Models\SIMRS\Location;
 use App\Models\SIMRS\Token;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Validator;
+use RealRashid\SweetAlert\Facades\Alert;
 
-class EncounterController extends Controller
+class EncounterController extends ApiController
 {
     public function index(Request $request)
     {
@@ -17,34 +22,66 @@ class EncounterController extends Controller
     }
     public function create(Request $request)
     {
-        $location = Location::pluck('name', 'identifier_id');
+        $location = Location::pluck('name', 'satusehat_uuid');
         return view('satusehat.encounter_create', compact([
             'request',
             'location',
         ]));
     }
+    public function store(Request $request)
+    {
+        $response = $this->encounter_store_api($request);
+        if ($response->isSuccessful()) {
+            Alert::success($response->statusText(), 'Kunjungan Berhasil Dibuat');
+        } else {
+            Alert::error($response->statusText(), 'Kunjungan Gagal Dibuat');
+        }
+        return redirect()->route('satusehat.encounter.index');
+    }
+    // API SIMRS
+    public function encounter_store_api(Request $request)
+    {
+        $response = $this->encounter_craete($request);
+        if ($response->isSuccessful()) {
+            $json = $response->getData();
+            $data = [
+                // identifier
+                'satusehat_uuid' => $json->id, #satusehat uuid
+                'identifier_id' => $json->identifier[0]->value,
+                // location
+                'location_id' => $request->location_id,
+                'location_name' => $request->location_name,
+                // participant
+                'practitioner_id' => $request->practitioner_id,
+                'practitioner_name' => $request->practitioner_name,
+                // patient
+                'patient_id' => $request->patient_id,
+                'patient_name' => $request->patient_name,
+                // periode
+                'period_start' =>  $json->period->start,
+                // service provider / rumahsakit
+                'provider_id' => env('SATUSEHAT_ORGANIZATION_ID'),
+                'status' => $json->status,
+            ];
+            Encounter::create($data);
+        }
+        return response()->json($response, $response->status());
+    }
+    // API SATU SEHAT
     public function encounter_craete(Request $request)
     {
-
-        return $request->all();
-        // $validator = Validator::make(request()->all(), [
-        //     "organization_id" => "required",
-        //     "identifier" => "required",
-        //     "name" => "required",
-        //     "phone" => "required",
-        //     "email" => "required",
-        //     "url" => "required",
-        //     "address" => "required",
-        //     "postalCode" => "required",
-        //     "province" => "required",
-        //     "city" => "required",
-        //     "district" => "required",
-        //     "village" => "required",
-        // ]);
-        // if ($validator->fails()) {
-        //     return $this->sendError('Data Belum Lengkap', $validator->errors()->first(), 400);
-        // }
-        // $request['cityText'] = City::firstWhere('code', $request->city)->name;
+        $validator = Validator::make(request()->all(), [
+            "patient_id" => "required",
+            "patient_name" => "required",
+            "practitioner_id" => "required",
+            "practitioner_name" => "required",
+            "location_id" => "required",
+        ]);
+        if ($validator->fails()) {
+            return $this->sendError('Data Belum Lengkap', $validator->errors()->first(), 400);
+        }
+        $request['location_name'] = Location::firstWhere('satusehat_uuid', $request->location_id)->name;
+        $request['encounter_id'] = strtoupper(uniqid());
         $token = Token::latest()->first()->access_token;
         $url =  env('SATUSEHAT_BASE_URL') . "/Encounter";
         $data = [
@@ -56,8 +93,8 @@ class EncounterController extends Controller
                 "display" => "ambulatory"
             ],
             "subject" => [
-                "reference" => "Patient/P00076560468",
-                "display" => "Budi Santoso"
+                "reference" => "Patient/" . $request->patient_id,
+                "display" => $request->patient_name,
             ],
             "participant" => [
                 [
@@ -73,19 +110,19 @@ class EncounterController extends Controller
                         ]
                     ],
                     "individual" => [
-                        "reference" => "Practitioner/N10000001",
-                        "display" => "Dokter Bronsig"
+                        "reference" => "Practitioner/" . $request->practitioner_id,
+                        "display" => $request->practitioner_name,
                     ]
                 ]
             ],
             "period" => [
-                "start" => "2022-06-14T07:00:00+07:00"
+                "start" => now()
             ],
             "location" => [
                 [
                     "location" => [
-                        "reference" => "Location/3399|561c-ee8f-4b89-b33b-716c78c78f40",
-                        "display" => "Ruang 1A, Poliklinik Bedah Rawat Jalan Terpadu, Lantai 2, Gedung G"
+                        "reference" => "Location/" . $request->location_id,
+                        "display" => $request->location_name,
                     ]
                 ]
             ],
@@ -93,21 +130,20 @@ class EncounterController extends Controller
                 [
                     "status" => "arrived",
                     "period" => [
-                        "start" => "2022-06-14T07:00:00+07:00"
+                        "start" => now()
                     ]
                 ]
             ],
             "serviceProvider" => [
-                "reference" => "Organization/10000004"
+                "reference" => "Organization/" . env('SATUSEHAT_ORGANIZATION_ID')
             ],
             "identifier" => [
                 [
-                    "system" => "http://sys-ids.kemkes.go.id/encounter/10000004",
-                    "value" => "P20240001"
+                    "system" => "http://sys-ids.kemkes.go.id/encounter/" . env('SATUSEHAT_ORGANIZATION_ID'),
+                    "value" => $request->encounter_id
                 ]
             ]
         ];
-
         $response = Http::withToken($token)->post($url, $data);
         return response()->json($response->json(), $response->status());
     }

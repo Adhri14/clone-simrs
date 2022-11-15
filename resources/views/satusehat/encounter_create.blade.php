@@ -7,7 +7,8 @@
     <div class="row">
         <div class="col-6">
             <x-adminlte-card title="Data Encounter" theme="secondary" collapsible>
-                <form action="{{ route('satusehat.organization.index') }}" method="get">
+                <form action="{{ route('satusehat.encounter.store') }}" method="POST">
+                    @csrf
                     <div class="row">
                         <div class="col-6">
                             <x-adminlte-input name="patient_id" igroup-size="sm" label="Identifier Patient"
@@ -44,9 +45,9 @@
                             <option value="{{ $code }}">{{ $name }}</option>
                         @endforeach
                     </x-adminlte-select2>
+                    <x-adminlte-button label="Create Encounter" type="submit" theme="success" title="Create Encounter"
+                        icon="fas fa-plus" />
                 </form>
-                <x-adminlte-button label="Create Encounter" theme="success" title="Create Encounter" icon="fas fa-plus"
-                    onclick="window.location='{{ route('satusehat.encounter.create') }}'" />
             </x-adminlte-card>
         </div>
     </div>
