@@ -595,6 +595,13 @@ return [
                     'shift'   => 'ml-2',
                     'can' => 'admin',
                 ],
+                [
+                    'text' => 'Dokter',
+                    'icon'    => 'fas fa-user-md',
+                    'url'  => 'bpjs/antrian/dokter',
+                    'shift'   => 'ml-2',
+                    'can' => 'admin',
+                ],
             ],
         ],
         // VCLAIM BPJS

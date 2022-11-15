@@ -32,6 +32,20 @@ class AntrianController extends ApiController
             'polikliniks'
         ]));
     }
+    public function dokter()
+    {
+        $response = $this->ref_dokter();
+        if ($response->isSuccessful()) {
+            $dokters = $response->getData()->data;
+            Alert::success($response->statusText(), 'Poliklinik Antrian BPJS');
+        } else {
+            $dokters = null;
+            Alert::error($response->statusText() . ' ' . $response->status());
+        }
+        return view('bpjs.antrian.dokter', compact([
+            'dokters'
+        ]));
+    }
     // API FUNCTION
     public function signature()
     {

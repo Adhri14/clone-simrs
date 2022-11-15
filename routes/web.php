@@ -179,6 +179,7 @@ Route::middleware('auth')->group(function () {
         Route::prefix('antrian')->name('antrian.')->group(function () {
             Route::get('status', [AntrianAntrianController::class, 'status'])->name('status');
             Route::get('poli', [AntrianAntrianController::class, 'poli'])->name('poli');
+            Route::get('dokter', [AntrianAntrianController::class, 'dokter'])->name('dokter');
         });
     });
     // satu sehat

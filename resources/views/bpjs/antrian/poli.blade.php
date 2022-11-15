@@ -6,9 +6,9 @@
 @section('content')
     <div class="row">
         <div class="col-12">
-            <x-adminlte-card title="Data Location SIMRS" theme="secondary" collapsible>
+            <x-adminlte-card title="Referensi Poliklinik Antrian BPJS" theme="secondary" collapsible>
                 @php
-                    $heads = ['No', 'Nama Subspesialis', 'Kode Subspesialis', 'Nama Poli', 'Kode Poli', 'Status','Action'];
+                    $heads = ['No', 'Nama Subspesialis', 'Kode Subspesialis', 'Nama Poli', 'Kode Poli', 'Status', 'Action'];
                 @endphp
                 <x-adminlte-datatable id="table1" class="text-xs" :heads="$heads" hoverable bordered compressed>
                     @foreach ($polikliniks as $poliklinik)
