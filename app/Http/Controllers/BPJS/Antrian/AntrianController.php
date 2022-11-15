@@ -122,6 +122,23 @@ class AntrianController extends ApiController
             'taskid',
         ]));
     }
+    public function dashboard_tanggal_index(Request $request)
+    {
+        // get antrian
+        $antrians = null;
+        if (isset($request->tanggal)) {
+            $response =  $this->dashboard_tanggal($request);
+            dd($response->getData());
+            if ($response->isSuccessful()) {
+                $antrians = $response->getData()->data;
+            }
+            Alert::success($response->statusText() . ' ' . $response->status());
+        }
+        return view('bpjs.antrian.dashboard_tanggal_index', compact([
+            'request',
+            'antrians',
+        ]));
+    }
     // API FUNCTION
     public function signature()
     {
@@ -360,7 +377,7 @@ class AntrianController extends ApiController
         $url = env('ANTRIAN_URL') . "dashboard/waktutunggu/tanggal/" . $request->tanggal . "/waktu/" . $request->waktu;
         $signature = $this->signature();
         $response = Http::withHeaders($signature)->get($url);
-        return $this->response_decrypt($response, $signature);
+        return $this->response_no_decrypt($response, $signature);
     }
     public function dashboard_bulan(Request $request)
     {

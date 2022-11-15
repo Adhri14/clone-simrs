@@ -183,6 +183,8 @@ Route::middleware('auth')->group(function () {
             Route::get('jadwal_dokter', [AntrianAntrianController::class, 'jadwal_dokter'])->name('jadwal_dokter');
             Route::get('antrian', [AntrianAntrianController::class, 'antrian'])->name('antrian');
             Route::get('list_task', [AntrianAntrianController::class, 'list_task'])->name('list_task');
+            Route::get('dashboard_tanggal', [AntrianAntrianController::class, 'dashboard_tanggal_index'])->name('dashboard_tanggal');
+            Route::get('dashboard_bulan', [AntrianAntrianController::class, 'dashboard_bulan_index'])->name('dashboard_bulan');
         });
     });
     // satu sehat

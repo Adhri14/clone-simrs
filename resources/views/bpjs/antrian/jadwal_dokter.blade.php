@@ -11,7 +11,7 @@
                     @php
                         $config = ['format' => 'YYYY-MM-DD'];
                     @endphp
-                    <x-adminlte-input-date name="tanggal" value="{{ Carbon\Carbon::now()->format('Y-m-d') }}"
+                    <x-adminlte-input-date name="tanggal" value="{{ $request->tanggal }}" placeholder="Silahkan Pilih Tanggal"
                         label="Tanggal Periksa" :config="$config" />
                     <x-adminlte-select2 name="kodepoli" id="kodepoli" label="Poliklinik">
                         @foreach ($polikliniks as $poli)
@@ -26,7 +26,7 @@
             </x-adminlte-card>
             <x-adminlte-card title="Referensi Jadwal Dokter Antrian BPJS" theme="secondary" collapsible>
                 @php
-                    $heads = ['No', 'Hari', 'Jadwal', 'Poliklinik', 'Subspesialis', 'Dokter', 'Kuota', 'Status', 'Action'];
+                    $heads = ['Task ID', 'Taskname', 'Waktu RS', 'Waktu BPJS', 'Kodebooking'];
                 @endphp
                 <x-adminlte-datatable id="table2" class="text-xs" :heads="$heads" hoverable bordered compressed>
                     @isset($jadwals)

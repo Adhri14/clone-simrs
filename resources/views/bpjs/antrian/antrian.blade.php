@@ -11,7 +11,7 @@
                     @php
                         $config = ['format' => 'YYYY-MM-DD'];
                     @endphp
-                    <x-adminlte-input-date name="tanggal" value="{{ Carbon\Carbon::now()->format('Y-m-d') }}"
+                    <x-adminlte-input-date name="tanggal" value="{{ $request->tanggal }}" placeholder="Silahkan Pilih Tanggal"
                         label="Tanggal Periksa" :config="$config" />
                     <x-adminlte-select2 name="kodepoli" id="kodepoli" label="Poliklinik">
                         @foreach ($polikliniks as $poli)
