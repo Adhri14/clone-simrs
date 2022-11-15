@@ -16,8 +16,11 @@ class EncounterController extends ApiController
 {
     public function index(Request $request)
     {
+        $encounters = Encounter::get();
+
         return view('satusehat.encounter', compact([
             'request',
+            'encounters',
         ]));
     }
     public function create(Request $request)

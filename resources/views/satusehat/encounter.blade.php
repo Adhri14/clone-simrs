@@ -22,6 +22,28 @@
                 </form> --}}
                 <x-adminlte-button label="Create Encounter" theme="success" title="Create Encounter" icon="fas fa-plus"
                     onclick="window.location='{{ route('satusehat.encounter.create') }}'" />
+                <br><br>
+                @php
+                    $heads = ['No.', 'Identifier', 'Start', 'End', 'Location','Patient', 'Practitioner',  'Status', 'Action'];
+                @endphp
+                <x-adminlte-datatable id="table1" class="text-xs" :heads="$heads" hoverable bordered compressed>
+                    @foreach ($encounters as $item)
+                        <tr>
+                            <td>{{ $loop->iteration }}</td>
+                            <td>{{ $item->identifier_id }}</td>
+                            <td>{{ Carbon\Carbon::parse($item->period_start) }}</td>
+                            <td>{{ $item->period_end }}</td>
+                            <td>{{ $item->location_name }}</td>
+                            <td>{{ $item->patient_name }} / {{ $item->patient_id }}</td>
+                            <td>{{ $item->practitioner_name }} / {{ $item->practitioner_id }}</td>
+                            <td>{{ $item->status }}</td>
+                            <td>
+
+                            </td>
+
+                        </tr>
+                    @endforeach
+                </x-adminlte-datatable>
             </x-adminlte-card>
         </div>
     </div>
