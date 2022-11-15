@@ -721,6 +721,13 @@ return [
                     'shift'   => 'ml-2',
                     'can' => 'admin',
                 ],
+                [
+                    'text'        => 'Log Viewer',
+                    'url'         => 'log-viewer',
+                    'icon'        => 'fas fa-info-circle',
+                    'shift'   => 'ml-2',
+                    'can' => 'admin',
+                ],
             ],
         ],
         // USER ACCESS CONTROLL
@@ -752,19 +759,6 @@ return [
             'url'  => 'profile',
             'icon' => 'fas fa-fw fa-user',
         ],
-        [
-            'text'        => 'Log Viewer',
-            'url'         => 'log-viewer',
-            'icon'        => 'fas fa-info-circle',
-            'can' => 'admin',
-        ],
-        // ['header' => 'account_settings'],
-
-        // [
-        //     'text' => 'change_password',
-        //     'url'  => 'password/reset',
-        //     'icon' => 'fas fa-fw fa-lock',
-        // ],
     ],
 
     /*
