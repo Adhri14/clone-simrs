@@ -8,7 +8,6 @@
         <div class="col-12">
             <x-adminlte-card title="Pencarian Jadwal Dokter" theme="secondary" icon="fas fa-info-circle" collapsible>
                 <form action="{{ route('bpjs.antrian.jadwal_dokter') }}">
-                    <input type="hidden" name="method" value="GET">
                     @php
                         $config = ['format' => 'YYYY-MM-DD'];
                     @endphp
@@ -21,7 +20,7 @@
                                 {{ $poli->kdsubspesialis }} - {{ $poli->nmsubspesialis }}</option>
                         @endforeach
                     </x-adminlte-select2>
-                    <x-adminlte-button label="Cari Jadwal Dokter" class="mr-auto" type="submit" theme="success"
+                    <x-adminlte-button label="Cari Jadwal Dokter" class="mr-auto withLoad" type="submit" theme="success"
                         icon="fas fa-search" />
                 </form>
             </x-adminlte-card>

@@ -84,13 +84,6 @@ class AntrianController extends ApiController
     }
     public function antrian(Request $request)
     {
-        // get dokter
-        $response = $this->ref_dokter();
-        if ($response->isSuccessful()) {
-            $dokters = $response->getData()->data;
-        } else {
-            $dokters = null;
-        }
         // get poli
         $response = $this->ref_poli();
         if ($response->isSuccessful()) {
@@ -109,9 +102,24 @@ class AntrianController extends ApiController
         }
         return view('bpjs.antrian.antrian', compact([
             'request',
-            'dokters',
             'polikliniks',
             'antrians',
+        ]));
+    }
+    public function list_task(Request $request)
+    {
+        // get antrian
+        $taskid = null;
+        if (isset($request->kodebooking)) {
+            $response =  $this->getlisttask($request);
+            if ($response->isSuccessful()) {
+                $taskid = $response->getData()->data;
+            }
+            Alert::success($response->statusText() . ' ' . $response->status());
+        }
+        return view('bpjs.antrian.list_task', compact([
+            'request',
+            'taskid',
         ]));
     }
     // API FUNCTION
