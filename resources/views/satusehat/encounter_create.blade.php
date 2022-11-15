@@ -100,16 +100,11 @@
             </div>
             <div class="col-12">
                 <x-adminlte-card title="Hasil Pencarian Patient" theme="secondary" collapsible>
-                    <table class="table table-bordered table-sm table-striped" id="table1">
-                        <thead>
-                            <th>Identifier</th>
-                            <th>NIK</th>
-                            <th>Nama</th>
-                            <th>Gender</th>
-                            <th>Status</th>
-                            <th>Action</th>
-                        </thead>
-                    </table>
+                    @php
+                        $heads = ['No.', 'Identifier', 'NIK', 'Nama', 'Gender', 'Kab / Kota', 'Status', 'Action'];
+                    @endphp
+                    <x-adminlte-datatable id="table1" class="text-xs" :heads="$heads" hoverable bordered compressed>
+                    </x-adminlte-datatable>
                 </x-adminlte-card>
             </div>
         </div>
@@ -168,16 +163,12 @@
             </div>
             <div class="col-12">
                 <x-adminlte-card title="Hasil Pencarian Patient" theme="secondary" collapsible>
-                    <table class="table table-bordered table-sm table-striped" id="tablePractitioner">
-                        <thead>
-                            <th>Identifier</th>
-                            <th>NIK</th>
-                            <th>Nama</th>
-                            <th>Gender</th>
-                            <th>Status</th>
-                            <th>Action</th>
-                        </thead>
-                    </table>
+                    @php
+                        $heads = ['No.', 'Identifier', 'NIK', 'Nama', 'Gender', 'Kab / Kota', 'Status', 'Action'];
+                    @endphp
+                    <x-adminlte-datatable id="tablePractitioner" class="text-xs" :heads="$heads" hoverable bordered
+                        compressed>
+                    </x-adminlte-datatable>
                 </x-adminlte-card>
             </div>
         </div>
@@ -216,41 +207,7 @@
                     type: "GET",
                     dataType: 'json',
                     success: function(data) {
-                        $('#table1').find("tr:gt(0)").empty();
-                        $.each(data.entry, function(key, value) {
-                            if (value.resource.active) {
-                                var status = "Aktif";
-                            } else {
-                                var status = "Non-aktif";
-                            }
-                            $('#table1').append('<tr><td>' + value.resource
-                                .identifier[
-                                    0]
-                                .value + '</td><td>' + value.resource
-                                .identifier[
-                                    1]
-                                .value + ' </td><td>' + value.resource.name[0]
-                                .text + '</td><td>' + value.resource.gender +
-                                '</td><td>' + status + '</td><td>' +
-                                "<button class='btn btn-warning btn-xs btnPilihPatient' data-id=" +
-                                value.resource.identifier[0].value +
-                                ">Pilih</button> </td></tr>"
-                            );
-                        })
-                        if (data.total > 0) {
-                            swal.fire(
-                                'Success',
-                                'Ditemukan ' + data.total + ' Pasien',
-                                'success'
-                            );
-                        } else {
-                            swal.fire(
-                                'Not Found',
-                                'Ditemukan ' + data.total + ' Pasien',
-                                'error'
-                            );
-
-                        }
+                        updateTablePasien(data);
                         $.LoadingOverlay("hide");
                     },
                     error: function(data) {
@@ -268,46 +225,14 @@
                 var nik = $('#nik').val();
                 if (nik == '') {
                     alert('Silahkan isi NIK terlebih dahulu !');
+                    $.LoadingOverlay("hide");
                 } else {
                     $.ajax({
                         url: "{{ route('api.satusehat.patient_index') }}" + "/nik/" + nik,
                         type: "GET",
                         dataType: 'json',
                         success: function(data) {
-                            $('#table1').find("tr:gt(0)").empty();
-                            $.each(data.entry, function(key, value) {
-                                if (value.resource.active) {
-                                    var status = "Aktif";
-                                } else {
-                                    var status = "Non-aktif";
-                                }
-                                $('#table1').append('<tr><td>' + value.resource
-                                    .identifier[
-                                        0]
-                                    .value + '</td><td>' + value.resource
-                                    .identifier[
-                                        1]
-                                    .value + ' </td><td>' + value.resource.name[0]
-                                    .text + '</td><td>' + value.resource.gender +
-                                    '</td><td>' + status + '</td><td>' +
-                                    "<button class='btn btn-warning btn-xs btnPilihPatient' data-id=" +
-                                    value.resource.identifier[0].value +
-                                    ">Pilih</button> </td></tr>"
-                                );
-                            })
-                            if (data.total > 0) {
-                                swal.fire(
-                                    'Success',
-                                    'Ditemukan ' + data.total + ' Pasien',
-                                    'success'
-                                );
-                            } else {
-                                swal.fire(
-                                    'Not Found',
-                                    'Ditemukan ' + data.total + ' Pasien',
-                                    'error'
-                                );
-                            }
+                            updateTablePasien(data);
                             $.LoadingOverlay("hide");
                         },
                         error: function(data) {
@@ -344,6 +269,43 @@
                     }
                 });
             });
+
+            function updateTablePasien(data) {
+                var table = $('#table1').DataTable();
+                table.rows().remove().draw();
+                $.each(data.entry, function(key, value) {
+                    if (value.resource.active) {
+                        var status = "Aktif";
+                    } else {
+                        var status = "Non-aktif";
+                    }
+                    table.row.add([
+                        key + 1,
+                        value.resource.identifier[0].value,
+                        value.resource.identifier[1].value,
+                        value.resource.name[0].text,
+                        value.resource.gender,
+                        ' ',
+                        status,
+                        "<button class='btn btn-warning btn-xs btnPilihPatient' data-id=" +
+                        value.resource.identifier[0].value +
+                        ">Pilih</button>",
+                    ]).draw(false);
+                    if (data.total > 0) {
+                        swal.fire(
+                            'Success',
+                            'Ditemukan ' + data.total + ' Pasien',
+                            'success'
+                        );
+                    } else {
+                        swal.fire(
+                            'Not Found',
+                            'Ditemukan ' + data.total + ' Pasien',
+                            'error'
+                        );
+                    }
+                })
+            }
             $('#btnPractitioner').click(function() {
                 $.LoadingOverlay("show");
                 $('#modalPractitioner').modal('show');
@@ -356,46 +318,12 @@
                 var name = $('#name_practitioner').val();
                 var data = "birthdate=" + birthdate + "&name=" + name + "&gender=" + gender;
                 $.ajax({
-                    url: "{{ route('api.satusehat.patient_by_name') }}",
+                    url: "{{ route('api.satusehat.practitioner_by_name') }}",
                     data: data,
                     type: "GET",
                     dataType: 'json',
                     success: function(data) {
-                        $('#table1').find("tr:gt(0)").empty();
-                        $.each(data.entry, function(key, value) {
-                            if (value.resource.active) {
-                                var status = "Aktif";
-                            } else {
-                                var status = "Non-aktif";
-                            }
-                            $('#tablePractitioner').append('<tr><td>' + value.resource
-                                .identifier[
-                                    0]
-                                .value + '</td><td>' + value.resource
-                                .identifier[
-                                    1]
-                                .value + ' </td><td>' + value.resource.name[0]
-                                .text + '</td><td>' + value.resource.gender +
-                                '</td><td>' + status + '</td><td>' +
-                                "<button class='btn btn-warning btn-xs btnPilihPractitioner' data-id=" +
-                                value.resource.identifier[0].value +
-                                ">Pilih</button> </td></tr>"
-                            );
-                        })
-                        if (data.total > 0) {
-                            swal.fire(
-                                'Success',
-                                'Ditemukan ' + data.total + ' Pasien',
-                                'success'
-                            );
-                        } else {
-                            swal.fire(
-                                'Not Found',
-                                'Ditemukan ' + data.total + ' Pasien',
-                                'error'
-                            );
-
-                        }
+                        updateTablePractitioner(data);
                         $.LoadingOverlay("hide");
                     },
                     error: function(data) {
@@ -420,41 +348,7 @@
                         type: "GET",
                         dataType: 'json',
                         success: function(data) {
-                            $('#tablePractitioner').find("tr:gt(0)").empty();
-                            $.each(data.entry, function(key, value) {
-                                if (value.resource.active) {
-                                    var status = "Aktif";
-                                } else {
-                                    var status = "Non-aktif";
-                                }
-                                $('#tablePractitioner').append('<tr><td>' + value
-                                    .resource
-                                    .identifier[
-                                        0]
-                                    .value + '</td><td>' + value.resource
-                                    .identifier[
-                                        1]
-                                    .value + ' </td><td>' + value.resource.name[0]
-                                    .text + '</td><td>' + value.resource.gender +
-                                    '</td><td>' + status + '</td><td>' +
-                                    "<button class='btn btn-warning btn-xs btnPilihPractitioner' data-id=" +
-                                    value.resource.identifier[0].value +
-                                    ">Pilih</button> </td></tr>"
-                                );
-                            })
-                            if (data.total > 0) {
-                                swal.fire(
-                                    'Success',
-                                    'Ditemukan ' + data.total + ' Pasien',
-                                    'success'
-                                );
-                            } else {
-                                swal.fire(
-                                    'Not Found',
-                                    'Ditemukan ' + data.total + ' Pasien',
-                                    'error'
-                                );
-                            }
+                            updateTablePractitioner(data);
                             $.LoadingOverlay("hide");
                         },
                         error: function(data) {
@@ -491,6 +385,43 @@
                     }
                 });
             });
+
+            function updateTablePractitioner(data) {
+                var table = $('#tablePractitioner').DataTable();
+                table.rows().remove().draw();
+                $.each(data.entry, function(key, value) {
+                    if (value.resource.active) {
+                        var status = "Aktif";
+                    } else {
+                        var status = "Non-aktif";
+                    }
+                    table.row.add([
+                        key + 1,
+                        value.resource.identifier[0].value,
+                        value.resource.identifier[1].value,
+                        value.resource.name[0].text,
+                        value.resource.gender,
+                        ' ',
+                        status,
+                        "<button class='btn btn-warning btn-xs btnPilihPractitioner' data-id=" +
+                        value.resource.identifier[0].value +
+                        ">Pilih</button>",
+                    ]).draw(false);
+                })
+                if (data.total > 0) {
+                    swal.fire(
+                        'Success',
+                        'Ditemukan ' + data.total + ' Practitioner',
+                        'success'
+                    );
+                } else {
+                    swal.fire(
+                        'Not Found',
+                        'Ditemukan ' + data.total + ' Practitioner',
+                        'error'
+                    );
+                }
+            }
             $('#btnCreateEncounter').click(function() {
                 $.LoadingOverlay("show");
                 $.LoadingOverlay("hide");
