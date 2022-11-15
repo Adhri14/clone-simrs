@@ -181,6 +181,7 @@ Route::middleware('auth')->group(function () {
             Route::get('poli', [AntrianAntrianController::class, 'poli'])->name('poli');
             Route::get('dokter', [AntrianAntrianController::class, 'dokter'])->name('dokter');
             Route::get('jadwal_dokter', [AntrianAntrianController::class, 'jadwal_dokter'])->name('jadwal_dokter');
+            Route::get('antrian', [AntrianAntrianController::class, 'antrian'])->name('antrian');
         });
     });
     // satu sehat

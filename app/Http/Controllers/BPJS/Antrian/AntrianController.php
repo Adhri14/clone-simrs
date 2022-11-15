@@ -4,6 +4,7 @@ namespace App\Http\Controllers\BPJS\Antrian;
 
 use App\Http\Controllers\API\ApiController;
 use App\Http\Controllers\Controller;
+use App\Models\Antrian;
 use App\Models\SIMRS\Token;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
@@ -63,12 +64,13 @@ class AntrianController extends ApiController
         } else {
             $polikliniks = null;
         }
+        // get jadwal
         $jadwals = null;
         if (isset($request->kodepoli)) {
             $response = $this->ref_jadwal_dokter($request);
             if ($response->isSuccessful()) {
-                $jadwals = $response->getData()->data;
-                Alert::success($response->statusText(), 'Jadwal Dokter Antrian BPJS Total : ' . count($jadwals));
+                $jadwals = collect($response->getData()->data);
+                Alert::success($response->statusText(), 'Jadwal Dokter Antrian BPJS Total : ' . $jadwals->count());
             } else {
                 Alert::error($response->statusText() . ' ' . $response->status());
             }
@@ -78,6 +80,38 @@ class AntrianController extends ApiController
             'dokters',
             'polikliniks',
             'jadwals',
+        ]));
+    }
+    public function antrian(Request $request)
+    {
+        // get dokter
+        $response = $this->ref_dokter();
+        if ($response->isSuccessful()) {
+            $dokters = $response->getData()->data;
+        } else {
+            $dokters = null;
+        }
+        // get poli
+        $response = $this->ref_poli();
+        if ($response->isSuccessful()) {
+            $polikliniks = $response->getData()->data;
+        } else {
+            $polikliniks = null;
+        }
+        // get antrian
+        $antrians = null;
+        if (isset($request->tanggal)) {
+            $antrians = Antrian::whereDate('tanggalperiksa', $request->tanggal)->get();
+            if ($request->kodepoli != '000') {
+                $antrians = $antrians->where('kodepoli', $request->kodepoli);
+            }
+            Alert::success('OK', 'Antrian BPJS Total : ' . $antrians->count());
+        }
+        return view('bpjs.antrian.antrian', compact([
+            'request',
+            'dokters',
+            'polikliniks',
+            'antrians',
         ]));
     }
     // API FUNCTION
