@@ -180,6 +180,7 @@ Route::middleware('auth')->group(function () {
             Route::get('status', [AntrianAntrianController::class, 'status'])->name('status');
             Route::get('poli', [AntrianAntrianController::class, 'poli'])->name('poli');
             Route::get('dokter', [AntrianAntrianController::class, 'dokter'])->name('dokter');
+            Route::get('jadwal_dokter', [AntrianAntrianController::class, 'jadwal_dokter'])->name('jadwal_dokter');
         });
     });
     // satu sehat

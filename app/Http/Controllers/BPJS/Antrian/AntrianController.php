@@ -46,6 +46,27 @@ class AntrianController extends ApiController
             'dokters'
         ]));
     }
+    public function jadwal_dokter()
+    {
+        // get dokter
+        $response = $this->ref_dokter();
+        if ($response->isSuccessful()) {
+            $dokters = $response->getData()->data;
+        } else {
+            $dokters = null;
+        }
+        // get poli
+        $response = $this->ref_poli();
+        if ($response->isSuccessful()) {
+            $polikliniks = $response->getData()->data;
+        } else {
+            $polikliniks = null;
+        }
+        return view('bpjs.antrian.jadwal_dokter', compact([
+            'dokters',
+            'polikliniks'
+        ]));
+    }
     // API FUNCTION
     public function signature()
     {

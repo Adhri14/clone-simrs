@@ -602,6 +602,13 @@ return [
                     'shift'   => 'ml-2',
                     'can' => 'admin',
                 ],
+                [
+                    'text' => 'Jadwal Dokter',
+                    'icon'    => 'fas fa-calendar-alt',
+                    'url'  => 'bpjs/antrian/jadwal_dokter',
+                    'shift'   => 'ml-2',
+                    'can' => 'admin',
+                ],
             ],
         ],
         // VCLAIM BPJS
