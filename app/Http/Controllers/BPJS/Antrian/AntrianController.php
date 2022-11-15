@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\SIMRS\Token;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Validator;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class AntrianController extends ApiController
@@ -46,7 +47,7 @@ class AntrianController extends ApiController
             'dokters'
         ]));
     }
-    public function jadwal_dokter()
+    public function jadwal_dokter(Request $request)
     {
         // get dokter
         $response = $this->ref_dokter();
@@ -62,9 +63,21 @@ class AntrianController extends ApiController
         } else {
             $polikliniks = null;
         }
+        $jadwals = null;
+        if (isset($request->kodepoli)) {
+            $response = $this->ref_jadwal_dokter($request);
+            if ($response->isSuccessful()) {
+                $jadwals = $response->getData()->data;
+                Alert::success($response->statusText(), 'Jadwal Dokter Antrian BPJS Total : ' . count($jadwals));
+            } else {
+                Alert::error($response->statusText() . ' ' . $response->status());
+            }
+        }
         return view('bpjs.antrian.jadwal_dokter', compact([
+            'request',
             'dokters',
-            'polikliniks'
+            'polikliniks',
+            'jadwals',
         ]));
     }
     // API FUNCTION

@@ -609,6 +609,35 @@ return [
                     'shift'   => 'ml-2',
                     'can' => 'admin',
                 ],
+                [
+                    'text' => 'Antrian',
+                    'icon'    => 'fas fa-calendar-alt',
+                    'url'  => 'bpjs/antrian/antrian',
+                    'shift'   => 'ml-2',
+                    'can' => 'admin',
+                ],
+                [
+                    'text' => 'List Task',
+                    'icon'    => 'fas fa-calendar-alt',
+                    'url'  => 'bpjs/antrian/list_task',
+                    'shift'   => 'ml-2',
+                    'can' => 'admin',
+                ],
+                [
+                    'text' => 'Dasboard Tanggal',
+                    'icon'    => 'fas fa-calendar-alt',
+                    'url'  => 'bpjs/antrian/dashboard_tanggal',
+                    'shift'   => 'ml-2',
+                    'can' => 'admin',
+                ],
+                [
+                    'text' => 'Dashboard Bulan',
+                    'icon'    => 'fas fa-calendar-alt',
+                    'url'  => 'bpjs/antrian/dashboard_bulan',
+                    'shift'   => 'ml-2',
+                    'can' => 'admin',
+                ],
+
             ],
         ],
         // VCLAIM BPJS

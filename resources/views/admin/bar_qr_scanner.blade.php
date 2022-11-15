@@ -19,7 +19,7 @@
                     target="_blank">https://github.com/picqer/php-barcode-generator</a>
                 <br>
                 <h3>QR Code : {{ $request->barcode }}</h3>
-                <img src="{{ asset('qrcode_test.png') }}" alt="">
+                <img src="{{ asset('storage/qrcode_test.png') }}" alt="">
                 <br>
                 Package :
                 <a href="https://www.simplesoftware.io/#/docs/simple-qrcode"
