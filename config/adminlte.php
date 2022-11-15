@@ -588,6 +588,13 @@ return [
                     'shift'   => 'ml-2',
                     'can' => 'admin',
                 ],
+                [
+                    'text' => 'Poliklinik',
+                    'icon'    => 'fas fa-clinic-medical',
+                    'url'  => 'bpjs/antrian/poli',
+                    'shift'   => 'ml-2',
+                    'can' => 'admin',
+                ],
             ],
         ],
         // VCLAIM BPJS

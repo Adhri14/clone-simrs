@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\ThermalPrintController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\AntrianController;
+use App\Http\Controllers\BPJS\Antrian\AntrianController as AntrianAntrianController;
 use App\Http\Controllers\DokterController;
 use App\Http\Controllers\FileRMController;
 use App\Http\Controllers\Icd10Controller;
@@ -176,7 +177,8 @@ Route::middleware('auth')->group(function () {
     // bpjs
     Route::prefix('bpjs')->name('bpjs.')->group(function () {
         Route::prefix('antrian')->name('antrian.')->group(function () {
-            Route::get('status', [TokenController::class, 'status'])->name('status');
+            Route::get('status', [AntrianAntrianController::class, 'status'])->name('status');
+            Route::get('poli', [AntrianAntrianController::class, 'poli'])->name('poli');
         });
     });
     // satu sehat
