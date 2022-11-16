@@ -1,19 +1,19 @@
 @extends('adminlte::page')
-@section('title', 'Dashboard Tanggal - Antrian BPJS')
+@section('title', 'Dashboard Bulan - Antrian BPJS')
 @section('content_header')
-    <h1 class="m-0 text-dark">Dashboard Tanggal Antrian BPJS</h1>
+    <h1 class="m-0 text-dark">Dashboard Bulan Antrian BPJS</h1>
 @stop
 @section('content')
     <div class="row">
         <div class="col-12">
-            <x-adminlte-card title="Pencarian Dashboad Tanggal Antrian" theme="secondary" icon="fas fa-info-circle"
+            <x-adminlte-card title="Pencarian Dashboad Bulan Antrian" theme="secondary" icon="fas fa-info-circle"
                 collapsible>
-                <form action="{{ route('bpjs.antrian.dashboard_bulan') }}">
+                <form action="{{ route('bpjs.antrian.dashboard_tanggal') }}">
                     @php
-                        $config = ['format' => 'YYYY-MM-DD'];
+                        $config = ['format' => 'YYYY-MM'];
                     @endphp
                     <x-adminlte-input-date name="tanggal" placeholder="Silahkan Pilih Tanggal" value="{{ $request->tanggal }}"
-                        label="Tanggal Periksa" :config="$config" />
+                        label="Bulan Periksa" :config="$config" />
                     <x-adminlte-select name="waktu" label="Waktu">
                         <option value="rs">Waktu RS</option>
                         <option value="server">Waktu BPJS</option>

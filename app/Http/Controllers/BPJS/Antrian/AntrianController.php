@@ -124,17 +124,37 @@ class AntrianController extends ApiController
     }
     public function dashboard_tanggal_index(Request $request)
     {
-        // get antrian
         $antrians = null;
-        if (isset($request->tanggal)) {
+        if (isset($request->waktu)) {
             $response =  $this->dashboard_tanggal($request);
-            dd($response->getData());
             if ($response->isSuccessful()) {
-                $antrians = $response->getData()->data;
+                $antrians = $response->getData()->data->list;
+                Alert::success($response->getData()->message . ' ' . $response->status());
+            } else {
+                Alert::error($response->getData()->message . ' ' . $response->status());
             }
-            Alert::success($response->statusText() . ' ' . $response->status());
         }
         return view('bpjs.antrian.dashboard_tanggal_index', compact([
+            'request',
+            'antrians',
+        ]));
+    }
+    public function dashboard_bulan_index(Request $request)
+    {
+        $antrians = null;
+        if (isset($request->waktu)) {
+            $tanggal = explode('-', $request->tanggal);
+            $request['tahun'] = $tanggal[0];
+            $request['bulan'] = $tanggal[1];
+            $response =  $this->dashboard_bulan($request);
+            if ($response->isSuccessful()) {
+                $antrians = $response->getData()->data->list;
+                Alert::success($response->getData()->message . ' - ' . $response->status());
+            } else {
+                Alert::error($response->getData()->message . ' - ' . $response->status());
+            }
+        }
+        return view('bpjs.antrian.dashboard_bulan_index', compact([
             'request',
             'antrians',
         ]));
