@@ -25,6 +25,7 @@ use App\Http\Controllers\SatuSehat\OrganizationController;
 use App\Http\Controllers\SatuSehat\PatientController;
 use App\Http\Controllers\SatuSehat\PractitionerController;
 use App\Http\Controllers\SatuSehat\TokenController;
+use App\Http\Controllers\SIMRS\AntrianController as SIMRSAntrianController;
 use App\Http\Controllers\TarifKelompokLayananController;
 use App\Http\Controllers\TarifLayananController;
 use App\Http\Controllers\VclaimController;
@@ -173,6 +174,15 @@ Route::middleware('auth')->group(function () {
         Route::resource('user', UserController::class);
         Route::resource('role', RoleController::class);
         Route::resource('permission', PermissionController::class);
+    });
+    // simrs
+    Route::prefix('simrs')->name('simrs.')->group(function () {
+        Route::prefix('antrian')->name('antrian.')->group(function () {
+            Route::get('anjungan', [SIMRSAntrianController::class, 'anjungan'])->name('anjungan');
+            Route::get('pendaftaran', [SIMRSAntrianController::class, 'pendaftaran'])->name('pendaftaran');
+            Route::get('laporan', [SIMRSAntrianController::class, 'laporan'])->name('laporan');
+            Route::get('laporan_kunjungan', [SIMRSAntrianController::class, 'laporan_kunjungan'])->name('laporan_kunjungan');
+        });
     });
     // bpjs
     Route::prefix('bpjs')->name('bpjs.')->group(function () {

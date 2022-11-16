@@ -331,13 +331,6 @@ return [
                     'shift'   => 'ml-2',
                     'can' => 'admin',
                 ],
-                // [
-                //     'text' => 'Antrian Pendaftaran WA',
-                //     'icon'    => 'fas fa-user-plus',
-                //     'url'  => 'antrianwa',
-                //     'shift'   => 'ml-2',
-                //     'can' => 'pendaftaran',
-                // ],
                 [
                     'text' => 'Antrian Pendaftaran',
                     'icon'    => 'fas fa-user-plus',
@@ -417,7 +410,64 @@ return [
                 ],
             ],
         ],
-
+        // APLIKASI PENDAFTARAN
+        [
+            'text' => 'Aplikasi Pendaftaran',
+            'icon'    => 'fas fa-sign-in-alt',
+            'can' => 'pendaftaran',
+            'submenu' => [
+                [
+                    'text' => 'Anjungan Antrian',
+                    'icon'    => 'fas fa-desktop',
+                    'url'  => 'simrs/antrian/anjungan',
+                    'shift'   => 'ml-2',
+                    'can' => 'pendaftaran',
+                ],
+                [
+                    'text' => 'Antrian Pendaftaran',
+                    'icon'    => 'fas fa-user-plus',
+                    'url'  => 'simrs/antrian/pendaftaran',
+                    'shift'   => 'ml-2',
+                    'can' => 'pendaftaran',
+                ],
+                [
+                    'text' => 'Laporan Antrian',
+                    'icon'    => 'fas fa-chart-line',
+                    'url'  => 'simrs/antrian/laporan',
+                    'shift'   => 'ml-2',
+                    'can' => 'pendaftaran',
+                ],
+                [
+                    'text' => 'Laporan Kunjungan',
+                    'icon'    => 'fas fa-chart-line',
+                    'shift'   => 'ml-2',
+                    'url'  => 'simrs/antrian/laporan_kunjungan',
+                    'can' => 'pendaftaran',
+                ],
+            ],
+        ],
+        // APLIKASI POLIKLINIK
+        [
+            'text' => 'Aplikasi Poliklinik',
+            'icon'    => 'fas fa-clinic-medical',
+            'can' => 'rekam-medis',
+            'submenu' => [
+                [
+                    'text' => 'Aplikasi KPO',
+                    'icon'    => 'fas fa-pills',
+                    'url'  => 'kpo',
+                    'shift'   => 'ml-2',
+                    'can' => 'rekam-medis',
+                ],
+                [
+                    'text' => 'Obat',
+                    'icon'    => 'fas fa-pills',
+                    'url'  => 'obat',
+                    'shift'   => 'ml-2',
+                    'can' => 'rekam-medis',
+                ],
+            ],
+        ],
         // PELAYANAN MEDIS
         [
             'text' => 'Pelayanan Medis',
@@ -726,7 +776,7 @@ return [
                     'url'  => 'satusehat/encounter',
                     'shift'   => 'ml-2',
                     'can' => 'admin',
-                    'active'  => ['satusehat/encounter', 'satusehat/encounter/create', ],
+                    'active'  => ['satusehat/encounter', 'satusehat/encounter/create',],
                 ],
                 [
                     'text' => 'Condition',
