@@ -4,6 +4,7 @@ use App\Http\Controllers\AntrianController;
 use App\Http\Controllers\API\AntrianBPJSController;
 use App\Http\Controllers\API\VclaimBPJSController;
 use App\Http\Controllers\API\WhatsappController;
+use App\Http\Controllers\BPJS\Antrian\AntrianController as AntrianAntrianController;
 use App\Http\Controllers\PasienController;
 use App\Http\Controllers\SatuSehat\EncounterController;
 use App\Http\Controllers\SatuSehat\LocationController;
@@ -46,7 +47,6 @@ Route::prefix('antrian')->group(function () {
     Route::post('listtask', [AntrianBPJSController::class, 'list_waktu_task']);
     Route::get('dashboard_tanggal', [AntrianBPJSController::class, 'dashboard_tanggal']);
     Route::get('dashboard_bulan', [AntrianBPJSController::class, 'dashboard_bulan']);
-
     Route::get('status_antrean', [AntrianBPJSController::class, 'status_antrean'])->name('api.status_antrean');
     Route::post('ambil_antrean', [AntrianBPJSController::class, 'ambil_antrean'])->name('api.ambil_antrean');
 });
@@ -113,8 +113,14 @@ Route::prefix('simrs')->name('api.simrs.')->group(function () {
     Route::get('get_icd10', [ICD10Controller::class, 'get_icd10'])->name('get_icd10');
 });
 
+Route::prefix('bpjs')->name('bpjs.')->group(function () {
+    Route::prefix('antrian')->name('antrian.')->group(function () {
+        Route::get('token', [AntrianAntrianController::class, 'token'])->name('token');
+    });
+});
 
-Route::prefix('satusehat')->name('api.satusehat.')->group(function () {
+
+Route::prefix('satusehat')->name('satusehat.')->group(function () {
     Route::get('patient/', [PatientController::class, 'index'])->name('patient_index');
     Route::get('patient/nik/{nik}', [PatientController::class, 'patient_by_nik'])->name('patient_by_nik');
     Route::get('patient/id/{id}', [PatientController::class, 'patient_by_id'])->name('patient_by_id');
