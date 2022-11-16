@@ -468,6 +468,36 @@ return [
                 ],
             ],
         ],
+        // APLIKASI SIMRS
+        [
+            'text' => 'Aplikasi SIMRS',
+            'icon'    => 'fas fa-hospital-alt',
+            'can' => 'admin',
+            'submenu' => [
+                [
+                    'text' => 'Pasien',
+                    'icon'    => 'fas fa-user-injured',
+                    'url'  => 'simrs/pasien',
+                    'shift'   => 'ml-2',
+                    'can' => 'admin',
+                ],
+                [
+                    'text' => 'Dokter',
+                    'icon'    => 'fas fa-user-md',
+                    'url'  => 'simrs/dokter',
+                    'shift'   => 'ml-2',
+                    'can' => 'admin',
+                ],
+                [
+                    'text' => 'Kunjungan',
+                    'icon'    => 'fas fa-hospital-user',
+                    'url'  => 'simrs/kunjungan',
+                    'shift'   => 'ml-2',
+                    'can' => 'admin',
+                ],
+
+            ],
+        ],
         // PELAYANAN MEDIS
         [
             'text' => 'Pelayanan Medis',
@@ -814,13 +844,6 @@ return [
                     'shift'   => 'ml-2',
                     'can' => 'admin',
                 ],
-                // [
-                //     'text' => 'Invoice Print',
-                //     'icon'    => 'fas fa-receipt',
-                //     'url'  => 'invoice',
-                //     'shift'   => 'ml-2',
-                //     'can' => 'admin',
-                // ],
                 [
                     'text'        => 'Log Viewer',
                     'url'         => 'log-viewer',

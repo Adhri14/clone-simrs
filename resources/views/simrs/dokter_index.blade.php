@@ -32,7 +32,7 @@
                         </tr>
                     @endforeach
                 </x-adminlte-datatable>
-                <a href="{{ route('dokter.create') }}" class="btn btn-success">Refresh</a>
+                <a href="{{ route('simrs.dokter.create') }}" class="btn btn-success">Refresh</a>
             </x-adminlte-card>
             <x-adminlte-card title="Informasi Referensi Dokter" theme="info" icon="fas fa-info-circle" collapsible
                 maximizable>

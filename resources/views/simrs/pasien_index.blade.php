@@ -27,7 +27,7 @@
                             icon="fas fa-plus" data-toggle="modal" data-target="#modalCustom" />
                     </div>
                     <div class="col-md-4">
-                        <form action="{{ route('pasien.index') }}" method="get">
+                        <form action="{{ route('simrs.pasien.index') }}" method="get">
                             <x-adminlte-input name="search" placeholder="Pencarian NIK / Nama" igroup-size="sm"
                                 value="{{ $request->search }}">
                                 <x-slot name="appendSlot">
@@ -62,9 +62,9 @@
                             <td>{{ $item->alamat }}</td>
                             <td>{{ $item->tgl_entry }} ({{ $item->pic }})</td>
                             <td>
-                                <form action="{{ route('pasien.destroy', $item->no_rm) }}" method="POST">
+                                <form action="{{ route('simrs.pasien.destroy', $item->no_rm) }}" method="POST">
                                     <x-adminlte-button class="btn-xs" theme="warning" icon="fas fa-edit"
-                                        onclick="window.location='{{ route('pasien.edit', $item->no_rm) }}'" />
+                                        onclick="window.location='{{ route('simrs.pasien.edit', $item->no_rm) }}'" />
                                     @csrf
                                     @method('DELETE')
                                     <x-adminlte-button class="btn-xs" theme="danger" icon="fas fa-trash-alt" type="submit"
@@ -90,7 +90,7 @@
     </div>
     <x-adminlte-modal id="modalCustom" title="Tambah User" theme="success" size="lg" v-centered static-backdrop
         scrollable>
-        <form action="{{ route('pasien.store') }}" id="myform" method="post">
+        <form action="{{ route('simrs.pasien.store') }}" id="myform" method="post">
             @csrf
             <div class="row">
                 <div class="col-md-6">

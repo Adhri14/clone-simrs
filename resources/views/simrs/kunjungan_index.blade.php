@@ -66,7 +66,7 @@
                                         <td>{{ $status_kunjungan[$item->status_kunjungan] }}</td>
                                         <td>
                                             <x-adminlte-button class="btn-xs" theme="warning" icon="fas fa-edit"
-                                                onclick="window.location='{{ route('kunjungan.edit', $item->kode_kunjungan) }}'" />
+                                                onclick="window.location='{{ route('simrs.kunjungan.edit', $item->kode_kunjungan) }}'" />
                                             </form>
                                         </td>
                                     </tr>

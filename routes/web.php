@@ -27,6 +27,9 @@ use App\Http\Controllers\SatuSehat\PatientController;
 use App\Http\Controllers\SatuSehat\PractitionerController;
 use App\Http\Controllers\SatuSehat\TokenController;
 use App\Http\Controllers\SIMRS\AntrianController as SIMRSAntrianController;
+use App\Http\Controllers\SIMRS\DokterController as SIMRSDokterController;
+use App\Http\Controllers\SIMRS\KunjunganController as SIMRSKunjunganController;
+use App\Http\Controllers\SIMRS\PasienController as SIMRSPasienController;
 use App\Http\Controllers\TarifKelompokLayananController;
 use App\Http\Controllers\TarifLayananController;
 use App\Http\Controllers\VclaimController;
@@ -141,13 +144,7 @@ Route::prefix('vclaim')->name('vclaim.')->middleware(['auth'])->group(function (
     Route::delete('delete_surat_kontrol/{noSuratKontrol}', [VclaimController::class, 'delete_surat_kontrol'])->name('delete_surat_kontrol');
 });
 
-Route::resource('poli', PoliklinikController::class)->only(['index', 'create', 'edit', 'show', 'store'])->middleware('permission:pelayanan-medis');
-Route::resource('dokter', DokterController::class)->only(['index', 'create'])->middleware('permission:pelayanan-medis');
-Route::resource('jadwaldokter', JadwalDokterController::class)->only(['index', 'store', 'edit'])->middleware('permission:pelayanan-medis');
-Route::resource('jadwallibur', JadwalLiburController::class)->middleware(['auth', 'permission:pelayanan-medis']);
-Route::resource('jadwaloperasi', JadwalOperasiController::class)->only(['index', 'store', 'edit'])->middleware('permission:pelayanan-medis');
-Route::resource('kunjungan', KunjunganController::class)->middleware('permission:rekam-medis');
-Route::resource('pasien', PasienController::class)->middleware('permission:rekam-medis');
+
 Route::get('pasien_daerah', [PasienController::class, 'pasien_daerah'])->name('pasien_daerah');
 Route::get('pasien_demografi', [PasienController::class, 'pasien_demografi'])->name('pasien_demografi');
 Route::get('index_penyakit_rajal', [IndexController::class, 'index_penyakit_rajal'])->name('index_penyakit_rajal');
@@ -161,7 +158,6 @@ Route::resource('efilerm', FileRMController::class);
 Route::resource('kpo', KPOController::class);
 Route::get('kpo/tanggal/{tanggal}', [KPOController::class, 'kunjungan_tanggal'])->name('kpo.kunjungan_tanggal');
 
-// SIMRS
 Route::get('get_city', [LaravotLocationController::class, 'get_city'])->name('get_city');
 Route::get('get_district', [LaravotLocationController::class, 'get_district'])->name('get_district');
 Route::get('get_village', [LaravotLocationController::class, 'get_village'])->name('get_village');
@@ -176,6 +172,7 @@ Route::middleware('auth')->group(function () {
         Route::resource('user', UserController::class);
         Route::resource('role', RoleController::class);
         Route::resource('permission', PermissionController::class);
+        Route::get('profile', [UserController::class, 'profile'])->name('profile');
     });
     // simrs
     Route::prefix('simrs')->name('simrs.')->group(function () {
@@ -185,6 +182,15 @@ Route::middleware('auth')->group(function () {
             Route::get('laporan', [SIMRSAntrianController::class, 'laporan'])->name('laporan');
             Route::get('laporan_kunjungan', [SIMRSAntrianController::class, 'laporan_kunjungan'])->name('laporan_kunjungan');
         });
+        Route::resource('pasien', SIMRSPasienController::class);
+        Route::resource('dokter', SIMRSDokterController::class);
+        Route::resource('kunjungan', SIMRSKunjunganController::class);
+
+        Route::resource('poli', PoliklinikController::class)->only(['index', 'create', 'edit', 'show', 'store'])->middleware('permission:pelayanan-medis');
+        Route::resource('jadwaldokter', JadwalDokterController::class)->only(['index', 'store', 'edit'])->middleware('permission:pelayanan-medis');
+        Route::resource('jadwallibur', JadwalLiburController::class)->middleware(['auth', 'permission:pelayanan-medis']);
+        Route::resource('jadwaloperasi', JadwalOperasiController::class)->only(['index', 'store', 'edit'])->middleware('permission:pelayanan-medis');
+        Route::resource('dokter', DokterController::class)->only(['index', 'create'])->middleware('permission:pelayanan-medis');
     });
     // bpjs
     Route::prefix('bpjs')->name('bpjs.')->group(function () {
@@ -210,4 +216,3 @@ Route::middleware('auth')->group(function () {
         Route::resource('encounter', EncounterController::class)->only(['index', 'create', 'store']);
     });
 });
-Route::get('profile', [UserController::class, 'profile'])->name('profile');
