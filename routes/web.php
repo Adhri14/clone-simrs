@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\ThermalPrintController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\WhatsappController;
 use App\Http\Controllers\AntrianController;
 use App\Http\Controllers\BPJS\Antrian\AntrianController as AntrianAntrianController;
 use App\Http\Controllers\DokterController;
@@ -167,6 +168,7 @@ Route::get('get_village', [LaravotLocationController::class, 'get_village'])->na
 Route::get('bar_qr_scanner', [BarcodeController::class, 'scanner'])->name('bar_qr_scanner');
 Route::get('thermal_printer', [ThermalPrintController::class, 'thermal_printer'])->name('thermal_printer');
 Route::get('thermal_print', [ThermalPrintController::class, 'thermal_print'])->name('thermal_print');
+Route::get('whatsapp', [WhatsappController::class, 'whatsapp'])->name('whatsapp');
 // auth
 Route::middleware('auth')->group(function () {
     // admin

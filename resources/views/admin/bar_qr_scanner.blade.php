@@ -6,7 +6,7 @@
 @section('content')
     <div class="row">
         <div class="col-6">
-            <x-adminlte-card title="Contoh Modul Bar & QR Code" theme="secondary" collapsible>
+            <x-adminlte-card title="Modul Bar & QR Code" theme="secondary" collapsible>
                 <h3>Barcode : {{ $request->barcode }}</h3>
                 @php
                     $generatorPNG = new Picqer\Barcode\BarcodeGeneratorPNG();

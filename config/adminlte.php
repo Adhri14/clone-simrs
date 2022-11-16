@@ -789,7 +789,7 @@ return [
         ],
         // MODUL TESTING
         [
-            'text'    => 'Modul Testing',
+            'text'    => 'Pengaturan & Testing',
             'icon'    => 'fas fa-cogs',
             'can' => 'admin',
             'submenu' => [
@@ -808,19 +808,19 @@ return [
                     'can' => 'admin',
                 ],
                 [
-                    'text' => 'Scan File',
-                    'icon'    => 'fas fa-print',
-                    'url'  => 'scan_file',
+                    'text' => 'WhatsApp API',
+                    'icon'    => 'fas fa-phone',
+                    'url'  => 'whatsapp',
                     'shift'   => 'ml-2',
                     'can' => 'admin',
                 ],
-                [
-                    'text' => 'Invoice Print',
-                    'icon'    => 'fas fa-receipt',
-                    'url'  => 'invoice',
-                    'shift'   => 'ml-2',
-                    'can' => 'admin',
-                ],
+                // [
+                //     'text' => 'Invoice Print',
+                //     'icon'    => 'fas fa-receipt',
+                //     'url'  => 'invoice',
+                //     'shift'   => 'ml-2',
+                //     'can' => 'admin',
+                // ],
                 [
                     'text'        => 'Log Viewer',
                     'url'         => 'log-viewer',

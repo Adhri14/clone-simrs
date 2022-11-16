@@ -12,18 +12,20 @@ class ThermalPrintController extends Controller
 {
     public function thermal_printer(Request $request)
     {
+        if (empty($request->printer_connector)) {
+            $request['printer_connector'] = "EPSON TM-T82X Receipt";
+        }
         return view('admin.thermal_printer', compact([
             'request',
         ]));
     }
-    public function thermal_print()
+    public function thermal_print(Request $request)
     {
         try {
-            $printer_connector = "EPSON TM-T82X Receipt";
-            $connector = new WindowsPrintConnector($printer_connector);
+            $connector = new WindowsPrintConnector($request->printer_connector);
             $printer = new Printer($connector);
             $printer->text("Test Printer\n");
-            $printer->text("Printer Connector : " . $printer_connector . "\n");
+            $printer->text("Printer Connector : " . $request->printer_connector . "\n");
             $printer->barcode('BARCODE');
             $printer->qrCode('QRCODE');
             $printer->setEmphasis(true);
