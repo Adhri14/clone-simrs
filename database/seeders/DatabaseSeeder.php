@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\SIMRS\Pasien;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -31,6 +32,7 @@ class DatabaseSeeder extends Seeder
         // $this->call(DokterSeeder::class);
         $this->call(RoleSeeder::class);
         $this->call(UserSeeder::class);
-        User::factory(100)->create();
+        // User::factory(50)->create();
+        Pasien::factory(100)->create();
     }
 }
