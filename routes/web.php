@@ -86,7 +86,6 @@ Route::prefix('antrian')->name('antrian.')->middleware(['auth'])->group(function
     Route::get('laporan', [AntrianController::class, 'laporan'])->name('laporan');
     Route::get('laporan_tanggal', [AntrianController::class, 'laporan_tanggal'])->name('laporan_tanggal');
     Route::get('laporan_bulan', [AntrianController::class, 'laporan_bulan'])->name('laporan_bulan');
-    Route::get('taskid', [AntrianController::class, 'taskid'])->name('taskid');
     Route::get('{kodebookig}/edit', [AntrianController::class, 'edit'])->name('edit');
     // pendafataran
     Route::get('pendaftaran', [AntrianController::class, 'pendaftaran'])->name('pendaftaran')->middleware('permission:pendaftaran');
@@ -144,7 +143,10 @@ Route::prefix('vclaim')->name('vclaim.')->middleware(['auth'])->group(function (
     Route::delete('delete_surat_kontrol/{noSuratKontrol}', [VclaimController::class, 'delete_surat_kontrol'])->name('delete_surat_kontrol');
 });
 
-
+Route::resource('poli', PoliklinikController::class)->only(['index', 'create', 'edit', 'show', 'store'])->middleware('permission:pelayanan-medis');
+Route::resource('jadwaldokter', JadwalDokterController::class)->only(['index', 'store', 'edit'])->middleware('permission:pelayanan-medis');
+Route::resource('jadwallibur', JadwalLiburController::class)->middleware(['auth', 'permission:pelayanan-medis']);
+Route::resource('jadwaloperasi', JadwalOperasiController::class)->only(['index', 'store', 'edit'])->middleware('permission:pelayanan-medis');
 Route::get('pasien_daerah', [PasienController::class, 'pasien_daerah'])->name('pasien_daerah');
 Route::get('pasien_demografi', [PasienController::class, 'pasien_demografi'])->name('pasien_demografi');
 Route::get('index_penyakit_rajal', [IndexController::class, 'index_penyakit_rajal'])->name('index_penyakit_rajal');
@@ -185,12 +187,6 @@ Route::middleware('auth')->group(function () {
         Route::resource('pasien', SIMRSPasienController::class);
         Route::resource('dokter', SIMRSDokterController::class);
         Route::resource('kunjungan', SIMRSKunjunganController::class);
-
-        Route::resource('poli', PoliklinikController::class)->only(['index', 'create', 'edit', 'show', 'store'])->middleware('permission:pelayanan-medis');
-        Route::resource('jadwaldokter', JadwalDokterController::class)->only(['index', 'store', 'edit'])->middleware('permission:pelayanan-medis');
-        Route::resource('jadwallibur', JadwalLiburController::class)->middleware(['auth', 'permission:pelayanan-medis']);
-        Route::resource('jadwaloperasi', JadwalOperasiController::class)->only(['index', 'store', 'edit'])->middleware('permission:pelayanan-medis');
-        Route::resource('dokter', DokterController::class)->only(['index', 'create'])->middleware('permission:pelayanan-medis');
     });
     // bpjs
     Route::prefix('bpjs')->name('bpjs.')->group(function () {

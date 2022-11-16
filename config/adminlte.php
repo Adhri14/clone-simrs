@@ -325,13 +325,6 @@ return [
                     'can' => 'admin',
                 ],
                 [
-                    'text' => 'Status TaskId Antrian',
-                    'icon'    => 'fas fa-desktop',
-                    'url'  => 'antrian/taskid',
-                    'shift'   => 'ml-2',
-                    'can' => 'admin',
-                ],
-                [
                     'text' => 'Antrian Pendaftaran',
                     'icon'    => 'fas fa-user-plus',
                     'url'  => 'antrian/pendaftaran',
@@ -410,11 +403,11 @@ return [
                 ],
             ],
         ],
-        // APLIKASI PENDAFTARAN
+        // APLIKASI SIMRS
         [
-            'text' => 'Aplikasi Pendaftaran',
-            'icon'    => 'fas fa-sign-in-alt',
-            'can' => 'pendaftaran',
+            'text' => 'Aplikasi SIMRS',
+            'icon'    => 'fas fa-hospital-alt',
+            'can' => 'admin',
             'submenu' => [
                 [
                     'text' => 'Anjungan Antrian',
@@ -444,36 +437,6 @@ return [
                     'url'  => 'simrs/antrian/laporan_kunjungan',
                     'can' => 'pendaftaran',
                 ],
-            ],
-        ],
-        // APLIKASI POLIKLINIK
-        [
-            'text' => 'Aplikasi Poliklinik',
-            'icon'    => 'fas fa-clinic-medical',
-            'can' => 'rekam-medis',
-            'submenu' => [
-                [
-                    'text' => 'Aplikasi KPO',
-                    'icon'    => 'fas fa-pills',
-                    'url'  => 'kpo',
-                    'shift'   => 'ml-2',
-                    'can' => 'rekam-medis',
-                ],
-                [
-                    'text' => 'Obat',
-                    'icon'    => 'fas fa-pills',
-                    'url'  => 'obat',
-                    'shift'   => 'ml-2',
-                    'can' => 'rekam-medis',
-                ],
-            ],
-        ],
-        // APLIKASI SIMRS
-        [
-            'text' => 'Aplikasi SIMRS',
-            'icon'    => 'fas fa-hospital-alt',
-            'can' => 'admin',
-            'submenu' => [
                 [
                     'text' => 'Pasien',
                     'icon'    => 'fas fa-user-injured',
@@ -495,15 +458,6 @@ return [
                     'shift'   => 'ml-2',
                     'can' => 'admin',
                 ],
-
-            ],
-        ],
-        // PELAYANAN MEDIS
-        [
-            'text' => 'Pelayanan Medis',
-            'icon'    => 'fas fa-stethoscope',
-            'can' => 'pelayanan-medis',
-            'submenu' => [
                 [
                     'text' => 'Poliklinik',
                     'icon'    => 'fas fa-clinic-medical',
@@ -554,15 +508,6 @@ return [
                     'shift'   => 'ml-2',
                     'can' => 'pelayanan-medis',
                 ],
-
-            ],
-        ],
-        // REKAM MEDIS
-        [
-            'text' => 'Rekam Medis',
-            'icon'    => 'fas fa-file-medical',
-            'can' => 'rekam-medis',
-            'submenu' => [
                 [
                     'text' => 'Kunjungan',
                     'icon'    => 'fas fa-hospital-user',
@@ -631,14 +576,6 @@ return [
                     'shift'   => 'ml-2',
                     'can' => 'rekam-medis',
                 ],
-            ],
-        ],
-        // KPO ELEKTRONIK
-        [
-            'text' => 'KPO Elektronik',
-            'icon'    => 'fas fa-prescription-bottle-alt',
-            'can' => 'rekam-medis',
-            'submenu' => [
                 [
                     'text' => 'Aplikasi KPO',
                     'icon'    => 'fas fa-pills',
@@ -653,7 +590,14 @@ return [
                     'shift'   => 'ml-2',
                     'can' => 'rekam-medis',
                 ],
+
             ],
+        ],
+        [
+            'text'    => 'Aplikasi Kepegawaian',
+            'icon'    => 'fas fa-user-tie',
+            'can' => ['admin'],
+            'submenu' => []
         ],
         // ANTRIAN BPJS
         [

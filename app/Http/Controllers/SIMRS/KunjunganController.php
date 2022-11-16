@@ -24,11 +24,9 @@ class KunjunganController extends Controller
                 ->orderByDesc('tgl_masuk')
                 ->paginate();
         }
-
         $status_kunjungan = StatusKunjunganDB::pluck('status_kunjungan', 'id');
         $alasan_masuk = AlasanMasukDB::pluck('alasan_masuk', 'id');
         $alasan_pulang = AlasanPulangDB::pluck('alasan_pulang', 'kode');
-
         return view('simrs.kunjungan_index', [
             'request' => $request,
             'kunjungans' => $kunjungans,

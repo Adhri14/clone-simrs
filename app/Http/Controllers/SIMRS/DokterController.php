@@ -4,16 +4,23 @@ namespace App\Http\Controllers\SIMRS;
 
 use App\Http\Controllers\Controller;
 use App\Models\Dokter;
+use App\Models\ParamedisDB;
 use Illuminate\Http\Request;
 
 class DokterController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $dokters = Dokter::get();
-        return view('simrs.dokter_index', [
-            'dokters' => $dokters,
-        ]);
+        $paramedis = ParamedisDB::where('nama_paramedis', 'LIKE', "%{$request->search}%")
+            ->simplePaginate(20);
+        $total_paramedis = ParamedisDB::count();
+        return view('simrs.dokter_index', compact([
+            'request',
+            'dokters',
+            'paramedis',
+            'total_paramedis',
+        ]));
     }
     public function create()
     {
