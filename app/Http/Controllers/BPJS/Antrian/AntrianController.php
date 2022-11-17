@@ -24,12 +24,12 @@ class AntrianController extends ApiBPJSController
     public function poli()
     {
         $response = $this->ref_poli();
-        if ($response->isSuccessful()) {
+        if ($response->status() == 200) {
             $polikliniks = $response->getData()->response;
             Alert::success($response->statusText(), 'Poliklinik Antrian BPJS');
         } else {
             $polikliniks = null;
-            Alert::error($response->statusText() . ' ' . $response->status());
+            Alert::error($response->getData()->metadata->message . ' ' . $response->status());
         }
         return view('bpjs.antrian.poli', compact([
             'polikliniks'
@@ -38,12 +38,12 @@ class AntrianController extends ApiBPJSController
     public function dokter()
     {
         $response = $this->ref_dokter();
-        if ($response->isSuccessful()) {
+        if ($response->status() == 200) {
             $dokters = $response->getData()->response;
             Alert::success($response->statusText(), 'Poliklinik Antrian BPJS');
         } else {
             $dokters = null;
-            Alert::error($response->statusText() . ' ' . $response->status());
+            Alert::error($response->getData()->metadata->message . ' ' . $response->status());
         }
         return view('bpjs.antrian.dokter', compact([
             'dokters'
@@ -53,14 +53,14 @@ class AntrianController extends ApiBPJSController
     {
         // get dokter
         $response = $this->ref_dokter();
-        if ($response->isSuccessful()) {
+        if ($response->status() == 200) {
             $dokters = $response->getData()->response;
         } else {
             $dokters = null;
         }
         // get poli
         $response = $this->ref_poli();
-        if ($response->isSuccessful()) {
+        if ($response->status() == 200) {
             $polikliniks = $response->getData()->response;
         } else {
             $polikliniks = null;
@@ -69,11 +69,11 @@ class AntrianController extends ApiBPJSController
         $jadwals = null;
         if (isset($request->kodepoli)) {
             $response = $this->ref_jadwal_dokter($request);
-            if ($response->isSuccessful()) {
+            if ($response->status() == 200) {
                 $jadwals = collect($response->getData()->response);
                 Alert::success($response->statusText(), 'Jadwal Dokter Antrian BPJS Total : ' . $jadwals->count());
             } else {
-                Alert::error($response->statusText() . ' ' . $response->status());
+                Alert::error($response->getData()->metadata->message . ' ' . $response->status());
             }
         }
         return view('bpjs.antrian.jadwal_dokter', compact([
@@ -87,14 +87,14 @@ class AntrianController extends ApiBPJSController
     {
         // get poli
         $response = $this->ref_poli();
-        if ($response->isSuccessful()) {
+        if ($response->status() == 200) {
             $polikliniks = $response->getData()->response;
         } else {
             $polikliniks = null;
         }
         // get antrian
         $antrians = null;
-        if (isset($request->tanggal)) {
+        if (isset($request->kodepoli)) {
             $antrians = Antrian::whereDate('tanggalperiksa', $request->tanggal)->get();
             if ($request->kodepoli != '000') {
                 $antrians = $antrians->where('kodepoli', $request->kodepoli);
@@ -113,10 +113,10 @@ class AntrianController extends ApiBPJSController
         $taskid = null;
         if (isset($request->kodebooking)) {
             $response =  $this->getlisttask($request);
-            if ($response->isSuccessful()) {
+            if ($response->status() == 200) {
                 $taskid = $response->getData()->response;
             }
-            Alert::success($response->statusText() . ' ' . $response->status());
+            Alert::success($response->getData()->metadata->message . ' ' . $response->status());
         }
         return view('bpjs.antrian.list_task', compact([
             'request',
@@ -128,7 +128,7 @@ class AntrianController extends ApiBPJSController
         $antrians = null;
         if (isset($request->waktu)) {
             $response =  $this->dashboard_tanggal($request);
-            if ($response->isSuccessful()) {
+            if ($response->status() == 200) {
                 $antrians = $response->getData()->response->list;
                 Alert::success($response->getData()->metadata->message . ' ' . $response->status());
             } else {
@@ -143,16 +143,16 @@ class AntrianController extends ApiBPJSController
     public function dashboard_bulan_index(Request $request)
     {
         $antrians = null;
-        if (isset($request->waktu)) {
+        if (isset($request->tanggal)) {
             $tanggal = explode('-', $request->tanggal);
             $request['tahun'] = $tanggal[0];
             $request['bulan'] = $tanggal[1];
             $response =  $this->dashboard_bulan($request);
-            if ($response->isSuccessful()) {
+            if ($response->status() == 200) {
                 $antrians = $response->getData()->response->list;
-                Alert::success($response->getData()->metadata->message . ' - ' . $response->status());
+                Alert::success($response->getData()->metadata->message . ' ' . $response->status());
             } else {
-                Alert::error($response->getData()->metadata->message . ' - ' . $response->status());
+                Alert::error($response->getData()->metadata->message . ' ' . $response->status());
             }
         }
         return view('bpjs.antrian.dashboard_bulan_index', compact([

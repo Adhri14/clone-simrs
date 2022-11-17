@@ -8,7 +8,7 @@
         <div class="col-12">
             <x-adminlte-card title="Pencarian Dashboad Bulan Antrian" theme="secondary" icon="fas fa-info-circle"
                 collapsible>
-                <form action="{{ route('bpjs.antrian.dashboard_tanggal') }}">
+                <form action="{{ route('bpjs.antrian.dashboard_bulan') }}">
                     @php
                         $config = ['format' => 'YYYY-MM'];
                     @endphp
