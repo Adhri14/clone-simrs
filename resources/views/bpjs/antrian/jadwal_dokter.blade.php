@@ -26,7 +26,7 @@
             </x-adminlte-card>
             <x-adminlte-card title="Referensi Jadwal Dokter Antrian BPJS" theme="secondary" collapsible>
                 @php
-                    $heads = ['Task ID', 'Taskname', 'Waktu RS', 'Waktu BPJS', 'Kodebooking'];
+                    $heads = ['No.', 'Hari', 'Jadwal', 'Poliklinik', 'Subspesialis','Dokter','Kuota','Status','Action'];
                 @endphp
                 <x-adminlte-datatable id="table2" class="text-xs" :heads="$heads" hoverable bordered compressed>
                     @isset($jadwals)
@@ -35,9 +35,9 @@
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $jadwal->namahari }}</td>
                                 <td>{{ $jadwal->jadwal }}</td>
-                                <td>{{ $jadwal->namapoli }}</td>
-                                <td>{{ $jadwal->namasubspesialis }}</td>
-                                <td>{{ $jadwal->namadokter }}</td>
+                                <td>{{ $jadwal->namapoli }} - {{ $jadwal->kodepoli }}</td>
+                                <td>{{ $jadwal->namasubspesialis }} - {{ $jadwal->kodesubspesialis }}</td>
+                                <td>{{ $jadwal->namadokter }} - {{ $jadwal->kodedokter }}</td>
                                 <td>{{ $jadwal->kapasitaspasien }}</td>
                                 <td></td>
                                 <td></td>

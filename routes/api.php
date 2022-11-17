@@ -116,6 +116,8 @@ Route::prefix('simrs')->name('api.simrs.')->group(function () {
 Route::prefix('bpjs')->name('bpjs.')->group(function () {
     Route::prefix('antrian')->name('antrian.')->group(function () {
         Route::get('token', [AntrianAntrianController::class, 'token'])->name('token');
+        Route::post('status_antrian', [AntrianAntrianController::class, 'status_antrian'])->name('status_antrian');
+        Route::post('ambil_antrian', [AntrianAntrianController::class, 'ambil_antrian'])->name('ambil_antrian');
     });
 });
 
