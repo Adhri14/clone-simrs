@@ -118,6 +118,9 @@ Route::prefix('bpjs')->name('bpjs.')->group(function () {
         Route::get('token', [AntrianAntrianController::class, 'token'])->name('token');
         Route::post('status_antrian', [AntrianAntrianController::class, 'status_antrian'])->name('status_antrian');
         Route::post('ambil_antrian', [AntrianAntrianController::class, 'ambil_antrian'])->name('ambil_antrian');
+        Route::post('sisa_antrian', [AntrianAntrianController::class, 'sisa_antrian'])->name('sisa_antrian');
+        Route::post('batal_antrian', [AntrianAntrianController::class, 'batal_antrian'])->name('batal_antrian');
+        Route::post('checkin_antrian', [AntrianAntrianController::class, 'checkin_antrian'])->name('checkin_antrian');
     });
 });
 

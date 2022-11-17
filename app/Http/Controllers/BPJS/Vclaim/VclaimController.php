@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\BPJS\Vclaim;
 
 use App\Http\Controllers\BPJS\ApiBPJSController;
+use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator;
@@ -152,6 +153,105 @@ class VclaimController extends ApiBPJSController
         $url = $this->baseUrl . "RencanaKontrol/noSuratKontrol/" . $request->nomorreferensi;
         $signature = $this->signature();
         $response = Http::withHeaders($signature)->get($url);
+        return $this->response_decrypt($response, $signature);
+    }
+
+    public function sep_insert(Request $request)
+    {
+        $validator = Validator::make(request()->all(), [
+            "noKartu" => "required",
+            "tglSep" => "required",
+            "ppkPelayanan" => "required",
+            "jnsPelayanan" => "required",
+            "klsRawatHak" => "required",
+            "asalRujukan" => "required",
+            "tglRujukan" => "required",
+            "noRujukan" => "required",
+            "ppkRujukan" => "required",
+            "catatan" => "required",
+            "diagAwal" => "required",
+            "tujuan" => "required",
+            "eksekutif" => "required",
+            "tujuanKunj" => "required",
+            // "flagProcedure" => "required",
+            // "kdPenunjang" => "required",
+            // "assesmentPel" => "required",
+            // "noSurat" => "required",
+            // "kodeDPJP" => "required",
+            "dpjpLayan" => "required",
+            "noTelp" => "required",
+            "user" => "required",
+        ]);
+        if ($validator->fails()) {
+            return $this->sendError($validator->errors()->first(), null, 201);
+        }
+        $url = $this->baseUrl . "SEP/2.0/insert";
+        $signature = $this->signature();
+        $signature['Content-Type'] = 'application/x-www-form-urlencoded';
+        $data = [
+            "request" => [
+                "t_sep" => [
+                    "noKartu" => $request->noKartu,
+                    "tglSep" => $request->tglSep,
+                    "ppkPelayanan" => $request->ppkPelayanan,
+                    "jnsPelayanan" => $request->jnsPelayanan,
+                    "klsRawat" => [
+                        "klsRawatHak" => $request->klsRawatHak,
+                        "klsRawatNaik" => "",
+                        "pembiayaan" => "",
+                        "penanggungJawab" => "",
+                    ],
+                    "noMR" => $request->noMR,
+                    "rujukan" => [
+                        "asalRujukan" =>  $request->asalRujukan,
+                        "tglRujukan" =>  $request->tglRujukan,
+                        "noRujukan" =>  $request->noRujukan,
+                        "ppkRujukan" =>  $request->ppkRujukan,
+                    ],
+                    "catatan" => $request->catatan,
+                    "diagAwal" => $request->diagAwal,
+                    "poli" => [
+                        "tujuan" => $request->tujuan,
+                        "eksekutif" => $request->eksekutif,
+                    ],
+                    "cob" => [
+                        "cob" => "0"
+                    ],
+                    "katarak" => [
+                        "katarak" => "0"
+                    ],
+                    "jaminan" => [
+                        "lakaLantas" => "0",
+                        "noLP" => "",
+                        "penjamin" => [
+                            "tglKejadian" => "",
+                            "keterangan" => "",
+                            "suplesi" => [
+                                "suplesi" => "0",
+                                "noSepSuplesi" => "",
+                                "lokasiLaka" => [
+                                    "kdPropinsi" => "",
+                                    "kdKabupaten" => "",
+                                    "kdKecamatan" => "",
+                                ]
+                            ]
+                        ]
+                    ],
+                    "tujuanKunj" => $request->tujuanKunj,
+                    "flagProcedure" => $request->flagProcedure,
+                    "kdPenunjang" => $request->kdPenunjang,
+                    "assesmentPel" => $request->assesmentPel,
+                    "skdp" => [
+                        "noSurat" => $request->noSurat,
+                        "kodeDPJP" => $request->kodeDPJP,
+                    ],
+                    "dpjpLayan" => $request->dpjpLayan,
+                    "noTelp" => $request->noTelp,
+                    "user" =>  $request->user,
+                ]
+            ]
+        ];
+        $response = Http::withHeaders($signature)->post($url, $data);
         return $this->response_decrypt($response, $signature);
     }
 }
