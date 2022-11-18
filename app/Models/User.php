@@ -19,6 +19,8 @@ class User extends Authenticatable
         'phone',
         'email',
         'password',
+        'email_verified_at',
+        'user_id',
     ];
 
     protected $hidden = [
@@ -29,4 +31,8 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+    public function verificator()
+    {
+        return $this->hasOne(User::class, 'id', 'user_id');
+    }
 }

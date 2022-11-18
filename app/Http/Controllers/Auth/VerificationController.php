@@ -2,9 +2,13 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Http\Controllers\Admin\WhatsappController;
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\VerifiesEmails;
+use Illuminate\Http\Request;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class VerificationController extends Controller
 {
@@ -33,10 +37,21 @@ class VerificationController extends Controller
      *
      * @return void
      */
-    public function __construct()
+    public function verifikasi_akun(Request $request)
     {
-        $this->middleware('auth');
-        $this->middleware('signed')->only('verify');
-        $this->middleware('throttle:6,1')->only('verify', 'resend');
+        return view('vendor.adminlte.auth.verify', compact(['request']));
+    }
+    public function verifikasi_kirim(Request $request)
+    {
+        $user = User::where('username', $request->username)
+            ->orWhere('email', $request->username)->first();
+        $wa = new WhatsappController();
+        $request['message'] = "*Verifikasi Akun SIMRS WALED* \nPesan verifikasi akun anda telah dikirim dengan sebagai berikut.\n\nNAMA : " . $user->name . "\nPHONE : " . $user->phone . "\nEMAIL : " . $user->email . "\n\nSilahkan menunggu Administrator atau Kepegawaian untuk memverifikasi anda.";
+        $request['number'] = $user->phone;
+        $wa->send_message($request);
+        $request['notif'] = "*Verifikasi Akun SIMRS WALED* \nTelah registrasi akun baru dengan data sebagai berikut.\n\nNAMA : " . $user->name . "\nPHONE : " . $user->phone . "\nEMAIL : " . $user->email . "\n\nMohon segera lakukan verifikasi registrasi tersebut.\nsim.rsudwaled.id";
+        $wa->send_notif($request);
+        Alert::success('Succes','Berhasil Kirim Pesan Verifikasi');
+        return redirect()->route('login');
     }
 }

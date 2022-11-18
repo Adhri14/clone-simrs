@@ -1,16 +1,36 @@
 @extends('adminlte::master')
 
-@php( $dashboard_url = View::getSection('dashboard_url') ?? config('adminlte.dashboard_url', 'home') )
+@php($dashboard_url = View::getSection('dashboard_url') ?? config('adminlte.dashboard_url', 'home'))
 
 @if (config('adminlte.use_route_url', false))
-    @php( $dashboard_url = $dashboard_url ? route($dashboard_url) : '' )
+    @php($dashboard_url = $dashboard_url ? route($dashboard_url) : '')
 @else
-    @php( $dashboard_url = $dashboard_url ? url($dashboard_url) : '' )
+    @php($dashboard_url = $dashboard_url ? url($dashboard_url) : '')
 @endif
 
 @section('adminlte_css')
     @stack('css')
     @yield('css')
+    <style>
+        .login-page {
+            background-image: url('{{ asset('rsud-waled-sejarah-scaled.jpg') }}');
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-position: center;
+            background-blend-mode: overlay;
+            background-size: 100% 500
+        }
+
+
+        .register-page {
+            background-image: url('{{ asset('rsud-waled-sejarah-scaled.jpg') }}');
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-position: center;
+            background-blend-mode: overlay;
+            background-size: 100% 500
+        }
+    </style>
 @stop
 
 @section('classes_body'){{ ($auth_type ?? 'login') . '-page' }}@stop
@@ -58,5 +78,5 @@
 @section('adminlte_js')
     @stack('js')
     @yield('js')
-
+    @include('sweetalert::alert')
 @stop

@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\ThermalPrintController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\WhatsappController;
 use App\Http\Controllers\AntrianController;
+use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers\BPJS\Antrian\AntrianController as AntrianAntrianController;
 use App\Http\Controllers\DokterController;
 use App\Http\Controllers\FileRMController;
@@ -53,7 +54,12 @@ Route::get('/', function () {
 Route::get('daftar_pasien', function () {
     return view('simrs.daftar_pasien');
 })->name('daftar_pasien');
+
 Auth::routes();
+Route::get('verifikasi_akun', [VerificationController::class, 'verifikasi_akun'])->name('verifikasi_akun');
+Route::post('verifikasi_kirim', [VerificationController::class, 'verifikasi_kirim'])->name('verifikasi_kirim');
+
+
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get('/status', [App\Http\Controllers\HomeController::class, 'status'])->name('status');
 Route::get("log-message", function () {
@@ -175,6 +181,8 @@ Route::middleware('auth')->group(function () {
         Route::resource('role', RoleController::class);
         Route::resource('permission', PermissionController::class);
         Route::get('profile', [UserController::class, 'profile'])->name('profile');
+        Route::get('user_verifikasi/{user}', [UserController::class, 'user_verifikasi'])->name('user_verifikasi');
+        Route::get('delet_verifikasi', [UserController::class, 'delet_verifikasi'])->name('delet_verifikasi');
     });
     // simrs
     Route::prefix('simrs')->name('simrs.')->group(function () {

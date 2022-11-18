@@ -4,20 +4,25 @@
 
 @section('auth_body')
 
-    @if(session('resent'))
+    @if (session('resent'))
         <div class="alert alert-success" role="alert">
             {{ __('adminlte::adminlte.verify_email_sent') }}
         </div>
     @endif
-
-    {{ __('adminlte::adminlte.verify_check_your_email') }}
-    {{ __('adminlte::adminlte.verify_if_not_recieved') }},
-
-    <form class="d-inline" method="POST" action="{{ route('verification.resend') }}">
+    Silahkan hubungi Adminstrator / Kepegawaian untuk memverifikasi akun anda. Klik tombol dibawah ini untuk meminta
+    verifikasi.
+    <br>
+    <br>
+    <label>Username : {{ $user->username }}</label>
+    <br>
+    <form class="d-inline" method="POST" action="{{ route('verifikasi_kirim') }}">
         @csrf
-        <button type="submit" class="btn btn-link p-0 m-0 align-baseline">
-            {{ __('adminlte::adminlte.verify_request_another') }}
-        </button>.
+        <input type="hidden" name="username" value="{{ $user->username }}">
+        <x-adminlte-input name="phone" value="{{ $user->phone }}" type="number" label="Nomor HP / Telepon"
+            placeholder="Nomor HP / Telepon yang dapat dihubungi" enable-old-support />
+        <button type="submit" class="btn btn-sm btn-primary">
+            Verifikasi Akun
+        </button>
     </form>
 
 @stop

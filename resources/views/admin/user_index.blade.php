@@ -46,7 +46,7 @@
                     </div>
                 </div>
                 @php
-                    $heads = ['ID', 'Name', 'Username', 'Email', 'Phone', 'Role', 'Action'];
+                    $heads = ['ID', 'Name', 'Username', 'Email', 'Phone', 'Role', 'Verify', 'Action'];
                     $config['paging'] = false;
                     $config['lengthMenu'] = false;
                     $config['searching'] = false;
@@ -76,7 +76,15 @@
                                 @endforeach
                             </td>
                             <td>
+                                @isset($item->verificator)
+                                    {{ $item->verificator->name }}
+                                @endisset
+                            </td>
+                            <td>
                                 <form action="{{ route('user.destroy', $item) }}" method="POST">
+                                    <x-adminlte-button class="btn-xs" theme="success" icon="fas fa-check"
+                                        title="Edit User {{ $item->name }}"
+                                        onclick="window.location='{{ route('user_verifikasi', $item) }}'" />
                                     <x-adminlte-button class="btn-xs" theme="warning" icon="fas fa-edit"
                                         title="Edit User {{ $item->name }}"
                                         onclick="window.location='{{ route('user.edit', $item) }}'" />

@@ -17,12 +17,14 @@ class UserSeeder extends Seeder
     public function run()
     {
         $user = User::create([
-            "name" => "Admin",
+            "name" => "Admin IT",
             "email" => "admin@gmail.com",
-            "username" => "admin",
+            "username" => "adminit",
             "phone" => "089529909036",
-            'password' => bcrypt('qweqwe'),
+            'password' => bcrypt('qweqwe123'),
+            'user_id' => 1,
             'email_verified_at' => Carbon::now()
+
         ]);
         $user->assignRole('Admin');
         $user = User::create([
@@ -30,7 +32,8 @@ class UserSeeder extends Seeder
             "email" => "adminrs@gmail.com",
             "username" => "adminrs",
             "phone" => "089529909036",
-            'password' => bcrypt('qweqwe'),
+            'password' => bcrypt('qweqwe123'),
+            'user_id' => 1,
             'email_verified_at' => Carbon::now()
         ]);
         $user->assignRole('Admin Super');
@@ -39,7 +42,16 @@ class UserSeeder extends Seeder
             "email" => "marwandhiaurrahman@gmail.com",
             "username" => "marwan",
             "phone" => "089529909036",
-            'password' => bcrypt('qweqwe'),
+            'password' => bcrypt('qweqwe123'),
+        ]);
+        $user->assignRole('Admin Super');
+        $user = User::create([
+            "name" => "Admin Antrian BPJS",
+            "email" => "antrianbpjs@gmail.com",
+            "username" => "antrianbpjs",
+            "phone" => "089529909036",
+            'password' => bcrypt('antrianbpjs'),
+            'user_id' => 1,
             'email_verified_at' => Carbon::now()
         ]);
         $user->assignRole('Admin Super');
@@ -47,61 +59,53 @@ class UserSeeder extends Seeder
             "name" => "Admin Pendaftaran",
             "email" => "adminpendaftaran@gmail.com",
             "username" => "adminpendaftaran",
+            "phone" => "089529909036",
             'password' => bcrypt('adminpendaftaran'),
-            'email_verified_at' => Carbon::now()
         ]);
         $user->assignRole('Pendaftaran');
-        $user = User::create([
-            "name" => "Admin Antrian BPJS",
-            "email" => "antrianbpjs@gmail.com",
-            "username" => "antrianbpjs",
-            'password' => bcrypt('antrianbpjs'),
-            'email_verified_at' => Carbon::now()
-        ]);
-        $user->assignRole('Admin Super');
         $user = User::create([
             "name" => "Admin Kasir",
             "email" => "adminkasir@gmail.com",
             "username" => "adminkasir",
+            "phone" => "089529909036",
             'password' => bcrypt('adminkasir'),
-            'email_verified_at' => Carbon::now()
         ]);
         $user->assignRole('Kasir');
         $user = User::create([
             "name" => "Admin Poliklinik",
             "email" => "adminpoli@gmail.com",
             "username" => "adminpoli",
+            "phone" => "089529909036",
             'password' => bcrypt('adminpoli'),
-            'email_verified_at' => Carbon::now()
         ]);
         $user->assignRole('Poliklinik');
         $user = User::create([
             "name" => "Admin Farmasi",
             "email" => "adminfarmasi@gmail.com",
             "username" => "adminfarmasi",
+            "phone" => "089529909036",
             'password' => bcrypt('adminfarmasi'),
-            'email_verified_at' => Carbon::now()
         ]);
         $user->assignRole('Farmasi');
         $user = User::create([
             "name" => "Admin Pelayanan Medis",
             "email" => "adminyanmed@gmail.com",
             "username" => "adminyanmed",
+            "phone" => "089529909036",
             'password' => bcrypt('adminyanmed'),
-            'email_verified_at' => Carbon::now()
         ]);
         $user->assignRole('Pelayanan Medis');
         $user = User::create([
             "name" => "Admin Rekam Medis",
             "email" => "adminrekammedis@gmail.com",
             "username" => "adminrekammedis",
+            "phone" => "089529909036",
             'password' => bcrypt('adminrekammedis'),
-            'email_verified_at' => Carbon::now()
         ]);
         $user->assignRole('Rekam Medis');
-
         // $adminpoli = [
         //     'obgyn',
+        //     'hiv',
         //     'kulit',
         //     'pari',
         //     'mcu',
@@ -121,7 +125,6 @@ class UserSeeder extends Seeder
         //         "email" => $value . "@gmail.com",
         //         "username" => $value,
         //         'password' => bcrypt($value),
-        //         'email_verified_at' => Carbon::now()
         //     ]);
         //     $user->assignRole('Poliklinik');
         // }

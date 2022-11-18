@@ -2,16 +2,6 @@
 
 @section('adminlte_css_pre')
     <link rel="stylesheet" href="{{ asset('vendor/icheck-bootstrap/icheck-bootstrap.min.css') }}">
-    <style>
-        .login-page {
-            background-image: url('{{ asset('rsud-waled-sejarah-scaled.jpg') }}');
-            background-repeat: no-repeat;
-            background-attachment: fixed;
-            background-position: center;
-            background-blend-mode: overlay;
-            background-size: 100% 100%;
-        }
-    </style>
 @stop
 
 @php($login_url = View::getSection('login_url') ?? config('adminlte.login_url', 'login'))

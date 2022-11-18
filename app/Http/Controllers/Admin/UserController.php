@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
@@ -89,5 +90,18 @@ class UserController extends Controller
         $user->update($request->all());
         Alert::success('Success', 'Data Telah Disimpan');
         return redirect()->route('profil');
+    }
+    public function user_verifikasi(User $user, Request $request)
+    {
+        $user->update([
+            'email_verified_at' => Carbon::now(),
+            'user_id' => Auth::user()->id,
+        ]);
+        $wa = new WhatsappController();
+        $request['message'] = "*Verifikasi Akun SIMRS WALED* \nAkun anda telah diverifikasi. Data akun anda sebagai berikut.\n\nNAMA : " . $user->name . "\nPHONE : " . $user->phone . "\nEMAIL : " . $user->email . "\n\nSilahkan gunakan akun ini baik-baik.";
+        $request['number'] = $user->phone;
+        $wa->send_message($request);
+        Alert::success('Success', 'Akun telah diverifikasi');
+        return redirect()->route('user.index');
     }
 }
