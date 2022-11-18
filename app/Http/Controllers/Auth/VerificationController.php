@@ -51,7 +51,7 @@ class VerificationController extends Controller
         $wa->send_message($request);
         $request['notif'] = "*Verifikasi Akun SIMRS WALED* \nTelah registrasi akun baru dengan data sebagai berikut.\n\nNAMA : " . $user->name . "\nPHONE : " . $user->phone . "\nEMAIL : " . $user->email . "\n\nMohon segera lakukan verifikasi registrasi tersebut.\nsim.rsudwaled.id";
         $wa->send_notif($request);
-        Alert::success('Succes','Berhasil Kirim Pesan Verifikasi');
+        Alert::success('Succes','Berhasil Kirim Pesan Verifikasi. Silahkan menunggu verifikasi');
         return redirect()->route('login');
     }
 }
