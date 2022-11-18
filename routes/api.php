@@ -115,12 +115,26 @@ Route::prefix('simrs')->name('api.simrs.')->group(function () {
 
 Route::prefix('bpjs')->name('bpjs.')->group(function () {
     Route::prefix('antrian')->name('antrian.')->group(function () {
+        Route::get('ref_poli', [AntrianAntrianController::class, 'ref_poli'])->name('ref_poli');
+        Route::get('ref_dokter', [AntrianAntrianController::class, 'ref_dokter'])->name('ref_dokter');
+        Route::get('ref_jadwal_dokter', [AntrianAntrianController::class, 'ref_jadwal_dokter'])->name('ref_jadwal_dokter');
+        Route::post('tambah_antrean', [AntrianAntrianController::class, 'tambah_antrean'])->name('tambah_antrean');
+        Route::post('update_antrean', [AntrianAntrianController::class, 'update_antrean'])->name('update_antrean');
+        Route::post('batal_antrean', [AntrianAntrianController::class, 'batal_antrean'])->name('batal_antrean');
+        Route::post('taskid_antrean', [AntrianAntrianController::class, 'taskid_antrean'])->name('taskid_antrean');
+        Route::get('dashboard_tanggal', [AntrianAntrianController::class, 'dashboard_tanggal'])->name('dashboard_tanggal');
+        Route::get('dashboard_bulan', [AntrianAntrianController::class, 'dashboard_bulan'])->name('dashboard_bulan');
+
+
+        // API SIMRS
         Route::get('token', [AntrianAntrianController::class, 'token'])->name('token');
         Route::post('status_antrian', [AntrianAntrianController::class, 'status_antrian'])->name('status_antrian');
         Route::post('ambil_antrian', [AntrianAntrianController::class, 'ambil_antrian'])->name('ambil_antrian');
         Route::post('sisa_antrian', [AntrianAntrianController::class, 'sisa_antrian'])->name('sisa_antrian');
         Route::post('batal_antrian', [AntrianAntrianController::class, 'batal_antrian'])->name('batal_antrian');
         Route::post('checkin_antrian', [AntrianAntrianController::class, 'checkin_antrian'])->name('checkin_antrian');
+        Route::post('jadwal_operasi_rs', [AntrianAntrianController::class, 'jadwal_operasi_rs'])->name('jadwal_operasi_rs');
+        Route::post('jadwal_operasi_pasien', [AntrianAntrianController::class, 'jadwal_operasi_pasien'])->name('jadwal_operasi_pasien');
     });
 });
 

@@ -7,6 +7,7 @@ use App\Http\Controllers\BPJS\ApiBPJSController;
 use App\Http\Controllers\BPJS\Vclaim\VclaimController;
 use App\Models\Antrian;
 use App\Models\JadwalDokter;
+use App\Models\JadwalOperasi;
 use App\Models\KunjunganDB;
 use App\Models\LayananDB;
 use App\Models\LayananDetailDB;
@@ -31,6 +32,7 @@ use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class AntrianController extends ApiBPJSController
 {
+    // VIEW SIMRS
     public function status()
     {
         $token = Token::latest()->first();
@@ -384,7 +386,7 @@ class AntrianController extends ApiBPJSController
         );
         return $this->response_decrypt($response, $signature);
     }
-    public function getlisttask(Request $request)
+    public function taskid_antrean(Request $request)
     {
         $validator = Validator::make(request()->all(), [
             "kodebooking" => "required",
@@ -1507,23 +1509,13 @@ class AntrianController extends ApiBPJSController
     }
     public function jadwal_operasi_rs(Request $request)
     {
-        // auth token
-        $auth = $this->auth_token($request);
-        if ($auth['metadata']['code'] != 200) {
-            return $auth;
-        }
         // checking request
         $validator = Validator::make(request()->all(), [
-            "tanggalawal" => "required",
-            "tanggalakhir" => "required",
+            "tanggalawal" => "required|date",
+            "tanggalakhir" => "required|date",
         ]);
         if ($validator->fails()) {
-            return [
-                'metadata' => [
-                    'code' => 201,
-                    'message' => $validator->errors()->first(),
-                ],
-            ];
+            return $this->sendError($validator->errors()->first(), null, 201);
         }
         // end auth token
         $jadwalops = JadwalOperasi::whereBetween('tanggaloperasi', [$request->tanggalawal, $request->tanggalakhir])->get();
@@ -1546,40 +1538,22 @@ class AntrianController extends ApiBPJSController
             ];
         }
         $response = [
-            "response" => [
-                "list" => $jadwals
-            ],
-            "metadata" => [
-                "message" => "Ok",
-                "code" => 200
-            ]
+            "list" => $jadwals
         ];
-        return $response;
+        return $this->sendResponse("OK", $response, 200);
     }
     public function jadwal_operasi_pasien(Request $request)
     {
-        // auth token
-        $auth = $this->auth_token($request);
-        if ($auth['metadata']['code'] != 200) {
-            return $auth;
-        }
         // checking request
         $validator = Validator::make(request()->all(), [
             "nopeserta" => "required|digits:13",
         ]);
         if ($validator->fails()) {
-            return [
-                'metadata' => [
-                    'code' => 201,
-                    'message' => $validator->errors()->first(),
-                ],
-            ];
+            return $this->sendError($validator->errors()->first(), null, 201);
         }
-        // end auth token
         $jadwalops = JadwalOperasi::where('nopeserta', $request->nopeserta)
             ->where('tanggaloperasi', '>=', Carbon::now()->format('Y-m-d'))
             ->get();
-
         $jadwals = [];
         foreach ($jadwalops as  $jadwalop) {
             if ($jadwalop->terlaksana == "0") {
@@ -1599,15 +1573,9 @@ class AntrianController extends ApiBPJSController
             ];
         }
         $response = [
-            "response" => [
-                "list" => $jadwals
-            ],
-            "metadata" => [
-                "message" => "Ok",
-                "code" => 200
-            ]
+            "list" => $jadwals
         ];
-        return $response;
+        return $this->sendResponse("OK", $response, 200);
     }
     public function print_ulang(Request $request)
     {
