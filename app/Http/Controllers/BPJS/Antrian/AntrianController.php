@@ -23,6 +23,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\ValidationException;
 use Mike42\Escpos\PrintConnectors\WindowsPrintConnector;
 use Mike42\Escpos\Printer;
 use RealRashid\SweetAlert\Facades\Alert;
@@ -955,20 +956,24 @@ class AntrianController extends ApiBPJSController
             return $this->sendError($validator->errors()->first(), null, 201);
         }
         $antrian = Antrian::firstWhere('kodebooking', $request->kodebooking);
-        // jika antrian ditemukan
-        if (isset($antrian)) {
-            // check backdate
-            if (!Carbon::parse($antrian->tanggalperiksa)->isToday()) {
-                return $this->sendError("Tanggal periksa bukan hari ini", null, 201);
-            }
+        // jika antrian tidak ditemukan
+        if (empty($antrian)) {
+            return $this->sendError("Antrian tidak ditemukan", null, 201);
+        }
+        // check backdate
+        if (!Carbon::parse($antrian->tanggalperiksa)->isToday()) {
+            return $this->sendError("Tanggal periksa bukan hari ini", null, 201);
+        }
+        // jika antrian sudah cekin print ulang
+        if ($antrian->taskid >= 3) {
+            return  $this->print_ulang($request);
+        }
+        try {
+            // init
             $now = now();
             $unit = UnitDB::firstWhere('KDPOLI', $antrian->kodepoli);
             $tarifkarcis = TarifLayananDetailDB::firstWhere('KODE_TARIF_DETAIL', $unit->kode_tarif_karcis);
             $tarifadm = TarifLayananDetailDB::firstWhere('KODE_TARIF_DETAIL', $unit->kode_tarif_adm);
-            if ($antrian->taskid >= 3) {
-                $this->print_ulang($antrian);
-                return $this->sendResponse("Printer Ulang Karcis Antrian", null, 200);
-            }
             if ($antrian->pasienbaru == 1) {
                 $request['pasienbaru_print'] = 'BARU';
             } else {
@@ -986,7 +991,6 @@ class AntrianController extends ApiBPJSController
                 $request['nik'] = $antrian->nik;
                 $request['nohp'] = $antrian->nohp;
                 $request['kodedokter'] = $antrian->kodedokter;
-                // insert sep
                 $vclaim = new VclaimController();
                 // daftar pake surat kontrol
                 if ($antrian->jeniskunjungan == 3) {
@@ -1154,7 +1158,7 @@ class AntrianController extends ApiBPJSController
                         $request['noTelp'] = $antrian->nohp;
                         $request['user'] = "Mesin Antrian";
                     } else {
-                        return $this->sendError($response->getData()->metadata->message, null, $response->status());
+                        throw ValidationException::withMessages([$response->getData()->metadata->message]);
                     }
                 }
                 // create sep
@@ -1171,7 +1175,7 @@ class AntrianController extends ApiBPJSController
                 }
                 // gagal buat sep
                 else {
-                    return $this->sendError($response->getData()->metadata->message, null, $response->status());
+                    throw ValidationException::withMessages([$response->getData()->metadata->message]);
                 }
                 // rj jkn tipe transaki 2 status layanan 2 status layanan detail opn
                 $tipetransaksi = 2;
@@ -1207,8 +1211,8 @@ class AntrianController extends ApiBPJSController
             $response = $this->update_antrean($request);
             // jika antrian berhasil diupdate di bpjs
             if ($response->status() == 200) {
-                // insert simrs create kunjungan
                 try {
+                    // insert simrs create kunjungan
                     $paramedis = ParamedisDB::firstWhere('kode_dokter_jkn', $antrian->kodedokter);
                     // hitung counter kunjungan
                     $kunjungan = KunjunganDB::where('no_rm', $antrian->norm)->orderBy('counter', 'DESC')->first();
@@ -1315,11 +1319,6 @@ class AntrianController extends ApiBPJSController
                         'tagihan_pribadi' => $totalpribadi,
                         'tagihan_penjamin' => $totalpenjamin,
                     ]);
-                } catch (\Throwable $th) {
-                    return $this->sendError("Error Create Kunjungan SIMRS : " . $th->getMessage(), null, 500);
-                }
-                // update antrian kunjungan tracer
-                try {
                     $kunjungan->update([
                         'status_kunjungan' => 1,
                     ]);
@@ -1365,17 +1364,15 @@ class AntrianController extends ApiBPJSController
                     $request['message'] = "Antrian dengan kode booking " . $antrian->kodebooking . " telah melakukan checkin.\n\n" . $request->keterangan;
                     $request['number'] = $antrian->nohp;
                     $wa->send_message($request);
+                    return $this->sendResponse('OK', null, 200);
                 } catch (\Throwable $th) {
-                    return $this->sendError("Error Update Kunjungan Antrian : " . $th->getMessage(), null, 500);
+                    throw ValidationException::withMessages([$th->getMessage()]);
                 }
-                return $this->sendResponse('OK', null, 200);
             } else {
-                return $this->sendError($response->getData()->metadata->message, null, $response->status());
+                throw ValidationException::withMessages([$response->getData()->metadata->message]);
             }
-        }
-        // jika antrian tidak ditemukan
-        else {
-            return $this->sendError("Antrian tidak ditemukan", null, 201);
+        } catch (\Throwable $th) {
+            return $this->sendError($th->getMessage(), null, 201);
         }
     }
     public function info_pasien_baru(Request $request)
@@ -1508,43 +1505,6 @@ class AntrianController extends ApiBPJSController
             ];
         }
     }
-    public function print_ulang(Request $request)
-    {
-        $antrian = Antrian::firstWhere('kodebooking', $request->kodebooking);
-        $unit = UnitDB::firstWhere('KDPOLI', $antrian->kodepoli);
-        $tarifkarcis = TarifLayananDetailDB::firstWhere('KODE_TARIF_DETAIL', $unit->kode_tarif_karcis);
-        $tarifadm = TarifLayananDetailDB::firstWhere('KODE_TARIF_DETAIL', $unit->kode_tarif_adm);
-        if ($antrian->taskid == 3) {
-            // print antrian
-            $print_karcis = new AntrianController();
-            $request['tarifkarcis'] = $tarifkarcis->TOTAL_TARIF_NEW;
-            $request['tarifadm'] = $tarifadm->TOTAL_TARIF_NEW;
-            $request['norm'] = $antrian->norm;
-            $request['nama'] = $antrian->nama;
-            $request['nik'] = $antrian->nik;
-            $request['nomorkartu'] = $antrian->nomorkartu;
-            $request['nohp'] = $antrian->nohp;
-            $request['nomorrujukan'] = $antrian->nomorrujukan;
-            $request['nomorsuratkontrol'] = $antrian->nomorsuratkontrol;
-            $request['namapoli'] = $antrian->namapoli;
-            $request['namadokter'] = $antrian->namadokter;
-            $request['jampraktek'] = $antrian->jampraktek;
-            $request['tanggalperiksa'] = $antrian->tanggalperiksa;
-            $request['jenispasien'] = $antrian->jenispasien;
-            $request['nomorantrean'] = $antrian->nomorantrean;
-            $request['lokasi'] = $antrian->lokasi;
-            $request['angkaantrean'] = $antrian->angkaantrean;
-            $request['lantaipendaftaran'] = $antrian->lantaipendaftaran;
-            $kunjungan = KunjunganDB::firstWhere('kode_kunjungan', $antrian->kode_kunjungan);
-            $print_karcis->print_karcis($request, $kunjungan);
-            return [
-                "metadata" => [
-                    "message" => "Print ulang sukses.",
-                    "code" => 200,
-                ],
-            ];
-        }
-    }
     public function jadwal_operasi_rs(Request $request)
     {
         // auth token
@@ -1649,8 +1609,63 @@ class AntrianController extends ApiBPJSController
         ];
         return $response;
     }
-
-
+    public function print_ulang(Request $request)
+    {
+        $antrian = Antrian::firstWhere('kodebooking', $request->kodebooking);
+        $unit = UnitDB::firstWhere('KDPOLI', $antrian->kodepoli);
+        $tarifkarcis = TarifLayananDetailDB::firstWhere('KODE_TARIF_DETAIL', $unit->kode_tarif_karcis);
+        $tarifadm = TarifLayananDetailDB::firstWhere('KODE_TARIF_DETAIL', $unit->kode_tarif_adm);
+        // print antrian
+        if ($antrian->pasienbaru == 0) {
+            $request['pasienbaru_print'] = 'LAMA';
+        } else {
+            $request['pasienbaru_print'] = 'BARU';
+        }
+        $request['keterangan'] = "Print Ulang Karcis Antrian, untuk pasien JKN dapat langsung menunggu panggilan dipoliklinik";
+        switch ($antrian->jeniskunjungan) {
+            case '1':
+                $request['jeniskunjungan_print'] = 'RUJUKAN FKTP';
+                break;
+            case '1':
+                $request['jeniskunjungan_print'] = 'RUJUKAN INTERNAL';
+                break;
+            case '1':
+                if (isset($antrian->nomorreferensi)) {
+                    $request['jeniskunjungan_print'] = 'KONTROL';
+                } else {
+                    $request['keterangan'] = "Print Ulang Karcis Antrian, untuk pasien NON-JKN silahkan lakukan pembayaran di Loken Pembayaran";
+                    $request['jeniskunjungan_print'] = 'KUNJUNGAN UMUM';
+                }
+                break;
+            case '1':
+                $request['jeniskunjungan_print'] = 'RUJUKAN RS';
+                break;
+            default:
+                break;
+        }
+        $request['tarifkarcis'] = $tarifkarcis->TOTAL_TARIF_NEW;
+        $request['tarifadm'] = $tarifadm->TOTAL_TARIF_NEW;
+        $request['norm'] = $antrian->norm;
+        $request['nama'] = $antrian->nama;
+        $request['nik'] = $antrian->nik;
+        $request['nomorkartu'] = $antrian->nomorkartu;
+        $request['nohp'] = $antrian->nohp;
+        $request['nomorrujukan'] = $antrian->nomorrujukan;
+        $request['nomorsuratkontrol'] = $antrian->nomorsuratkontrol;
+        $request['namapoli'] = $antrian->namapoli;
+        $request['namadokter'] = $antrian->namadokter;
+        $request['jampraktek'] = $antrian->jampraktek;
+        $request['tanggalperiksa'] = $antrian->tanggalperiksa;
+        $request['jenispasien'] = $antrian->jenispasien;
+        $request['nomorantrean'] = $antrian->nomorantrean;
+        $request['lokasi'] = $antrian->lokasi;
+        $request['angkaantrean'] = $antrian->angkaantrean;
+        $request['lantaipendaftaran'] = $antrian->lantaipendaftaran;
+        $request['nomorsep'] = $antrian->nomorsep;
+        $kunjungan = KunjunganDB::firstWhere('kode_kunjungan', $antrian->kode_kunjungan);
+        $this->print_karcis($request, $kunjungan);
+        return  $this->sendResponse("Print Ulang Berhasil", null, 200);
+    }
     function print_karcis(Request $request,  $kunjungan)
     {
         Carbon::setLocale('id');
@@ -1679,7 +1694,7 @@ class AntrianController extends ApiBPJSController
         $printer->text("Tanggal : " . Carbon::parse($request->tanggalperiksa)->format('d M Y') . "\n");
         $printer->text("================================================\n");
         $printer->text("Keterangan : \n" . $request->keterangan . "\n");
-        if (empty($request->nomorreferensi)) {
+        if ($request->jenispasien != "JKN") {
             $printer->text("================================================\n");
             $printer->setJustification(Printer::JUSTIFY_RIGHT);
             $printer->text("Biaya Karcis Poli : " . money($request->tarifkarcis, 'IDR') . "\n");
