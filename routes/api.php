@@ -5,6 +5,7 @@ use App\Http\Controllers\API\AntrianBPJSController;
 use App\Http\Controllers\API\VclaimBPJSController;
 use App\Http\Controllers\API\WhatsappController;
 use App\Http\Controllers\BPJS\Antrian\AntrianController as AntrianAntrianController;
+use App\Http\Controllers\BPJS\Vclaim\VclaimController as VclaimVclaimController;
 use App\Http\Controllers\PasienController;
 use App\Http\Controllers\SatuSehat\EncounterController;
 use App\Http\Controllers\SatuSehat\LocationController;
@@ -110,6 +111,7 @@ Route::prefix('simrs')->name('api.simrs.')->group(function () {
     Route::get('get_icd10', [ICD10Controller::class, 'get_icd10'])->name('get_icd10');
 });
 Route::prefix('bpjs')->name('bpjs.')->group(function () {
+    // ANTRIAN
     Route::prefix('antrian')->name('antrian.')->group(function () {
         // API BPJS
         Route::get('ref_poli', [AntrianAntrianController::class, 'ref_poli'])->name('ref_poli');
@@ -131,6 +133,27 @@ Route::prefix('bpjs')->name('bpjs.')->group(function () {
         Route::post('jadwal_operasi_rs', [AntrianAntrianController::class, 'jadwal_operasi_rs'])->name('jadwal_operasi_rs');
         Route::post('jadwal_operasi_pasien', [AntrianAntrianController::class, 'jadwal_operasi_pasien'])->name('jadwal_operasi_pasien');
     });
+    // VCLAIM
+    Route::prefix('vclaim')->name('vclaim.')->group(function () {
+        // API BPJS
+        Route::get('monitoring_data_kunjungan', [VclaimVclaimController::class, 'monitoring_data_kunjungan'])->name('monitoring_data_kunjungan');
+        Route::get('monitoring_data_klaim', [VclaimVclaimController::class, 'monitoring_data_klaim'])->name('monitoring_data_klaim');
+        Route::get('monitoring_pelayanan_peserta', [VclaimVclaimController::class, 'monitoring_pelayanan_peserta'])->name('monitoring_pelayanan_peserta');
+        Route::get('monitoring_klaim_jasaraharja', [VclaimVclaimController::class, 'monitoring_klaim_jasaraharja'])->name('monitoring_klaim_jasaraharja');
+        // PESERTA
+        Route::get('peserta_nomorkartu', [VclaimVclaimController::class, 'peserta_nomorkartu'])->name('peserta_nomorkartu');
+        Route::get('peserta_nik', [VclaimVclaimController::class, 'peserta_nik'])->name('peserta_nik');
+        // REFERENSI
+        Route::get('ref_diagnosa', [VclaimVclaimController::class, 'ref_diagnosa'])->name('ref_diagnosa');
+        Route::get('ref_poliklinik', [VclaimVclaimController::class, 'ref_poliklinik'])->name('ref_poliklinik');
+        Route::get('ref_faskes', [VclaimVclaimController::class, 'ref_faskes'])->name('ref_faskes');
+        Route::get('ref_dpjp', [VclaimVclaimController::class, 'ref_dpjp'])->name('ref_dpjp');
+        Route::get('ref_provinsi', [VclaimVclaimController::class, 'ref_provinsi'])->name('ref_provinsi');
+        Route::get('ref_kabupaten', [VclaimVclaimController::class, 'ref_kabupaten'])->name('ref_kabupaten');
+        Route::get('ref_kecamatan', [VclaimVclaimController::class, 'ref_kecamatan'])->name('ref_kecamatan');
+
+
+    });
 });
 // APP.RSUDWALED.ID
 Route::get('token', [AntrianAntrianController::class, 'token']);
@@ -139,9 +162,9 @@ Route::post('ambilantrean', [AntrianAntrianController::class, 'ambil_antrian']);
 Route::post('sisaantrean', [AntrianAntrianController::class, 'sisa_antrian']);
 Route::post('batalantrean', [AntrianAntrianController::class, 'batal_antrian']);
 Route::post('checkin', [AntrianAntrianController::class, 'checkin_antrian']);
+Route::post('infopasienbaru', [AntrianAntrianController::class, 'infoPasienBaru']);
 Route::post('jadwaloperasi', [AntrianAntrianController::class, 'jadwal_operasi_rs']);
 Route::post('jadwaloperasipasien', [AntrianAntrianController::class, 'jadwal_operasi_pasien']);
-Route::post('infopasienbaru', [AntrianAntrianController::class, 'infoPasienBaru']);
 // API SATU SEHAT
 Route::prefix('satusehat')->name('satusehat.')->group(function () {
     Route::get('patient/', [PatientController::class, 'index'])->name('patient_index');
