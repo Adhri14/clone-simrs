@@ -103,18 +103,15 @@ Route::prefix('vclaim')->group(function () {
 });
 
 Route::prefix('wa')->group(function () {
+    Route::get('test', [WhatsappController::class, 'index']);
     Route::post('callback', [WhatsappController::class, 'callback']);
-    Route::get('index', [WhatsappController::class, 'index']);
-    Route::post('send_message', [WhatsappController::class, 'send_message']);
-    Route::post('daftar_antrian', [WhatsappController::class, 'daftar_antrian']);
 });
-
 Route::prefix('simrs')->name('api.simrs.')->group(function () {
     Route::get('get_icd10', [ICD10Controller::class, 'get_icd10'])->name('get_icd10');
 });
-
 Route::prefix('bpjs')->name('bpjs.')->group(function () {
     Route::prefix('antrian')->name('antrian.')->group(function () {
+        // API BPJS
         Route::get('ref_poli', [AntrianAntrianController::class, 'ref_poli'])->name('ref_poli');
         Route::get('ref_dokter', [AntrianAntrianController::class, 'ref_dokter'])->name('ref_dokter');
         Route::get('ref_jadwal_dokter', [AntrianAntrianController::class, 'ref_jadwal_dokter'])->name('ref_jadwal_dokter');
@@ -124,8 +121,6 @@ Route::prefix('bpjs')->name('bpjs.')->group(function () {
         Route::post('taskid_antrean', [AntrianAntrianController::class, 'taskid_antrean'])->name('taskid_antrean');
         Route::get('dashboard_tanggal', [AntrianAntrianController::class, 'dashboard_tanggal'])->name('dashboard_tanggal');
         Route::get('dashboard_bulan', [AntrianAntrianController::class, 'dashboard_bulan'])->name('dashboard_bulan');
-
-
         // API SIMRS
         Route::get('token', [AntrianAntrianController::class, 'token'])->name('token');
         Route::post('status_antrian', [AntrianAntrianController::class, 'status_antrian'])->name('status_antrian');
@@ -137,8 +132,17 @@ Route::prefix('bpjs')->name('bpjs.')->group(function () {
         Route::post('jadwal_operasi_pasien', [AntrianAntrianController::class, 'jadwal_operasi_pasien'])->name('jadwal_operasi_pasien');
     });
 });
-
-
+// APP.RSUDWALED.ID
+Route::get('token', [AntrianAntrianController::class, 'token']);
+Route::post('statusantrean', [AntrianAntrianController::class, 'status_antrian']);
+Route::post('ambilantrean', [AntrianAntrianController::class, 'ambil_antrian']);
+Route::post('sisaantrean', [AntrianAntrianController::class, 'sisa_antrian']);
+Route::post('batalantrean', [AntrianAntrianController::class, 'batal_antrian']);
+Route::post('checkin', [AntrianAntrianController::class, 'checkin_antrian']);
+Route::post('jadwaloperasi', [AntrianAntrianController::class, 'jadwal_operasi_rs']);
+Route::post('jadwaloperasipasien', [AntrianAntrianController::class, 'jadwal_operasi_pasien']);
+Route::post('infopasienbaru', [AntrianAntrianController::class, 'infoPasienBaru']);
+// API SATU SEHAT
 Route::prefix('satusehat')->name('satusehat.')->group(function () {
     Route::get('patient/', [PatientController::class, 'index'])->name('patient_index');
     Route::get('patient/nik/{nik}', [PatientController::class, 'patient_by_nik'])->name('patient_by_nik');

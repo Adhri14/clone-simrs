@@ -594,7 +594,7 @@ return [
             ],
         ],
         [
-            'text'    => 'Aplikasi Kepegawaian',
+            'text'    => 'Aplikasi Kepegawaian (Cooming Soon)',
             'icon'    => 'fas fa-user-tie',
             'can' => ['admin'],
             'submenu' => []
