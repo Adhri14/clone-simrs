@@ -941,12 +941,7 @@ class AntrianBPJSController extends Controller
                     return json_decode(json_encode($response));
                 }
                 // kirim notif wa
-                $qr = QrCode::backgroundColor(255, 255, 51)->format('png')->generate($request->kodebooking, "public/storage/antrian" . $request->kodebooking . ".png");
-                $request['filepath'] = public_path("storage/antrian" . $request->kodebooking . ".png");
-                $request['caption'] = "Kode booking : " . $request->kodebooking . "\nSilahkan gunakan *QR Code* ini untuk checkin di mesin antrian rawat jalan.";
-                $request['number'] = $request->nohp;
-                $wa = new WhatsappController();
-                $wa->send_filepath($request);
+
                 $wa = new WhatsappController();
                 $request['message'] = "*Antrian Berhasil di Daftarkan*\nAntrian anda berhasil didaftarkan melalui Layanan Online RSUD Waled dengan data sebagai berikut : \n\n*Kode Antrian :* " . $request->kodebooking .  "\n*Angka Antrian :* " . $request->angkaantrean .  "\n*Nomor Antrian :* " . $request->nomorantrean . "\n*Jenis Pasien :* " . $request->jenispasien .  "\n*Jenis Kunjungan :* " . $request->jeniskunjungan .  "\n\n*Nama :* " . $request->nama . "\n*Poliklinik :* " . $request->namapoli  . "\n*Dokter :* " . $request->namadokter  .  "\n*Jam Praktek :* " . $request->jampraktek  .  "\n*Tanggal Periksa :* " . $request->tanggalperiksa . "\n\n*Keterangan :* " . $request->keterangan  .  "\nTerima kasih. Semoga sehat selalu.\nUntuk pertanyaan & pengaduan silahkan hubungi :\n*Humas RSUD Waled 08983311118*";
                 $request['number'] = $request->nohp;
@@ -954,6 +949,12 @@ class AntrianBPJSController extends Controller
                 $wa = new WhatsappController();
                 $request['notif'] = 'Antrian berhasil didaftarkan melalui ' . $request->method . "LINE\n*Nama :* " . $request->nama . "\n*Poliklinik :* " . $request->namapoli .  "\n*Tanggal Periksa :* " . $request->tanggalperiksa . "\n*Jenis Kunjungan :* " . $request->jeniskunjungan;
                 $wa->send_notif($request);
+                $qr = QrCode::backgroundColor(255, 255, 51)->format('png')->generate($request->kodebooking, "public/storage/antrian" . $request->kodebooking . ".png");
+                $request['filepath'] = public_path("storage/antrian" . $request->kodebooking . ".png");
+                $request['caption'] = "Kode booking : " . $request->kodebooking . "\nSilahkan gunakan *QR Code* ini untuk checkin di mesin antrian rawat jalan.";
+                $request['number'] = $request->nohp;
+                $wa = new WhatsappController();
+                $wa->send_filepath($request);
                 $response = [
                     "response" => [
                         "nomorantrean" => $request->nomorantrean,
