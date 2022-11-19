@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\BPJS\Vclaim;
 
 use App\Http\Controllers\BPJS\ApiBPJSController;
+use Carbon\Carbon;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
@@ -42,6 +43,73 @@ class VclaimController extends ApiBPJSController
         }
         return view('bpjs.vclaim.monitoring_data_klaim_index', compact([
             'request', 'klaim'
+        ]));
+    }
+    public function monitoring_pelayanan_peserta_index(Request $request)
+    {
+        $peserta = null;
+        $sep = null;
+        $rujukan = null;
+        $rujukan_rs = null;
+        $surat_kontrol = null;
+        // get  peserta
+        if ($request->tanggal) {
+            if ($request->nik && $request->tanggal) {
+                $response =  $this->peserta_nik($request);
+                if ($response->status() == 200) {
+                    $peserta = $response->getData()->response->peserta;
+                    $request['nomorkartu'] = $peserta->noKartu;
+                    Alert::success('OK', 'Peserta Ditemukan');
+                } else {
+                }
+            } else if ($request->nomorkartu && $request->tanggal) {
+                $response =  $this->peserta_nomorkartu($request);
+                if ($response->status() == 200) {
+                    $peserta = $response->getData()->response->peserta;
+                    $request['nik'] = $peserta->nik;
+                    Alert::success('OK', 'Peserta Ditemukan');
+                } else {
+                    Alert::error('Error', $response->getData()->metadata->message);
+                }
+            }
+        } else {
+            $request['tanggal'] = now()->format('Y-m-d');
+        }
+        // get data
+        if (isset($peserta)) {
+            $request['tanggalakhir'] = Carbon::parse($request->tanggal)->format('Y-m-d');
+            $request['tanggalmulai'] = Carbon::parse($request->tanggalakhir)->subDays(90)->format('Y-m-d');
+            // history sep
+            $response = $this->monitoring_pelayanan_peserta($request);
+            if ($response->status() == 200) {
+                $sep = $response->getData()->response->histori;
+            }
+            // rujukan fktp
+            $response = $this->rujukan_peserta($request);
+            if ($response->status() == 200) {
+                $rujukan = $response->getData()->response->rujukan;
+            }
+            // rujukan antar rs
+            $response = $this->rujukan_rs_peserta($request);
+            if ($response->status() == 200) {
+                $rujukan_rs = $response->getData()->response->rujukan;
+            }
+            // rujukan antar rs
+            $request['tahun'] = Carbon::parse($request->tanggal)->format('Y');
+            $request['bulan'] = Carbon::parse($request->tanggal)->format('m');
+            $request['formatfilter'] = 1;
+            $response = $this->surat_kontrol_peserta($request);
+            if ($response->status() == 200) {
+                $surat_kontrol = $response->getData()->response->list;
+            }
+        }
+        return view('bpjs.vclaim.monitoring_pelayanan_peserta_index', compact([
+            'request',
+            'peserta',
+            'sep',
+            'rujukan',
+            'rujukan_rs',
+            'surat_kontrol',
         ]));
     }
     // API VCLAIM
@@ -167,7 +235,7 @@ class VclaimController extends ApiBPJSController
         if ($validator->fails()) {
             return $this->sendError($validator->errors()->first(), null, 201);
         }
-        $url = $this->baseUrl . "Peserta/nokartu/" . $request->nomorkartu . "/tglSEP/" . $request->tanggal;
+        $url = env('VCLAIM_URL') . "Peserta/nokartu/" . $request->nomorkartu . "/tglSEP/" . $request->tanggal;
         $signature = $this->signature();
         $response = Http::withHeaders($signature)->get($url);
         return $this->response_decrypt($response, $signature);
@@ -181,7 +249,7 @@ class VclaimController extends ApiBPJSController
         if ($validator->fails()) {
             return $this->sendError($validator->errors()->first(), null, 201);
         }
-        $url = $this->baseUrl . "Peserta/nik/" . $request->nik . "/tglSEP/" . $request->tanggal;
+        $url = env('VCLAIM_URL') . "Peserta/nik/" . $request->nik . "/tglSEP/" . $request->tanggal;
         $signature = $this->signature();
         $response = Http::withHeaders($signature)->get($url);
         return $this->response_decrypt($response, $signature);
@@ -195,7 +263,7 @@ class VclaimController extends ApiBPJSController
         if ($validator->fails()) {
             return $this->sendError($validator->errors()->first(), null, 201);
         }
-        $url = $this->baseUrl . "referensi/diagnosa/" . $request->diagnosa;
+        $url = env('VCLAIM_URL') . "referensi/diagnosa/" . $request->diagnosa;
         $signature = $this->signature();
         $response = Http::withHeaders($signature)->get($url);
         return $this->response_decrypt($response, $signature);
@@ -208,7 +276,7 @@ class VclaimController extends ApiBPJSController
         if ($validator->fails()) {
             return $this->sendError($validator->errors()->first(), null, 201);
         }
-        $url = $this->baseUrl . "referensi/poli/" . $request->poliklinik;
+        $url = env('VCLAIM_URL') . "referensi/poli/" . $request->poliklinik;
         $signature = $this->signature();
         $response = Http::withHeaders($signature)->get($url);
         return $this->response_decrypt($response, $signature);
@@ -222,7 +290,7 @@ class VclaimController extends ApiBPJSController
         if ($validator->fails()) {
             return $this->sendError($validator->errors()->first(), null, 201);
         }
-        $url = $this->baseUrl . "referensi/faskes/" . $request->nama . "/" . $request->jenisfaskes;
+        $url = env('VCLAIM_URL') . "referensi/faskes/" . $request->nama . "/" . $request->jenisfaskes;
         $signature = $this->signature();
         $response = Http::withHeaders($signature)->get($url);
         return $this->response_decrypt($response, $signature);
@@ -237,14 +305,14 @@ class VclaimController extends ApiBPJSController
         if ($validator->fails()) {
             return $this->sendError($validator->errors()->first(), null, 201);
         }
-        $url = $this->baseUrl . "referensi/dokter/pelayanan/" . $request->jenispelayanan . "/tglPelayanan/" . $request->tanggal . "/Spesialis/" . $request->kodespesialis;
+        $url = env('VCLAIM_URL') . "referensi/dokter/pelayanan/" . $request->jenispelayanan . "/tglPelayanan/" . $request->tanggal . "/Spesialis/" . $request->kodespesialis;
         $signature = $this->signature();
         $response = Http::withHeaders($signature)->get($url);
         return $this->response_decrypt($response, $signature);
     }
     public function ref_provinsi(Request $request)
     {
-        $url = $this->baseUrl . "referensi/propinsi";
+        $url = env('VCLAIM_URL') . "referensi/propinsi";
         $signature = $this->signature();
         $response = Http::withHeaders($signature)->get($url);
         return $this->response_decrypt($response, $signature);
@@ -257,7 +325,7 @@ class VclaimController extends ApiBPJSController
         if ($validator->fails()) {
             return $this->sendError($validator->errors()->first(), null, 201);
         }
-        $url = $this->baseUrl . "referensi/kabupaten/propinsi/" . $request->kodeprovinsi;
+        $url = env('VCLAIM_URL') . "referensi/kabupaten/propinsi/" . $request->kodeprovinsi;
         $signature = $this->signature();
         $response = Http::withHeaders($signature)->get($url);
         return $this->response_decrypt($response, $signature);
@@ -270,7 +338,7 @@ class VclaimController extends ApiBPJSController
         if ($validator->fails()) {
             return $this->sendError($validator->errors()->first(), null, 201);
         }
-        $url = $this->baseUrl . "referensi/kecamatan/kabupaten/" . $request->kodekabupaten;
+        $url = env('VCLAIM_URL') . "referensi/kecamatan/kabupaten/" . $request->kodekabupaten;
         $signature = $this->signature();
         $response = Http::withHeaders($signature)->get($url);
         return $this->response_decrypt($response, $signature);
@@ -284,22 +352,20 @@ class VclaimController extends ApiBPJSController
         if ($validator->fails()) {
             return $this->sendError($validator->errors()->first(), null, 201);
         }
-        $url = $this->baseUrl . "Rujukan/" . $request->nomorreferensi;
+        $url = env('VCLAIM_URL') . "Rujukan/" . $request->nomorreferensi;
         $signature = $this->signature();
         $response = Http::withHeaders($signature)->get($url);
         return $this->response_decrypt($response, $signature);
     }
     public function rujukan_peserta(Request $request)
     {
-        // checking request
         $validator = Validator::make(request()->all(), [
             "nomorkartu" => "required",
         ]);
         if ($validator->fails()) {
             return $this->sendError($validator->errors()->first(), null, 201);
         }
-
-        $url = $this->baseUrl . "Rujukan/List/Peserta/" . $request->nomorkartu;
+        $url = env('VCLAIM_URL') . "Rujukan/List/Peserta/" . $request->nomorkartu;
         $signature = $this->signature();
         $response = Http::withHeaders($signature)->get($url);
         return $this->response_decrypt($response, $signature);
@@ -314,7 +380,7 @@ class VclaimController extends ApiBPJSController
             return $this->sendError($validator->errors()->first(), null, 201);
         }
 
-        $url = $this->baseUrl . "Rujukan/RS/" . $request->nomorreferensi;
+        $url = env('VCLAIM_URL') . "Rujukan/RS/" . $request->nomorreferensi;
         $signature = $this->signature();
         $response = Http::withHeaders($signature)->get($url);
 
@@ -329,7 +395,7 @@ class VclaimController extends ApiBPJSController
         if ($validator->fails()) {
             return $this->sendError($validator->errors()->first(), null, 201);
         }
-        $url = $this->baseUrl . "Rujukan/RS/List/Peserta/" . $request->nomorkartu;
+        $url = env('VCLAIM_URL') . "Rujukan/RS/List/Peserta/" . $request->nomorkartu;
         $signature = $this->signature();
         $response = Http::withHeaders($signature)->get($url);
         return $this->response_decrypt($response, $signature);
@@ -344,7 +410,25 @@ class VclaimController extends ApiBPJSController
         if ($validator->fails()) {
             return $this->sendError($validator->errors()->first(), null, 201);
         }
-        $url = $this->baseUrl . "Rujukan/JumlahSEP/" . $request->jenisrujukan . "/" . $request->nomorreferensi;
+        $url = env('VCLAIM_URL') . "Rujukan/JumlahSEP/" . $request->jenisrujukan . "/" . $request->nomorreferensi;
+        $signature = $this->signature();
+        $response = Http::withHeaders($signature)->get($url);
+        return $this->response_decrypt($response, $signature);
+    }
+
+    public function surat_kontrol_peserta(Request $request)
+    {
+        // checking request
+        $validator = Validator::make(request()->all(), [
+            "tahun" => "required",
+            "bulan" => "required",
+            "nomorkartu" => "required",
+            "formatfilter" => "required",
+        ]);
+        if ($validator->fails()) {
+            return $this->sendError($validator->errors()->first(), null, 201);
+        }
+        $url = env('VCLAIM_URL') . "RencanaKontrol/ListRencanaKontrol/Bulan/" . sprintf("%02d", $request->bulan)  . "/Tahun/" . $request->tahun . "/Nokartu/" . $request->nomorkartu . "/filter/" . $request->formatfilter;
         $signature = $this->signature();
         $response = Http::withHeaders($signature)->get($url);
         return $this->response_decrypt($response, $signature);
@@ -358,7 +442,7 @@ class VclaimController extends ApiBPJSController
         if ($validator->fails()) {
             return $this->sendError($validator->errors()->first(), null, 201);
         }
-        $url = $this->baseUrl . "RencanaKontrol/noSuratKontrol/" . $request->nomorreferensi;
+        $url = env('VCLAIM_URL') . "RencanaKontrol/noSuratKontrol/" . $request->nomorreferensi;
         $signature = $this->signature();
         $response = Http::withHeaders($signature)->get($url);
         return $this->response_decrypt($response, $signature);
@@ -392,7 +476,7 @@ class VclaimController extends ApiBPJSController
         if ($validator->fails()) {
             return $this->sendError($validator->errors()->first(), null, 201);
         }
-        $url = $this->baseUrl . "SEP/2.0/insert";
+        $url = env('VCLAIM_URL') . "SEP/2.0/insert";
         $signature = $this->signature();
         $signature['Content-Type'] = 'application/x-www-form-urlencoded';
         $data = [

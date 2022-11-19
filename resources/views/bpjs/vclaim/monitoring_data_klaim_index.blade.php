@@ -7,7 +7,7 @@
     <div class="row">
         <div class="col-12">
             <x-adminlte-card title="Filter Data Klaim BPJS" theme="secondary" collapsible>
-                <form action="{{ route('bpjs.vclaim.monitoring_data_klaim') }}" method="get">
+                <form action="" method="get">
                     @php
                         $config = ['format' => 'YYYY-MM-DD'];
                     @endphp
@@ -62,14 +62,14 @@
                                 </td>
                                 <td>{{ $item->kelasRawat }} {{ $item->poli }}</td>
                                 <td>
-                                    {{ $item->peserta->noKartu }}
+                                    {{ $item->peserta->noKartu }} - {{ $item->peserta->noMR }}
                                     <br>
-                                    {{ $item->peserta->noMR }} {{ substr($item->peserta->nama, 0, 10) }}..
+                                    {{ $item->peserta->nama }}
                                 </td>
                                 <td>
                                     {{ $item->Inacbg->kode }}
                                     <br>
-                                    {{ substr($item->Inacbg->nama, 0, 20)}}..
+                                    {{ substr($item->Inacbg->nama, 0, 20) }}..
                                 </td>
                                 <td>{{ $item->status }}</td>
                                 <td>{{ money($item->biaya->byTarifGruper, 'IDR') }}</td>
