@@ -8,7 +8,7 @@
         <div class="col-12">
             <x-adminlte-card title="Pencarian Dashboad Tanggal Antrian" theme="secondary" icon="fas fa-info-circle"
                 collapsible>
-                <form action="{{ route('bpjs.antrian.dashboard_tanggal') }}">
+                {{-- <form action="{{ route('bpjs.antrian.dashboard_tanggal') }}"> --}}
                     @php
                         $config = ['format' => 'YYYY-MM-DD'];
                     @endphp
@@ -20,7 +20,7 @@
                     </x-adminlte-select>
                     <x-adminlte-button label="Cari Antrian" class="mr-auto withLoad" type="submit" theme="success"
                         icon="fas fa-search" />
-                </form>
+                {{-- </form> --}}
             </x-adminlte-card>
             <x-adminlte-card title="Data Task ID Antrian" theme="secondary" collapsible>
                 @php
