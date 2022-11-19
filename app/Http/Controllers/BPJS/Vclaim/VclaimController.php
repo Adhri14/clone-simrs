@@ -28,6 +28,22 @@ class VclaimController extends ApiBPJSController
             'request', 'sep'
         ]));
     }
+    public function monitoring_data_klaim_index(Request $request)
+    {
+        $klaim = null;
+        if ($request->tanggalpulang && $request->jenispelayanan && $request->statusklaim) {
+            $response =  $this->monitoring_data_klaim($request);
+            if ($response->status() == 200) {
+                $klaim = $response->getData()->response->klaim;
+                Alert::success($response->getData()->metadata->message, 'Total Data Kunjungan BPJS ' . count($klaim) . ' Pasien');
+            } else {
+                Alert::error('Error ' . $response->status(), $response->getData()->metadata->message);
+            }
+        }
+        return view('bpjs.vclaim.monitoring_data_klaim_index', compact([
+            'request', 'klaim'
+        ]));
+    }
     // API VCLAIM
     public static function signature()
     {

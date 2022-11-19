@@ -213,6 +213,7 @@ Route::middleware('auth')->group(function () {
         // vclaim
         Route::prefix('vclaim')->name('vclaim.')->group(function () {
             Route::get('monitoring_data_kunjungan', [VclaimVclaimController::class, 'monitoring_data_kunjungan_index'])->name('monitoring_data_kunjungan');
+            Route::get('monitoring_data_klaim', [VclaimVclaimController::class, 'monitoring_data_klaim_index'])->name('monitoring_data_klaim');
         });
     });
     // satu sehat
