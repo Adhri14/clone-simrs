@@ -1,11 +1,8 @@
 @extends('adminlte::page')
-
 @section('title', 'Monitoring Pelayanan Peserta')
-
 @section('content_header')
     <h1>Monitoring Pelayanan Peserta</h1>
 @stop
-
 @section('content')
     <div class="row">
         <div class="col-12">
@@ -284,5 +281,5 @@
         @endisset
     </div>
 @stop
-
 @section('plugins.Datatables', true)
+@section('plugins.TempusDominusBs4', true)

@@ -1,7 +1,7 @@
 @extends('adminlte::page')
-@section('title', 'Monitoring Data Klaim - Vclaim BPJS')
+@section('title', 'Monitoring Klaim Jasa Raharja - Vclaim BPJS')
 @section('content_header')
-    <h1>Monitoring Data Klaim - Vclaim BPJS </h1>
+    <h1>Monitoring Klaim Jasa Raharja - Vclaim BPJS </h1>
 @stop
 @section('content')
     <div class="row">
@@ -9,26 +9,21 @@
             <x-adminlte-card title="Filter Data Klaim BPJS" theme="secondary" collapsible>
                 <form action="" method="get">
                     @php
-                        $config = ['format' => 'YYYY-MM-DD'];
+                        $config = [
+                            'locale' => ['format' => 'YYYY/MM/DD'],
+                        ];
                     @endphp
-                    <x-adminlte-input-date name="tanggalpulang" label="Tanggal Pulang" :config="$config"
-                        value="{{ \Carbon\Carbon::parse($request->tanggalpulang)->format('Y-m-d') }}">
+                    <x-adminlte-date-range name="tanggal" label="Periode Tanggal Antrian" enable-default-ranges="Today"
+                        :config="$config">
                         <x-slot name="prependSlot">
                             <div class="input-group-text bg-primary">
                                 <i class="fas fa-calendar-alt"></i>
                             </div>
                         </x-slot>
-                    </x-adminlte-input-date>
+                    </x-adminlte-date-range>
                     <x-adminlte-select2 name="jenispelayanan" label="Jenis Pelayanan">
                         <option value="1" {{ $request->jenispelayanan == 1 ? 'selected' : null }}>Rawat Inap</option>
                         <option value="2" {{ $request->jenispelayanan == 2 ? 'selected' : null }}>Rawat Jalan</option>
-                    </x-adminlte-select2>
-                    <x-adminlte-select2 name="statusklaim" label="Status Klaim">
-                        <option value="1" {{ $request->statusklaim == 1 ? 'selected' : null }}>Proses Verifikasi
-                            Pending</option>
-                        <option value="2" {{ $request->statusklaim == 2 ? 'selected' : null }}>Pending Varifikasi
-                        </option>
-                        <option value="3" {{ $request->statusklaim == 3 ? 'selected' : null }}>Klaim</option>
                     </x-adminlte-select2>
                     <x-adminlte-button type="submit" class="withLoad" theme="primary" label="Submit Data Kunjungan" />
                 </form>
@@ -108,3 +103,4 @@
 @stop
 @section('plugins.Datatables', true)
 @section('plugins.TempusDominusBs4', true)
+@section('plugins.DateRangePicker', true)

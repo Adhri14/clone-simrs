@@ -215,6 +215,7 @@ Route::middleware('auth')->group(function () {
             Route::get('monitoring_data_kunjungan', [VclaimVclaimController::class, 'monitoring_data_kunjungan_index'])->name('monitoring_data_kunjungan');
             Route::get('monitoring_data_klaim', [VclaimVclaimController::class, 'monitoring_data_klaim_index'])->name('monitoring_data_klaim');
             Route::get('monitoring_pelayanan_peserta', [VclaimVclaimController::class, 'monitoring_pelayanan_peserta_index'])->name('monitoring_pelayanan_peserta');
+            Route::get('monitoring_klaim_jasaraharja', [VclaimVclaimController::class, 'monitoring_klaim_jasaraharja_index'])->name('monitoring_klaim_jasaraharja');
         });
     });
     // satu sehat

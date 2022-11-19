@@ -112,6 +112,54 @@ class VclaimController extends ApiBPJSController
             'surat_kontrol',
         ]));
     }
+    public function monitoring_klaim_jasaraharja_index(Request $request)
+    {
+        $klaim = null;
+        if ($request->tanggal && $request->jenispelayanan) {
+            $tanggal = explode('-', $request->tanggal);
+            $request['tanggalmulai'] = Carbon::parse($tanggal[0])->format('Y-m-d');
+            $request['tanggalakhir'] = Carbon::parse($tanggal[1])->format('Y-m-d');
+            $response =  $this->monitoring_klaim_jasaraharja($request);
+            if ($response->status() == 200) {
+                if ($response->getData()->response) {
+                    $klaim = $response->getData()->response;
+                    dd($klaim);
+                    Alert::success($response->getData()->metadata->message, 'Total Data Kunjungan BPJS ' . count($klaim) . ' Pasien');
+                } else {
+                    Alert::error('Error ' . $response->status(), $response->getData()->metadata->message);
+                }
+            } else {
+                Alert::error('Error ' . $response->status(), $response->getData()->metadata->message);
+            }
+        }
+        return view('bpjs.vclaim.monitoring_klaim_jasaraharja_index', compact([
+            'request', 'klaim'
+        ]));
+    }
+    public function referensi_index(Request $request)
+    {
+        $klaim = null;
+        if ($request->tanggal && $request->jenispelayanan) {
+            $tanggal = explode('-', $request->tanggal);
+            $request['tanggalmulai'] = Carbon::parse($tanggal[0])->format('Y-m-d');
+            $request['tanggalakhir'] = Carbon::parse($tanggal[1])->format('Y-m-d');
+            $response =  $this->monitoring_klaim_jasaraharja($request);
+            if ($response->status() == 200) {
+                if ($response->getData()->response) {
+                    $klaim = $response->getData()->response;
+                    dd($klaim);
+                    Alert::success($response->getData()->metadata->message, 'Total Data Kunjungan BPJS ' . count($klaim) . ' Pasien');
+                } else {
+                    Alert::error('Error ' . $response->status(), $response->getData()->metadata->message);
+                }
+            } else {
+                Alert::error('Error ' . $response->status(), $response->getData()->metadata->message);
+            }
+        }
+        return view('bpjs.vclaim.monitoring_klaim_jasaraharja_index', compact([
+            'request', 'klaim'
+        ]));
+    }
     // API VCLAIM
     public static function signature()
     {

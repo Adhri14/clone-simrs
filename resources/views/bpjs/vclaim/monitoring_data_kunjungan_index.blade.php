@@ -54,7 +54,5 @@
         </div>
     </div>
 @stop
-
-@section('plugins.Select2', true)
 @section('plugins.Datatables', true)
 @section('plugins.TempusDominusBs4', true)
