@@ -110,7 +110,8 @@ Route::prefix('wa')->group(function () {
 Route::prefix('simrs')->name('api.simrs.')->group(function () {
     Route::get('get_icd10', [ICD10Controller::class, 'get_icd10'])->name('get_icd10');
 });
-Route::prefix('bpjs')->name('bpjs.')->group(function () {
+// API BPJS
+Route::prefix('bpjs')->name('api.bpjs.')->group(function () {
     // ANTRIAN
     Route::prefix('antrian')->name('antrian.')->group(function () {
         // API BPJS
@@ -151,8 +152,6 @@ Route::prefix('bpjs')->name('bpjs.')->group(function () {
         Route::get('ref_provinsi', [VclaimVclaimController::class, 'ref_provinsi'])->name('ref_provinsi');
         Route::get('ref_kabupaten', [VclaimVclaimController::class, 'ref_kabupaten'])->name('ref_kabupaten');
         Route::get('ref_kecamatan', [VclaimVclaimController::class, 'ref_kecamatan'])->name('ref_kecamatan');
-
-
     });
 });
 // APP.RSUDWALED.ID
@@ -166,7 +165,7 @@ Route::post('infopasienbaru', [AntrianAntrianController::class, 'infoPasienBaru'
 Route::post('jadwaloperasi', [AntrianAntrianController::class, 'jadwal_operasi_rs']);
 Route::post('jadwaloperasipasien', [AntrianAntrianController::class, 'jadwal_operasi_pasien']);
 // API SATU SEHAT
-Route::prefix('satusehat')->name('satusehat.')->group(function () {
+Route::prefix('satusehat')->name('api.satusehat.')->group(function () {
     Route::get('patient/', [PatientController::class, 'index'])->name('patient_index');
     Route::get('patient/nik/{nik}', [PatientController::class, 'patient_by_nik'])->name('patient_by_nik');
     Route::get('patient/id/{id}', [PatientController::class, 'patient_by_id'])->name('patient_by_id');

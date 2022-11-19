@@ -7,12 +7,28 @@ use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class VclaimController extends ApiBPJSController
 {
-    // public $baseUrl = 'https://apijkn-dev.bpjs-kesehatan.go.id/vclaim-rest-dev/';
-    public $baseUrl = 'https://apijkn.bpjs-kesehatan.go.id/vclaim-rest/';
 
+    public function monitoring_data_kunjungan_index(Request $request)
+    {
+        $sep = null;
+        if ($request->tanggal && $request->jenispelayanan) {
+            $response =  $this->monitoring_data_kunjungan($request);
+            if ($response->status() == 200) {
+                $sep = $response->getData()->response->sep;
+                Alert::success($response->getData()->metadata->message, 'Total Data Kunjungan BPJS ' . count($sep) . ' Pasien');
+            } else {
+                Alert::error('Error ' . $response->status(), $response->getData()->metadata->message);
+            }
+        }
+        return view('bpjs.vclaim.monitoring_data_kunjungan_index', compact([
+            'request', 'sep'
+        ]));
+    }
+    // API VCLAIM
     public static function signature()
     {
         $cons_id =  env('VCLAIM_CONS_ID');
@@ -65,7 +81,6 @@ class VclaimController extends ApiBPJSController
             return $this->sendResponse($response->json('metaData.message'), $response->json('response'), $response->json('metaData.code'));
         }
     }
-    // API VCLAIM
     // MONITORING
     public function monitoring_data_kunjungan(Request $request)
     {
@@ -239,7 +254,7 @@ class VclaimController extends ApiBPJSController
         if ($validator->fails()) {
             return $this->sendError($validator->errors()->first(), null, 201);
         }
-        $url = $this->baseUrl . "referensi/kecamatan/kabupaten/" . $request->kodekabupaten ;
+        $url = $this->baseUrl . "referensi/kecamatan/kabupaten/" . $request->kodekabupaten;
         $signature = $this->signature();
         $response = Http::withHeaders($signature)->get($url);
         return $this->response_decrypt($response, $signature);

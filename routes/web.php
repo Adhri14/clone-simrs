@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\WhatsappController;
 use App\Http\Controllers\AntrianController;
 use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers\BPJS\Antrian\AntrianController as AntrianAntrianController;
+use App\Http\Controllers\BPJS\Vclaim\VclaimController as VclaimVclaimController;
 use App\Http\Controllers\DokterController;
 use App\Http\Controllers\FileRMController;
 use App\Http\Controllers\Icd10Controller;
@@ -198,6 +199,7 @@ Route::middleware('auth')->group(function () {
     });
     // bpjs
     Route::prefix('bpjs')->name('bpjs.')->group(function () {
+        // antrian
         Route::prefix('antrian')->name('antrian.')->group(function () {
             Route::get('status', [AntrianAntrianController::class, 'status'])->name('status');
             Route::get('poli', [AntrianAntrianController::class, 'poli'])->name('poli');
@@ -207,6 +209,10 @@ Route::middleware('auth')->group(function () {
             Route::get('list_task', [AntrianAntrianController::class, 'list_task'])->name('list_task');
             Route::get('dashboard_tanggal', [AntrianAntrianController::class, 'dashboard_tanggal_index'])->name('dashboard_tanggal');
             Route::get('dashboard_bulan', [AntrianAntrianController::class, 'dashboard_bulan_index'])->name('dashboard_bulan');
+        });
+        // vclaim
+        Route::prefix('vclaim')->name('vclaim.')->group(function () {
+            Route::get('monitoring_data_kunjungan', [VclaimVclaimController::class, 'monitoring_data_kunjungan_index'])->name('monitoring_data_kunjungan');
         });
     });
     // satu sehat
