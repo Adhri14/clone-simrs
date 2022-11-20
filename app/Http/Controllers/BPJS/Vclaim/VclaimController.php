@@ -138,27 +138,71 @@ class VclaimController extends ApiBPJSController
     }
     public function referensi_index(Request $request)
     {
-        $klaim = null;
-        if ($request->tanggal && $request->jenispelayanan) {
-            $tanggal = explode('-', $request->tanggal);
-            $request['tanggalmulai'] = Carbon::parse($tanggal[0])->format('Y-m-d');
-            $request['tanggalakhir'] = Carbon::parse($tanggal[1])->format('Y-m-d');
-            $response =  $this->monitoring_klaim_jasaraharja($request);
-            if ($response->status() == 200) {
-                if ($response->getData()->response) {
-                    $klaim = $response->getData()->response;
-                    dd($klaim);
-                    Alert::success($response->getData()->metadata->message, 'Total Data Kunjungan BPJS ' . count($klaim) . ' Pasien');
-                } else {
-                    Alert::error('Error ' . $response->status(), $response->getData()->metadata->message);
-                }
-            } else {
-                Alert::error('Error ' . $response->status(), $response->getData()->metadata->message);
+        return view('bpjs.vclaim.referensi_index', compact([
+            'request',
+        ]));
+    }
+    public function ref_diagnosa_api(Request $request)
+    {
+        $data = array();
+        $response = $this->ref_diagnosa($request);
+        if ($response->status() == 200) {
+            $diagnosa = $response->getData()->response->diagnosa;
+            foreach ($diagnosa as $item) {
+                $data[] = array(
+                    "id" => $item->kode,
+                    "text" => $item->nama
+                );
             }
         }
-        return view('bpjs.vclaim.monitoring_klaim_jasaraharja_index', compact([
-            'request', 'klaim'
-        ]));
+        return response()->json($data);
+    }
+    public function ref_poliklinik_api(Request $request)
+    {
+        $data = array();
+        $response = $this->ref_poliklinik($request);
+        if ($response->status() == 200) {
+            $poli = $response->getData()->response->poli;
+            foreach ($poli as $item) {
+                $data[] = array(
+                    "id" => $item->kode,
+                    "text" => $item->nama . " (" . $item->kode . ")"
+                );
+            }
+        }
+        return response()->json($data);
+    }
+    public function ref_faskes_api(Request $request)
+    {
+        $data = array();
+        $response = $this->ref_faskes($request);
+        if ($response->status() == 200) {
+            $faskes = $response->getData()->response->faskes;
+            foreach ($faskes as $item) {
+                $data[] = array(
+                    "id" => $item->kode,
+                    "text" => $item->nama . " (" . $item->kode . ")"
+                );
+            }
+        }
+        return response()->json($data);
+    }
+    public function ref_dpjp_api(Request $request)
+    {
+        $data = array();
+        $response = $this->ref_dpjp($request);
+        if ($response->status() == 200) {
+            $dokter = $response->getData()->response->list;
+            foreach ($dokter as $item) {
+                if ((strpos(strtoupper($item->nama), strtoupper($request->nama)) !== false)) {
+                    $data[] = array(
+                        "id" => $item->kode,
+                        "text" => $item->nama . " (" . $item->kode . ")"
+                    );
+                }
+            }
+        }
+        return response()->json($data);
     }
     // API VCLAIM
     public static function signature()
@@ -463,7 +507,6 @@ class VclaimController extends ApiBPJSController
         $response = Http::withHeaders($signature)->get($url);
         return $this->response_decrypt($response, $signature);
     }
-
     public function surat_kontrol_peserta(Request $request)
     {
         // checking request

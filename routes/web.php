@@ -216,6 +216,11 @@ Route::middleware('auth')->group(function () {
             Route::get('monitoring_data_klaim', [VclaimVclaimController::class, 'monitoring_data_klaim_index'])->name('monitoring_data_klaim');
             Route::get('monitoring_pelayanan_peserta', [VclaimVclaimController::class, 'monitoring_pelayanan_peserta_index'])->name('monitoring_pelayanan_peserta');
             Route::get('monitoring_klaim_jasaraharja', [VclaimVclaimController::class, 'monitoring_klaim_jasaraharja_index'])->name('monitoring_klaim_jasaraharja');
+            Route::get('referensi', [VclaimVclaimController::class, 'referensi_index'])->name('referensi');
+            Route::get('ref_diagnosa_api', [VclaimVclaimController::class, 'ref_diagnosa_api'])->name('ref_diagnosa_api');
+            Route::get('ref_poliklinik_api', [VclaimVclaimController::class, 'ref_poliklinik_api'])->name('ref_poliklinik_api');
+            Route::get('ref_faskes_api', [VclaimVclaimController::class, 'ref_faskes_api'])->name('ref_faskes_api');
+            Route::get('ref_dpjp_api', [VclaimVclaimController::class, 'ref_dpjp_api'])->name('ref_dpjp_api');
         });
     });
     // satu sehat

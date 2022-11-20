@@ -730,7 +730,7 @@ return [
                 [
                     'text' => 'Referensi',
                     'icon'    => 'fas fa-info-circle',
-                    'url'  => 'vclaim/referensi',
+                    'url'  => 'bpjs/vclaim/referensi',
                     'shift'   => 'ml-2',
                     'can' => 'bpjs',
                 ],
