@@ -737,6 +737,13 @@ return [
                 [
                     'text' => 'Surat Kontrol & SPRI',
                     'icon'    => 'fas fa-id-card',
+                    'url'  => 'bpjs/vclaim/surat_kontrol',
+                    'shift'   => 'ml-2',
+                    'can' => 'bpjs',
+                ],
+                [
+                    'text' => 'Surat Kontrol & SPRI',
+                    'icon'    => 'fas fa-id-card',
                     'url'  => 'vclaim/data_surat_kontrol',
                     'shift'   => 'ml-2',
                     'can' => 'bpjs',

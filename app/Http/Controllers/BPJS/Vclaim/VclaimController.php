@@ -255,6 +255,25 @@ class VclaimController extends ApiBPJSController
         }
         return response()->json($data);
     }
+    public function surat_kontrol_index(Request $request)
+    {
+        $suratkontrol = null;
+        if ($request->tanggal && $request->formatfilter) {
+            $tanggal = explode('-', $request->tanggal);
+            $request['tanggalmulai'] = Carbon::parse($tanggal[0])->format('Y-m-d');
+            $request['tanggalakhir'] = Carbon::parse($tanggal[1])->format('Y-m-d');
+            $response =  $this->surat_kontrol_tanggal($request);
+            if ($response->status() == 200) {
+                $suratkontrol = $response->getData()->response->list;
+                Alert::success($response->getData()->metadata->message, 'Total Data Kunjungan BPJS ' . count($suratkontrol) . ' Pasien');
+            } else {
+                Alert::error('Error ' . $response->status(), $response->getData()->metadata->message);
+            }
+        }
+        return view('bpjs.vclaim.surat_kontrol_index', compact([
+            'request', 'suratkontrol'
+        ]));
+    }
     // API VCLAIM
     public static function signature()
     {
@@ -554,6 +573,22 @@ class VclaimController extends ApiBPJSController
             return $this->sendError($validator->errors()->first(), null, 201);
         }
         $url = env('VCLAIM_URL') . "Rujukan/JumlahSEP/" . $request->jenisrujukan . "/" . $request->nomorreferensi;
+        $signature = $this->signature();
+        $response = Http::withHeaders($signature)->get($url);
+        return $this->response_decrypt($response, $signature);
+    }
+    public function surat_kontrol_tanggal(Request $request)
+    {
+        // checking request
+        $validator = Validator::make(request()->all(), [
+            "tanggalmulai" => "required|date",
+            "tanggalakhir" => "required|date",
+            "formatfilter" => "required",
+        ]);
+        if ($validator->fails()) {
+            return $this->sendError($validator->errors()->first(), null, 201);
+        }
+        $url = env('VCLAIM_URL') . "RencanaKontrol/ListRencanaKontrol/tglAwal/" . $request->tanggalmulai . "/tglAkhir/" . $request->tanggalakhir .  "/filter/" . $request->formatfilter;
         $signature = $this->signature();
         $response = Http::withHeaders($signature)->get($url);
         return $this->response_decrypt($response, $signature);
