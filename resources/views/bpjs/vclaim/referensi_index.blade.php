@@ -5,11 +5,10 @@
 @stop
 @section('content')
     <div class="row">
-        <div class="col-12">
-            <x-adminlte-card title="Filter Data Klaim BPJS" theme="secondary" collapsible>
+        <div class="col-6">
+            <x-adminlte-card title="Refefensi Vclaim BPJS" theme="secondary" collapsible>
                 <form action="" method="get">
-                    <x-adminlte-select2 name="diagnosa" label="Diagnosa BPJS ICD-10">
-                        <option selected disabled>Cari Diagnosa</option>
+                    <x-adminlte-select2 name="diagnosa" label="Diagnosa BPJS ICD-10" data-placeholder="Pilih beberapa diagnosa..." multiple>
                     </x-adminlte-select2>
                     <x-adminlte-select name="jenisfaskes" label="Jenis Faskes BPJS">
                         <option value="1">Faskes Tingkat 1</option>
@@ -30,16 +29,24 @@
                         </x-slot>
                     </x-adminlte-input-date>
                     <x-adminlte-select name="jenispelayanan" label="Jenis Pelayanan">
-                        <option value="2">Rawat Jalan</option>
                         <option value="1">Rawat Inap</option>
+                        <option value="2">Rawat Jalan</option>
                     </x-adminlte-select>
                     <x-adminlte-select2 name="poliklinik" label="Poliklinik BPJS">
                         <option selected disabled>Cari Poliklinik</option>
                     </x-adminlte-select2>
                     <x-adminlte-select2 name="dokter" label="Dokter DPJP">
-                        <option selected disabled>Cari Poliklinik</option>
+                        <option selected disabled>Cari Dokter DPJP</option>
                     </x-adminlte-select2>
-                    <x-adminlte-button type="submit" class="withLoad" theme="primary" label="Submit Data Kunjungan" />
+                    <x-adminlte-select2 name="provinsi" label="Provinsi">
+                        <option selected disabled>Cari Provinsi</option>
+                    </x-adminlte-select2>
+                    <x-adminlte-select2 name="kabupaten" label="Kota / Kabupaten">
+                        <option selected disabled>Cari Kota / Kabupaten</option>
+                    </x-adminlte-select2>
+                    <x-adminlte-select2 name="kecamatan" label="Kecamatan">
+                        <option selected disabled>Cari Kecamatan</option>
+                    </x-adminlte-select2>
                 </form>
             </x-adminlte-card>
         </div>
@@ -131,6 +138,68 @@
                             jenispelayanan: $("#jenispelayanan option:selected").val(),
                             kodespesialis: $("#poliklinik option:selected").val(),
                             tanggal: $("#tanggal").val(),
+                            nama: params.term // search term
+                        };
+                    },
+                    processResults: function(response) {
+                        return {
+                            results: response
+                        };
+                    },
+                    cache: true
+                }
+            });
+            $("#provinsi").select2({
+                theme: "bootstrap4",
+                ajax: {
+                    url: "{{ route('bpjs.vclaim.ref_provinsi_api') }}",
+                    type: "get",
+                    dataType: 'json',
+                    delay: 250,
+                    data: function(params) {
+                        return {
+                            nama: params.term // search term
+                        };
+                    },
+                    processResults: function(response) {
+                        return {
+                            results: response
+                        };
+                    },
+                    cache: true
+                }
+            });
+            $("#kabupaten").select2({
+                theme: "bootstrap4",
+                ajax: {
+                    url: "{{ route('bpjs.vclaim.ref_kabupaten_api') }}",
+                    type: "get",
+                    dataType: 'json',
+                    delay: 250,
+                    data: function(params) {
+                        return {
+                            kodeprovinsi: $("#provinsi option:selected").val(),
+                            nama: params.term // search term
+                        };
+                    },
+                    processResults: function(response) {
+                        return {
+                            results: response
+                        };
+                    },
+                    cache: true
+                }
+            });
+            $("#kecamatan").select2({
+                theme: "bootstrap4",
+                ajax: {
+                    url: "{{ route('bpjs.vclaim.ref_kecamatan_api') }}",
+                    type: "get",
+                    dataType: 'json',
+                    delay: 250,
+                    data: function(params) {
+                        return {
+                            kodekabupaten: $("#kabupaten option:selected").val(),
                             nama: params.term // search term
                         };
                     },

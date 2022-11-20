@@ -204,6 +204,57 @@ class VclaimController extends ApiBPJSController
         }
         return response()->json($data);
     }
+    public function ref_provinsi_api(Request $request)
+    {
+        $data = array();
+        $response = $this->ref_provinsi($request);
+        if ($response->status() == 200) {
+            $provinsi = $response->getData()->response->list;
+            foreach ($provinsi as $item) {
+                if ((strpos(strtoupper($item->nama), strtoupper($request->nama)) !== false)) {
+                    $data[] = array(
+                        "id" => $item->kode,
+                        "text" => $item->nama . " (" . $item->kode . ")"
+                    );
+                }
+            }
+        }
+        return response()->json($data);
+    }
+    public function ref_kabupaten_api(Request $request)
+    {
+        $data = array();
+        $response = $this->ref_kabupaten($request);
+        if ($response->status() == 200) {
+            $kabupaten = $response->getData()->response->list;
+            foreach ($kabupaten as $item) {
+                if ((strpos(strtoupper($item->nama), strtoupper($request->nama)) !== false)) {
+                    $data[] = array(
+                        "id" => $item->kode,
+                        "text" => $item->nama . " (" . $item->kode . ")"
+                    );
+                }
+            }
+        }
+        return response()->json($data);
+    }
+    public function ref_kecamatan_api(Request $request)
+    {
+        $data = array();
+        $response = $this->ref_kecamatan($request);
+        if ($response->status() == 200) {
+            $kecamatan = $response->getData()->response->list;
+            foreach ($kecamatan as $item) {
+                if ((strpos(strtoupper($item->nama), strtoupper($request->nama)) !== false)) {
+                    $data[] = array(
+                        "id" => $item->kode,
+                        "text" => $item->nama . " (" . $item->kode . ")"
+                    );
+                }
+            }
+        }
+        return response()->json($data);
+    }
     // API VCLAIM
     public static function signature()
     {
