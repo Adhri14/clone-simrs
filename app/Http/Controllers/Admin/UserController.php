@@ -102,6 +102,6 @@ class UserController extends Controller
         $request['number'] = $user->phone;
         $wa->send_message($request);
         Alert::success('Success', 'Akun telah diverifikasi');
-        return redirect()->route('user.index');
+        return back();
     }
 }
