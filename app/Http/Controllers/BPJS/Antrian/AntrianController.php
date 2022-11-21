@@ -1523,11 +1523,12 @@ class AntrianController extends ApiBPJSController
         foreach ($jadwalops as  $jadwalop) {
             $jadwals[] = [
                 "kodebooking" => $jadwalop->no_book,
-                "tanggaloperasi" => $jadwalop->tanggal,
+                "tanggaloperasi" => Carbon::parse($jadwalop->tanggal)->format('Y-m-d'),
                 "jenistindakan" => $jadwalop->jenis,
-                "kodepoli" => $jadwalop->ruangan_asal,
-                "namapoli" => $jadwalop->ruangan_asal,
-                "terlaksana" => $jadwalop->status,
+                "kodepoli" => "ANA",
+                // "namapoli" => $jadwalop->ruangan_asal,
+                "namapoli" => "PARU",
+                "terlaksana" => 0,
             ];
         }
         $response = [
@@ -1551,11 +1552,11 @@ class AntrianController extends ApiBPJSController
         foreach ($jadwalops as  $jadwalop) {
             $jadwals[] = [
                 "kodebooking" => $jadwalop->no_book,
-                "tanggaloperasi" => $jadwalop->tanggal,
+                "tanggaloperasi" => Carbon::parse($jadwalop->tanggal)->format('Y-m-d'),
                 "jenistindakan" => $jadwalop->jenis,
-                "kodepoli" => $jadwalop->ruangan_asal,
-                "namapoli" => $jadwalop->ruangan_asal,
-                "terlaksana" => $jadwalop->status,
+                "kodepoli" => "INT",
+                "namapoli" => "Penyakit Dalam",
+                "terlaksana" => 0,
             ];
         }
         $response = [
