@@ -29,6 +29,7 @@ use App\Http\Controllers\SatuSehat\PatientController;
 use App\Http\Controllers\SatuSehat\PractitionerController;
 use App\Http\Controllers\SatuSehat\TokenController;
 use App\Http\Controllers\SIMRS\AntrianController as SIMRSAntrianController;
+use App\Http\Controllers\SIMRS\BukuTamuController;
 use App\Http\Controllers\SIMRS\DokterController as SIMRSDokterController;
 use App\Http\Controllers\SIMRS\KunjunganController as SIMRSKunjunganController;
 use App\Http\Controllers\SIMRS\PasienController as SIMRSPasienController;
@@ -134,8 +135,6 @@ Route::prefix('antrian')->name('antrian.')->middleware(['auth'])->group(function
     Route::post('simpan_baru_online/{kodebooking}', [AntrianController::class, 'simpan_baru_online'])->name('simpan_baru_online');
     Route::get('baru_offline/{kodebooking}', [AntrianController::class, 'baru_offline'])->name('baru_offline');
 });
-
-
 // vcalim
 Route::prefix('vclaim')->name('vclaim.')->middleware(['auth'])->group(function () {
     Route::get('/', [VclaimController::class, 'index'])->name('index');
@@ -174,6 +173,8 @@ Route::get('bar_qr_scanner', [BarcodeController::class, 'scanner'])->name('bar_q
 Route::get('thermal_printer', [ThermalPrintController::class, 'thermal_printer'])->name('thermal_printer');
 Route::get('thermal_print', [ThermalPrintController::class, 'thermal_print'])->name('thermal_print');
 Route::get('whatsapp', [WhatsappController::class, 'whatsapp'])->name('whatsapp');
+Route::get('bukutamu', [BukuTamuController::class, 'bukutamu'])->name('bukutamu');
+Route::post('bukutamu', [BukuTamuController::class, 'store'])->name('bukutamu_store');
 // auth
 Route::middleware('auth')->group(function () {
     // admin

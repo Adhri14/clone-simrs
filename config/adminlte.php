@@ -599,6 +599,12 @@ return [
             'can' => ['admin'],
             'submenu' => []
         ],
+        [
+            'text'    => 'Aplikasi Buku Tamu',
+            'icon'    => 'fas fa-user-tie',
+            'can' => ['admin'],
+            'submenu' => []
+        ],
         // ANTRIAN BPJS
         [
             'text'    => 'Integrasi Antrian BPJS',
