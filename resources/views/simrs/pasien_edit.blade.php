@@ -17,7 +17,7 @@
                 </x-adminlte-alert>
             @endif
             <x-adminlte-card title="Edit Data Pasien" theme="warning" collapsible>
-                <form action="{{ route('pasien.update', $pasien) }}" id="myform" method="POST">
+                <form action="{{ route('simrs.pasien.update', $pasien) }}" id="myform" method="POST">
                     @csrf
                     @method('PUT')
                     <div class="row">

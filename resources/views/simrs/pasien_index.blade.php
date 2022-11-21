@@ -58,7 +58,7 @@
                             <td>{{ $item->nik_bpjs }}</td>
                             <td>{{ $item->nama_px }} ({{ \Carbon\Carbon::parse($item->tgl_lahir)->age }})</td>
                             <td>{{ $item->jenis_kelamin }}</td>
-                            <td>{{ $item->kecamatans->nama_kecamatan }}</td>
+                            <td>{{ $item->kecamatans ? $item->kecamatans->nama_kecamatan : '-' }}</td>
                             <td>{{ $item->alamat }}</td>
                             <td>{{ $item->tgl_entry }} ({{ $item->pic }})</td>
                             <td>

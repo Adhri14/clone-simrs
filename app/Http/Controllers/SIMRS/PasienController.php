@@ -5,6 +5,7 @@ namespace App\Http\Controllers\SIMRS;
 use App\Http\Controllers\Controller;
 use App\Models\PasienDB;
 use Illuminate\Http\Request;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class PasienController extends Controller
 {
@@ -50,7 +51,7 @@ class PasienController extends Controller
             'tgl_lahir' => $request->tanggal_lahir,
         ]);
         Alert::success('Success', 'Data Pasien Telah Disimpan');
-        return redirect()->route('pasien.index');
+        return redirect()->route('simrs.pasien.index');
     }
     public function update(Request $request, PasienDB $pasien)
     {
@@ -66,7 +67,7 @@ class PasienController extends Controller
             'nama_px' => $request->nama,
         ]);
         Alert::success('Success', 'Data Pasien Telah Disimpan');
-        return redirect()->route('pasien.index');
+        return redirect()->route('simrs.pasien.index');
     }
     public function edit($no_rm)
     {
@@ -83,7 +84,7 @@ class PasienController extends Controller
         $pasien = PasienDB::firstWhere('no_rm', $no_rm);
         $pasien->delete();
         Alert::success('Success', 'Data Pasien Telah Dihapus');
-        return redirect()->route('pasien.index');
+        return redirect()->route('simrs.pasien.index');
     }
     public function pasien_daerah(Request $request)
     {

@@ -1518,23 +1518,16 @@ class AntrianController extends ApiBPJSController
             return $this->sendError($validator->errors()->first(), null, 201);
         }
         // end auth token
-        $jadwalops = JadwalOperasi::whereBetween('tanggaloperasi', [$request->tanggalawal, $request->tanggalakhir])->get();
+        $jadwalops = JadwalOperasi::whereBetween('tanggal', [$request->tanggalawal, $request->tanggalakhir])->get();
         $jadwals = [];
         foreach ($jadwalops as  $jadwalop) {
-            if ($jadwalop->terlaksana == "0") {
-                $terlaksana = "Belum";
-            } else {
-                $terlaksana = "Sudah";
-            }
             $jadwals[] = [
-                "kodebooking" => $jadwalop->kodebooking,
-                "tanggaloperasi" => $jadwalop->tanggaloperasi,
-                "jenistindakan" => $jadwalop->jenistindakan,
-                "kodepoli" => $jadwalop->kodepoli,
-                "namapoli" => $jadwalop->namapoli,
-                "terlaksana" => $terlaksana,
-                "nopeserta" => $jadwalop->nopeserta,
-                "lastupdate" => Carbon::parse($jadwalop->updated_at)->format('Y-m-d H:i:s'),
+                "kodebooking" => $jadwalop->no_book,
+                "tanggaloperasi" => $jadwalop->tanggal,
+                "jenistindakan" => $jadwalop->jenis,
+                "kodepoli" => $jadwalop->ruangan_asal,
+                "namapoli" => $jadwalop->ruangan_asal,
+                "terlaksana" => $jadwalop->status,
             ];
         }
         $response = [
@@ -1551,25 +1544,18 @@ class AntrianController extends ApiBPJSController
         if ($validator->fails()) {
             return $this->sendError($validator->errors()->first(), null, 201);
         }
-        $jadwalops = JadwalOperasi::where('nopeserta', $request->nopeserta)
-            ->where('tanggaloperasi', '>=', Carbon::now()->format('Y-m-d'))
+        $jadwalops = JadwalOperasi::where('nomor_bpjs', $request->nopeserta)
+            ->where('tanggal', '>=', Carbon::now()->format('Y-m-d'))
             ->get();
         $jadwals = [];
         foreach ($jadwalops as  $jadwalop) {
-            if ($jadwalop->terlaksana == "0") {
-                $terlaksana = "Belum";
-            } else {
-                $terlaksana = "Sudah";
-            }
             $jadwals[] = [
-                "kodebooking" => $jadwalop->kodebooking,
-                "tanggaloperasi" => $jadwalop->tanggaloperasi,
-                "jenistindakan" => $jadwalop->jenistindakan,
-                "kodepoli" => $jadwalop->kodepoli,
-                "namapoli" => $jadwalop->namapoli,
-                "terlaksana" => $terlaksana,
-                "nopeserta" => $jadwalop->nopeserta,
-                "lastupdate" => Carbon::parse($jadwalop->updated_at)->format('Y-m-d H:i:s'),
+                "kodebooking" => $jadwalop->no_book,
+                "tanggaloperasi" => $jadwalop->tanggal,
+                "jenistindakan" => $jadwalop->jenis,
+                "kodepoli" => $jadwalop->ruangan_asal,
+                "namapoli" => $jadwalop->ruangan_asal,
+                "terlaksana" => $jadwalop->status,
             ];
         }
         $response = [
