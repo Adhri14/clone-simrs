@@ -5,9 +5,9 @@
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-    <title>SIM RSUD Waled</title>
-    <meta content="" name="description">
-    <meta content="" name="keywords">
+    <title>Buku Tamu - SIM RSUD Waled</title>
+    <meta content="" name="Aplikasi pengisian buku tamu">
+    <meta content="" name="buku tamu">
 
     <!-- Favicons -->
     <link href="{{ asset('assets/img/logo rs waled ico.png') }}" rel="icon">
@@ -32,7 +32,13 @@
         #hero {
             /* background-size: cover; */
             /* height: 75ex; */
-            background: url("{{ asset('rs-bagus-min.png') }}") center center no-repeat !important;
+            background: url("{{ asset('rs-bagus-min.png') }}") center no-repeat !important;
+        }
+
+        .about .video-box {
+            /* background-size: cover; */
+            /* height: 75ex; */
+            background: url("{{ asset('rs-bagus-min.png') }}") no-repeat !important;
         }
 
         #footer {
@@ -164,7 +170,7 @@
                                 </ul>
                             </x-adminlte-alert>
                         @endif
-                        <form action="" method="post">
+                        <form action="" id="daftarTamu" method="post">
                             @csrf
                             <div class="col-md-10 form-group">
                                 <label for="name"><b>Nama Tamu</b></label>
@@ -207,7 +213,7 @@
                                     Dengan ini saya menyatakan bahwa data yang saya isi ini benar dan kedatangan saya
                                     sesuai dengan maksud dan tujuan yang tercantum.
                                     <br>
-                                    Cirebon,  {{ Carbon\Carbon::now()->format('h M Y') }}
+                                    Cirebon, {{ \Carbon\Carbon::now()->format('d M Y') }}
                                 </div>
                             </div>
                             <div class="form-group">
@@ -217,11 +223,10 @@
                                 <div class="signature-component">
                                     <canvas id="signature-pad" width="400" height="200"></canvas>
                                     <div>
-                                        <button id="save" type="submit"
+                                        <button id="save" type="submit" form="daftarTamu"
                                             class="btn btn-success mt-1">Submit</button>
-                                        <button class="btn btn-danger  mt-1" id="clear">Clear</button>
-                                        <button class="btn btn-warning  mt-1" id="showPointsToggle">Show
-                                            points?</button>
+                                        <span class="btn btn-danger mt-1" id="clear">Clear</span>
+                                        <span id="showPointsToggle"></span>
 
                                     </div>
                                 </div>
