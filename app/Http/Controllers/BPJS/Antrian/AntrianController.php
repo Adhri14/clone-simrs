@@ -1525,8 +1525,9 @@ class AntrianController extends ApiBPJSController
                 "kodebooking" => $jadwalop->no_book,
                 "tanggaloperasi" => Carbon::parse($jadwalop->tanggal)->format('Y-m-d'),
                 "jenistindakan" => $jadwalop->jenis,
-                "kodepoli" => "INT",
-                "namapoli" => "Penyakit Dalam",
+                "kodepoli" => "ANA",
+                // "namapoli" => $jadwalop->ruangan_asal,
+                "namapoli" => "PARU",
                 "terlaksana" => 0,
             ];
         }
