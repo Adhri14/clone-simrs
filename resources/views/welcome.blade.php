@@ -27,10 +27,16 @@
     <link href="{{ asset('assets/css/style.css') }}" rel="stylesheet">
 
     <style>
+        #hero {
+            /* background-size: cover; */
+            /* height: 75ex; */
+            background: url("{{ asset('rs-bagus-min.png') }}") center no-repeat !important;
+        }
+
         .about .video-box {
-            background: url('rsud-waled-sejarah-scaled.jpg') center center no-repeat;
-            background-size: cover;
-            min-height: 500px;
+            /* background-size: cover; */
+            /* height: 75ex; */
+            background: url("{{ asset('rs-bagus-min.png') }}") no-repeat !important;
         }
     </style>
 </head>
@@ -110,7 +116,7 @@
                             <div class="row">
                                 <div class="col-xl-4 d-flex align-items-stretch">
                                     <div class="icon-box mt-4 mt-xl-0">
-                                        <i class="bx bx-receipt"></i>
+                                        <i class="bx bx-message-add"></i>
                                         <h4>Information</h4>
                                         <p>Menyajikan Informasi yang dibutuhkan untuk Internal dan Eksternal Rumah Sakit
                                         </p>
@@ -118,14 +124,14 @@
                                 </div>
                                 <div class="col-xl-4 d-flex align-items-stretch">
                                     <div class="icon-box mt-4 mt-xl-0">
-                                        <i class="bx bx-cube-alt"></i>
+                                        <i class="bx bx-clinic"></i>
                                         <h4>Service</h4>
                                         <p>Pelayanan Kesehatan berbasis Digital Untuk Rumah Sakit</p>
                                     </div>
                                 </div>
                                 <div class="col-xl-4 d-flex align-items-stretch">
                                     <div class="icon-box mt-4 mt-xl-0">
-                                        <i class="bx bx-images"></i>
+                                        <i class="bx bx-line-chart"></i>
                                         <h4>Controlling</h4>
                                         <p>Memudahkan proses Pelaporan, Pemantauan, Pengendalian dan Evaluasi Rumah
                                             Sakit</p>
