@@ -33,6 +33,7 @@ use App\Http\Controllers\SIMRS\BukuTamuController;
 use App\Http\Controllers\SIMRS\DokterController as SIMRSDokterController;
 use App\Http\Controllers\SIMRS\KunjunganController as SIMRSKunjunganController;
 use App\Http\Controllers\SIMRS\PasienController as SIMRSPasienController;
+use App\Http\Controllers\SIMRS\SimrsController;
 use App\Http\Controllers\TarifKelompokLayananController;
 use App\Http\Controllers\TarifLayananController;
 use App\Http\Controllers\VclaimController;
@@ -188,6 +189,7 @@ Route::middleware('auth')->group(function () {
     });
     // simrs
     Route::prefix('simrs')->name('simrs.')->group(function () {
+        Route::get('dashboard', [SimrsController::class, 'dashboard'])->name('dashboard');
         Route::prefix('antrian')->name('antrian.')->group(function () {
             Route::get('anjungan', [SIMRSAntrianController::class, 'anjungan'])->name('anjungan');
             Route::get('pendaftaran', [SIMRSAntrianController::class, 'pendaftaran'])->name('pendaftaran');
@@ -208,8 +210,8 @@ Route::middleware('auth')->group(function () {
             Route::get('jadwal_dokter', [AntrianAntrianController::class, 'jadwal_dokter'])->name('jadwal_dokter');
             Route::get('antrian', [AntrianAntrianController::class, 'antrian'])->name('antrian');
             Route::get('list_task', [AntrianAntrianController::class, 'list_task'])->name('list_task');
-            Route::get('dashboard_tanggal_index', [AntrianAntrianController::class, 'dashboard_tanggal_index'])->name('dashboard_tanggal_index');
-            Route::get('dashboard_bulan_index', [AntrianAntrianController::class, 'dashboard_bulan_index'])->name('dashboard_bulan_index');
+            Route::get('dashboard_tanggal', [AntrianAntrianController::class, 'dashboard_tanggal_index'])->name('dashboard_tanggal');
+            Route::get('dashboard_bulan', [AntrianAntrianController::class, 'dashboard_bulan_index'])->name('dashboard_bulan');
         });
         // vclaim
         Route::prefix('vclaim')->name('vclaim.')->group(function () {
@@ -226,7 +228,6 @@ Route::middleware('auth')->group(function () {
             Route::get('ref_kabupaten_api', [VclaimVclaimController::class, 'ref_kabupaten_api'])->name('ref_kabupaten_api');
             Route::get('ref_kecamatan_api', [VclaimVclaimController::class, 'ref_kecamatan_api'])->name('ref_kecamatan_api');
             Route::get('surat_kontrol', [VclaimVclaimController::class, 'surat_kontrol_index'])->name('surat_kontrol');
-
         });
     });
     // satu sehat

@@ -410,6 +410,13 @@ return [
             'can' => 'admin',
             'submenu' => [
                 [
+                    'text' => 'Dashboard Antrian',
+                    'icon'    => 'fas fa-hospital-alt',
+                    'url'  => 'simrs/dashboard',
+                    'shift'   => 'ml-2',
+                    'can' => 'admin',
+                ],
+                [
                     'text' => 'Anjungan Antrian',
                     'icon'    => 'fas fa-desktop',
                     'url'  => 'simrs/antrian/anjungan',
@@ -603,7 +610,22 @@ return [
             'text'    => 'Aplikasi Buku Tamu',
             'icon'    => 'fas fa-user-tie',
             'can' => ['admin'],
-            'submenu' => []
+            'submenu' => [
+                [
+                    'text' => 'Buku Tamu',
+                    'icon'    => 'fas fa-book',
+                    'url'  => 'bukutamu',
+                    'shift'   => 'ml-2',
+                    'can' => 'admin',
+                ],
+                [
+                    'text' => 'Data Tamu',
+                    'icon'    => 'fas fa-book',
+                    'url'  => 'bukutamu',
+                    'shift'   => 'ml-2',
+                    'can' => 'admin',
+                ],
+            ]
         ],
         // ANTRIAN BPJS
         [

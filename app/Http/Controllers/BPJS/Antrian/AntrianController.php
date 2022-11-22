@@ -1521,13 +1521,20 @@ class AntrianController extends ApiBPJSController
         $jadwalops = JadwalOperasi::whereBetween('tanggal', [$request->tanggalawal, $request->tanggalakhir])->get();
         $jadwals = [];
         foreach ($jadwalops as  $jadwalop) {
+            $dokter = ParamedisDB::where('nama_paramedis', $jadwalop->nama_dokter)->first();
+            if (isset($dokter)) {
+                $unit = UnitDB::where('kode_unit', $dokter->unit)->first();
+            } else {
+                $unit['KDPOLI'] = 'UGD';
+            }
+            // dd($jadwalop->nama_dokter, $unit->KDPOLI);
             $jadwals[] = [
                 "kodebooking" => $jadwalop->no_book,
                 "tanggaloperasi" => Carbon::parse($jadwalop->tanggal)->format('Y-m-d'),
                 "jenistindakan" => $jadwalop->jenis,
-                "kodepoli" => "ANA",
+                "kodepoli" =>  $unit->KDPOLI ?? 'BED',
                 // "namapoli" => $jadwalop->ruangan_asal,
-                "namapoli" => "PARU",
+                "namapoli" => $unit->nama_unit ?? 'BEDAH',
                 "terlaksana" => 0,
             ];
         }
