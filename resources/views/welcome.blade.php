@@ -155,40 +155,279 @@
 
                     <div
                         class="col-xl-7 col-lg-6 icon-boxes d-flex flex-column align-items-stretch justify-content-center py-5 px-lg-5">
-                        <h3>Enim quis est voluptatibus aliquid consequatur fugiat</h3>
+                        <h3>Pelayanan Online Pasien SIMRS Waled</h3>
                         <p>Esse voluptas cumque vel exercitationem. Reiciendis est hic accusamus. Non ipsam et sed
                             minima temporibus laudantium. Soluta voluptate sed facere corporis dolores excepturi. Libero
                             laboriosam sint et id nulla tenetur. Suscipit aut voluptate.</p>
-
                         <div class="icon-box">
                             <div class="icon"><i class="bx bx-fingerprint"></i></div>
-                            <h4 class="title"><a href="">PERMENKES RI NO. 82 TAHUN 2013</a></h4>
+                            <h4 class="title"><a href=""> Jadwal Dokter & Libur Rawat Jalan</a></h4>
                             <p class="description">PERATURAN SISTEM INFORMASI MANAJEMEN RUMAH SAKIT</p>
                         </div>
-
+                        <div class="icon-box">
+                            <div class="icon"><i class="bx bx-fingerprint"></i></div>
+                            <h4 class="title"><a href="">Antrian Online Rawat Jalan</a></h4>
+                            <p class="description">PERATURAN SISTEM INFORMASI MANAJEMEN RUMAH SAKIT</p>
+                        </div>
+                        <div class="icon-box">
+                            <div class="icon"><i class="bx bx-fingerprint"></i></div>
+                            <h4 class="title"><a href="">Administrasi Online Pasien</a></h4>
+                            <p class="description">PERATURAN SISTEM INFORMASI MANAJEMEN RUMAH SAKIT</p>
+                        </div>
                         <div class="icon-box">
                             <div class="icon"><i class="bx bx-gift"></i></div>
-                            <h4 class="title"><a href="">Nemo Enim</a></h4>
+                            <h4 class="title"><a href="">Bed Monitoring Rawat Inap</a></h4>
                             <p class="description">At vero eos et accusamus et iusto odio dignissimos ducimus qui
                                 blanditiis praesentium voluptatum deleniti atque</p>
                         </div>
-
-                        <div class="icon-box">
-                            <div class="icon"><i class="bx bx-atom"></i></div>
-                            <h4 class="title"><a href="">Dine Pad</a></h4>
-                            <p class="description">Explicabo est voluptatum asperiores consequatur magnam. Et veritatis
-                                odit. Sunt aut deserunt minus aut eligendi omnis</p>
-                        </div>
-
                     </div>
                 </div>
-
             </div>
-        </section><!-- End About Section -->
+        </section>
+
+        <section id="faq" class="faq section-bg">
+            <div class="container">
+                <div class="section-title">
+                    <h2>Jadwal Poliklinik Rawat Jalan</h2>
+                    <p>Dokter sewaktu waktu dapat membatalkan jadwal praktek dikarenakan cuti atau berhalangan. Silahkan
+                        tetap dapatkan informasi terbaru jadwal dokter di web kami. <br>Terima kasih dan harap
+                        maklum. Update terakhir {{ \Carbon\Carbon::now() }}</p>
+                </div>
+                <div class="faq-list">
+                    <ul>
+                        <li data-aos="fade-up"> <i class="bx bx-help-circle icon-help"></i> <a
+                                data-bs-toggle="collapse" class="collapse collapsed" data-bs-target="#faq-list-1"
+                                aria-expanded="false">Senin <i class="bx bx-chevron-down icon-show"></i><i
+                                    class="bx bx-chevron-up icon-close"></i></a>
+                            <div id="faq-list-1" class="collapse" data-bs-parent=".faq-list" style="">
+                                <p> Feugiat pretium nibh ipsum consequat. Tempus iaculis urna id volutpat lacus laoreet
+                                    non curabitur gravida. Venenatis lectus magna fringilla urna porttitor rhoncus dolor
+                                    purus non.</p>
+                            </div>
+                        </li>
+                        <li data-aos="fade-up" data-aos-delay="100"> <i class="bx bx-help-circle icon-help"></i> <a
+                                data-bs-toggle="collapse" data-bs-target="#faq-list-2" class="collapsed"
+                                aria-expanded="false">Selasa<i class="bx bx-chevron-down icon-show"></i><i
+                                    class="bx bx-chevron-up icon-close"></i></a>
+                            <div id="faq-list-2" class="collapse" data-bs-parent=".faq-list" style="">
+                                <p> Dolor sit amet consectetur adipiscing elit pellentesque habitant morbi. Id interdum
+                                    velit laoreet id donec ultrices. Fringilla phasellus faucibus scelerisque eleifend
+                                    donec pretium. Est pellentesque elit ullamcorper dignissim. Mauris ultrices eros in
+                                    cursus turpis massa tincidunt dui.</p>
+                            </div>
+                        </li>
+                        <li data-aos="fade-up" data-aos-delay="200"> <i class="bx bx-help-circle icon-help"></i> <a
+                                data-bs-toggle="collapse" data-bs-target="#faq-list-3" class="collapsed"
+                                aria-expanded="false">Rabu<i class="bx bx-chevron-down icon-show"></i><i
+                                    class="bx bx-chevron-up icon-close"></i></a>
+                            <div id="faq-list-3" class="collapse" data-bs-parent=".faq-list" style="">
+                                <p> Eleifend mi in nulla posuere sollicitudin aliquam ultrices sagittis orci. Faucibus
+                                    pulvinar elementum integer enim. Sem nulla pharetra diam sit amet nisl suscipit.
+                                    Rutrum tellus pellentesque eu tincidunt. Lectus urna duis convallis convallis
+                                    tellus. Urna molestie at elementum eu facilisis sed odio morbi quis</p>
+                            </div>
+                        </li>
+                        <li data-aos="fade-up" data-aos-delay="300"> <i class="bx bx-help-circle icon-help"></i> <a
+                                data-bs-toggle="collapse" data-bs-target="#faq-list-4" class="collapsed"
+                                aria-expanded="false">Kamis
+                                <i class="bx bx-chevron-down icon-show"></i><i
+                                    class="bx bx-chevron-up icon-close"></i></a>
+                            <div id="faq-list-4" class="collapse" data-bs-parent=".faq-list" style="">
+                                <p> Molestie a iaculis at erat pellentesque adipiscing commodo. Dignissim suspendisse in
+                                    est ante in. Nunc vel risus commodo viverra maecenas accumsan. Sit amet nisl
+                                    suscipit adipiscing bibendum est. Purus gravida quis blandit turpis cursus in.</p>
+                            </div>
+                        </li>
+                        <li data-aos="fade-up" data-aos-delay="400"> <i class="bx bx-help-circle icon-help"></i> <a
+                                data-bs-toggle="collapse" data-bs-target="#faq-list-5" class="collapsed"
+                                aria-expanded="false">Jumat<i class="bx bx-chevron-down icon-show"></i><i
+                                    class="bx bx-chevron-up icon-close"></i></a>
+                            <div id="faq-list-5" class="collapse" data-bs-parent=".faq-list">
+                                <p> Laoreet sit amet cursus sit amet dictum sit amet justo. Mauris vitae ultricies leo
+                                    integer malesuada nunc vel. Tincidunt eget nullam non nisi est sit amet. Turpis nunc
+                                    eget lorem dolor sed. Ut venenatis tellus in metus vulputate eu scelerisque.</p>
+                            </div>
+                        </li>
+                        <li data-aos="fade-up" data-aos-delay="500"> <i class="bx bx-help-circle icon-help"></i> <a
+                                data-bs-toggle="collapse" data-bs-target="#faq-list-5" class="collapsed"
+                                aria-expanded="false">Sabtu<i class="bx bx-chevron-down icon-show"></i><i
+                                    class="bx bx-chevron-up icon-close"></i></a>
+                            <div id="faq-list-5" class="collapse" data-bs-parent=".faq-list">
+                                <p><b>Poliklinik Mata</b></p>
+                                <p> Laoreet sit amet cursus sit amet dictum sit amet justo. Mauris vitae ultricies leo
+                                    integer malesuada nunc vel. Tincidunt eget nullam non nisi est sit amet. Turpis nunc
+                                    eget lorem dolor sed. Ut venenatis tellus in metus vulputate eu scelerisque.
+                                </p>
+                                <p><b>Poliklinik Mata</b></p>
+                                <p> Laoreet sit amet cursus sit amet dictum sit amet justo. Mauris vitae ultricies leo
+                                    integer malesuada nunc vel. Tincidunt eget nullam non nisi est sit amet. Turpis nunc
+                                    eget lorem dolor sed. Ut venenatis tellus in metus vulputate eu scelerisque.
+                                </p>
+                                <p><b>Poliklinik Mata</b></p>
+                                <p> Laoreet sit amet cursus sit amet dictum sit amet justo. Mauris vitae ultricies leo
+                                    integer malesuada nunc vel. Tincidunt eget nullam non nisi est sit amet. Turpis nunc
+                                    eget lorem dolor sed. Ut venenatis tellus in metus vulputate eu scelerisque.
+                                </p>
+                                <p><b>Poliklinik Mata</b></p>
+                                <p> Laoreet sit amet cursus sit amet dictum sit amet justo. Mauris vitae ultricies leo
+                                    integer malesuada nunc vel. Tincidunt eget nullam non nisi est sit amet. Turpis nunc
+                                    eget lorem dolor sed. Ut venenatis tellus in metus vulputate eu scelerisque.
+                                </p>
+                                <p><b>Poliklinik Mata</b></p>
+                                <p> Laoreet sit amet cursus sit amet dictum sit amet justo. Mauris vitae ultricies leo
+                                    integer malesuada nunc vel. Tincidunt eget nullam non nisi est sit amet. Turpis nunc
+                                    eget lorem dolor sed. Ut venenatis tellus in metus vulputate eu scelerisque.
+                                </p>
+                                <p><b>Poliklinik Mata</b></p>
+                                <p> Laoreet sit amet cursus sit amet dictum sit amet justo. Mauris vitae ultricies leo
+                                    integer malesuada nunc vel. Tincidunt eget nullam non nisi est sit amet. Turpis nunc
+                                    eget lorem dolor sed. Ut venenatis tellus in metus vulputate eu scelerisque.
+                                </p>
+                                <p><b>Poliklinik Mata</b></p>
+                                <p> Laoreet sit amet cursus sit amet dictum sit amet justo. Mauris vitae ultricies leo
+                                    integer malesuada nunc vel. Tincidunt eget nullam non nisi est sit amet. Turpis nunc
+                                    eget lorem dolor sed. Ut venenatis tellus in metus vulputate eu scelerisque.
+                                </p>
+                                <p><b>Poliklinik Mata</b></p>
+                                <p> Laoreet sit amet cursus sit amet dictum sit amet justo. Mauris vitae ultricies leo
+                                    integer malesuada nunc vel. Tincidunt eget nullam non nisi est sit amet. Turpis nunc
+                                    eget lorem dolor sed. Ut venenatis tellus in metus vulputate eu scelerisque.
+                                </p>
+                                <p><b>Poliklinik Mata</b></p>
+                                <p> Laoreet sit amet cursus sit amet dictum sit amet justo. Mauris vitae ultricies leo
+                                    integer malesuada nunc vel. Tincidunt eget nullam non nisi est sit amet. Turpis nunc
+                                    eget lorem dolor sed. Ut venenatis tellus in metus vulputate eu scelerisque.
+                                </p>
+                                <p><b>Poliklinik Mata</b></p>
+                                <p> Laoreet sit amet cursus sit amet dictum sit amet justo. Mauris vitae ultricies leo
+                                    integer malesuada nunc vel. Tincidunt eget nullam non nisi est sit amet. Turpis nunc
+                                    eget lorem dolor sed. Ut venenatis tellus in metus vulputate eu scelerisque.
+                                </p>
+                                <p><b>Poliklinik Mata</b></p>
+                                <p> Laoreet sit amet cursus sit amet dictum sit amet justo. Mauris vitae ultricies leo
+                                    integer malesuada nunc vel. Tincidunt eget nullam non nisi est sit amet. Turpis nunc
+                                    eget lorem dolor sed. Ut venenatis tellus in metus vulputate eu scelerisque.
+                                </p>
+                                <p><b>Poliklinik Mata</b></p>
+                                <p> Laoreet sit amet cursus sit amet dictum sit amet justo. Mauris vitae ultricies leo
+                                    integer malesuada nunc vel. Tincidunt eget nullam non nisi est sit amet. Turpis nunc
+                                    eget lorem dolor sed. Ut venenatis tellus in metus vulputate eu scelerisque.
+                                </p>
+                                <p><b>Poliklinik Mata</b></p>
+                                <p> Laoreet sit amet cursus sit amet dictum sit amet justo. Mauris vitae ultricies leo
+                                    integer malesuada nunc vel. Tincidunt eget nullam non nisi est sit amet. Turpis nunc
+                                    eget lorem dolor sed. Ut venenatis tellus in metus vulputate eu scelerisque.
+                                </p>
+
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="services" class="services">
+            <div class="container">
+                <div class="section-title">
+                    <h2>Antrian Online Rawat Jalan</h2>
+                    <p>Magnam dolores commodi suscipit. Necessitatibus eius consequatur ex aliquid fuga eum quidem. Sit
+                        sint consectetur velit. Quisquam quos quisquam cupiditate. Et nemo qui impedit suscipit alias
+                        ea. Quia fugiat sit in iste officiis commodi quidem hic quas.</p>
+                </div>
+                <div class="row">
+                    <div class="col-lg-4 col-md-6 d-flex align-items-stretch">
+                        <div class="icon-box">
+                            <div class="icon"><i class="fas fa-heartbeat"></i></div>
+                            <h4><a href="">Pasien BPJS</a></h4>
+                            <p>Voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi</p>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 d-flex align-items-stretch mt-4 mt-md-0">
+                        <div class="icon-box">
+                            <div class="icon"><i class="fas fa-pills"></i></div>
+                            <h4><a href="">Pasien Umum</a></h4>
+                            <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore</p>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 d-flex align-items-stretch mt-4 mt-lg-0">
+                        <div class="icon-box">
+                            <div class="icon"><i class="fas fa-hospital-user"></i></div>
+                            <h4><a href="">Pasien Asuransi Lainnya</a></h4>
+                            <p>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section id="counts" class="counts">
+            <div class="container">
+                <div class="section-title">
+                    <h2>Bed Monitoring Rawat Inap</h2>
+                    <p>Magnam dolores commodi suscipit. Necessitatibus eius consequatur ex aliquid fuga eum quidem. Sit
+                        sint consectetur velit. Quisquam quos quisquam cupiditate. Et nemo qui impedit suscipit alias
+                        ea. Quia fugiat sit in iste officiis commodi quidem hic quas.</p>
+                </div>
+                <div class="row">
+                    <div class="col-lg-3 col-md-6 mt-3 mt-lg-3">
+                        <div class="count-box"> <i class="fas fa-user-md"></i> <span data-purecounter-start="0"
+                                data-purecounter-end="85" data-purecounter-duration="0" class="purecounter">85</span>
+                            <p>Doctors</p>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 mt-3 mt-lg-3">
+                        <div class="count-box"> <i class="far fa-hospital"></i> <span data-purecounter-start="0"
+                                data-purecounter-end="18" data-purecounter-duration="0" class="purecounter">18</span>
+                            <p>Departments</p>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 mt-3 mt-lg-3">
+                        <div class="count-box"> <i class="fas fa-flask"></i> <span data-purecounter-start="0"
+                                data-purecounter-end="12" data-purecounter-duration="0" class="purecounter">12</span>
+                            <p>Research Labs</p>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 mt-3 mt-lg-3">
+                        <div class="count-box"> <i class="fas fa-award"></i> <span data-purecounter-start="0"
+                                data-purecounter-end="150" data-purecounter-duration="0"
+                                class="purecounter">150</span>
+                            <p>Awards</p>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 mt-3 mt-lg-3">
+                        <div class="count-box"> <i class="fas fa-award"></i> <span data-purecounter-start="0"
+                                data-purecounter-end="150" data-purecounter-duration="0"
+                                class="purecounter">150</span>
+                            <p>Awards</p>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 mt-3 mt-lg-3">
+                        <div class="count-box"> <i class="fas fa-award"></i> <span data-purecounter-start="0"
+                                data-purecounter-end="150" data-purecounter-duration="0"
+                                class="purecounter">150</span>
+                            <p>Awards</p>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 mt-3 mt-lg-3">
+                        <div class="count-box"> <i class="fas fa-award"></i> <span data-purecounter-start="0"
+                                data-purecounter-end="150" data-purecounter-duration="0"
+                                class="purecounter">150</span>
+                            <p>Awards</p>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 mt-3 mt-lg-3">
+                        <div class="count-box"> <i class="fas fa-award"></i> <span data-purecounter-start="0"
+                                data-purecounter-end="150" data-purecounter-duration="0"
+                                class="purecounter">150</span>
+                            <p>Awards</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
         <section id="departments" class="departments">
             <div class="container">
                 <div class="section-title">
-                    <h2>Departments</h2>
+                    <h2>Bed Monitoring</h2>
                     <p>Magnam dolores commodi suscipit. Necessitatibus eius consequatur ex aliquid fuga eum quidem. Sit
                         sint consectetur velit. Quisquam quos quisquam cupiditate. Et nemo qui impedit suscipit alias
                         ea. Quia fugiat sit in iste officiis commodi quidem hic quas.</p>
@@ -197,23 +436,22 @@
                     <div class="col-lg-3">
                         <ul class="nav nav-tabs flex-column" role="tablist">
                             <li class="nav-item" role="presentation"> <a class="nav-link show" data-bs-toggle="tab"
-                                    href="#tab-1" aria-selected="false" role="tab"
-                                    tabindex="-1">Senin</a></li>
+                                    href="#tab-1" aria-selected="false" role="tab" tabindex="-1">Senin</a>
+                            </li>
                             <li class="nav-item" role="presentation"> <a class="nav-link active"
                                     data-bs-toggle="tab" href="#tab-2" aria-selected="true"
                                     role="tab">Selasa</a></li>
                             <li class="nav-item" role="presentation"> <a class="nav-link" data-bs-toggle="tab"
-                                    href="#tab-3" aria-selected="false" role="tab"
-                                    tabindex="-1">Rabu</a></li>
+                                    href="#tab-3" aria-selected="false" role="tab" tabindex="-1">Rabu</a></li>
                             <li class="nav-item" role="presentation"> <a class="nav-link" data-bs-toggle="tab"
-                                    href="#tab-4" aria-selected="false" role="tab"
-                                    tabindex="-1">Kamis</a></li>
+                                    href="#tab-4" aria-selected="false" role="tab" tabindex="-1">Kamis</a>
+                            </li>
                             <li class="nav-item" role="presentation"> <a class="nav-link" data-bs-toggle="tab"
                                     href="#tab-5" aria-selected="false" role="tab" tabindex="-1">Jumat</a>
                             </li>
                             <li class="nav-item" role="presentation"> <a class="nav-link" data-bs-toggle="tab"
-                                href="#tab-5" aria-selected="false" role="tab" tabindex="-1">Sabtu</a>
-                        </li>
+                                    href="#tab-5" aria-selected="false" role="tab" tabindex="-1">Sabtu</a>
+                            </li>
                         </ul>
                     </div>
                     <div class="col-lg-9">
