@@ -5,7 +5,7 @@
 @stop
 @section('content')
     <div class="row">
-        <div class="col-12">
+        <div class="col-md-12">
             <x-adminlte-card title="Pencarian Dashboad Tanggal Antrian" theme="secondary" icon="fas fa-info-circle"
                 collapsible>
                 <form action="">
@@ -23,7 +23,7 @@
                 </form>
             </x-adminlte-card>
         </div>
-        <div class="col-6">
+        <div class="col-md-6">
             <x-adminlte-card title="Data Kunjungan Rawat Jalan Per Tahun" theme="success" icon="fas fa-info-circle"
                 collapsible>
                 <div class="chart">
@@ -32,7 +32,7 @@
                 </div>
             </x-adminlte-card>
         </div>
-        <div class="col-6">
+        <div class="col-md-6">
             <x-adminlte-card title="Data Kunjungan Rawat Jalan Per Bulan" theme="success" icon="fas fa-info-circle"
                 collapsible>
                 <div class="chart">
@@ -41,7 +41,7 @@
                 </div>
             </x-adminlte-card>
         </div>
-        <div class="col-8">
+        <div class="col-md-12">
             <x-adminlte-card title="Data Kunjungan Rawat Jalan Per Tanggal" theme="success" icon="fas fa-info-circle"
                 collapsible>
                 <div class="chart">
@@ -50,7 +50,7 @@
                 </div>
             </x-adminlte-card>
         </div>
-        <div class="col-12">
+        <div class="col-md-12">
             <div class="row">
                 <div class="col-md-6">
                     <!-- AREA CHART -->
