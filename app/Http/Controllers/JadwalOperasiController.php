@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Dokter;
 use App\Models\JadwalOperasi;
 use App\Models\Poliklinik;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use RealRashid\SweetAlert\Facades\Alert;
 
@@ -20,6 +21,16 @@ class JadwalOperasiController extends Controller
             'poli' => $poli,
             'jadwals' => $jadwals
         ]);
+    }
+
+    public function jadwaloperasi_display()
+    {
+        $tanggalawal = Carbon::now()->format('Y-m-d');
+        $tanggalakhir = Carbon::now()->addDays(1)->format('Y-m-d');
+        $jadwals = JadwalOperasi::whereBetween('tanggal', [$tanggalawal, $tanggalakhir])->get();
+        return view('simrs.jadwaloperasi_display', compact([
+            'jadwals'
+        ]));
     }
 
     public function create()

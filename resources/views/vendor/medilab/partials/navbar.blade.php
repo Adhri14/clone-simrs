@@ -25,17 +25,26 @@
                 <li class="dropdown"><a href="#"><span>Jadwal</span> <i class="bi bi-chevron-down"></i></a>
                     <ul>
                         <li><a href="{{ route('landingpage') }}#jadwalrawatjalan">Jadwal Rawat Jalan</a></li>
+                        <li><a href="{{ route('jadwaloperasi_display') }}">Jadwal Operasi</a></li>
                     </ul>
                 </li>
                 <li><a class="nav-link scrollto" href="#departments">Antrian</a></li>
                 <li><a class="nav-link scrollto" href="{{ route('bukutamu') }}#bukutamu">Buku Tamu</a></li>
                 <li><a class="nav-link scrollto" href="#doctors">Bed Monitoring</a></li>
                 <li><a class="nav-link scrollto" href="#contact">Kontak</a></li>
-                <li><a class="nav-link scrollto" href="{{ route('login') }}">Login</a></li>
+                <li><a class="nav-link scrollto" href="{{ route('login') }}">
+                        @auth
+                            Dashboard
+                        @else
+                            Login
+                        @endauth
+                    </a>
+                </li>
             </ul>
             <i class="bi bi-list mobile-nav-toggle"></i>
         </nav>
-        <a href="#appointment" class="appointment-btn scrollto"><span class="d-none d-md-inline">Daftar Online</a>
+        <a href="{{ route('landingpage') }}#daftaronline" class="appointment-btn scrollto"><span
+                class="d-none d-md-inline">Daftar Online</a>
     </div>
 </header>
 <section id="hero" class="d-flex align-items-center">

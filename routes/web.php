@@ -52,7 +52,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 Route::get('', [HomeController::class, 'landingpage'])->name('landingpage');
-
 Route::get('daftar_pasien', function () {
     return view('simrs.daftar_pasien');
 })->name('daftar_pasien');
@@ -80,6 +79,8 @@ Route::get('daftar_pasien', [AntrianController::class, 'daftar_pasien'])->name('
 Route::get('info_jadwaldokter', [JadwalDokterController::class, 'index'])->name('info_jadwaldokter');
 Route::get('info_jadwallibur', [JadwalLiburController::class, 'index'])->name('info_jadwallibur');
 Route::get('info_jadwaloperasi', [JadwalOperasiController::class, 'index'])->name('info_jadwaloperasi');
+Route::get('jadwaloperasi_display', [JadwalOperasiController::class, 'jadwaloperasi_display'])->name('jadwaloperasi_display');
+
 // antrian routes
 Route::prefix('antrian')->name('antrian.')->group(function () {
     Route::get('console', [AntrianController::class, 'console'])->name('console');
