@@ -21,12 +21,17 @@
         <nav id="navbar" class="navbar order-last order-lg-0">
             <ul>
                 <li><a class="nav-link scrollto active" href="{{ route('landingpage') }}">Home</a></li>
-                <li><a class="nav-link scrollto" href="#about">Pelayanan</a></li>
-                <li><a class="nav-link scrollto" href="#services">Jadwal</a></li>
+                <li><a class="nav-link scrollto" href="{{ route('landingpage') }}#about">Pelayanan</a></li>
+                <li class="dropdown"><a href="#"><span>Jadwal</span> <i class="bi bi-chevron-down"></i></a>
+                    <ul>
+                        <li><a href="{{ route('landingpage') }}#jadwalrawatjalan">Jadwal Rawat Jalan</a></li>
+                    </ul>
+                </li>
                 <li><a class="nav-link scrollto" href="#departments">Antrian</a></li>
                 <li><a class="nav-link scrollto" href="{{ route('bukutamu') }}#bukutamu">Buku Tamu</a></li>
                 <li><a class="nav-link scrollto" href="#doctors">Bed Monitoring</a></li>
                 <li><a class="nav-link scrollto" href="#contact">Kontak</a></li>
+                <li><a class="nav-link scrollto" href="{{ route('login') }}">Login</a></li>
             </ul>
             <i class="bi bi-list mobile-nav-toggle"></i>
         </nav>

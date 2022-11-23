@@ -13,6 +13,7 @@ use App\Http\Controllers\BPJS\Antrian\AntrianController as AntrianAntrianControl
 use App\Http\Controllers\BPJS\Vclaim\VclaimController as VclaimVclaimController;
 use App\Http\Controllers\DokterController;
 use App\Http\Controllers\FileRMController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Icd10Controller;
 use App\Http\Controllers\JadwalDokterController;
 use App\Http\Controllers\JadwalLiburController;
@@ -50,10 +51,8 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
+Route::get('', [HomeController::class, 'landingpage'])->name('landingpage');
 
-Route::get('/', function () {
-    return view('vendor.medilab.landingpage');
-})->name('landingpage');
 Route::get('daftar_pasien', function () {
     return view('simrs.daftar_pasien');
 })->name('daftar_pasien');

@@ -97,7 +97,7 @@
             </div>
         </div>
     </section>
-    <section id="faq" class="faq section-bg">
+    <section id="jadwalrawatjalan" class="faq section-bg">
         <div class="container">
             <div class="section-title">
                 <h2>Jadwal Poliklinik Rawat Jalan</h2>
@@ -107,130 +107,45 @@
             </div>
             <div class="faq-list">
                 <ul>
-                    <li data-aos="fade-up"> <i class="bx bx-help-circle icon-help"></i> <a data-bs-toggle="collapse"
-                            class="collapse collapsed" data-bs-target="#faq-list-1" aria-expanded="false">Senin <i
-                                class="bx bx-chevron-down icon-show"></i><i class="bx bx-chevron-up icon-close"></i></a>
-                        <div id="faq-list-1" class="collapse" data-bs-parent=".faq-list" style="">
-                            <p> Feugiat pretium nibh ipsum consequat. Tempus iaculis urna id volutpat lacus laoreet
-                                non curabitur gravida. Venenatis lectus magna fringilla urna porttitor rhoncus dolor
-                                purus non.</p>
-                        </div>
-                    </li>
-                    <li data-aos="fade-up" data-aos-delay="100"> <i class="bx bx-help-circle icon-help"></i> <a
-                            data-bs-toggle="collapse" data-bs-target="#faq-list-2" class="collapsed"
-                            aria-expanded="false">Selasa<i class="bx bx-chevron-down icon-show"></i><i
-                                class="bx bx-chevron-up icon-close"></i></a>
-                        <div id="faq-list-2" class="collapse" data-bs-parent=".faq-list" style="">
-                            <p> Dolor sit amet consectetur adipiscing elit pellentesque habitant morbi. Id interdum
-                                velit laoreet id donec ultrices. Fringilla phasellus faucibus scelerisque eleifend
-                                donec pretium. Est pellentesque elit ullamcorper dignissim. Mauris ultrices eros in
-                                cursus turpis massa tincidunt dui.</p>
-                        </div>
-                    </li>
-                    <li data-aos="fade-up" data-aos-delay="200"> <i class="bx bx-help-circle icon-help"></i> <a
-                            data-bs-toggle="collapse" data-bs-target="#faq-list-3" class="collapsed"
-                            aria-expanded="false">Rabu<i class="bx bx-chevron-down icon-show"></i><i
-                                class="bx bx-chevron-up icon-close"></i></a>
-                        <div id="faq-list-3" class="collapse" data-bs-parent=".faq-list" style="">
-                            <p> Eleifend mi in nulla posuere sollicitudin aliquam ultrices sagittis orci. Faucibus
-                                pulvinar elementum integer enim. Sem nulla pharetra diam sit amet nisl suscipit.
-                                Rutrum tellus pellentesque eu tincidunt. Lectus urna duis convallis convallis
-                                tellus. Urna molestie at elementum eu facilisis sed odio morbi quis</p>
-                        </div>
-                    </li>
-                    <li data-aos="fade-up" data-aos-delay="300"> <i class="bx bx-help-circle icon-help"></i> <a
-                            data-bs-toggle="collapse" data-bs-target="#faq-list-4" class="collapsed"
-                            aria-expanded="false">Kamis
-                            <i class="bx bx-chevron-down icon-show"></i><i class="bx bx-chevron-up icon-close"></i></a>
-                        <div id="faq-list-4" class="collapse" data-bs-parent=".faq-list" style="">
-                            <p> Molestie a iaculis at erat pellentesque adipiscing commodo. Dignissim suspendisse in
-                                est ante in. Nunc vel risus commodo viverra maecenas accumsan. Sit amet nisl
-                                suscipit adipiscing bibendum est. Purus gravida quis blandit turpis cursus in.</p>
-                        </div>
-                    </li>
-                    <li data-aos="fade-up" data-aos-delay="400"> <i class="bx bx-help-circle icon-help"></i> <a
-                            data-bs-toggle="collapse" data-bs-target="#faq-list-5" class="collapsed"
-                            aria-expanded="false">Jumat<i class="bx bx-chevron-down icon-show"></i><i
-                                class="bx bx-chevron-up icon-close"></i></a>
-                        <div id="faq-list-5" class="collapse" data-bs-parent=".faq-list">
-                            <p> Laoreet sit amet cursus sit amet dictum sit amet justo. Mauris vitae ultricies leo
-                                integer malesuada nunc vel. Tincidunt eget nullam non nisi est sit amet. Turpis nunc
-                                eget lorem dolor sed. Ut venenatis tellus in metus vulputate eu scelerisque.</p>
-                        </div>
-                    </li>
-                    <li data-aos="fade-up" data-aos-delay="500"> <i class="bx bx-help-circle icon-help"></i> <a
-                            data-bs-toggle="collapse" data-bs-target="#faq-list-5" class="collapsed"
-                            aria-expanded="false">Sabtu<i class="bx bx-chevron-down icon-show"></i><i
-                                class="bx bx-chevron-up icon-close"></i></a>
-                        <div id="faq-list-5" class="collapse" data-bs-parent=".faq-list">
-                            <p><b>Poliklinik Mata</b></p>
-                            <p> Laoreet sit amet cursus sit amet dictum sit amet justo. Mauris vitae ultricies leo
-                                integer malesuada nunc vel. Tincidunt eget nullam non nisi est sit amet. Turpis nunc
-                                eget lorem dolor sed. Ut venenatis tellus in metus vulputate eu scelerisque.
-                            </p>
-                            <p><b>Poliklinik Mata</b></p>
-                            <p> Laoreet sit amet cursus sit amet dictum sit amet justo. Mauris vitae ultricies leo
-                                integer malesuada nunc vel. Tincidunt eget nullam non nisi est sit amet. Turpis nunc
-                                eget lorem dolor sed. Ut venenatis tellus in metus vulputate eu scelerisque.
-                            </p>
-                            <p><b>Poliklinik Mata</b></p>
-                            <p> Laoreet sit amet cursus sit amet dictum sit amet justo. Mauris vitae ultricies leo
-                                integer malesuada nunc vel. Tincidunt eget nullam non nisi est sit amet. Turpis nunc
-                                eget lorem dolor sed. Ut venenatis tellus in metus vulputate eu scelerisque.
-                            </p>
-                            <p><b>Poliklinik Mata</b></p>
-                            <p> Laoreet sit amet cursus sit amet dictum sit amet justo. Mauris vitae ultricies leo
-                                integer malesuada nunc vel. Tincidunt eget nullam non nisi est sit amet. Turpis nunc
-                                eget lorem dolor sed. Ut venenatis tellus in metus vulputate eu scelerisque.
-                            </p>
-                            <p><b>Poliklinik Mata</b></p>
-                            <p> Laoreet sit amet cursus sit amet dictum sit amet justo. Mauris vitae ultricies leo
-                                integer malesuada nunc vel. Tincidunt eget nullam non nisi est sit amet. Turpis nunc
-                                eget lorem dolor sed. Ut venenatis tellus in metus vulputate eu scelerisque.
-                            </p>
-                            <p><b>Poliklinik Mata</b></p>
-                            <p> Laoreet sit amet cursus sit amet dictum sit amet justo. Mauris vitae ultricies leo
-                                integer malesuada nunc vel. Tincidunt eget nullam non nisi est sit amet. Turpis nunc
-                                eget lorem dolor sed. Ut venenatis tellus in metus vulputate eu scelerisque.
-                            </p>
-                            <p><b>Poliklinik Mata</b></p>
-                            <p> Laoreet sit amet cursus sit amet dictum sit amet justo. Mauris vitae ultricies leo
-                                integer malesuada nunc vel. Tincidunt eget nullam non nisi est sit amet. Turpis nunc
-                                eget lorem dolor sed. Ut venenatis tellus in metus vulputate eu scelerisque.
-                            </p>
-                            <p><b>Poliklinik Mata</b></p>
-                            <p> Laoreet sit amet cursus sit amet dictum sit amet justo. Mauris vitae ultricies leo
-                                integer malesuada nunc vel. Tincidunt eget nullam non nisi est sit amet. Turpis nunc
-                                eget lorem dolor sed. Ut venenatis tellus in metus vulputate eu scelerisque.
-                            </p>
-                            <p><b>Poliklinik Mata</b></p>
-                            <p> Laoreet sit amet cursus sit amet dictum sit amet justo. Mauris vitae ultricies leo
-                                integer malesuada nunc vel. Tincidunt eget nullam non nisi est sit amet. Turpis nunc
-                                eget lorem dolor sed. Ut venenatis tellus in metus vulputate eu scelerisque.
-                            </p>
-                            <p><b>Poliklinik Mata</b></p>
-                            <p> Laoreet sit amet cursus sit amet dictum sit amet justo. Mauris vitae ultricies leo
-                                integer malesuada nunc vel. Tincidunt eget nullam non nisi est sit amet. Turpis nunc
-                                eget lorem dolor sed. Ut venenatis tellus in metus vulputate eu scelerisque.
-                            </p>
-                            <p><b>Poliklinik Mata</b></p>
-                            <p> Laoreet sit amet cursus sit amet dictum sit amet justo. Mauris vitae ultricies leo
-                                integer malesuada nunc vel. Tincidunt eget nullam non nisi est sit amet. Turpis nunc
-                                eget lorem dolor sed. Ut venenatis tellus in metus vulputate eu scelerisque.
-                            </p>
-                            <p><b>Poliklinik Mata</b></p>
-                            <p> Laoreet sit amet cursus sit amet dictum sit amet justo. Mauris vitae ultricies leo
-                                integer malesuada nunc vel. Tincidunt eget nullam non nisi est sit amet. Turpis nunc
-                                eget lorem dolor sed. Ut venenatis tellus in metus vulputate eu scelerisque.
-                            </p>
-                            <p><b>Poliklinik Mata</b></p>
-                            <p> Laoreet sit amet cursus sit amet dictum sit amet justo. Mauris vitae ultricies leo
-                                integer malesuada nunc vel. Tincidunt eget nullam non nisi est sit amet. Turpis nunc
-                                eget lorem dolor sed. Ut venenatis tellus in metus vulputate eu scelerisque.
-                            </p>
-
-                        </div>
-                    </li>
+                    @for ($i = 1; $i <= 6; $i++)
+                        <li data-aos="fade-up" data-aos-delay="{{ $i * 100 }}"> <i
+                                class="bx bx-calendar-exclamation icon-help"></i>
+                            <a data-bs-toggle="collapse" data-bs-target="#faq-list-{{ $i }}" class="collapsed"
+                                aria-expanded="false">
+                                <b>
+                                    {{ $jadwal->where('hari', $i)->first()->namahari }}
+                                </b><i class="bx bx-chevron-down icon-show"></i><i
+                                    class="bx bx-chevron-up icon-close"></i></a>
+                            <div id="faq-list-{{ $i }}" class="collapse" data-bs-parent=".faq-list">
+                                <table class="table table-hover table-responsive">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">POLIKLINIK</th>
+                                            <th scope="col">DOKTER</th>
+                                            <th scope="col">JADWAL</th>
+                                            <th scope="col">KUOTA</th>
+                                            <th scope="col">KET</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($jadwal->where('hari', $i) as $item)
+                                            <tr class="{{ $item->libur ? 'table-danger' : null }}">
+                                                <td>{{ strtoupper($item->namasubspesialis) }}</td>
+                                                <td>{{ strtoupper($item->namadokter) }}</td>
+                                                <td>{{ $item->jadwal }}</td>
+                                                <td>{{ $item->kapasitaspasien }}</td>
+                                                <td>
+                                                    @if ($item->libur)
+                                                        Libur
+                                                    @endif
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </li>
+                    @endfor
                 </ul>
             </div>
         </div>
@@ -323,7 +238,7 @@
         <div>
             <iframe
                 src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d2800.7142316722648!2d108.71889725135291!3d-6.913539570187568!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0xd5151423db71bc02!2sRSUD%20Waled%20Cirebon!5e0!3m2!1sen!2sid!4v1669169174657!5m2!1sen!2sid"
-               style="border:0; width: 100%; height: 350px;" allowfullscreen="" loading="lazy"
+                style="border:0; width: 100%; height: 350px;" allowfullscreen="" loading="lazy"
                 referrerpolicy="no-referrer-when-downgrade"></iframe>
         </div>
 
@@ -334,7 +249,8 @@
                         <div class="address">
                             <i class="bi bi-geo-alt"></i>
                             <h4>Location:</h4>
-                            <p>Jl. Prabu Kiansantang No.4, Desa Waled Kota, Kec. Waled, Kabupaten Cirebon, Jawa Barat 45187</p>
+                            <p>Jl. Prabu Kiansantang No.4, Desa Waled Kota, Kec. Waled, Kabupaten Cirebon, Jawa Barat 45187
+                            </p>
                         </div>
                         <div class="email">
                             <i class="bi bi-envelope"></i>
