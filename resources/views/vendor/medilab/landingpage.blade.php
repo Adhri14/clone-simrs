@@ -348,19 +348,3 @@
         </div>
     </section>
 @endsection
-
-@section('js')
-
-@endsection
-
-@section('css')
-    <style>
-        #hero {
-            background: url("{{ asset('rs-bagus-min.png') }}") center no-repeat !important;
-        }
-
-        .about .video-box {
-            background: url("{{ asset('rs-bagus-min.png') }}") no-repeat !important;
-        }
-    </style>
-@endsection

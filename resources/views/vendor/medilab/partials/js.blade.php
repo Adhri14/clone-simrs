@@ -7,4 +7,6 @@
 <script src="{{ asset('medilab/assets/vendor/swiper/swiper-bundle.min.js') }}"></script>
 <script src="{{ asset('medilab/assets/vendor/php-email-form/validate.js') }}"></script>
 <script src="{{ asset('medilab/assets/js/main.js') }}"></script>
+@include('sweetalert::alert')
+
 @yield('js')

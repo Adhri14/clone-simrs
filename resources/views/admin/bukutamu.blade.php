@@ -1,17 +1,15 @@
 @extends('vendor.medilab.master')
 
-@section('title','Buku Tamu - SIMRS Waled')
+@section('title', 'Buku Tamu - SIMRS Waled')
 
 @section('content')
-<main id="main">
     <section class="about section-bg">
         <div class="container-fluid">
             <div class="section-title">
                 <h2>Profil RSUD Waled</h2>
             </div>
             <div class="row">
-                <div
-                    class="col-xl-5 col-lg-6 video-box d-flex justify-content-center align-items-stretch position-relative">
+                <div class="col-xl-5 col-lg-6 video-box d-flex justify-content-center align-items-stretch position-relative">
                     <a href="https://www.youtube.com/watch?v=oRj04KcUmuU" class="glightbox play-btn mb-4"></a>
                 </div>
                 <div
@@ -92,34 +90,15 @@
                     </form>
                 </div>
             </div>
-
         </div>
-    </section><!-- End About Section -->
-</main>
+    </section>
 @endsection
 
 @section('css')
-<link rel="stylesheet" href="{{ asset('signature/dist/signature-style.css') }}">
-    <style>
-        #hero {
-            background: url("{{ asset('rs-bagus-min.png') }}")  no-repeat !important;
-        }
-
-        .about .video-box {
-            background: url("{{ asset('rs-bagus-min.png') }}") no-repeat !important;
-        }
-
-        #footer {
-            background: white !important;
-        }
-    </style>
-
+    <link rel="stylesheet" href="{{ asset('signature/dist/signature-style.css') }}">
 @endsection
 
 @section('js')
-<script src="{{ asset('signature/dist/underscore-min.js') }}"></script>
-<script src="{{ asset('signature/dist/signature-script.js') }}"></script>
-@include('sweetalert::alert')
-
+    <script src="{{ asset('signature/dist/underscore-min.js') }}"></script>
+    <script src="{{ asset('signature/dist/signature-script.js') }}"></script>
 @endsection
-

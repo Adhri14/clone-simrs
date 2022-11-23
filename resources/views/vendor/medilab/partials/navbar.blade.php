@@ -14,7 +14,7 @@
 <header id="header" class="fixed-top">
     <div class="container d-flex align-items-center">
         <h1 class="logo me-auto">
-            <a href="index.html">
+            <a href="{{ route('landingpage') }}">
                 <img src="{{ asset('assets/img/logo rs waled ico.png') }}" alt="" class="img-fluid">
                 RSUD Waled</a>
         </h1>
