@@ -79,6 +79,7 @@ Route::get('daftar_pasien', [AntrianController::class, 'daftar_pasien'])->name('
 Route::get('info_jadwaldokter', [JadwalDokterController::class, 'index'])->name('info_jadwaldokter');
 Route::get('info_jadwallibur', [JadwalLiburController::class, 'index'])->name('info_jadwallibur');
 Route::get('info_jadwaloperasi', [JadwalOperasiController::class, 'index'])->name('info_jadwaloperasi');
+Route::get('jadwaloperasi_info', [JadwalOperasiController::class, 'jadwaloperasi_info'])->name('jadwaloperasi_info');
 Route::get('jadwaloperasi_display', [JadwalOperasiController::class, 'jadwaloperasi_display'])->name('jadwaloperasi_display');
 
 // antrian routes

@@ -23,6 +23,16 @@ class JadwalOperasiController extends Controller
         ]);
     }
 
+    public function jadwaloperasi_info()
+    {
+        $tanggalawal = Carbon::now()->format('Y-m-d');
+        $tanggalakhir = Carbon::now()->addDays(1)->format('Y-m-d');
+        $jadwals = JadwalOperasi::whereBetween('tanggal', [$tanggalawal, $tanggalakhir])->get();
+        return view('simrs.jadwaloperasi_info', compact([
+            'jadwals'
+        ]));
+    }
+
     public function jadwaloperasi_display()
     {
         $tanggalawal = Carbon::now()->format('Y-m-d');
