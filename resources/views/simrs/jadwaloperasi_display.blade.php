@@ -19,22 +19,26 @@
                                     class="table table-hover table-sm table-responsive table-striped">
                                     <thead>
                                         <tr>
+                                            <th scope="col">TANGGAL</th>
+                                            <th scope="col">No Booking</th>
+                                            <th scope="col">KAMAR</th>
                                             <th scope="col">RM</th>
                                             <th scope="col">PASIEN</th>
                                             <th scope="col">DOKTER</th>
-                                            <th scope="col">RUANGAN</th>
-                                            <th scope="col">TANGGAL</th>
+                                            <th scope="col">KET</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @foreach ($jadwals as $item)
                                             <tr class="text-xs ">
+                                                <td>{{ Carbon\Carbon::parse( $item->tanggal)->format('d M Y') }}</td>
+                                                <td>{{ $item->no_book }}</td>
+                                                <td>{{ $item->ruangan }}</td>
                                                 <td>{{ strlen($item->nomor_rm) == 6 ? $item->nomor_rm : substr($item->nomor_rm, -6) }}
                                                 </td>
                                                 <td>{{ strtoupper($item->nama_pasien) }}</td>
                                                 <td>{{ strtoupper($item->nama_dokter) }}</td>
-                                                <td>{{ $item->ruangan }}</td>
-                                                <td>{{ $item->tanggal }}</td>
+                                                <td>Belum</td>
                                             </tr>
                                         @endforeach
                                     </tbody>
@@ -69,6 +73,9 @@
             paging: false,
             info: false,
             searching: false,
+            order: [
+                1, 'asc'
+            ],
         });
     </script>
 @endsection

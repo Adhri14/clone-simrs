@@ -24,8 +24,27 @@
     <link href="{{ asset('medilab/assets/vendor/swiper/swiper-bundle.min.css') }}" rel="stylesheet">
     <link href="{{ asset('medilab/assets/css/style.css') }}" rel="stylesheet">
     <style>
-        #footer {
-            background: white !important;
+        #topbar {
+            background: green !important;
+        }
+
+        #topbar .contact-info a {
+            color: white;
+
+        }
+
+        #topbar .contact-info i {
+            color: white;
+
+        }
+
+        #topbar .social-links a {
+            color: white;
+
+        }
+
+        body #topbar {
+            color: white;
         }
     </style>
 
@@ -54,7 +73,8 @@
         <div class="container d-flex justify-content-between">
             <div class="contact-info d-flex align-items-center">
                 <div class="copyright">
-                    &copy; Copyright <strong><span>SIMRS Waled</span></strong>. All Rights Reserved. Designed by <a href="https://github.com/marwandhiaurrahman/" target="_blank">IT RSUD Waled</a>
+                    &copy; Copyright <strong><span>SIMRS Waled</span></strong>. All Rights Reserved. Designed by <a
+                        href="https://github.com/marwandhiaurrahman/" target="_blank">IT RSUD Waled</a>
                 </div>
             </div>
             <div class="d-none d-lg-flex social-links align-items-center">
