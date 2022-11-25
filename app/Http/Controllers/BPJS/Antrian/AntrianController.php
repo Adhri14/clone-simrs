@@ -1534,7 +1534,7 @@ class AntrianController extends ApiBPJSController
                 "jenistindakan" => $jadwalop->jenis,
                 "kodepoli" =>  $unit->KDPOLI ?? 'BED',
                 // "namapoli" => $jadwalop->ruangan_asal,
-                "namapoli" => $unit->nama_unit ?? 'BEDAH',
+                "namapoli" => 'BEDAH',
                 "terlaksana" => 0,
             ];
         }

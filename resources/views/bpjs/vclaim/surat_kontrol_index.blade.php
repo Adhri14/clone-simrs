@@ -7,7 +7,7 @@
     <div class="row">
         <div class="col-12">
             <x-adminlte-card title="Filter Surat Kontrol & SPRI" theme="secondary" collapsible>
-                <form action="" method="get">zz=
+                <form action="" method="get">
                     <div class="row">
                         <div class="col-6">
                             @php
@@ -39,6 +39,47 @@
                         </div>
                     </div>
                 </form>
+                <form action="" method="get">
+                    <div class="row">
+                        <div class="col-4">
+                            @php
+                                $config = ['format' => 'YYYY-MM'];
+                            @endphp
+                            <x-adminlte-input-date name="bulan" label="Tanggal Antrian" :config="$config"
+                                value="{{ $request->bulan }}" placeholder="Pilih Bulan">
+                                <x-slot name="prependSlot">
+                                    <div class="input-group-text bg-primary">
+                                        <i class="fas fa-calendar-alt"></i>
+                                    </div>
+                                </x-slot>
+                            </x-adminlte-input-date>
+                        </div>
+                        <div class="col-4">
+                            <x-adminlte-input name="nomorkartu" label="Nomor Kartu" value="{{ $request->nomorkartu }}"
+                                placeholder="Pencarian Berdasarkan Nomor Kartu BPJS">
+                                <x-slot name="prependSlot">
+                                    <div class="input-group-text bg-primary">
+                                        <i class="fas fa-user"></i>
+                                    </div>
+                                </x-slot>
+                            </x-adminlte-input>
+                        </div>
+                        <div class="col-4">
+                            <x-adminlte-select2 name="formatfilter" label="Format Filter">
+                                <option value="1" {{ $request->jenispelayanan == 1 ? 'selected' : null }}>Tanggal Entri
+                                </option>
+                                <option value="2" {{ $request->jenispelayanan == 2 ? 'selected' : null }}>Tanggal
+                                    Kontrol
+                                </option>
+                                <x-slot name="appendSlot">
+                                    <x-adminlte-button type="submit" class="withLoad" theme="primary"
+                                        label="Cari Surat Kontrol" />
+                                </x-slot>
+                            </x-adminlte-select2>
+                        </div>
+                    </div>
+
+                </form>
             </x-adminlte-card>
         </div>
         <div class="col-12">
@@ -66,7 +107,7 @@
                                     {{ $item->jnsPelayanan }}
                                 </td>
                                 <td>
-                                    Tujuan :{{ $item->namaPoliTujuan }}
+                                    Tujuan : {{ $item->namaPoliTujuan }}
                                     <br>
                                     Asal : {{ $item->namaPoliAsal }}
                                 </td>

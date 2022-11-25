@@ -137,7 +137,7 @@ Route::prefix('bpjs')->name('api.bpjs.')->group(function () {
     });
     // VCLAIM
     Route::prefix('vclaim')->name('vclaim.')->group(function () {
-        // API BPJS
+        // MONITORING
         Route::get('monitoring_data_kunjungan', [VclaimVclaimController::class, 'monitoring_data_kunjungan'])->name('monitoring_data_kunjungan');
         Route::get('monitoring_data_klaim', [VclaimVclaimController::class, 'monitoring_data_klaim'])->name('monitoring_data_klaim');
         Route::get('monitoring_pelayanan_peserta', [VclaimVclaimController::class, 'monitoring_pelayanan_peserta'])->name('monitoring_pelayanan_peserta');
@@ -153,6 +153,22 @@ Route::prefix('bpjs')->name('api.bpjs.')->group(function () {
         Route::get('ref_provinsi', [VclaimVclaimController::class, 'ref_provinsi'])->name('ref_provinsi');
         Route::get('ref_kabupaten', [VclaimVclaimController::class, 'ref_kabupaten'])->name('ref_kabupaten');
         Route::get('ref_kecamatan', [VclaimVclaimController::class, 'ref_kecamatan'])->name('ref_kecamatan');
+        // RENCANA KONTROL
+        Route::post('suratkontrol_insert', [AntrianAntrianController::class, 'suratkontrol_insert'])->name('suratkontrol_insert');
+        Route::put('suratkontrol_update', [AntrianAntrianController::class, 'suratkontrol_update'])->name('suratkontrol_update');
+        Route::delete('suratkontrol_delete', [AntrianAntrianController::class, 'suratkontrol_delete'])->name('suratkontrol_delete');
+        Route::post('spri_insert', [AntrianAntrianController::class, 'spri_insert'])->name('spri_insert');
+        Route::put('spri_update', [AntrianAntrianController::class, 'spri_update'])->name('spri_update');
+        Route::get('suratkontrol_nomor', [AntrianAntrianController::class, 'suratkontrol_nomor'])->name('suratkontrol_nomor');
+        Route::get('suratkontrol_peserta', [AntrianAntrianController::class, 'suratkontrol_peserta'])->name('suratkontrol_peserta');
+        Route::get('suratkontrol_tanggal', [AntrianAntrianController::class, 'suratkontrol_tanggal'])->name('suratkontrol_tanggal');
+        Route::get('suratkontrol_sep', [AntrianAntrianController::class, 'suratkontrol_sep'])->name('suratkontrol_sep');
+        Route::get('suratkontrol_poli', [AntrianAntrianController::class, 'suratkontrol_poli'])->name('suratkontrol_poli');
+        Route::get('suratkontrol_dokter', [AntrianAntrianController::class, 'suratkontrol_dokter'])->name('suratkontrol_dokter');
+        // SEP
+        Route::get('sep_nomor', [VclaimVclaimController::class, 'sep_nomor'])->name('sep_nomor');
+        Route::delete('sep_delete', [VclaimVclaimController::class, 'sep_delete'])->name('sep_delete');
+
     });
 });
 // APP.RSUDWALED.ID

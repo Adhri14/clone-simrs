@@ -122,7 +122,7 @@
             </div>
             <div class="col-md-8">
                 @php
-                    $heads = ['Tgl Masuk \ Pulang', 'No SEP \ Rujukam', 'Pasien', 'Pelayanan', 'Poliklinik', 'Diagnosa', 'Status'];
+                    $heads = ['Tgl Masuk \ Pulang', 'No SEP \ Rujukam', 'Pasien', 'Pelayanan', 'Poliklinik', 'Diagnosa', 'Action'];
                     $config['order'] = ['0', 'desc'];
                 @endphp
                 <x-adminlte-card title="SEP Peserta" theme="primary" icon="fas fa-info-circle" collapsible>
@@ -150,7 +150,19 @@
                                         {{ $item->diagnosa }}
                                     </td>
                                     <td>
-                                        {{ $item->flag }} {{ $item->asuransi }}<br>{{ $item->poliTujSep }}
+                                        <form action="{{ route('api.bpjs.vclaim.sep_delete') }}" method="POST">
+                                            {{-- <x-adminlte-button class="btn-xs" theme="success" icon="fas fa-check"
+                                                title="Edit User {{ $item->name }}"
+                                                onclick="window.location='{{ route('user_verifikasi', $item) }}'" />
+                                            <x-adminlte-button class="btn-xs" theme="warning" icon="fas fa-edit"
+                                                title="Edit User {{ $item->name }}"
+                                                onclick="window.location='{{ route('user.edit', $item) }}'" /> --}}
+                                            @csrf
+                                            @method('DELETE')
+                                            <input type="hidden" name="noSep" value="{{ $item->noSep }}">
+                                            <x-adminlte-button class="btn-xs" theme="danger" icon="fas fa-trash-alt" type="submit"
+                                                onclick="return confirm('Apakah anda akan menghapus SEP {{ $item->noSep }} ?')" />
+                                        </form>
                                     </td>
                                 </tr>
                             @endforeach
