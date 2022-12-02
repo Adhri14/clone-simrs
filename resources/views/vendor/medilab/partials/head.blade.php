@@ -11,8 +11,8 @@
     <meta content="" name="description">
     <meta content="" name="keywords">
 
-    <link href="{{ asset('assets/img/logo rs waled ico.png') }}" rel="icon">
-    <link href="{{ asset('assets/img/logo rs waled ico.png') }}" rel="apple-touch-icon">
+    <link href="{{ asset('vendor/adminlte/dist/img/rswaledico.png') }}" rel="icon">
+    <link href="{{ asset('vendor/adminlte/dist/img/rswaledico.png') }}" rel="apple-touch-icon">
 
     @include('vendor.medilab.partials.css')
     @yield('css')

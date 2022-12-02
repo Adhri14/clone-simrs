@@ -1,5 +1,7 @@
 @extends('vendor.medilab.master')
+
 @section('title', 'SIMRS Waled')
+
 @section('content')
     <section id="why-us" class="why-us">
         <div class="container">
