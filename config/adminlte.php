@@ -403,6 +403,77 @@ return [
                 ],
             ],
         ],
+        // MENU APLIKASI POLIKLINIK
+        [
+            'text'    => 'Aplikasi Poliklinik',
+            'icon'    => 'fas fa-clinic-medical',
+            'can' => 'poliklinik',
+            'submenu' => [
+                [
+                    'text' => 'Antrian Pasien',
+                    'icon'    => 'fas fa-user-injured',
+                    'url'  => 'poliklinik/antrian',
+                    'shift'   => 'ml-2',
+                    'can' => 'poliklinik',
+                ],
+                [
+                    'text' => 'Surat Kontrol Poliklinik',
+                    'icon'    => 'fas fa-file-medical',
+                    'url'  => 'antrian/surat_kontrol_poli',
+                    'shift'   => 'ml-2',
+                    'can' => 'poliklinik',
+                ],
+                [
+                    'text' => 'KPO Elektronik',
+                    'icon'    => 'fas fa-pills',
+                    'url'  => 'antrian/kpo',
+                    'shift'   => 'ml-2',
+                    'can' => 'poliklinik',
+                ],
+                [
+                    'text' => 'Laporan Kunjungan Poliklinik',
+                    'icon'    => 'fas fa-chart-line',
+                    'shift'   => 'ml-2',
+                    'url'  => 'antrian/laporan_kunjungan_poliklinik',
+                    'can' => 'poliklinik',
+                ],
+                [
+                    'text' => 'Antrian Farmasi',
+                    'icon'    => 'fas fa-pills',
+                    'url'  => 'antrian/farmasi',
+                    'shift'   => 'ml-2',
+                    'can' => 'farmasi',
+                ],
+                // [
+                //     'text' => 'Display Antrian Pendaftaran',
+                //     'icon'    => 'fas fa-user-plus',
+                //     'url'  => 'antrian/display_pendaftaran',
+                //     'shift'   => 'ml-2',
+                //     'can' => 'admin',
+                // ],
+                [
+                    'text' => 'Laporan Antrian',
+                    'icon'    => 'fas fa-chart-line',
+                    'shift'   => 'ml-2',
+                    'url'  => 'antrian/laporan',
+                    // 'can' => 'admin',
+                ],
+                [
+                    'text' => 'Laporan Pertanggal',
+                    'icon'    => 'fas fa-chart-line',
+                    'shift'   => 'ml-2',
+                    'url'  => 'antrian/laporan_tanggal',
+                    // 'can' => 'admin',
+                ],
+                [
+                    'text' => 'Laporan Perbulan',
+                    'icon'    => 'fas fa-chart-line',
+                    'shift'   => 'ml-2',
+                    'url'  => 'antrian/laporan_bulan',
+                    // 'can' => 'admin',
+                ],
+            ],
+        ],
         // APLIKASI SIMRS
         [
             'text' => 'Aplikasi SIMRS',

@@ -51,6 +51,7 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
 Route::get('', [HomeController::class, 'landingpage'])->name('landingpage');
 Route::get('daftar_pasien', function () {
     return view('simrs.daftar_pasien');
@@ -59,21 +60,6 @@ Route::get('daftar_pasien', function () {
 Auth::routes();
 Route::get('verifikasi_akun', [VerificationController::class, 'verifikasi_akun'])->name('verifikasi_akun');
 Route::post('verifikasi_kirim', [VerificationController::class, 'verifikasi_kirim'])->name('verifikasi_kirim');
-
-
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-Route::get('/status', [App\Http\Controllers\HomeController::class, 'status'])->name('status');
-Route::get("log-message", function () {
-    $message = "This is a sample message for Test.";
-    Log::emergency($message);
-    Log::alert($message);
-    Log::critical($message);
-    Log::error($message);
-    Log::warning($message);
-    Log::notice($message);
-    Log::info($message);
-    Log::debug($message);
-});
 
 Route::get('daftar_pasien', [AntrianController::class, 'daftar_pasien'])->name('daftar_pasien');
 Route::get('info_jadwaldokter', [JadwalDokterController::class, 'index'])->name('info_jadwaldokter');
@@ -179,6 +165,18 @@ Route::get('bukutamu', [BukuTamuController::class, 'bukutamu'])->name('bukutamu'
 Route::post('bukutamu', [BukuTamuController::class, 'store'])->name('bukutamu_store');
 // auth
 Route::middleware('auth')->group(function () {
+    Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+    Route::get("log-message", function () {
+        $message = "This is a sample message for Test.";
+        Log::emergency($message);
+        Log::alert($message);
+        Log::critical($message);
+        Log::error($message);
+        Log::warning($message);
+        Log::notice($message);
+        Log::info($message);
+        Log::debug($message);
+    });
     // admin
     Route::middleware('permission:admin')->group(function () {
         Route::resource('user', UserController::class);
@@ -187,6 +185,17 @@ Route::middleware('auth')->group(function () {
         Route::get('profile', [UserController::class, 'profile'])->name('profile');
         Route::get('user_verifikasi/{user}', [UserController::class, 'user_verifikasi'])->name('user_verifikasi');
         Route::get('delet_verifikasi', [UserController::class, 'delet_verifikasi'])->name('delet_verifikasi');
+    });
+    // poliklinik
+    Route::middleware('permission:poliklinik')->prefix('poliklinik')->name('poliklinik.')->group(function () {
+        Route::get('antrian', [SIMRSAntrianController::class, 'antrian_poliklinik'])->name('antrian');
+        Route::get('antrian_panggil/{antrian}', [SIMRSAntrianController::class, 'panggil_poliklinik'])->name('antrian_panggil');
+        Route::get('antrian_panggil_ulang/{antrian}', [SIMRSAntrianController::class, 'panggil_ulang_poliklinik'])->name('antrian_panggil_ulang');
+        Route::get('antrian_batal/{antrian}', [SIMRSAntrianController::class, 'batal_antrian_poliklinik'])->name('antrian_batal');
+        Route::get('lanjut_farmasi/{antrian}', [SIMRSAntrianController::class, 'lanjut_farmasi'])->name('lanjut_farmasi');
+        Route::get('selesai_poliklinik/{antrian}', [SIMRSAntrianController::class, 'selesai_poliklinik'])->name('selesai_poliklinik');
+
+
     });
     // simrs
     Route::prefix('simrs')->name('simrs.')->group(function () {
