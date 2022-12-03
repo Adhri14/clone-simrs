@@ -154,17 +154,17 @@ Route::prefix('bpjs')->name('api.bpjs.')->group(function () {
         Route::get('ref_kabupaten', [VclaimVclaimController::class, 'ref_kabupaten'])->name('ref_kabupaten');
         Route::get('ref_kecamatan', [VclaimVclaimController::class, 'ref_kecamatan'])->name('ref_kecamatan');
         // RENCANA KONTROL
-        Route::post('suratkontrol_insert', [AntrianAntrianController::class, 'suratkontrol_insert'])->name('suratkontrol_insert');
-        Route::put('suratkontrol_update', [AntrianAntrianController::class, 'suratkontrol_update'])->name('suratkontrol_update');
-        Route::delete('suratkontrol_delete', [AntrianAntrianController::class, 'suratkontrol_delete'])->name('suratkontrol_delete');
-        Route::post('spri_insert', [AntrianAntrianController::class, 'spri_insert'])->name('spri_insert');
-        Route::put('spri_update', [AntrianAntrianController::class, 'spri_update'])->name('spri_update');
-        Route::get('suratkontrol_nomor', [AntrianAntrianController::class, 'suratkontrol_nomor'])->name('suratkontrol_nomor');
-        Route::get('suratkontrol_peserta', [AntrianAntrianController::class, 'suratkontrol_peserta'])->name('suratkontrol_peserta');
-        Route::get('suratkontrol_tanggal', [AntrianAntrianController::class, 'suratkontrol_tanggal'])->name('suratkontrol_tanggal');
-        Route::get('suratkontrol_sep', [AntrianAntrianController::class, 'suratkontrol_sep'])->name('suratkontrol_sep');
-        Route::get('suratkontrol_poli', [AntrianAntrianController::class, 'suratkontrol_poli'])->name('suratkontrol_poli');
-        Route::get('suratkontrol_dokter', [AntrianAntrianController::class, 'suratkontrol_dokter'])->name('suratkontrol_dokter');
+        Route::post('suratkontrol_insert', [VclaimVclaimController::class, 'suratkontrol_insert'])->name('suratkontrol_insert');
+        // Route::put('suratkontrol_update', [VclaimVclaimController::class, 'suratkontrol_update'])->name('suratkontrol_update');
+        Route::delete('suratkontrol_delete', [VclaimVclaimController::class, 'suratkontrol_delete'])->name('suratkontrol_delete');
+        // Route::post('spri_insert', [VclaimVclaimController::class, 'spri_insert'])->name('spri_insert');
+        // Route::put('spri_update', [VclaimVclaimController::class, 'spri_update'])->name('spri_update');
+        Route::get('suratkontrol_nomor', [VclaimVclaimController::class, 'suratkontrol_nomor'])->name('suratkontrol_nomor');
+        Route::get('suratkontrol_peserta', [VclaimVclaimController::class, 'suratkontrol_peserta'])->name('suratkontrol_peserta');
+        Route::get('suratkontrol_tanggal', [VclaimVclaimController::class, 'suratkontrol_tanggal'])->name('suratkontrol_tanggal');
+        // Route::get('suratkontrol_sep', [VclaimVclaimController::class, 'suratkontrol_sep'])->name('suratkontrol_sep');
+        // Route::get('suratkontrol_poli', [VclaimVclaimController::class, 'suratkontrol_poli'])->name('suratkontrol_poli');
+        // Route::get('suratkontrol_dokter', [VclaimVclaimController::class, 'suratkontrol_dokter'])->name('suratkontrol_dokter');
         // SEP
         Route::get('sep_nomor', [VclaimVclaimController::class, 'sep_nomor'])->name('sep_nomor');
         Route::delete('sep_delete', [VclaimVclaimController::class, 'sep_delete'])->name('sep_delete');

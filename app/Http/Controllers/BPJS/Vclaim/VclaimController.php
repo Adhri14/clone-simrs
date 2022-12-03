@@ -326,7 +326,11 @@ class VclaimController extends ApiBPJSController
             if ($response->json('metaData.code') == 1 || $response->json('metaData.code') == 0) {
                 $code = 200;
             } else {
-                $code = $response->json('metaData.code');
+                if ($response->json('metaData.code') == 200) {
+                    $code = $response->json('metaData.code');
+                } else {
+                    $code = 400;
+                }
             }
             return $this->sendResponse($response->json('metaData.message'), $data, $code);
         }
@@ -518,6 +522,55 @@ class VclaimController extends ApiBPJSController
         return $this->response_decrypt($response, $signature);
     }
     // RENCANA KONTROL
+    public function suratkontrol_insert(Request $request)
+    {
+        $validator = Validator::make(request()->all(), [
+            "noSep" => "required",
+            "tglRencanaKontrol" => "required|date",
+            "kodeDokter" => "required",
+            "poliKontrol" => "required",
+            "user" => "required",
+        ]);
+        if ($validator->fails()) {
+            return $this->sendError($validator->errors()->first(), null, 400);
+        }
+        $url = env('VCLAIM_URL') . "RencanaKontrol/insert";
+        $signature = $this->signature();
+        $signature['Content-Type'] = 'application/x-www-form-urlencoded';
+        $data = [
+            "request" => [
+                "noSEP" => $request->noSep,
+                "tglRencanaKontrol" => $request->tglRencanaKontrol,
+                "poliKontrol" => $request->poliKontrol,
+                "kodeDokter" => $request->kodeDokter,
+                "user" =>  $request->user,
+            ]
+        ];
+        $response = Http::withHeaders($signature)->post($url, $data);
+        return $this->response_decrypt($response, $signature);
+    }
+    public function suratkontrol_delete(Request $request)
+    {
+        $validator = Validator::make(request()->all(), [
+            "noSuratKontrol" => "required",
+        ]);
+        if ($validator->fails()) {
+            return $this->sendError($validator->errors()->first(), null, 201);
+        }
+        $url = env('VCLAIM_URL') . "RencanaKontrol/Delete";
+        $signature = $this->signature();
+        $signature['Content-Type'] = 'application/x-www-form-urlencoded';
+        $data = [
+            "request" => [
+                "t_suratkontrol" => [
+                    "noSuratKontrol" => $request->noSuratKontrol,
+                    "user" => Auth::user()->name,
+                ]
+            ]
+        ];
+        $response = Http::withHeaders($signature)->delete($url, $data);
+        return $this->response_decrypt($response, $signature);
+    }
     public function suratkontrol_tanggal(Request $request)
     {
         // checking request

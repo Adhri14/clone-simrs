@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\SIMRS;
 
+use App\Http\Controllers\API\ApiController;
 use App\Http\Controllers\Controller;
 use App\Models\AlasanMasukDB;
 use App\Models\AlasanPulangDB;
@@ -9,11 +10,10 @@ use App\Models\KunjunganDB;
 use App\Models\StatusKunjunganDB;
 use Illuminate\Http\Request;
 
-class KunjunganController extends Controller
+class KunjunganController extends ApiController
 {
     public function index(Request $request)
     {
-
         if (empty($request->search)) {
             $kunjungans = KunjunganDB::with(['pasien', 'unit', 'penjamin'])
                 ->orderByDesc('tgl_masuk')
@@ -35,28 +35,13 @@ class KunjunganController extends Controller
             'alasan_pulang' => $alasan_pulang,
         ]);
     }
-
-    public function create()
+    public function show($kodekunjungan)
     {
-    }
-
-    public function store(Request $request)
-    {
-    }
-
-    public function show($id)
-    {
-    }
-
-    public function edit($id)
-    {
-    }
-
-    public function update(Request $request, $id)
-    {
-    }
-
-    public function destroy($id)
-    {
+        $kunjungan = KunjunganDB::firstWhere('kode_kunjungan', $kodekunjungan);
+        $data['noSEP'] = $kunjungan->no_sep;
+        $data['namaPasien'] = $kunjungan->pasien->nama_px;
+        $data['kodePoli'] = $kunjungan->unit->KDPOLI;
+        $data['kodeDokter'] = $kunjungan->dokter ? (string) $kunjungan->dokter->kode_dokter_jkn : null;
+        return $this->sendResponse('OK', $data, 200);
     }
 }

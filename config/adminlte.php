@@ -419,7 +419,7 @@ return [
                 [
                     'text' => 'Surat Kontrol Poliklinik',
                     'icon'    => 'fas fa-file-medical',
-                    'url'  => 'antrian/surat_kontrol_poli',
+                    'url'  => 'poliklinik/suratkontrol_poliklinik',
                     'shift'   => 'ml-2',
                     'can' => 'poliklinik',
                 ],

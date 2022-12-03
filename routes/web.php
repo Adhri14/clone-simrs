@@ -35,6 +35,7 @@ use App\Http\Controllers\SIMRS\DokterController as SIMRSDokterController;
 use App\Http\Controllers\SIMRS\KunjunganController as SIMRSKunjunganController;
 use App\Http\Controllers\SIMRS\PasienController as SIMRSPasienController;
 use App\Http\Controllers\SIMRS\SimrsController;
+use App\Http\Controllers\SIMRS\SuratKontrolController;
 use App\Http\Controllers\TarifKelompokLayananController;
 use App\Http\Controllers\TarifLayananController;
 use App\Http\Controllers\VclaimController;
@@ -177,6 +178,7 @@ Route::middleware('auth')->group(function () {
         Log::info($message);
         Log::debug($message);
     });
+    Route::get('kunjungan/show/{kodekunjungan}', [SIMRSKunjunganController::class, 'show'])->name('kunjungan.show');
     // admin
     Route::middleware('permission:admin')->group(function () {
         Route::resource('user', UserController::class);
@@ -194,8 +196,7 @@ Route::middleware('auth')->group(function () {
         Route::get('antrian_batal/{antrian}', [SIMRSAntrianController::class, 'batal_antrian_poliklinik'])->name('antrian_batal');
         Route::get('lanjut_farmasi/{antrian}', [SIMRSAntrianController::class, 'lanjut_farmasi'])->name('lanjut_farmasi');
         Route::get('selesai_poliklinik/{antrian}', [SIMRSAntrianController::class, 'selesai_poliklinik'])->name('selesai_poliklinik');
-
-
+        Route::get('suratkontrol_poliklinik', [SIMRSAntrianController::class, 'suratkontrol_poliklinik'])->name('suratkontrol_poliklinik');
     });
     // simrs
     Route::prefix('simrs')->name('simrs.')->group(function () {
@@ -238,6 +239,7 @@ Route::middleware('auth')->group(function () {
             Route::get('ref_kabupaten_api', [VclaimVclaimController::class, 'ref_kabupaten_api'])->name('ref_kabupaten_api');
             Route::get('ref_kecamatan_api', [VclaimVclaimController::class, 'ref_kecamatan_api'])->name('ref_kecamatan_api');
             Route::get('surat_kontrol', [VclaimVclaimController::class, 'surat_kontrol_index'])->name('surat_kontrol');
+            Route::post('surat_kontrol_store', [SuratKontrolController::class, 'store'])->name('surat_kontrol_store');
         });
     });
     // satu sehat

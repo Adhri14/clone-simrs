@@ -160,7 +160,8 @@
                                             @csrf
                                             @method('DELETE')
                                             <input type="hidden" name="noSep" value="{{ $item->noSep }}">
-                                            <x-adminlte-button class="btn-xs" theme="danger" icon="fas fa-trash-alt" type="submit"
+                                            <x-adminlte-button class="btn-xs" theme="danger" icon="fas fa-trash-alt"
+                                                type="submit"
                                                 onclick="return confirm('Apakah anda akan menghapus SEP {{ $item->noSep }} ?')" />
                                         </form>
                                     </td>
@@ -243,7 +244,7 @@
             <div class="col-md-12">
                 <x-adminlte-card title="Surat Kontrol Peserta" theme="primary" icon="fas fa-info-circle" collapsible>
                     @php
-                        $heads = ['Tgl Kontrol', 'Tgl Terbit', 'No S. Kontrol', 'Pelayanan', 'Polklinik', 'Dokter', 'Tgl SEP', 'Status'];
+                        $heads = ['Tgl Kontrol', 'Tgl Terbit', 'No S. Kontrol', 'Pelayanan', 'Polklinik', 'Dokter', 'Tgl SEP', 'Status', 'Action'];
                         $config['order'] = ['1', 'DESC'];
                     @endphp
                     <x-adminlte-datatable id="table4" class="nowrap" :heads="$heads" :config="$config" striped bordered
@@ -258,7 +259,7 @@
                                         {{ $suratkontrol->tglTerbitKontrol }}
                                     </td>
                                     <td>
-                                        SEP : {{ $suratkontrol->noSuratKontrol }}
+                                        {{ $suratkontrol->noSuratKontrol }}
                                         <br>
                                         REF : {{ $suratkontrol->noSepAsalKontrol }}
                                     </td>
@@ -282,6 +283,18 @@
                                     </td>
                                     <td>
                                         {{ $suratkontrol->terbitSEP }}
+                                    </td>
+                                    <td>
+                                        <form action="{{ route('api.bpjs.vclaim.suratkontrol_delete') }}" method="POST">
+                                            @csrf
+                                            @method('DELETE')
+                                            <input type="hidden" name="noSuratKontrol"
+                                                value="{{ $suratkontrol->noSuratKontrol }}">
+                                            <x-adminlte-button class="btn-xs" theme="danger" icon="fas fa-trash-alt"
+                                                type="submit" data-toggle="tooltip"
+                                                title="Hapus Surat Kontrol {{ $suratkontrol->noSuratKontrol }}"
+                                                onclick="return confirm('Apakah anda akan menghapus Surat Kontrol {{ $suratkontrol->noSuratKontrol }} ?')" />
+                                        </form>
                                     </td>
                                 </tr>
                             @endforeach

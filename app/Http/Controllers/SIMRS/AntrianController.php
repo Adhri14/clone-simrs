@@ -11,6 +11,7 @@ use App\Models\KunjunganDB;
 use App\Models\ParamedisDB;
 use App\Models\PenjaminSimrs;
 use App\Models\PoliklinikDB;
+use App\Models\SuratKontrol;
 use App\Models\UnitDB;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -203,6 +204,50 @@ class AntrianController extends Controller
             Alert::error('Error ' . $response->status(), $response->getData()->metadata->message);
         }
         return redirect()->back();
+    }
+    public function suratkontrol_poliklinik(Request $request)
+    {
+        $kunjungans = null;
+        $surat_kontrols = null;
+        if ($request->tanggal) {
+            $surat_kontrols = SuratKontrol::whereDate('tglTerbitKontrol', $request->tanggal)->get();
+            $kunjungans = KunjunganDB::whereDate('tgl_masuk', $request->tanggal)
+                ->where('status_kunjungan', "!=", 8)
+                ->where('kode_unit', "!=", null)
+                ->where('kode_unit', 'LIKE', '10%')
+                ->where('kode_unit', "!=", 1002)
+                ->where('kode_unit', "!=", 1023)
+                ->with(['dokter', 'unit', 'pasien', 'surat_kontrol'])
+                ->get();
+            if ($request->kodepoli != null) {
+                $poli = UnitDB::where('KDPOLI', $request->kodepoli)->first();
+                $kunjungans = $kunjungans->where('kode_unit', $poli->kode_unit);
+                $surat_kontrols = $surat_kontrols->where('poliTujuan', $request->kodepoli);
+            }
+            if ($request->kodedokter != null) {
+                $dokter = ParamedisDB::where('kode_dokter_jkn', $request->kodedokter)->first();
+                $kunjungans = $kunjungans->where('kode_paramedis', $dokter->kode_paramedis);
+            }
+        }
+        if ($request->kodepoli == null) {
+            $unit = UnitDB::where('KDPOLI', "!=", null)->get();
+            $dokters = ParamedisDB::where('kode_dokter_jkn', "!=", null)
+                ->where('unit', "!=", null)
+                ->get();
+        } else {
+            $unit = UnitDB::where('KDPOLI', "!=", null)->get();
+            $poli =   UnitDB::firstWhere('KDPOLI', $request->kodepoli);
+            $dokters = ParamedisDB::where('unit', $poli->kode_unit)
+                ->where('kode_dokter_jkn', "!=", null)
+                ->get();
+        }
+        return view('simrs.poliklinik.poliklinik_suratkontrol', [
+            'kunjungans' => $kunjungans,
+            'request' => $request,
+            'unit' => $unit,
+            'dokters' => $dokters,
+            'surat_kontrols' => $surat_kontrols,
+        ]);
     }
 
 

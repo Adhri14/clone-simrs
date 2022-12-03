@@ -10,22 +10,20 @@ class ApiController extends Controller
     public function sendResponse($message, $data, $code = 200)
     {
         $response = [
-            'success' => true,
             'code' => $code,
             'message' => $message,
             'data'    => $data,
         ];
         return response()->json($response, $code);
     }
-    public function sendError($error, $errorMessages = [], $code = 404)
+    public function sendError($errorMessages, $errorData = [], $code = 404)
     {
         $response = [
-            'success' => false,
             'code' => $code,
-            'message' => $error,
+            'message' => $errorMessages,
         ];
-        if (!empty($errorMessages)) {
-            $response['data'] = $errorMessages;
+        if (!empty($errorData)) {
+            $response['data'] = $errorData;
         }
         return response()->json($response, $code);
     }

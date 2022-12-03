@@ -46,7 +46,7 @@
                             </x-adminlte-select2>
                         </div>
                     </div>
-                    <x-adminlte-button type="submit" class="withLoad" theme="primary" label="Submit Antrian" />
+                    <x-adminlte-button type="submit" class="withLoad" theme="primary" label="Submit Pencarian" />
                 </form>
             </x-adminlte-card>
             @if (isset($antrians))
