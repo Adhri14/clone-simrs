@@ -3,7 +3,6 @@
 @section('content_header')
     <h1>Surat Kontrol Poliklinik</h1>
 @stop
-
 @section('content')
     <div class="row">
         <div class="col-md-12">
@@ -103,7 +102,7 @@
                         $config['scrollX'] = true;
                         $config['scrollCollapse'] = true;
                     @endphp
-                    <x-adminlte-datatable id="table1" class="nowrap" :heads="$heads" :config="$config" striped bordered
+                    <x-adminlte-datatable id="table1" class="nowrap text-xs" :heads="$heads" :config="$config" striped bordered
                         hoverable compressed>
                         @foreach ($surat_kontrols as $item)
                             <tr>
