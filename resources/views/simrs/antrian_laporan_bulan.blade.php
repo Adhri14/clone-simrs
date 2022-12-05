@@ -10,7 +10,7 @@
     <div class="row">
         <div class="col-12">
             <x-adminlte-card title="Filter Data Antrian" theme="secondary" collapsible>
-                <form action="{{ route('antrian.laporan_bulan') }}" method="get">
+                <form action="" method="get">
                     <div class="row">
                         <div class="col-md-3">
                             @php

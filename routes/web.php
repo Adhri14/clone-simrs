@@ -199,6 +199,10 @@ Route::middleware('auth')->group(function () {
         Route::get('suratkontrol_poliklinik', [SIMRSAntrianController::class, 'suratkontrol_poliklinik'])->name('suratkontrol_poliklinik');
         Route::get('laporan_kunjungan_poliklinik', [SIMRSAntrianController::class, 'laporan_kunjungan_poliklinik'])->name('laporan_kunjungan_poliklinik');
         Route::get('jadwaldokter', [JadwalDokterController::class, 'jadwaldokter_poliklinik'])->name('jadwaldokter');
+        Route::get('laporan_antrian_poliklinik', [SIMRSAntrianController::class, 'laporan_antrian_poliklinik'])->name('laporan_antrian_poliklinik');
+        Route::get('dashboard_antrian_tanggal', [SIMRSAntrianController::class, 'dashboard_antrian_tanggal'])->name('dashboard_antrian_tanggal');
+        Route::get('dashboard_antrian_bulan', [SIMRSAntrianController::class, 'dashboard_antrian_bulan'])->name('dashboard_antrian_bulan');
+
     });
     // simrs
     Route::prefix('simrs')->name('simrs.')->group(function () {

@@ -24,7 +24,6 @@
                         </div>
                         <div class="col-md-6">
                             <x-adminlte-select2 name="kodepoli" label="Poliklinik">
-                                <option value="">SEMUA POLIKLINIK</option>
                                 @foreach ($unit as $item)
                                     <option value="{{ $item->KDPOLI }}"
                                         {{ $item->KDPOLI == $request->kodepoli ? 'selected' : null }}>

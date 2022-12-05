@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\SIMRS;
 
+use App\Http\Controllers\API\AntrianBPJSController;
 use App\Http\Controllers\BPJS\Antrian\AntrianController as AntrianAntrianController;
 use App\Http\Controllers\Controller;
 use App\Models\Antrian;
@@ -267,7 +268,7 @@ class AntrianController extends Controller
             'unit' => $unit,
         ]);
     }
-    public function laporan(Request $request)
+    public function laporan_antrian_poliklinik(Request $request)
     {
         if ($request->tanggal == null) {
             $tanggal_awal = now()->startOfDay()->format('Y-m-d');
@@ -294,31 +295,54 @@ class AntrianController extends Controller
             'units' => $units,
         ]);
     }
-    public function laporan_kunjungan(Request $request)
+    public function dashboard_antrian_tanggal(Request $request)
     {
-
-        $response = null;
-        $kunjungans = null;
-        if (isset($request->tanggal) && isset($request->kodepoli)) {
-            $poli = UnitDB::where('KDPOLI', $request->kodepoli)->first();
-            $kunjungans = KunjunganDB::whereDate('tgl_masuk', $request->tanggal)
-                ->where('kode_unit', $poli->kode_unit)
-                ->where('status_kunjungan',  2)
-                ->with(['dokter', 'unit', 'pasien', 'diagnosapoli', 'pasien.kecamatans', 'penjamin', 'surat_kontrol'])
-                ->get();
-            $response = DB::connection('mysql2')->select("CALL SP_PANGGIL_PASIEN_RAWAT_JALAN_KUNJUNGAN('" . $poli->kode_unit . "','" . $request->tanggal . "')");
+        $antrians = null;
+        if (isset($request->tanggal) && isset($request->waktu)) {
+            $api = new AntrianAntrianController();
+            $response = $api->dashboard_tanggal($request);
+            if ($response->status() == 200) {
+                $antrians = $response->getData()->response->list;
+                Alert::success('Success', "Berhasil Dapatkan Data Antrian");
+            } else {
+                Alert::error('Error ' . $response->status(),  $response->getData()->metadata->message);
+                return redirect()->route('antrian.laporan_tanggal');
+            }
         }
-        $unit = UnitDB::where('KDPOLI', "!=", null)->get();
-        $penjaminrs = PenjaminSimrs::get();
-        $response = collect($response);
-        // dd($response);
-        // dd($response->where('KODE_KUNJUNGAN', $kunjungans->first()->kode_kunjungan)->first()->diagx);
-        return view('simrs.antrian_laporan_kunjungan', [
-            'kunjungans' => $kunjungans,
+        return view('simrs.antrian_laporan_tanggal', [
+            'antrians' => $antrians,
             'request' => $request,
-            'response' => $response,
-            'penjaminrs' => $penjaminrs,
-            'unit' => $unit,
         ]);
+    }
+    public function dashboard_antrian_bulan(Request $request)
+    {
+        if ($request['tanggal'] == null) {
+            $request['tanggal'] = Carbon::now()->format('Y-m');
+            $request['tahun'] = Carbon::now()->format('Y');
+            $request['bulan'] = Carbon::now()->format('m');
+            $request['waktu'] = 'rs';
+            $antrians = null;
+            return view('simrs.antrian_laporan_bulan', [
+                'antrians' => $antrians,
+                'request' => $request,
+            ]);
+        } else {
+            $tanggal = explode('-', $request->tanggal);
+            $request['tahun'] = $tanggal[0];
+            $request['bulan'] = $tanggal[1];
+            $api = new AntrianBPJSController();
+            $response = $api->dashboard_bulan($request);
+            if ($response->metadata->code == 200) {
+                Alert::success('Success', "Success Message " . $response->metadata->message);
+                $antrians = $response->response->list;
+                return view('simrs.antrian_laporan_bulan', [
+                    'antrians' => $antrians,
+                    'request' => $request,
+                ]);
+            } else {
+                Alert::error('Error Title', "Error Message " . $response->metadata->message);
+                return redirect()->route('antrian.laporan_bulan');
+            }
+        }
     }
 }
