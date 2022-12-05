@@ -243,9 +243,30 @@ class AntrianController extends Controller
             'surat_kontrols' => $surat_kontrols,
         ]);
     }
-
-
-
+    public function laporan_kunjungan_poliklinik(Request $request)
+    {
+        $response = null;
+        $kunjungans = null;
+        if (isset($request->tanggal) && isset($request->kodepoli)) {
+            $poli = UnitDB::where('KDPOLI', $request->kodepoli)->first();
+            $kunjungans = KunjunganDB::whereDate('tgl_masuk', $request->tanggal)
+                ->where('kode_unit', $poli->kode_unit)
+                ->where('status_kunjungan',  "<=", 2)
+                ->with(['dokter', 'unit', 'pasien', 'diagnosapoli', 'pasien.kecamatans', 'penjamin', 'surat_kontrol'])
+                ->get();
+            $response = DB::connection('mysql2')->select("CALL SP_PANGGIL_PASIEN_RAWAT_JALAN_KUNJUNGAN('" . $poli->kode_unit . "','" . $request->tanggal . "')");
+        }
+        $unit = UnitDB::where('KDPOLI', "!=", null)->where('KDPOLI', "!=", "")->get();
+        $penjaminrs = PenjaminSimrs::get();
+        $response = collect($response);
+        return view('simrs.poliklinik.poliklinik_laporan_kunjungan', [
+            'kunjungans' => $kunjungans,
+            'request' => $request,
+            'response' => $response,
+            'penjaminrs' => $penjaminrs,
+            'unit' => $unit,
+        ]);
+    }
     public function laporan(Request $request)
     {
         if ($request->tanggal == null) {

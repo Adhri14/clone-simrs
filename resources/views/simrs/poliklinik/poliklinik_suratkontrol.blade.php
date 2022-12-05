@@ -1,7 +1,5 @@
 @extends('adminlte::page')
-
 @section('title', 'Surat Kontrol Poliklinik')
-
 @section('content_header')
     <h1>Surat Kontrol Poliklinik</h1>
 @stop

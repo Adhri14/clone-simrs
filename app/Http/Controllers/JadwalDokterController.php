@@ -7,6 +7,7 @@ use App\Models\Dokter;
 use App\Models\JadwalDokter;
 use App\Models\Poliklinik;
 use App\Models\PoliklinikDB;
+use App\Models\UnitDB;
 use Illuminate\Http\Request;
 use RealRashid\SweetAlert\Facades\Alert;
 
@@ -82,7 +83,7 @@ class JadwalDokterController extends Controller
                 'kapasitaspasien' => $request->kapasitaspasien,
             ]);
             Alert::success('Success', 'Jadwal Telah Diperbarui');
-            return redirect()->route('jadwaldokter.index');
+            return redirect()->back();
         }
         if ($request->method == "DELETE") {
             $jadwal = JadwalDokter::find($request->idjadwal);
@@ -96,5 +97,20 @@ class JadwalDokterController extends Controller
     {
         $jadwal = JadwalDokter::find($id);
         return response()->json($jadwal);
+    }
+    public function jadwaldokter_poliklinik(Request $request)
+    {
+        $jadwaldokter = null;
+        if (isset($request->kodepoli)) {
+            $jadwaldokter = JadwalDokter::where('kodesubspesialis', $request->kodepoli)->get();
+        }
+        $dokters = Dokter::get();
+        $unit = UnitDB::where('KDPOLI', "!=", null)->get();
+        return view('simrs.poliklinik.poliklinik_jadwaldokter', compact([
+            'request',
+            'unit',
+            'dokters',
+            'jadwaldokter',
+        ]));
     }
 }
