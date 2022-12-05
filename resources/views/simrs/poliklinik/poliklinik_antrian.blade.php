@@ -110,7 +110,7 @@
                                                 <span class="badge bg-secondary">Lama</span>
                                             @endif
                                             @if (isset($item->method))
-                                                <span class="badge bg-secondary">{{ $item->method }}LINE</span>
+                                                <span class="badge bg-secondary">{{ $item->method }}</span>
                                             @else
                                                 <span class="badge bg-secondary">NULL</span>
                                             @endif
@@ -237,7 +237,7 @@
                                                 <span class="badge bg-secondary">Lama</span>
                                             @endif
                                             @if (isset($antrian->method))
-                                                <span class="badge bg-secondary">{{ $antrian->method }}LINE</span>
+                                                <span class="badge bg-secondary">{{ $antrian->method }}</span>
                                             @else
                                                 <span class="badge bg-secondary">NULL</span>
                                             @endif

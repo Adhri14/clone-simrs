@@ -316,6 +316,8 @@ return [
             'text'    => 'Aplikasi Antrian',
             'icon'    => 'fas fa-sign-in-alt',
             'can' => ['admin', 'pendaftaran', 'kasir', 'poliklinik', 'farmasi'],
+            'label' => 'lama',
+            'label_color' => 'danger',
             'submenu' => [
                 [
                     'text' => 'Console Antrian',
@@ -344,6 +346,8 @@ return [
                     'url'  => 'antrian/poli',
                     'shift'   => 'ml-2',
                     'can' => 'poliklinik',
+                    'label' => 'lama',
+                    'label_color' => 'danger',
                 ],
                 [
                     'text' => 'Surat Kontrol Poliklinik',
@@ -351,20 +355,8 @@ return [
                     'url'  => 'antrian/surat_kontrol_poli',
                     'shift'   => 'ml-2',
                     'can' => 'poliklinik',
-                ],
-                [
-                    'text' => 'KPO Elektronik',
-                    'icon'    => 'fas fa-pills',
-                    'url'  => 'antrian/kpo',
-                    'shift'   => 'ml-2',
-                    'can' => 'poliklinik',
-                ],
-                [
-                    'text' => 'Laporan Kunjungan Poliklinik',
-                    'icon'    => 'fas fa-chart-line',
-                    'shift'   => 'ml-2',
-                    'url'  => 'antrian/laporan_kunjungan_poliklinik',
-                    'can' => 'poliklinik',
+                    'label' => 'lama',
+                    'label_color' => 'danger',
                 ],
                 [
                     'text' => 'Antrian Farmasi',
@@ -373,34 +365,6 @@ return [
                     'shift'   => 'ml-2',
                     'can' => 'farmasi',
                 ],
-                // [
-                //     'text' => 'Display Antrian Pendaftaran',
-                //     'icon'    => 'fas fa-user-plus',
-                //     'url'  => 'antrian/display_pendaftaran',
-                //     'shift'   => 'ml-2',
-                //     'can' => 'admin',
-                // ],
-                [
-                    'text' => 'Laporan Antrian',
-                    'icon'    => 'fas fa-chart-line',
-                    'shift'   => 'ml-2',
-                    'url'  => 'antrian/laporan',
-                    // 'can' => 'admin',
-                ],
-                [
-                    'text' => 'Laporan Pertanggal',
-                    'icon'    => 'fas fa-chart-line',
-                    'shift'   => 'ml-2',
-                    'url'  => 'antrian/laporan_tanggal',
-                    // 'can' => 'admin',
-                ],
-                [
-                    'text' => 'Laporan Perbulan',
-                    'icon'    => 'fas fa-chart-line',
-                    'shift'   => 'ml-2',
-                    'url'  => 'antrian/laporan_bulan',
-                    // 'can' => 'admin',
-                ],
             ],
         ],
         // MENU APLIKASI POLIKLINIK
@@ -408,7 +372,7 @@ return [
             'text'    => 'Aplikasi Poliklinik',
             'icon'    => 'fas fa-clinic-medical',
             'can' => 'poliklinik',
-            'label' => 'fitur baru',
+            'label' => 'baru',
             'label_color' => 'success',
             'submenu' => [
                 [
@@ -417,6 +381,8 @@ return [
                     'url'  => 'poliklinik/antrian',
                     'shift'   => 'ml-2',
                     'can' => 'poliklinik',
+                    'label' => 'perbaikan',
+                    'label_color' => 'warning',
                 ],
                 [
                     'text' => 'Surat Kontrol Poliklinik',
@@ -424,6 +390,8 @@ return [
                     'url'  => 'poliklinik/suratkontrol_poliklinik',
                     'shift'   => 'ml-2',
                     'can' => 'poliklinik',
+                    'label' => 'perbaikan',
+                    'label_color' => 'warning',
                 ],
                 [
                     'text' => 'Jadwal Dokter Poliklinik',
@@ -431,6 +399,8 @@ return [
                     'shift'   => 'ml-2',
                     'url'  => 'poliklinik/jadwaldokter',
                     'can' => 'poliklinik',
+                    'label' => 'baru',
+                    'label_color' => 'success',
                 ],
                 [
                     'text' => 'Laporan Kunjungan Poliklinik',

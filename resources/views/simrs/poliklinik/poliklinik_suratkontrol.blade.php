@@ -113,11 +113,14 @@
                                 <td>{{ $item->noSuratKontrol }}
                                     <br>
                                     <x-adminlte-button class="btn-xs" label="Print" theme="success" icon="fas fa-print"
-                                        data-toggle="tooltop" title="Print Surat Kontrol {{ $item->kode_kunjungan }}" />
+                                        data-toggle="tooltip" title="Print Surat Kontrol {{ $item->kode_kunjungan }}" />
                                     <x-adminlte-button class="btn-xs btnEditSuratKontrol" label="Edit" theme="warning"
-                                        icon="fas fa-edit" data-toggle="tooltop" title="Edit Surat Kontrol"
+                                        icon="fas fa-edit" data-toggle="tooltip"
+                                        title="Edit Surat Kontrol {{ $item->noSuratKontrol }}"
                                         data-id="{{ $item->id }}" />
-
+                                    <x-adminlte-button class="btn-xs btnDelete" theme="danger" icon="fas fa-trash"
+                                        data-toggle="tooltip" title="Delete Surat Kontrol {{ $item->noSuratKontrol }}"
+                                        data-id="{{ $item->noSuratKontrol }}" />
                                 </td>
                                 <td>
                                     {{ $item->nama }} <br>
@@ -301,6 +304,41 @@
                         $.LoadingOverlay("hide");
                     }
                 });
+            });
+            $('.btnDelete').click(function(e) {
+                // $.LoadingOverlay("show");
+                e.preventDefault();
+                var nomorsuratkontrol = $(this).data('id');
+                alert(nomorsuratkontrol);
+                // var url = "{{ route('bpjs.vclaim.surat_kontrol_update') }}";
+                // $.ajax({
+                //     data: $('#formSuratKontrol').serialize(),
+                //     url: url,
+                //     type: "PUT",
+                //     dataType: 'json',
+                //     success: function(data) {
+                //         console.log(data);
+                //         swal.fire(
+                //             'Success',
+                //             'Data Berhasil Disimpan',
+                //             'success'
+                //         ).then(okay => {
+                //             if (okay) {
+                //                 $.LoadingOverlay("show");
+                //                 location.reload();
+                //             }
+                //         });
+                //         $.LoadingOverlay("hide");
+                //     },
+                //     error: function(data) {
+                //         swal.fire(
+                //             data.statusText + ' ' + data.status,
+                //             data.responseJSON.metadata.message,
+                //             'error'
+                //         );
+                //         $.LoadingOverlay("hide");
+                //     }
+                // });
             });
         });
     </script>

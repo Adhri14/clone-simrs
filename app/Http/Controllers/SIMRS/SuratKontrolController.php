@@ -77,6 +77,6 @@ class SuratKontrolController extends Controller
     }
     public function destroy(Request $request)
     {
-        # code...
+        return $request->all();
     }
 }

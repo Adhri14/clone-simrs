@@ -225,12 +225,16 @@ class AntrianController extends Controller
             }
         }
         if ($request->kodepoli == null) {
-            $unit = UnitDB::where('KDPOLI', "!=", null)->get();
+            $unit = UnitDB::where('KDPOLI', "!=", null)
+                ->where('KDPOLI', "!=", "")
+                ->get();
             $dokters = ParamedisDB::where('kode_dokter_jkn', "!=", null)
                 ->where('unit', "!=", null)
                 ->get();
         } else {
-            $unit = UnitDB::where('KDPOLI', "!=", null)->get();
+            $unit = UnitDB::where('KDPOLI', "!=", null)
+                ->where('KDPOLI', "!=", "")
+                ->get();
             $poli =   UnitDB::firstWhere('KDPOLI', $request->kodepoli);
             $dokters = ParamedisDB::where('unit', $poli->kode_unit)
                 ->where('kode_dokter_jkn', "!=", null)
