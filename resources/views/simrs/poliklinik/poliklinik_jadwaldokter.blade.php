@@ -58,12 +58,12 @@
                         $heads = ['No.', 'Unit', 'Tanggal Libur', 'Keterangan', 'Antrian', 'Status', 'Action'];
                         $config['paging'] = false;
                         $config['info'] = false;
-                        $config['scrollY'] = '400px';
+                        $config['scrollY'] = '300px';
                         $config['scrollX'] = true;
                         $config['scrollCollapse'] = true;
                     @endphp
                     <x-adminlte-datatable id="table2" :heads="$heads" :config="$config" hoverable bordered compressed
-                        class="nowrap">
+                        class="nowrap text-xs">
                         @foreach ($jadwallibur->where('tanggal_awal', '>=', Carbon\Carbon::now()->format('Y-m-d')) as $jadwal)
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
@@ -141,10 +141,9 @@
                         $config['scrollY'] = '400px';
                         $config['scrollX'] = true;
                         $config['scrollCollapse'] = true;
-                        // $config['scrollCollapse'] = true;
                     @endphp
                     <x-adminlte-datatable id="table3" :heads="$heads" :config="$config" hoverable bordered compressed
-                        class="nowrap">
+                        class="nowrap text-xs">
                         @foreach ($jadwallibur->where('tanggal_awal', '<', Carbon\Carbon::now()->format('Y-m-d')) as $jadwal)
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
