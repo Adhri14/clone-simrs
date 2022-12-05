@@ -97,7 +97,7 @@ class VclaimController extends ApiBPJSController
             // rujukan antar rs
             $request['tahun'] = Carbon::parse($request->tanggal)->format('Y');
             $request['bulan'] = Carbon::parse($request->tanggal)->format('m');
-            $request['formatfilter'] = 1;
+            $request['formatfilter'] = 2;
             $response = $this->suratkontrol_peserta($request);
             if ($response->status() == 200) {
                 $surat_kontrol = $response->getData()->response->list;
