@@ -164,6 +164,8 @@ Route::get('thermal_print', [ThermalPrintController::class, 'thermal_print'])->n
 Route::get('whatsapp', [WhatsappController::class, 'whatsapp'])->name('whatsapp');
 Route::get('bukutamu', [BukuTamuController::class, 'bukutamu'])->name('bukutamu');
 Route::post('bukutamu', [BukuTamuController::class, 'store'])->name('bukutamu_store');
+Route::get('bpjs/vclaim/surat_kontrol_print/{suratkontrol}', [SuratKontrolController::class, 'print'])->name('surat_kontrol_print');
+
 // auth
 Route::middleware('auth')->group(function () {
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
@@ -248,7 +250,6 @@ Route::middleware('auth')->group(function () {
             Route::post('surat_kontrol_store', [SuratKontrolController::class, 'store'])->name('surat_kontrol_store');
             Route::put('surat_kontrol_update', [SuratKontrolController::class, 'update'])->name('surat_kontrol_update');
             Route::delete('surat_kontrol_delete', [SuratKontrolController::class, 'destroy'])->name('surat_kontrol_delete');
-            Route::get('surat_kontrol_print/{suratkontrol}', [SuratKontrolController::class, 'print'])->name('surat_kontrol_print');
         });
     });
     // satu sehat
