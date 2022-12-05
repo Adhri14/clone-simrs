@@ -139,7 +139,7 @@ Route::prefix('vclaim')->name('vclaim.')->middleware(['auth'])->group(function (
 });
 
 Route::resource('poli', PoliklinikController::class)->only(['index', 'create', 'edit', 'show', 'store'])->middleware('permission:pelayanan-medis');
-Route::resource('jadwaldokter', JadwalDokterController::class)->only(['index', 'store', 'edit'])->middleware('permission:pelayanan-medis');
+Route::resource('jadwaldokter', JadwalDokterController::class)->only(['index', 'store', 'edit']);
 Route::resource('jadwallibur', JadwalLiburController::class)->middleware(['auth', 'permission:pelayanan-medis']);
 Route::resource('jadwaloperasi', JadwalOperasiController::class)->only(['index', 'store', 'edit'])->middleware('permission:pelayanan-medis');
 Route::get('pasien_daerah', [PasienController::class, 'pasien_daerah'])->name('pasien_daerah');

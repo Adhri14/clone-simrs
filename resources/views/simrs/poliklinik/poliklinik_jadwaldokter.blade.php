@@ -22,17 +22,17 @@
             </x-adminlte-card>
         </div>
         @if (isset($jadwaldokter))
-            <div class="col-md-12">
+            <div class="col-md-7">
                 <x-adminlte-card title="Jadwal Dokter Poliklinik" theme="primary" icon="fas fa-info-circle" collapsible>
                     @php
                         $heads = ['Hari', 'Dokter', 'Jam Praktek', 'Kapasitas', 'Action'];
                         $config['paging'] = false;
                         $config['info'] = false;
                         $config['scrollY'] = '400px';
-                        $config['scrollX'] = true;
-                        $config['scrollCollapse'] = true;
+                        // $config['scrollX'] = true;
+                        // $config['scrollCollapse'] = true;
                     @endphp
-                    <x-adminlte-datatable id="table2" class="nowrap text-xs" :heads="$heads" :config="$config" bordered
+                    <x-adminlte-datatable id="table1" class="nowrap text-xs" :heads="$heads" :config="$config" bordered
                         hoverable compressed>
                         @foreach ($jadwaldokter as $item)
                             <tr class="{{ $item->libur ? 'table-danger' : null }} ">
@@ -51,6 +51,163 @@
                     Catatan : <br>
                     *Kolom berwarna merah menandakan jadwal diliburkan
                 </x-adminlte-card>
+            </div>
+            <div class="col-md-5">
+                <x-adminlte-card title="Jadwal Libur Poliklinik Akan Datang" theme="warning" collapsible>
+                    @php
+                        $heads = ['No.', 'Unit', 'Tanggal Libur', 'Keterangan', 'Antrian', 'Status', 'Action'];
+                        $config['responsive'] = true;
+                    @endphp
+                    <x-adminlte-datatable id="table2" :heads="$heads" :config="$config" hoverable bordered compressed
+                        class="nowrap">
+                        @foreach ($jadwallibur->where('tanggal_awal', '>=', Carbon\Carbon::now()->format('Y-m-d')) as $jadwal)
+                            <tr>
+                                <td>{{ $loop->iteration }}</td>
+                                <td>
+                                    @if ($jadwal->kode_poli == 0)
+                                        SEMUA POLIKLINIK
+                                    @else
+                                        {{ $jadwal->unit->nama_unit }}
+                                    @endif
+                                </td>
+                                <td>{{ Carbon\Carbon::parse($jadwal->tanggal_awal)->locale('id')->isoFormat('LL') }}
+                                    -
+                                    {{ Carbon\Carbon::parse($jadwal->tanggal_akhir)->locale('id')->isoFormat('LL') }}
+                                </td>
+                                <td>{{ $jadwal->keterangan }}</td>
+                                <td>
+                                    @if ($jadwal->kode_poli == 0)
+                                        {{ App\Models\Antrian::whereBetween('tanggalperiksa', [$jadwal->tanggal_awal, $jadwal->tanggal_akhir])->count() }}
+                                    @else
+                                        {{ $jadwal->unit->antrians->whereBetween('tanggalperiksa', [$jadwal->tanggal_awal, $jadwal->tanggal_akhir])->count() }}
+                                    @endif
+                                </td>
+                                <td>
+                                    @if ($jadwal->status == 1)
+                                        <span class="badge bg-warning">{{ $jadwal->status }}. Libur belum
+                                            dikonformasi</span>
+                                    @endif
+                                    @if ($jadwal->status == 2)
+                                        <span class="badge bg-success">{{ $jadwal->status }}. Libur
+                                        </span>
+                                    @endif
+
+                                </td>
+                                <td>
+                                    @can('pelayanan-medis')
+                                        <form action="{{ route('jadwallibur.destroy', $jadwal) }}" method="POST">
+                                            @csrf
+                                            @method('DELETE')
+                                            @if ($jadwal->status == 1)
+                                                <x-adminlte-button theme="primary" icon="fas fa-question-circle"
+                                                    data-toggle="tooltip"
+                                                    title="Konfirmasi LIBUR {{ $jadwal->kode_poli == 0 ? 'SEMUA POLIKLINIK' : $jadwal->unit->nama_unit }} {{ $jadwal->tanggal }}"
+                                                    onclick="window.location='{{ route('jadwallibur.show', $jadwal->id) }}'"
+                                                    class="btn btn-xs" />
+                                            @endif
+                                            @if ($jadwal->status == 2)
+                                                <x-adminlte-button theme="success" icon="fas fa-check" data-toggle="tooltip"
+                                                    title="LIBUR {{ $jadwal->kode_poli == 0 ? 'SEMUA POLIKLINIK' : $jadwal->unit->nama_unit }} {{ $jadwal->tanggal }} Telah dikonformasi"
+                                                    class="btn btn-xs" />
+                                            @endif
+                                            <x-adminlte-button theme="warning" icon="fas fa-edit" class="btn btn-xs"
+                                                data-toggle="tooltip"
+                                                title="Edit LIBUR {{ $jadwal->kode_poli == 0 ? 'SEMUA POLIKLINIK' : $jadwal->unit->nama_unit }} {{ $jadwal->tanggal }}"
+                                                onclick="window.location='{{ route('jadwallibur.edit', $jadwal->id) }}'" />
+                                            <x-adminlte-button class="btn-xs" theme="danger" icon="fas fa-trash-alt"
+                                                type="submit"
+                                                onclick="return confirm('Apakah anda akan menghapus Role LIBUR {{ $jadwal->kode_poli == 0 ? 'SEMUA POLIKLINIK' : $jadwal->unit->nama_unit }} {{ $jadwal->tanggal }} ?')" />
+                                        </form>
+                                    @endcan
+                                </td>
+                            </tr>
+                        @endforeach
+                    </x-adminlte-datatable>
+                    @can('pelayanan-medis')
+                        <x-adminlte-button label="Tambah Jadwal Libur" class="btn" theme="success"
+                            title="Tambah Unit & Poliklinik" icon="fas fa-plus" data-toggle="modal"
+                            data-target="#modalCustom" />
+                    @endcan
+                </x-adminlte-card>
+                <x-adminlte-card title="Jadwal Libur Poliklinik Terlewat" theme="secondary" collapsible="collapsed">
+                    @php
+                        $heads = ['No', 'Poliklinik', 'Tanggal', 'Keterangan', 'Pasien Terdaftar', 'Status', 'Action'];
+                        $config['paging'] = false;
+                        $config['info'] = false;
+                        $config['scrollY'] = false;
+                        $config['fixedColumns'] = true;
+                        $config['fixedHeader'] = true;
+                        $config['scrollX'] = true;
+                        $config['order'] = [0, 'desc'];
+                        // $config['scrollCollapse'] = true;
+                    @endphp
+                    <x-adminlte-datatable id="table3" :heads="$heads" :config="$config" hoverable bordered compressed
+                        class="nowrap">
+                        @foreach ($jadwallibur->where('tanggal_awal', '<', Carbon\Carbon::now()->format('Y-m-d')) as $jadwal)
+                            <tr>
+                                <td>{{ $loop->iteration }}</td>
+                                <td>
+                                    @if ($jadwal->kode_poli == 0)
+                                        SEMUA POLIKLINIK
+                                    @else
+                                        {{ $jadwal->unit->nama_unit }}
+                                    @endif
+                                </td>
+                                <td>{{ Carbon\Carbon::parse($jadwal->tanggal_awal)->locale('id')->isoFormat('LL') }}
+                                    -
+                                    {{ Carbon\Carbon::parse($jadwal->tanggal_akhir)->locale('id')->isoFormat('LL') }}
+                                </td>
+                                <td>{{ $jadwal->keterangan }}</td>
+                                <td>
+                                    @if ($jadwal->kode_poli == 0)
+                                        {{ App\Models\Antrian::whereBetween('tanggalperiksa', [$jadwal->tanggal_awal, $jadwal->tanggal_akhir])->count() }}
+                                    @else
+                                        {{ $jadwal->unit->antrians->whereBetween('tanggalperiksa', [$jadwal->tanggal_awal, $jadwal->tanggal_akhir])->count() }}
+                                    @endif
+                                </td>
+                                <td>
+                                    @if ($jadwal->status == 1)
+                                        <span class="badge bg-warning">{{ $jadwal->status }}. Libur belum
+                                            dikonformasi</span>
+                                    @endif
+                                    @if ($jadwal->status == 2)
+                                        <span class="badge bg-success">{{ $jadwal->status }}. Libur
+                                        </span>
+                                    @endif
+
+                                </td>
+                                <td>
+                                    {{-- @can('pelayanan-medis')
+                                        <form action="{{ route('jadwallibur.destroy', $jadwal) }}" method="POST">
+                                            @csrf
+                                            @method('DELETE')
+                                            @if ($jadwal->status == 1)
+                                                <x-adminlte-button theme="primary" icon="fas fa-question-circle"
+                                                    data-toggle="tooltip"
+                                                    title="Konfirmasi LIBUR {{ $jadwal->kode_poli == 0 ? 'SEMUA POLIKLINIK' : $jadwal->unit->nama_unit }} {{ $jadwal->tanggal }}"
+                                                    onclick="window.location='{{ route('jadwallibur.show', $jadwal->id) }}'"
+                                                    class="btn btn-xs" />
+                                            @endif
+                                            @if ($jadwal->status == 2)
+                                                <x-adminlte-button theme="success" icon="fas fa-check" data-toggle="tooltip"
+                                                    title="LIBUR {{ $jadwal->kode_poli == 0 ? 'SEMUA POLIKLINIK' : $jadwal->unit->nama_unit }} {{ $jadwal->tanggal }} Telah dikonformasi"
+                                                    class="btn btn-xs" />
+                                            @endif
+                                            <x-adminlte-button theme="warning" icon="fas fa-edit" class="btn btn-xs"
+                                                data-toggle="tooltip"
+                                                title="Edit LIBUR {{ $jadwal->kode_poli == 0 ? 'SEMUA POLIKLINIK' : $jadwal->unit->nama_unit }} {{ $jadwal->tanggal }}"
+                                                onclick="window.location='{{ route('jadwallibur.edit', $jadwal->id) }}'" />
+                                            <x-adminlte-button class="btn-xs" theme="danger" icon="fas fa-trash-alt"
+                                                type="submit"
+                                                onclick="return confirm('Apakah anda akan menghapus Role LIBUR {{ $jadwal->kode_poli == 0 ? 'SEMUA POLIKLINIK' : $jadwal->unit->nama_unit }} {{ $jadwal->tanggal }} ?')" />
+                                        </form>
+                                    @endcan --}}
+                                </td>
+                            </tr>
+                        @endforeach
+                    </x-adminlte-datatable>
+                </x-adminlte-card>
+
             </div>
         @endif
     </div>
@@ -105,7 +262,6 @@
             <input type="hidden" name="method" value="DELETE">
             <input type="hidden" class="idjadwal" name="idjadwal" id="idjadwal">
         </form>
-
         <x-slot name="footerSlot">
             <x-adminlte-button label="Update" form="formUpdateJadwal" class="mr-auto withLoad" type="submit"
                 theme="success" icon="fas fa-edit" />

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\API\AntrianBPJSController;
 use App\Models\Dokter;
 use App\Models\JadwalDokter;
+use App\Models\JadwalLiburPoliDB;
 use App\Models\Poliklinik;
 use App\Models\PoliklinikDB;
 use App\Models\UnitDB;
@@ -101,8 +102,12 @@ class JadwalDokterController extends Controller
     public function jadwaldokter_poliklinik(Request $request)
     {
         $jadwaldokter = null;
+        $jadwallibur = null;
         if (isset($request->kodepoli)) {
             $jadwaldokter = JadwalDokter::where('kodesubspesialis', $request->kodepoli)->get();
+            $jadwallibur = JadwalLiburPoliDB::with(['unit', 'unit.antrians'])
+                ->latest()
+                ->paginate();
         }
         $dokters = Dokter::get();
         $unit = UnitDB::where('KDPOLI', "!=", null)->get();
@@ -110,6 +115,7 @@ class JadwalDokterController extends Controller
             'request',
             'unit',
             'dokters',
+            'jadwallibur',
             'jadwaldokter',
         ]));
     }

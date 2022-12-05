@@ -18,7 +18,6 @@
                     </ul>
                 </x-adminlte-alert>
             @endif
-
             <x-adminlte-card title="Jadwal Libur Poliklinik Akan Datang" theme="warning" collapsible>
                 @php
                     $heads = ['No.', 'Unit', 'Tanggal Libur', 'Keterangan', 'Antrian', 'Status', 'Action'];
