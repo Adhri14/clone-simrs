@@ -549,6 +549,35 @@ class VclaimController extends ApiBPJSController
         $response = Http::withHeaders($signature)->post($url, $data);
         return $this->response_decrypt($response, $signature);
     }
+    public function suratkontrol_update(Request $request)
+    {
+        $validator = Validator::make(request()->all(), [
+            "noSuratKontrol" => "required",
+            "noSep" => "required",
+            "kodeDokter" => "required",
+            "poliKontrol" => "required",
+            "tglRencanaKontrol" => "required|date",
+            "user" => "required",
+        ]);
+        if ($validator->fails()) {
+            return $this->sendError($validator->errors()->first(), null, 400);
+        }
+        $url = env('VCLAIM_URL') . "RencanaKontrol/Update";
+        $signature = $this->signature();
+        $signature['Content-Type'] = 'application/x-www-form-urlencoded';
+        $data = [
+            "request" => [
+                "noSuratKontrol" => $request->noSuratKontrol,
+                "noSEP" => $request->noSep,
+                "kodeDokter" => $request->kodeDokter,
+                "poliKontrol" => $request->poliKontrol,
+                "tglRencanaKontrol" => $request->tglRencanaKontrol,
+                "user" =>  $request->user,
+            ]
+        ];
+        $response = Http::withHeaders($signature)->put($url, $data);
+        return $this->response_decrypt($response, $signature);
+    }
     public function suratkontrol_delete(Request $request)
     {
         $validator = Validator::make(request()->all(), [

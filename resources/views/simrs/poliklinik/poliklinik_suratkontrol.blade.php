@@ -78,7 +78,7 @@
                                 </td>
                                 <td>
                                     <x-adminlte-button class="btn-xs btnBuatSuratKontrol" label="S. Kontrol" theme="primary"
-                                        icon="fas fa-edit" data-toggle="tooltop" title="Buat Surat Kontrol"
+                                        icon="fas fa-file-medical" data-toggle="tooltop" title="Buat Surat Kontrol"
                                         data-id="{{ $item->kode_kunjungan }}" />
                                 </td>
                                 <td>
@@ -114,9 +114,12 @@
 
                                 <td>{{ $item->noSuratKontrol }}
                                     <br>
+                                    <x-adminlte-button class="btn-xs" label="Print" theme="success" icon="fas fa-print"
+                                        data-toggle="tooltop" title="Print Surat Kontrol {{ $item->kode_kunjungan }}" />
                                     <x-adminlte-button class="btn-xs btnEditSuratKontrol" label="Edit" theme="warning"
                                         icon="fas fa-edit" data-toggle="tooltop" title="Edit Surat Kontrol"
                                         data-id="{{ $item->id }}" />
+
                                 </td>
                                 <td>
                                     {{ $item->nama }} <br>
@@ -183,7 +186,7 @@
                         <x-adminlte-button id="btnStore" class="mr-auto" icon="fas fa-file-medical" theme="success"
                             label="Buat Surat Kontrol" />
                         <x-adminlte-button id="btnUpdate" class="mr-auto" icon="fas fa-edit" theme="warning"
-                            label="Update Update" />
+                            label="Update Surat Kontrol" />
                         <x-adminlte-button theme="danger" label="Tutup" data-dismiss="modal" />
                     </x-slot>
                 </form>
@@ -202,6 +205,8 @@
     <script>
         $(function() {
             $('.btnEditSuratKontrol').click(function() {
+                $('#btnStore').hide();
+                $('#btnUpdate').show();
                 var nomorsuratkontrol = $(this).data('id');
                 var url = "{{ route('vclaim.index') }}" + "/edit_surat_kontrol/" + nomorsuratkontrol;
                 $.LoadingOverlay("show");
@@ -218,6 +223,8 @@
                 });
             });
             $('.btnBuatSuratKontrol').click(function() {
+                $('#btnStore').show();
+                $('#btnUpdate').hide();
                 var kodekunjungan = $(this).data('id');
                 var url = "{{ route('landingpage') }}" + "/kunjungan/show/" + kodekunjungan;
                 $.LoadingOverlay("show");
@@ -252,6 +259,7 @@
                                 location.reload();
                             }
                         });
+                        $.LoadingOverlay("hide");
                     },
                     error: function(data) {
                         swal.fire(
@@ -259,9 +267,42 @@
                             data.responseJSON.metadata.message,
                             'error'
                         );
+                        $.LoadingOverlay("hide");
                     }
                 });
-                $.LoadingOverlay("hide");
+            });
+            $('#btnUpdate').click(function(e) {
+                $.LoadingOverlay("show");
+                e.preventDefault();
+                var url = "{{ route('bpjs.vclaim.surat_kontrol_update') }}";
+                $.ajax({
+                    data: $('#formSuratKontrol').serialize(),
+                    url: url,
+                    type: "PUT",
+                    dataType: 'json',
+                    success: function(data) {
+                        console.log(data);
+                        swal.fire(
+                            'Success',
+                            'Data Berhasil Disimpan',
+                            'success'
+                        ).then(okay => {
+                            if (okay) {
+                                $.LoadingOverlay("show");
+                                location.reload();
+                            }
+                        });
+                        $.LoadingOverlay("hide");
+                    },
+                    error: function(data) {
+                        swal.fire(
+                            data.statusText + ' ' + data.status,
+                            data.responseJSON.metadata.message,
+                            'error'
+                        );
+                        $.LoadingOverlay("hide");
+                    }
+                });
             });
         });
     </script>
