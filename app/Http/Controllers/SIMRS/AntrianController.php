@@ -127,16 +127,10 @@ class AntrianController extends Controller
     {
         $request['kodebooking'] = $antrian->kodebooking;
         $request['taskid'] = 99;
-        $request['waktu'] = Carbon::now()->timestamp * 1000;
-        $request['keterangan'] = "Dibatalkan dari sisi sistem oleh " . Auth::user()->name;
+        $request['keterangan'] = "Antrian dibatalkan di poliklinik oleh " . Auth::user()->name;
         $vclaim = new AntrianAntrianController();
-        $response = $vclaim->update_antrean($request);
+        $response = $vclaim->batal_antrian($request);
         if ($response->status() == 200) {
-            $antrian->update([
-                "taskid" => $request->taskid,
-                "status_api" => 1,
-                "keterangan" => $request->keterangan,
-            ]);
             Alert::success('Success', "Antrian berhasil dibatalkan");
         } else {
             Alert::error('Error ' . $response->status(), $response->getData()->metadata->message);

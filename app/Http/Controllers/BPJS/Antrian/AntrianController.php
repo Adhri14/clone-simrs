@@ -831,16 +831,18 @@ class AntrianController extends ApiBPJSController
                 "nama" => $request->nama,
             ]);
             // kirim notif wa
-            $qr = QrCode::backgroundColor(255, 255, 51)->format('png')->generate($request->kodebooking, "public/storage/antrian" . $request->kodebooking . ".png");
-            $wa = new WhatsappController();
-            $request['fileurl'] = asset("storage/antrian" . $request->kodebooking . ".png");
-            $request['caption'] = "Kode booking : " . $request->kodebooking . "\nSilahkan gunakan *QR Code* ini untuk checkin di mesin antrian rawat jalan.";
-            $request['number'] = $request->nohp;
-            $wa->send_image($request);
             $wa = new WhatsappController();
             $request['message'] = "*Antrian Berhasil di Daftarkan*\nAntrian anda berhasil didaftarkan melalui Layanan " . $request->method . " RSUD Waled dengan data sebagai berikut : \n\n*Kode Antrian :* " . $request->kodebooking .  "\n*Angka Antrian :* " . $request->angkaantrean .  "\n*Nomor Antrian :* " . $request->nomorantrean . "\n*Jenis Pasien :* " . $request->jenispasien .  "\n*Jenis Kunjungan :* " . $request->jeniskunjungan .  "\n\n*Nama :* " . $request->nama . "\n*Poliklinik :* " . $request->namapoli  . "\n*Dokter :* " . $request->namadokter  .  "\n*Jam Praktek :* " . $request->jampraktek  .  "\n*Tanggal Periksa :* " . $request->tanggalperiksa . "\n\n*Keterangan :* " . $request->keterangan  .  "\nTerima kasih. Semoga sehat selalu.\nUntuk pertanyaan & pengaduan silahkan hubungi :\n*Humas RSUD Waled 08983311118*";
             $request['number'] = $request->nohp;
             $wa->send_message($request);
+            // kirim qr code
+            $qr = QrCode::backgroundColor(255, 255, 51)->format('png')->generate($request->kodebooking, "public/storage/antrian/" . $request->kodebooking . ".png");
+            $wa = new WhatsappController();
+            $request['fileurl'] = asset("storage/antrian/" . $request->kodebooking . ".png");
+            $request['caption'] = "Kode booking : " . $request->kodebooking . "\nSilahkan gunakan *QR Code* ini untuk checkin di mesin antrian rawat jalan.";
+            $request['number'] = $request->nohp;
+            $wa->send_image($request);
+            // kirim notif
             $wa = new WhatsappController();
             $request['notif'] = 'Antrian berhasil didaftarkan melalui ' . $request->method . "\n*Nama :* " . $request->nama . "\n*Poliklinik :* " . $request->namapoli .  "\n*Tanggal Periksa :* " . $request->tanggalperiksa . "\n*Jenis Kunjungan :* " . $request->jeniskunjungan;
             $wa->send_notif($request);
@@ -915,15 +917,14 @@ class AntrianController extends ApiBPJSController
             return $this->sendError($validator->errors()->first(), null, 201);
         }
         $antrian = Antrian::firstWhere('kodebooking', $request->kodebooking);
-        // cari antrian
         if (isset($antrian)) {
             $response = $this->batal_antrean($request);
             if ($response->status() == 200) {
                 // kirim notif wa
-                $wa = new WhatsappController();
-                $request['message'] = "Kode antrian " . $antrian->kodebooking . " telah dibatakan karena :\n" . $request->keterangan;
-                $request['number'] = $antrian->nohp;
-                $wa->send_message($request);
+                // $wa = new WhatsappController();
+                // $request['message'] = "Kode antrian " . $antrian->kodebooking . " telah dibatakan\n" . $request->keterangan;
+                // $request['number'] = $antrian->nohp;
+                // $wa->send_message($request);
                 $antrian->update([
                     "taskid" => 99,
                     "status_api" => 1,

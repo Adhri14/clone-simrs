@@ -126,7 +126,7 @@
                                         </td>
                                         <td>
                                             @if ($item->taskid == 0)
-                                                <span class="badge bg-secondary">Belum Chekcin</span>
+                                                <span class="badge bg-secondary">0. Belum Checkin</span>
                                             @endif
                                             @if ($item->taskid == 1)
                                                 <span class="badge bg-secondary">{{ $item->taskid }}. Chekcin</span>
