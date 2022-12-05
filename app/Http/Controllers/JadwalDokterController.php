@@ -12,7 +12,6 @@ use App\Models\UnitDB;
 use Illuminate\Http\Request;
 use RealRashid\SweetAlert\Facades\Alert;
 
-
 class JadwalDokterController extends Controller
 {
     public function index()
@@ -110,7 +109,9 @@ class JadwalDokterController extends Controller
                 ->paginate();
         }
         $dokters = Dokter::get();
-        $unit = UnitDB::where('KDPOLI', "!=", null)->get();
+        $unit = UnitDB::where('KDPOLI', "!=", null)
+        ->where('KDPOLI', "!=", "")
+        ->get();
         return view('simrs.poliklinik.poliklinik_jadwaldokter', compact([
             'request',
             'unit',

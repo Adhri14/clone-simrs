@@ -82,6 +82,7 @@
                                 $config['info'] = false;
                                 $config['scrollY'] = '400px';
                                 $config['scrollCollapse'] = true;
+                                $config['scrollX'] = true;
                             @endphp
                             <x-adminlte-datatable id="table2" class="nowrap text-xs" :heads="$heads" :config="$config"
                                 striped bordered hoverable compressed>
@@ -210,6 +211,7 @@
                                 $config['info'] = false;
                                 $config['scrollY'] = '400px';
                                 $config['scrollCollapse'] = true;
+                                $config['scrollX'] = true;
                             @endphp
                             <x-adminlte-datatable id="table4" class="nowrap text-xs" :heads="$heads" :config="$config"
                                 striped bordered hoverable compressed>

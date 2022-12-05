@@ -29,8 +29,8 @@
                         $config['paging'] = false;
                         $config['info'] = false;
                         $config['scrollY'] = '400px';
-                        // $config['scrollX'] = true;
-                        // $config['scrollCollapse'] = true;
+                        $config['scrollX'] = true;
+                        $config['scrollCollapse'] = true;
                     @endphp
                     <x-adminlte-datatable id="table1" class="nowrap text-xs" :heads="$heads" :config="$config" bordered
                         hoverable compressed>
@@ -56,7 +56,11 @@
                 <x-adminlte-card title="Jadwal Libur Poliklinik Akan Datang" theme="warning" collapsible>
                     @php
                         $heads = ['No.', 'Unit', 'Tanggal Libur', 'Keterangan', 'Antrian', 'Status', 'Action'];
-                        $config['responsive'] = true;
+                        $config['paging'] = false;
+                        $config['info'] = false;
+                        $config['scrollY'] = '400px';
+                        $config['scrollX'] = true;
+                        $config['scrollCollapse'] = true;
                     @endphp
                     <x-adminlte-datatable id="table2" :heads="$heads" :config="$config" hoverable bordered compressed
                         class="nowrap">
@@ -134,11 +138,9 @@
                         $heads = ['No', 'Poliklinik', 'Tanggal', 'Keterangan', 'Pasien Terdaftar', 'Status', 'Action'];
                         $config['paging'] = false;
                         $config['info'] = false;
-                        $config['scrollY'] = false;
-                        $config['fixedColumns'] = true;
-                        $config['fixedHeader'] = true;
+                        $config['scrollY'] = '400px';
                         $config['scrollX'] = true;
-                        $config['order'] = [0, 'desc'];
+                        $config['scrollCollapse'] = true;
                         // $config['scrollCollapse'] = true;
                     @endphp
                     <x-adminlte-datatable id="table3" :heads="$heads" :config="$config" hoverable bordered compressed
