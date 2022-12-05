@@ -164,7 +164,7 @@ Route::get('thermal_print', [ThermalPrintController::class, 'thermal_print'])->n
 Route::get('whatsapp', [WhatsappController::class, 'whatsapp'])->name('whatsapp');
 Route::get('bukutamu', [BukuTamuController::class, 'bukutamu'])->name('bukutamu');
 Route::post('bukutamu', [BukuTamuController::class, 'store'])->name('bukutamu_store');
-Route::get('bpjs/vclaim/surat_kontrol_print/{suratkontrol}', [SuratKontrolController::class, 'print'])->name('surat_kontrol_print');
+Route::get('bpjs/vclaim/surat_kontrol_print/{suratkontrol}', [SuratKontrolController::class, 'print'])->name('bpjs.vclaim.surat_kontrol_print');
 
 // auth
 Route::middleware('auth')->group(function () {

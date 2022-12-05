@@ -1,13 +1,8 @@
-@extends('adminlte::page')
-
+@extends('adminlte::print')
 @section('title', 'Print Surat Kontrol')
-
 @section('content_header')
     <h1>Print Surat Kontrol</h1>
 @stop
-
-
-
 @section('content')
     <div class="row">
         <div class="col-12">
@@ -108,7 +103,6 @@
 @section('plugins.Datatables', true)
 @section('plugins.DateRangePicker', true)
 @section('plugins.Select2', true)
-
 @section('css')
     <style type="text/css" media="print">
         hr {
@@ -132,7 +126,6 @@
         }
     </style>
 @endsection
-
 @section('js')
     <script>
         function printDiv(divName) {
