@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\SIMRS;
 
+use App\Http\Controllers\Admin\WhatsappController;
 use App\Http\Controllers\BPJS\Vclaim\VclaimController;
 use App\Http\Controllers\Controller;
+use App\Models\PasienDB;
 use App\Models\PoliklinikDB;
 use App\Models\SuratKontrol;
 use Illuminate\Http\Request;
@@ -39,6 +41,13 @@ class SuratKontrolController extends Controller
                 "tglLahir" => $suratkontrol->tglLahir,
                 "user" => Auth::user()->name,
             ]);
+            $pasien = PasienDB::firstWhere('no_Bpjs', $suratkontrol->noKartu);
+            $wa = new WhatsappController();
+            $request['message'] = "*Surat Kontrol Rawat Jalan*\nTelah berhasil pembuatan surat kontrol atas pasien sebagai berikut.\n\nNama : " . $suratkontrol->nama . "\nNo Surat Kontrol : " . $suratkontrol->noSuratKontrol . "\nTanggal Kontrol : " . $suratkontrol->tglRencanaKontrol . "\n\nUntuk surat kontrol online dapat diakses melalui link berikut.\nsim.rsudwaled.id/simrs/bpjs/vclaim/surat_kontrol_print/" . $suratkontrol->noSuratKontrol;
+            $request['number'] = $pasien->no_hp;
+            $wa->send_message($request);
+            $request['notif'] = "*Surat Kontrol Rawat Jalan*\nTelah berhasil pembuatan surat kontrol atas pasien sebagai berikut.\n\nNama : " . $suratkontrol->nama . "\nNo Surat Kontrol : " . $suratkontrol->noSuratKontrol . "\nTanggal Kontrol : " . $suratkontrol->tglRencanaKontrol . "\n\nUntuk surat kontrol online dapat diakses melalui link berikut.\nsim.rsudwaled.id/simrs/bpjs/vclaim/surat_kontrol_print/" . $suratkontrol->noSuratKontrol;
+            $wa->send_notif($request);
         }
         return $response;
     }
@@ -77,6 +86,34 @@ class SuratKontrolController extends Controller
     }
     public function destroy(Request $request)
     {
-        return $request->all();
+        $request['noSuratKontrol'] = $request->nomor_suratkontrol;
+        $request['user'] = Auth::user()->name;
+        $vclaim = new VclaimController();
+        $response = $vclaim->suratkontrol_delete($request);
+        if ($response->status() == 200) {
+            $sk = SuratKontrol::firstWhere('noSuratKontrol', $request->nomor_suratkontrol);
+            $sk->delete();
+        }
+        return $response;
+    }
+    public function print($nomorsuratkontrol, Request $request)
+    {
+        $request['noSuratKontrol'] = $nomorsuratkontrol;
+        $vclaim = new VclaimController();
+        $response = $vclaim->suratkontrol_nomor($request);
+        if ($response->status() == 200) {
+            $suratkontrol = $response->getData()->response;
+            $sep = $response->getData()->response->sep;
+            $peserta = $response->getData()->response->sep->peserta;
+            $pasien = PasienDB::firstWhere('no_Bpjs', $peserta->noKartu);
+            return view('simrs.suratkontrol.suratkontrol_print', compact([
+                'suratkontrol',
+                'sep',
+                'peserta',
+                'pasien',
+            ]));
+        } else {
+            return $response->getData()->metadata->message;
+        }
     }
 }

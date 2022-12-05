@@ -202,7 +202,6 @@ Route::middleware('auth')->group(function () {
         Route::get('laporan_antrian_poliklinik', [SIMRSAntrianController::class, 'laporan_antrian_poliklinik'])->name('laporan_antrian_poliklinik');
         Route::get('dashboard_antrian_tanggal', [SIMRSAntrianController::class, 'dashboard_antrian_tanggal'])->name('dashboard_antrian_tanggal');
         Route::get('dashboard_antrian_bulan', [SIMRSAntrianController::class, 'dashboard_antrian_bulan'])->name('dashboard_antrian_bulan');
-
     });
     // simrs
     Route::prefix('simrs')->name('simrs.')->group(function () {
@@ -249,6 +248,7 @@ Route::middleware('auth')->group(function () {
             Route::post('surat_kontrol_store', [SuratKontrolController::class, 'store'])->name('surat_kontrol_store');
             Route::put('surat_kontrol_update', [SuratKontrolController::class, 'update'])->name('surat_kontrol_update');
             Route::delete('surat_kontrol_delete', [SuratKontrolController::class, 'destroy'])->name('surat_kontrol_delete');
+            Route::get('surat_kontrol_print/{suratkontrol}', [SuratKontrolController::class, 'print'])->name('surat_kontrol_print');
         });
     });
     // satu sehat

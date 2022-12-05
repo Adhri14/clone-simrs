@@ -284,7 +284,6 @@ return [
                     'url'  => 'info_jadwaloperasi',
                     // 'can' => 'admin',
                 ],
-
                 // [
                 //     'text' => 'Status Antrian',
                 //     'icon'    => 'fas fa-sign-in-alt',
@@ -311,7 +310,7 @@ return [
                 // ],
             ]
         ],
-        // MENU APLIKASI ANTRIAN
+        // APLIKASI ANTRIAN
         [
             'text'    => 'Aplikasi Antrian',
             'icon'    => 'fas fa-sign-in-alt',
@@ -319,20 +318,6 @@ return [
             'label' => 'lama',
             'label_color' => 'danger',
             'submenu' => [
-                [
-                    'text' => 'Console Antrian',
-                    'icon'    => 'fas fa-desktop',
-                    'url'  => 'antrian/console',
-                    'shift'   => 'ml-2',
-                    'can' => 'admin',
-                ],
-                [
-                    'text' => 'Antrian Pendaftaran',
-                    'icon'    => 'fas fa-user-plus',
-                    'url'  => 'antrian/pendaftaran',
-                    'shift'   => 'ml-2',
-                    'can' => 'pendaftaran',
-                ],
                 [
                     'text' => 'Antrian Pembayaran',
                     'icon'    => 'fas fa-cash-register',
@@ -367,7 +352,29 @@ return [
                 ],
             ],
         ],
-        // MENU APLIKASI POLIKLINIK
+        // APLIKASI PENDAFTARAN
+        [
+            'text'    => 'Aplikasi Pendaftaran',
+            'icon'    => 'fas fa-user-plus',
+            'can' => 'pendaftaran',
+            'submenu' => [
+                [
+                    'text' => 'Console Antrian',
+                    'icon'    => 'fas fa-desktop',
+                    'url'  => 'antrian/console',
+                    'shift'   => 'ml-2',
+                    'can' => 'pendaftaran',
+                ],
+                [
+                    'text' => 'Antrian Pendaftaran',
+                    'icon'    => 'fas fa-user-plus',
+                    'url'  => 'antrian/pendaftaran',
+                    'shift'   => 'ml-2',
+                    'can' => 'pendaftaran',
+                ],
+            ],
+        ],
+        // APLIKASI POLIKLINIK
         [
             'text'    => 'Aplikasi Poliklinik',
             'icon'    => 'fas fa-clinic-medical',

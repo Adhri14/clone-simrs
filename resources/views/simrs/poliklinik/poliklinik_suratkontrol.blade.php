@@ -112,15 +112,15 @@
 
                                 <td>{{ $item->noSuratKontrol }}
                                     <br>
-                                    <x-adminlte-button class="btn-xs" label="Print" theme="success" icon="fas fa-print"
-                                        data-toggle="tooltip" title="Print Surat Kontrol {{ $item->kode_kunjungan }}" />
+                                    <a href="{{ route('bpjs.vclaim.surat_kontrol_print', $item->noSuratKontrol) }}"
+                                        target="_blank" class="btn btn-xs btn-success" data-toggle="tooltip"
+                                        title="Print Surat Kontrol {{ $item->kode_kunjungan }}"> <i
+                                            class="fas fa-print"></i> Print</a>
                                     <x-adminlte-button class="btn-xs btnEditSuratKontrol" label="Edit" theme="warning"
                                         icon="fas fa-edit" data-toggle="tooltip"
                                         title="Edit Surat Kontrol {{ $item->noSuratKontrol }}"
                                         data-id="{{ $item->id }}" />
-                                    <x-adminlte-button class="btn-xs btnDelete" theme="danger" icon="fas fa-trash"
-                                        data-toggle="tooltip" title="Delete Surat Kontrol {{ $item->noSuratKontrol }}"
-                                        data-id="{{ $item->noSuratKontrol }}" />
+
                                 </td>
                                 <td>
                                     {{ $item->nama }} <br>
@@ -188,7 +188,9 @@
                             label="Buat Surat Kontrol" />
                         <x-adminlte-button id="btnUpdate" class="mr-auto" icon="fas fa-edit" theme="warning"
                             label="Update Surat Kontrol" />
-                        <x-adminlte-button theme="danger" label="Tutup" data-dismiss="modal" />
+                        <x-adminlte-button id="btnDelete" icon="fas fa-trash" theme="danger" label="Hapus"
+                            data-toggle="tooltip" title="Delete Surat Kontrol {{ $item->noSuratKontrol }}" />
+                        <x-adminlte-button theme="danger" icon="fas fa-times" label="Kembali" data-dismiss="modal" />
                     </x-slot>
                 </form>
             </x-adminlte-modal>
@@ -212,7 +214,6 @@
                 var url = "{{ route('vclaim.index') }}" + "/edit_surat_kontrol/" + nomorsuratkontrol;
                 $.LoadingOverlay("show");
                 $.get(url, function(data) {
-                    console.log(data);
                     $('#nama_suratkontrol').val(data.nama);
                     $('#nomor_suratkontrol').val(data.noSuratKontrol);
                     $('#nomorsep_suratkontrol').val(data.noSepAsalKontrol);
@@ -249,12 +250,19 @@
                     type: "POST",
                     dataType: 'json',
                     success: function(data) {
-                        console.log(data);
-                        swal.fire(
-                            'Success',
-                            'Data Berhasil Disimpan',
-                            'success'
-                        ).then(okay => {
+                        var urlPrint =
+                            "{{ route('landingpage') }}/bpjs/vclaim/surat_kontrol_print/" +
+                            data
+                            .response.noSuratKontrol;
+                        alert(urlPrint);
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success',
+                            text: 'Surat Kontrol Berhasil Dibuat dengan Nomor ' + data
+                                .response.noSuratKontrol,
+                            footer: "<a href=" + urlPrint +
+                                " target='_blank'>Print Surat Kontrol</a>"
+                        }).then(okay => {
                             if (okay) {
                                 $.LoadingOverlay("show");
                                 location.reload();
@@ -282,7 +290,40 @@
                     type: "PUT",
                     dataType: 'json',
                     success: function(data) {
-                        console.log(data);
+                        swal.fire(
+                            'Success',
+                            'Surat Kontrol Berhasil Diperbaharui dengan Nomor ' + data
+                            .response
+                            .noSuratKontrol,
+                            'success'
+                        ).then(okay => {
+                            if (okay) {
+                                $.LoadingOverlay("show");
+                                location.reload();
+                            }
+                        });
+                        $.LoadingOverlay("hide");
+                    },
+                    error: function(data) {
+                        swal.fire(
+                            data.statusText + ' ' + data.status,
+                            data.responseJSON.metadata.message,
+                            'error'
+                        );
+                        $.LoadingOverlay("hide");
+                    }
+                });
+            });
+            $('#btnDelete').click(function(e) {
+                $.LoadingOverlay("show");
+                e.preventDefault();
+                var url = "{{ route('bpjs.vclaim.surat_kontrol_delete') }}";
+                $.ajax({
+                    data: $('#formSuratKontrol').serialize(),
+                    url: url,
+                    type: "DELETE",
+                    dataType: 'json',
+                    success: function(data) {
                         swal.fire(
                             'Success',
                             'Data Berhasil Disimpan',
@@ -304,41 +345,6 @@
                         $.LoadingOverlay("hide");
                     }
                 });
-            });
-            $('.btnDelete').click(function(e) {
-                // $.LoadingOverlay("show");
-                e.preventDefault();
-                var nomorsuratkontrol = $(this).data('id');
-                alert(nomorsuratkontrol);
-                // var url = "{{ route('bpjs.vclaim.surat_kontrol_update') }}";
-                // $.ajax({
-                //     data: $('#formSuratKontrol').serialize(),
-                //     url: url,
-                //     type: "PUT",
-                //     dataType: 'json',
-                //     success: function(data) {
-                //         console.log(data);
-                //         swal.fire(
-                //             'Success',
-                //             'Data Berhasil Disimpan',
-                //             'success'
-                //         ).then(okay => {
-                //             if (okay) {
-                //                 $.LoadingOverlay("show");
-                //                 location.reload();
-                //             }
-                //         });
-                //         $.LoadingOverlay("hide");
-                //     },
-                //     error: function(data) {
-                //         swal.fire(
-                //             data.statusText + ' ' + data.status,
-                //             data.responseJSON.metadata.message,
-                //             'error'
-                //         );
-                //         $.LoadingOverlay("hide");
-                //     }
-                // });
             });
         });
     </script>

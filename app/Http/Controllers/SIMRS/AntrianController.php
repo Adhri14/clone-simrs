@@ -163,7 +163,7 @@ class AntrianController extends Controller
             // } catch (\Throwable $th) {
             //     //throw $th;
             // }
-            Alert::success('Success', 'Panggil Pasien Berhasil');
+            Alert::success('Success', 'Pasien Dilanjutkan Ke Farmasi');
         } else {
             Alert::error('Error ' . $response->status(), $response->getData()->metadata->message);
         }
@@ -194,7 +194,7 @@ class AntrianController extends Controller
             // } catch (\Throwable $th) {
             //     //throw $th;
             // }
-            Alert::success('Success', 'Panggil Pasien Berhasil');
+            Alert::success('Success', 'Pasien Selesai Di Poliklinik');
         } else {
             Alert::error('Error ' . $response->status(), $response->getData()->metadata->message);
         }

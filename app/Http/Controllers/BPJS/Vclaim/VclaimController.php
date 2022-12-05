@@ -582,6 +582,7 @@ class VclaimController extends ApiBPJSController
     {
         $validator = Validator::make(request()->all(), [
             "noSuratKontrol" => "required",
+            "user" => "required",
         ]);
         if ($validator->fails()) {
             return $this->sendError($validator->errors()->first(), null, 201);
@@ -593,7 +594,7 @@ class VclaimController extends ApiBPJSController
             "request" => [
                 "t_suratkontrol" => [
                     "noSuratKontrol" => $request->noSuratKontrol,
-                    "user" => Auth::user()->name,
+                    "user" =>  $request->user,
                 ]
             ]
         ];
@@ -637,12 +638,12 @@ class VclaimController extends ApiBPJSController
     {
         // checking request
         $validator = Validator::make(request()->all(), [
-            "nomorreferensi" => "required",
+            "noSuratKontrol" => "required",
         ]);
         if ($validator->fails()) {
             return $this->sendError($validator->errors()->first(), null, 201);
         }
-        $url = env('VCLAIM_URL') . "RencanaKontrol/noSuratKontrol/" . $request->nomorreferensi;
+        $url = env('VCLAIM_URL') . "RencanaKontrol/noSuratKontrol/" . $request->noSuratKontrol;
         $signature = $this->signature();
         $response = Http::withHeaders($signature)->get($url);
         return $this->response_decrypt($response, $signature);
