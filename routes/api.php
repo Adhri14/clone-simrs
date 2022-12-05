@@ -108,6 +108,7 @@ Route::prefix('wa')->group(function () {
     Route::get('test', [WhatsappController::class, 'index']);
     Route::post('callback', [WhatsappController::class, 'callback']);
 });
+
 Route::prefix('simrs')->name('api.simrs.')->group(function () {
     Route::get('get_icd10', [ICD10Controller::class, 'get_icd10'])->name('get_icd10');
 });

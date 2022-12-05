@@ -223,6 +223,7 @@ Route::middleware('auth')->group(function () {
             Route::get('list_task', [AntrianAntrianController::class, 'list_task'])->name('list_task');
             Route::get('dashboard_tanggal', [AntrianAntrianController::class, 'dashboard_tanggal_index'])->name('dashboard_tanggal');
             Route::get('dashboard_bulan', [AntrianAntrianController::class, 'dashboard_bulan_index'])->name('dashboard_bulan');
+            Route::get('jadwal_operasi', [AntrianAntrianController::class, 'jadwal_operasi'])->name('jadwal_operasi');
         });
         // vclaim
         Route::prefix('vclaim')->name('vclaim.')->group(function () {

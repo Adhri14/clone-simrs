@@ -763,7 +763,7 @@ return [
                 [
                     'text' => 'Jadwal Operasi',
                     'icon'    => 'fas fa-calendar-alt',
-                    'url'  => 'bpjs/antrian/jadwal_oprasi',
+                    'url'  => 'bpjs/antrian/jadwal_operasi',
                     'shift'   => 'ml-2',
                     'can' => 'bpjs',
                 ],
