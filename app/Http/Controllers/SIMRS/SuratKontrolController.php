@@ -42,11 +42,17 @@ class SuratKontrolController extends Controller
                 "tglLahir" => $suratkontrol->tglLahir,
                 "user" => Auth::user()->name,
             ]);
-            $pasien = PasienDB::firstWhere('no_Bpjs', $suratkontrol->noKartu);
+            $vclaim = new VclaimController();
+            $request['nomorkartu'] = $suratkontrol->noKartu;
+            $request['tanggal'] = now()->format('Y-m-d');
+            $response_peserta = $vclaim->peserta_nomorkartu($request);
+            $peserta = $response_peserta->getData()->response->peserta;
+            // $pasien = PasienDB::firstWhere('no_Bpjs', $suratkontrol->noKartu);
             $wa = new WhatsappController();
             $request['message'] = "*Surat Kontrol Rawat Jalan*\nTelah berhasil pembuatan surat kontrol atas pasien sebagai berikut.\n\nNama : " . $suratkontrol->nama . "\nNo Surat Kontrol : " . $suratkontrol->noSuratKontrol . "\nTanggal Kontrol : " . $suratkontrol->tglRencanaKontrol . "\nPoliklinik : " . $poli->namasubspesialis . "\n\nUntuk surat kontrol online dapat diakses melalui link berikut.\nsim.rsudwaled.id/simrs/bpjs/vclaim/surat_kontrol_print/" . $suratkontrol->noSuratKontrol;
-            $request['number'] = $pasien->no_hp;
+            $request['number'] = $peserta->mr->noTelepon;
             $wa->send_message($request);
+
             $request['notif'] = "*Surat Kontrol Rawat Jalan*\nTelah berhasil pembuatan surat kontrol atas pasien sebagai berikut.\n\nNama : " . $suratkontrol->nama . "\nNo Surat Kontrol : " . $suratkontrol->noSuratKontrol . "\nTanggal Kontrol : " . $suratkontrol->tglRencanaKontrol . "\nPoliklinik : " . $poli->namasubspesialis . "\n\nUntuk surat kontrol online dapat diakses melalui link berikut.\nsim.rsudwaled.id/simrs/bpjs/vclaim/surat_kontrol_print/" . $suratkontrol->noSuratKontrol;
             $wa->send_notif($request);
         }
