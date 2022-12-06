@@ -187,9 +187,9 @@ class WhatsappController extends Controller
                         $request['titletext'] = "2. Pilih Tanggal Lain Kunjungan 🗓";
                         $request['buttontext'] = 'PILIH TANGGAL';
                         $now = Carbon::now();
-                        $rowhari = 'TANGGAL_' . $now->format('Y-m-d') . "#" . $poli;
+                        $rowhari = 'TANGGAL_' . $now->translatedFormat('Y-m-d_l') . "#" . $poli;
                         for ($i = 0; $i < 6; $i++) {
-                            $rowhari = $rowhari . ','  . 'TANGGAL_' . $now->addDay(1)->format('Y-m-d') .  "#" . $poli;
+                            $rowhari = $rowhari . ','  . 'TANGGAL_' . $now->addDay(1)->translatedFormat('Y-m-d_l') .  "#" . $poli;
                         }
                         $request['rowtitle'] = $rowhari;
                         return $this->send_list($request);
@@ -214,9 +214,9 @@ class WhatsappController extends Controller
                         $now = Carbon::now();
                         $request['notif'] = '4 cek jadwal libur poli ' . $poli . " tanggal " . $tanggal;
                         $this->send_notif($request);
-                        $rowtanggal = 'TANGGAL_' . $now->format('Y-m-d') . "#" . $poli;
+                        $rowtanggal = 'TANGGAL_' . $now->translatedFormat('Y-m-d_l') . "#" . $poli;
                         for ($i = 0; $i < 6; $i++) {
-                            $rowtanggal = $rowtanggal . ',' . 'TANGGAL_' . $now->addDay(1)->format('Y-m-d') . "#" . $poli;
+                            $rowtanggal = $rowtanggal . ',' . 'TANGGAL_' . $now->addDay(1)->translatedFormat('Y-m-d_l') . "#" . $poli;
                         }
                         $request['contenttext'] = "Silahkan pilih tanggal lain rawat jalan poliklinik " . strtoupper($poli) . " dibawah ini.";
                         $request['titletext'] = "Jadwal Dokter Pilihan sedang Libur/Tutup";
