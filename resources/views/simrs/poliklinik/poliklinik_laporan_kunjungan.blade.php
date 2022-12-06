@@ -42,11 +42,11 @@
                         <div class="row">
                             <img src="{{ asset('vendor/adminlte/dist/img/rswaledico.png') }}" style="width: 100px">
                             <div class="col">
-                                <b>RUMAH SAKIT UMUM DAERAH WALED</b><br>
-                                <b>KABUPATEN CIREBON</b><br>
+                                <b>RUMAH SAKIT UMUM DAERAH WALED KABUPATEN CIREBON</b><br>
                                 Jalan Raden Walangsungsang Kecamatan Waled Kabupaten Cirebon 45188<br>
                                 www.rsudwaled.id - brsud.waled@gmail.com - Call Center (0231) 661126
                             </div>
+                            <hr width="100%" hight="20px" class="m-1 " color="black" size="50px" />
                         </div>
                         <div class="row invoice-info">
                             <div class="col-sm-12 invoice-col text-center">
@@ -299,10 +299,18 @@
             }
         }
 
+        hr {
+            color: #333333 !important;
+            border: 1px solid #333333 !important;
+            line-height: 1.5;
+        }
+
         table,
         th,
         td {
             border: 1px solid #333333 !important;
+            font-size: 10px !important;
+            padding: 2px !important;
         }
     </style>
 

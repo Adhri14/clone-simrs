@@ -15,8 +15,8 @@
                             Jalan Raden Walangsungsang Kecamatan Waled Kabupaten Cirebon 45188<br>
                             www.rsudwaled.id - brsud.waled@gmail.com - Call Center (0231) 661126
                         </div>
+                        <hr width="100%" hight="20px" class="m-1 " color="black" size="50px" />
                     </div>
-                    <hr width="100%" hight="20px" class="m-1 " color="black" size="50px" />
                     <div class="row invoice-info">
                         <div class="col-sm-12 invoice-col text-center">
                             <b class="text-md">SURAT KONTROL RAWAT JALAN</b> <br>
@@ -82,7 +82,6 @@
                         </div>
                         <br>
                         <div class="col-sm-8 mt-1">
-
                         </div>
                         <div class="col-sm-4 mt-1">
                             <b> Waled, {{ Carbon\Carbon::now()->translatedFormat('d F Y') }} <br>
@@ -118,7 +117,6 @@
         .btnPrint {
             display: none !important;
         }
-
     </style>
 @endsection
 @section('js')
