@@ -253,7 +253,6 @@
                             "{{ route('landingpage') }}/bpjs/vclaim/surat_kontrol_print/" +
                             data
                             .response.noSuratKontrol;
-                        alert(urlPrint);
                         Swal.fire({
                             icon: 'success',
                             title: 'Success',
