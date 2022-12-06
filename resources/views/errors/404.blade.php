@@ -7,7 +7,8 @@
     <div class="row">
         <div class="col-md-12">
             Silahkan periksa kembali link anda
+            <br>
+            <a href="{{ route('home') }}" class="btn btn-danger">Kembali Menu Utama</a>
         </div>
     </div>
-
 @stop
