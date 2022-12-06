@@ -27,52 +27,52 @@
                         <div class="col-sm-6 invoice-col">
                             <dl class="row">
                                 <dt class="col-sm-4 m-0">No RM</dt>
-                                <dd class="col-sm-8 m-0"> : {{ $pasien->no_rm }}</b></dd>
+                                <dd class="col-sm-8 m-0">{{ $pasien->no_rm }}</b></dd>
                                 <dt class="col-sm-4 m-0">Nama Pasien</dt>
-                                <dd class="col-sm-8 m-0"> : {{ $peserta->nama }}</b></dd>
+                                <dd class="col-sm-8 m-0">{{ $peserta->nama }}</b></dd>
                                 <dt class="col-sm-4 m-0">Nomor Kartu</dt>
-                                <dd class="col-sm-8 m-0"> : {{ $peserta->noKartu }}</b></dd>
+                                <dd class="col-sm-8 m-0">{{ $peserta->noKartu }}</b></dd>
                                 <dt class="col-sm-4 m-0">No HP / Telp</dt>
-                                <dd class="col-sm-8 m-0"> : {{ $pasien->no_hp }}</b></dd>
+                                <dd class="col-sm-8 m-0">{{ $pasien->no_hp }}</b></dd>
                                 <dt class="col-sm-4 m-0">Jenis Kelamin</dt>
-                                <dd class="col-sm-8 m-0"> : {{ $peserta->kelamin }}</b></dd>
+                                <dd class="col-sm-8 m-0">{{ $peserta->kelamin }}</b></dd>
                                 <dt class="col-sm-4 m-0">Tanggal Lahir</dt>
-                                <dd class="col-sm-8 m-0"> : {{ $peserta->tglLahir }}</b></dd>
+                                <dd class="col-sm-8 m-0">{{ $peserta->tglLahir }}</b></dd>
 
                             </dl>
                             <dl class="row">
                                 <dt class="col-sm-4 m-0">Tanggal Kontrol</dt>
-                                <dd class="col-sm-8 m-0"> : {{ $suratkontrol->tglRencanaKontrol }}</b></dd>
+                                <dd class="col-sm-8 m-0">{{ $suratkontrol->tglRencanaKontrol }}</b></dd>
                                 <dt class="col-sm-4 m-0">Tanggal Terbit</dt>
-                                <dd class="col-sm-8 m-0"> : {{ $suratkontrol->tglTerbit }}</b></dd>
+                                <dd class="col-sm-8 m-0">{{ $suratkontrol->tglTerbit }}</b></dd>
                                 <dt class="col-sm-4 m-0">Jenis Kontrol</dt>
-                                <dd class="col-sm-8 m-0"> : {{ $suratkontrol->namaJnsKontrol }}</b></dd>
+                                <dd class="col-sm-8 m-0">{{ $suratkontrol->namaJnsKontrol }}</b></dd>
                                 <dt class="col-sm-4 m-0">Poliklinik Tujuan</dt>
-                                <dd class="col-sm-8 m-0"> : {{ $suratkontrol->namaPoliTujuan }}</b></dd>
+                                <dd class="col-sm-8 m-0">{{ $suratkontrol->namaPoliTujuan }}</b></dd>
                                 <dt class="col-sm-4 m-0">Dokter</dt>
-                                <dd class="col-sm-8 m-0"> : {{ $suratkontrol->namaDokter }}</b></dd>
+                                <dd class="col-sm-8 m-0">{{ $suratkontrol->namaDokter }}</b></dd>
                             </dl>
                         </div>
                         <div class="col-sm-6 invoice-col">
                             <dl class="row">
                                 <dt class="col-sm-4 m-0">No SEP</dt>
-                                <dd class="col-sm-8 m-0"> : {{ $sep->noSep }}</b></dd>
+                                <dd class="col-sm-8 m-0">{{ $sep->noSep }}</b></dd>
                                 <dt class="col-sm-4 m-0">Tanggal SEP</dt>
-                                <dd class="col-sm-8 m-0"> : {{ $sep->tglSep }}</b></dd>
+                                <dd class="col-sm-8 m-0">{{ $sep->tglSep }}</b></dd>
                                 <dt class="col-sm-4 m-0">Jenis Pelayanan</dt>
-                                <dd class="col-sm-8 m-0"> : {{ $sep->jnsPelayanan }}</b></dd>
+                                <dd class="col-sm-8 m-0">{{ $sep->jnsPelayanan }}</b></dd>
                                 <dt class="col-sm-4 m-0">Poliklinik</dt>
-                                <dd class="col-sm-8 m-0"> : {{ $sep->poli }}</b></dd>
+                                <dd class="col-sm-8 m-0">{{ $sep->poli }}</b></dd>
                                 <dt class="col-sm-4 m-0">Diagnosa</dt>
-                                <dd class="col-sm-8 m-0"> : {{ $sep->diagnosa }}</b></dd>
+                                <dd class="col-sm-8 m-0">{{ $sep->diagnosa }}</b></dd>
                                 <dt class="col-sm-4 m-0">Prov. Perujuk</dt>
-                                <dd class="col-sm-8 m-0"> : {{ $sep->provPerujuk->nmProviderPerujuk }}</b></dd>
+                                <dd class="col-sm-8 m-0">{{ $sep->provPerujuk->nmProviderPerujuk }}</b></dd>
                                 <dt class="col-sm-4 m-0">Asal Rujukan</dt>
-                                <dd class="col-sm-8 m-0"> : {{ $sep->provPerujuk->asalRujukan }}</b></dd>
+                                <dd class="col-sm-8 m-0">{{ $sep->provPerujuk->asalRujukan }}</b></dd>
                                 <dt class="col-sm-4 m-0">No Rujukan</dt>
-                                <dd class="col-sm-8 m-0"> : {{ $sep->provPerujuk->noRujukan }}</b></dd>
+                                <dd class="col-sm-8 m-0">{{ $sep->provPerujuk->noRujukan }}</b></dd>
                                 <dt class="col-sm-4 m-0">Tanggal Rujukan</dt>
-                                <dd class="col-sm-8 m-0"> : {{ $sep->provPerujuk->tglRujukan }}</b></dd>
+                                <dd class="col-sm-8 m-0">{{ $sep->provPerujuk->tglRujukan }}</b></dd>
                             </dl>
                         </div>
                         <div class="col-sm-12 ">
