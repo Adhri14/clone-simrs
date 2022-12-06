@@ -13,7 +13,7 @@
                         <div class="col">
                             <b>RUMAH SAKIT UMUM DAERAH WALED KABUPATEN CIREBON</b><br>
                             Jalan Raden Walangsungsang Kecamatan Waled Kabupaten Cirebon 45188<br>
-                            www.rsudwaled.id - brsud.waled@gmail.com - Call Center (0231) 661126
+                            www.rsudwaled.id - brsud.waled@gmail.com - Whatasapp 0895 4000 60700 - Call Center (0231) 661126
                         </div>
                         <hr width="100%" hight="20px" class="m-1 " color="black" size="50px" />
                     </div>
