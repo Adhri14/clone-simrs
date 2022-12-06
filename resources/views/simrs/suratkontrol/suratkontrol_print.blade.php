@@ -119,11 +119,6 @@
             display: none !important;
         }
 
-        @media print {
-            @page {
-                size: 210mm 148mm;
-            }
-        }
     </style>
 @endsection
 @section('js')
