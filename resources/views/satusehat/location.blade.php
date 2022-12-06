@@ -7,7 +7,7 @@
     <div class="row">
         <div class="col-12">
             <x-adminlte-card title="Filter Location" theme="secondary" collapsible>
-                <form action="{{ route('satusehat.organization.index') }}" method="get">
+                <form action="" method="get">
                     <x-adminlte-input name="partOf" label="Part Of Location" placeholder="Masukan ID Part Of Location"
                         value="{{ $request->partOf }}">
                         <x-slot name="appendSlot">

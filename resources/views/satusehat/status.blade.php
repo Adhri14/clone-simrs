@@ -13,8 +13,8 @@
             <b>Base URL :</b> {{ env('SATUSEHAT_BASE_URL') }} <br>
             <b>Client ID :</b> {{ Str::mask(env('SATUSEHAT_CLIENT_ID'), '*', -20, 15) }} <br>
             <b>Secret ID :</b> {{ Str::mask(env('SATUSEHAT_SECRET_ID'), '*', -20, 15) }} <br>
-            <b>Token :</b> {{ Str::mask($token->access_token, '*', -20, 15) }} <br>
-            <b>Timestamp :</b> {{ $token->created_at }} <br> <br>
+            <b>Token :</b> {{ Str::mask($token->access_token ?? 00000, '*', -20, 15) }} <br>
+            <b>Timestamp :</b> {{ $token->created_at ?? 00000 }} <br> <br>
             <x-adminlte-button theme="warning" icon="fas fa-sync" label="Refresh Token" title="Refresh Token"
                 onclick="window.location='{{ route('satusehat.refresh_token') }}'" />
         </div>
