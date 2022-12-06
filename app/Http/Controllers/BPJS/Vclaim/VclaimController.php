@@ -123,7 +123,6 @@ class VclaimController extends ApiBPJSController
             if ($response->status() == 200) {
                 if ($response->getData()->response) {
                     $klaim = $response->getData()->response;
-                    dd($klaim);
                     Alert::success($response->getData()->metadata->message, 'Total Data Kunjungan BPJS ' . count($klaim) . ' Pasien');
                 } else {
                     Alert::error('Error ' . $response->status(), $response->getData()->metadata->message);

@@ -700,7 +700,7 @@ class AntrianController extends ApiBPJSController
             // kunjungan kontrol
             if ($request->jeniskunjungan == 3) {
                 $request['nomorsuratkontrol'] = $request->nomorreferensi;
-                $response =  $vclaim->surat_kontrol_nomor($request);
+                $response =  $vclaim->suratkontrol_nomor($request);
                 if ($response->status() == 200) {
                     $suratkontrol = $response->getData()->response;
                     $request['nomorrujukan'] = $suratkontrol->sep->provPerujuk->noRujukan;
@@ -1528,7 +1528,6 @@ class AntrianController extends ApiBPJSController
             } else {
                 $unit['KDPOLI'] = 'UGD';
             }
-            // dd($jadwalop->nama_dokter, $unit->KDPOLI);
             $jadwals[] = [
                 "kodebooking" => $jadwalop->no_book,
                 "tanggaloperasi" => Carbon::parse($jadwalop->tanggal)->format('Y-m-d'),
