@@ -5,6 +5,7 @@ namespace App\Http\Controllers\SIMRS;
 use App\Http\Controllers\Admin\WhatsappController;
 use App\Http\Controllers\BPJS\Vclaim\VclaimController;
 use App\Http\Controllers\Controller;
+use App\Models\ParamedisDB;
 use App\Models\PasienDB;
 use App\Models\PoliklinikDB;
 use App\Models\SuratKontrol;
@@ -43,10 +44,10 @@ class SuratKontrolController extends Controller
             ]);
             $pasien = PasienDB::firstWhere('no_Bpjs', $suratkontrol->noKartu);
             $wa = new WhatsappController();
-            $request['message'] = "*Surat Kontrol Rawat Jalan*\nTelah berhasil pembuatan surat kontrol atas pasien sebagai berikut.\n\nNama : " . $suratkontrol->nama . "\nNo Surat Kontrol : " . $suratkontrol->noSuratKontrol . "\nTanggal Kontrol : " . $suratkontrol->tglRencanaKontrol . "\n\nUntuk surat kontrol online dapat diakses melalui link berikut.\nsim.rsudwaled.id/simrs/bpjs/vclaim/surat_kontrol_print/" . $suratkontrol->noSuratKontrol;
+            $request['message'] = "*Surat Kontrol Rawat Jalan*\nTelah berhasil pembuatan surat kontrol atas pasien sebagai berikut.\n\nNama : " . $suratkontrol->nama . "\nNo Surat Kontrol : " . $suratkontrol->noSuratKontrol . "\nTanggal Kontrol : " . $suratkontrol->tglRencanaKontrol . "\nPoliklinik : " . $poli->namasubspesialis . "\n\nUntuk surat kontrol online dapat diakses melalui link berikut.\nsim.rsudwaled.id/simrs/bpjs/vclaim/surat_kontrol_print/" . $suratkontrol->noSuratKontrol;
             $request['number'] = $pasien->no_hp;
             $wa->send_message($request);
-            $request['notif'] = "*Surat Kontrol Rawat Jalan*\nTelah berhasil pembuatan surat kontrol atas pasien sebagai berikut.\n\nNama : " . $suratkontrol->nama . "\nNo Surat Kontrol : " . $suratkontrol->noSuratKontrol . "\nTanggal Kontrol : " . $suratkontrol->tglRencanaKontrol . "\n\nUntuk surat kontrol online dapat diakses melalui link berikut.\nsim.rsudwaled.id/simrs/bpjs/vclaim/surat_kontrol_print/" . $suratkontrol->noSuratKontrol;
+            $request['notif'] = "*Surat Kontrol Rawat Jalan*\nTelah berhasil pembuatan surat kontrol atas pasien sebagai berikut.\n\nNama : " . $suratkontrol->nama . "\nNo Surat Kontrol : " . $suratkontrol->noSuratKontrol . "\nTanggal Kontrol : " . $suratkontrol->tglRencanaKontrol . "\nPoliklinik : " . $poli->namasubspesialis . "\n\nUntuk surat kontrol online dapat diakses melalui link berikut.\nsim.rsudwaled.id/simrs/bpjs/vclaim/surat_kontrol_print/" . $suratkontrol->noSuratKontrol;
             $wa->send_notif($request);
         }
         return $response;
@@ -106,11 +107,13 @@ class SuratKontrolController extends Controller
             $sep = $response->getData()->response->sep;
             $peserta = $response->getData()->response->sep->peserta;
             $pasien = PasienDB::firstWhere('no_Bpjs', $peserta->noKartu);
+            $dokter = ParamedisDB::firstWhere('kode_dokter_jkn', $suratkontrol->kodeDokter);
             return view('simrs.suratkontrol.suratkontrol_print', compact([
                 'suratkontrol',
                 'sep',
                 'peserta',
                 'pasien',
+                'dokter',
             ]));
         } else {
             return $response->getData()->metadata->message;

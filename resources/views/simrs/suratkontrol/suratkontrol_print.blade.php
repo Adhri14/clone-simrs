@@ -88,7 +88,7 @@
                                 DPJP,</b>
 
                             <br><br><br><br>
-                            ............................................
+                            <b><u>{{ $dokter->nama_paramedis }}</u></b>
                         </div>
                     </div>
                 </section>
