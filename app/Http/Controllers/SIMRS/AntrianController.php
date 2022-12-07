@@ -45,6 +45,36 @@ class AntrianController extends Controller
             'provinsis' => $provinsis,
         ]);
     }
+    // pendaftaran
+    public function antrian_pendaftaran(Request $request)
+    {
+        $antrians = null;
+        if ($request->tanggal && $request->loket && $request->lantai) {
+            $antrians = Antrian::whereDate('tanggalperiksa', $request->tanggal)
+            ->get();
+            if ($request->kodepoli != null) {
+                $antrians = $antrians->where('kodepoli', $request->kodepoli);
+            }
+        }
+        $polis = PoliklinikDB::where('status', 1)->get();
+        dd($antrians);
+
+        $dokters = ParamedisDB::where('kode_dokter_jkn', "!=", null)
+            ->where('unit', "!=", null)
+            ->get();
+        if (isset($request->kodepoli)) {
+            $poli = UnitDB::firstWhere('KDPOLI', $request->kodepoli);
+            $dokters = ParamedisDB::where('unit', $poli->kode_unit)
+                ->where('kode_dokter_jkn', "!=", null)
+                ->get();
+        }
+        return view('simrs.pendaftaran.pendaftaran_antrian', [
+            'antrians' => $antrians,
+            'request' => $request,
+            'polis' => $polis,
+            'dokters' => $dokters,
+        ]);
+    }
     // poliklinik
     public function antrian_poliklinik(Request $request)
     {

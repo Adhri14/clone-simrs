@@ -191,6 +191,10 @@ Route::middleware('auth')->group(function () {
         Route::get('delet_verifikasi', [UserController::class, 'delet_verifikasi'])->name('delet_verifikasi');
     });
     // poliklinik
+    Route::middleware('permission:pendaftaran')->prefix('pendaftaran')->name('pendaftaran.')->group(function () {
+        Route::get('antrian_pendaftaran', [SIMRSAntrianController::class, 'antrian_pendaftaran'])->name('antrian_pendaftaran');
+    });
+    // poliklinik
     Route::middleware('permission:poliklinik')->prefix('poliklinik')->name('poliklinik.')->group(function () {
         Route::get('antrian', [SIMRSAntrianController::class, 'antrian_poliklinik'])->name('antrian');
         Route::get('antrian_panggil/{antrian}', [SIMRSAntrianController::class, 'panggil_poliklinik'])->name('antrian_panggil');

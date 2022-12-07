@@ -1,7 +1,7 @@
 @extends('adminlte::page')
-@section('title', 'Antrian Pasien Poliklinik')
+@section('title', 'Antrian Pasien Pendaftaran')
 @section('content_header')
-    <h1>Antrian Pasien Poliklinik</h1>
+    <h1>Antrian Pasien Pendaftaran</h1>
 @stop
 
 @section('content')
@@ -10,7 +10,7 @@
             <x-adminlte-card title="Filter Antrian Pasien" theme="secondary" collapsible>
                 <form action="" method="get">
                     <div class="row">
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             @php
                                 $config = ['format' => 'YYYY-MM-DD'];
                             @endphp
@@ -23,7 +23,7 @@
                                 </x-slot>
                             </x-adminlte-input-date>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <x-adminlte-select2 name="kodepoli" label="Poliklinik">
                                 <option value="">SEMUA POLIKLINIK (-)</option>
                                 @foreach ($polis as $item)
@@ -34,16 +34,27 @@
                                 @endforeach
                             </x-adminlte-select2>
                         </div>
-                        <div class="col-md-4">
-                            <x-adminlte-select2 name="kodedokter" label="Dokter">
-                                <option value="">SEMUA DOKTER (-)</option>
-                                @foreach ($dokters as $item)
-                                    <option value="{{ $item->kode_dokter_jkn }}"
-                                        {{ $item->kode_dokter_jkn == $request->kodedokter ? 'selected' : null }}>
-                                        {{ $item->nama_paramedis }} ({{ $item->kode_dokter_jkn }})
-                                    </option>
-                                @endforeach
-                            </x-adminlte-select2>
+                        <div class="col-md-3">
+                            <x-adminlte-select name="loket" label="Loket">
+                                <x-adminlte-options :options="[
+                                    1 => 'Loket 1',
+                                    2 => 'Loket 2',
+                                    3 => 'Loket 3',
+                                    4 => 'Loket 4',
+                                    5 => 'Loket 5',
+                                ]" :selected="$request->loket ?? 1" />
+                            </x-adminlte-select>
+                        </div>
+                        <div class="col-md-3">
+                            <x-adminlte-select name="lantai" label="Lantai">
+                                <x-adminlte-options :options="[
+                                    1 => 'Lantai 1',
+                                    2 => 'Lantai 2',
+                                    3 => 'Lantai 3',
+                                    4 => 'Lantai 4',
+                                    5 => 'Lantai 5',
+                                ]" :selected="$request->lantai ?? 1" />
+                            </x-adminlte-select>
                         </div>
                     </div>
                     <x-adminlte-button type="submit" class="withLoad" theme="primary" label="Submit Pencarian" />
@@ -411,7 +422,7 @@
                             $config = [
                                 'format' => 'YYYY-MM-DD',
                                 'dayViewHeaderFormat' => 'MMMM YYYY',
-                                'minDate' => "js:moment()",
+                                'minDate' => 'js:moment()',
                                 'daysOfWeekDisabled' => [0],
                             ];
                         @endphp

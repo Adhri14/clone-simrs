@@ -310,49 +310,7 @@ return [
                 // ],
             ]
         ],
-        // APLIKASI ANTRIAN
-        [
-            'text'    => 'Aplikasi Antrian',
-            'icon'    => 'fas fa-sign-in-alt',
-            'can' => ['admin', 'pendaftaran', 'kasir', 'poliklinik', 'farmasi'],
-            'label' => 'lama',
-            'label_color' => 'danger',
-            'submenu' => [
-                [
-                    'text' => 'Antrian Pembayaran',
-                    'icon'    => 'fas fa-cash-register',
-                    'url'  => 'antrian/pembayaran',
-                    'shift'   => 'ml-2',
-                    'can' => 'kasir',
-                ],
-                [
-                    'text' => 'Antrian Poliklinik',
-                    'icon'    => 'fas fa-clinic-medical',
-                    'url'  => 'antrian/poli',
-                    'shift'   => 'ml-2',
-                    'can' => 'poliklinik',
-                    'label' => 'lama',
-                    'label_color' => 'danger',
-                ],
-                // [
-                //     'text' => 'Surat Kontrol Poliklinik',
-                //     'icon'    => 'fas fa-file-medical',
-                //     'url'  => 'antrian/surat_kontrol_poli',
-                //     'shift'   => 'ml-2',
-                //     'can' => 'poliklinik',
-                //     'label' => 'lama',
-                //     'label_color' => 'danger',
-                // ],
-                [
-                    'text' => 'Antrian Farmasi',
-                    'icon'    => 'fas fa-pills',
-                    'url'  => 'antrian/farmasi',
-                    'shift'   => 'ml-2',
-                    'can' => 'farmasi',
-                ],
-            ],
-        ],
-        // APLIKASI PENDAFTARAN
+        // PENDAFTARAN
         [
             'text'    => 'Aplikasi Pendaftaran',
             'icon'    => 'fas fa-user-plus',
@@ -372,9 +330,31 @@ return [
                     'shift'   => 'ml-2',
                     'can' => 'pendaftaran',
                 ],
+                [
+                    'text' => 'Antrian Pendaftaran',
+                    'icon'    => 'fas fa-user-plus',
+                    'url'  => 'pendaftaran/antrian_pendaftaran',
+                    'shift'   => 'ml-2',
+                    'can' => 'pendaftaran',
+                ],
             ],
         ],
-        // APLIKASI POLIKLINIK
+        // KASIR
+        [
+            'text'    => 'Aplikasi Kasir',
+            'icon'    => 'fas fa-cash-register',
+            'can' => 'kasir',
+            'submenu' => [
+                [
+                    'text' => 'Antrian Pembayaran',
+                    'icon'    => 'fas fa-hand-holding-usd',
+                    'url'  => 'antrian/pembayaran',
+                    'shift'   => 'ml-2',
+                    'can' => 'kasir',
+                ],
+            ],
+        ],
+        // POLIKLINIK
         [
             'text'    => 'Aplikasi Poliklinik',
             'icon'    => 'fas fa-clinic-medical',
@@ -439,7 +419,22 @@ return [
                 ],
             ],
         ],
-        // APLIKASI SIMRS
+        // KASIR
+        [
+            'text'    => 'Aplikasi Farmasi',
+            'icon'    => 'fas fa-prescription-bottle-alt',
+            'can' => 'farmasi',
+            'submenu' => [
+                [
+                    'text' => 'Antrian Obat',
+                    'icon'    => 'fas fa-pills',
+                    'url'  => 'antrian/farmasi',
+                    'shift'   => 'ml-2',
+                    'can' => 'farmasi',
+                ],
+            ],
+        ],
+        // SIMRS
         [
             'text' => 'Aplikasi SIMRS',
             'icon'    => 'fas fa-hospital-alt',
@@ -636,12 +631,16 @@ return [
 
             ],
         ],
+        // KEPEGAWAIAN
         [
-            'text'    => 'Aplikasi Kepegawaian (Cooming Soon)',
+            'text'    => 'Aplikasi Kepegawaian',
             'icon'    => 'fas fa-user-tie',
             'can' => ['admin'],
+            'label' => 'onbuild',
+            'label_color' => 'danger',
             'submenu' => []
         ],
+        // BUKU TAMU
         [
             'text'    => 'Aplikasi Buku Tamu',
             'icon'    => 'fas fa-user-tie',

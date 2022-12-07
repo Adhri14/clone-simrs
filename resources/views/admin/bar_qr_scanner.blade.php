@@ -11,8 +11,7 @@
                 @php
                     $generatorPNG = new Picqer\Barcode\BarcodeGeneratorPNG();
                 @endphp
-                <img
-                    src="data:image/png; base64, {{ base64_encode($generatorPNG->getBarcode($request->barcode, $generatorPNG::TYPE_CODE_128, 3, 100)) }}">
+                <img src="{{ asset('storage/barcode_test.png') }}" alt="">
                 <br>
                 Package :
                 <a href="https://github.com/picqer/php-barcode-generator"
