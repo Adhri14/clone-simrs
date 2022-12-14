@@ -36,8 +36,8 @@ use App\Http\Controllers\SIMRS\KunjunganController as SIMRSKunjunganController;
 use App\Http\Controllers\SIMRS\PasienController as SIMRSPasienController;
 use App\Http\Controllers\SIMRS\SimrsController;
 use App\Http\Controllers\SIMRS\SuratKontrolController;
+use App\Http\Controllers\SIMRS\TarifLayananController;
 use App\Http\Controllers\TarifKelompokLayananController;
-use App\Http\Controllers\TarifLayananController;
 use App\Http\Controllers\VclaimController;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
@@ -149,7 +149,6 @@ Route::get('index_dokter', [IndexController::class, 'index_dokter'])->name('inde
 
 Route::resource('tindakan', PasienController::class)->middleware('permission:rekam-medis');
 Route::resource('tarif_kelompok_layanan', TarifKelompokLayananController::class);
-Route::resource('tarif_layanan', TarifLayananController::class);
 Route::resource('icd10', Icd10Controller::class);
 Route::resource('efilerm', FileRMController::class);
 Route::resource('kpo', KPOController::class);
@@ -190,7 +189,7 @@ Route::middleware('auth')->group(function () {
         Route::get('user_verifikasi/{user}', [UserController::class, 'user_verifikasi'])->name('user_verifikasi');
         Route::get('delet_verifikasi', [UserController::class, 'delet_verifikasi'])->name('delet_verifikasi');
     });
-    // poliklinik
+    // pendaftaran
     Route::middleware('permission:pendaftaran')->prefix('pendaftaran')->name('pendaftaran.')->group(function () {
         Route::get('antrian_pendaftaran', [SIMRSAntrianController::class, 'antrian_pendaftaran'])->name('antrian_pendaftaran');
     });
@@ -208,6 +207,10 @@ Route::middleware('auth')->group(function () {
         Route::get('laporan_antrian_poliklinik', [SIMRSAntrianController::class, 'laporan_antrian_poliklinik'])->name('laporan_antrian_poliklinik');
         Route::get('dashboard_antrian_tanggal', [SIMRSAntrianController::class, 'dashboard_antrian_tanggal'])->name('dashboard_antrian_tanggal');
         Route::get('dashboard_antrian_bulan', [SIMRSAntrianController::class, 'dashboard_antrian_bulan'])->name('dashboard_antrian_bulan');
+    });
+    // yanmed
+    Route::middleware('permission:pelayanan-medis')->prefix('pelayananmedis')->name('pelayanan-medis.')->group(function () {
+        Route::resource('tarif_layanan', TarifLayananController::class)->only(['index']);
     });
     // simrs
     Route::prefix('simrs')->name('simrs.')->group(function () {
