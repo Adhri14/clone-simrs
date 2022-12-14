@@ -5,11 +5,15 @@ namespace App\Http\Controllers\SIMRS;
 use App\Http\Controllers\Controller;
 use App\Models\TarifLayananDB;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 
 class TarifLayananController extends Controller
 {
     public function index()
     {
+      $response = Http::get('http://sim.rsudwaled.id/simrs/api/penunjang/get_tarif_laboratorium');
+      dd($response->jsons());
+
         $tariflayanans = TarifLayananDB::with(['tarifdeails'])->paginate();
         return view('simrs.pelyananmedis.tarif_layanan_index', [
             'tariflayanans' => $tariflayanans,
