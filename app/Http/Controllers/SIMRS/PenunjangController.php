@@ -5,13 +5,14 @@ namespace App\Http\Controllers\SIMRS;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 class PenunjangController extends Controller
 {
     public function get_tarif_laboratorium(Request $request)
     {
         $query = DB::connection('mysql2')->select("CALL sp_panggil_tarif_laboratorium('3','')");
-        return response()->json($query);
+        return response($query);
     }
     public function insert_layanan(Request $request)
     {
@@ -43,7 +44,7 @@ class PenunjangController extends Controller
         if ($validator->fails()) {
             return response()->json('OK', 400);
         }
-        return response()->json('OK');
+        return response()->json('OK',200);
     }
     public function print_nota(Request $request)
     {
