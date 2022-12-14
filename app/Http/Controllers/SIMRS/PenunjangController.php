@@ -2,17 +2,53 @@
 
 namespace App\Http\Controllers\SIMRS;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\API\ApiController;
+use App\Models\PasienDB;
+use App\Models\SIMRS\OrderLayananDB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
-class PenunjangController extends Controller
+class PenunjangController extends ApiController
 {
     public function get_tarif_laboratorium(Request $request)
     {
-        $query = DB::connection('mysql2')->select("CALL sp_panggil_tarif_laboratorium('3','')");
-        return response($query);
+        $validator = Validator::make(request()->all(), [
+            "kelas" => "required",
+        ]);
+        if ($validator->fails()) {
+            return $this->sendError($validator->errors()->first(), null, 400);
+        }
+        if ($request->nama == null) {
+            $sql = "CALL sp_panggil_tarif_laboratorium(" . $request->kelas . ",'')";
+        } else {
+            $sql = "CALL sp_panggil_tarif_laboratorium(" . $request->kelas . ",'" . $request->nama . "')";
+        }
+        $query = DB::connection('mysql2')->select($sql);
+        return $this->sendResponse('OK', $query);
+    }
+    public function cari_pasien(Request $request)
+    {
+        if ($request->norm) {
+            $pasien = PasienDB::where('no_rm', $request->norm)->first();
+            if ($pasien == null) {
+                return $this->sendError('No RM tidak ditemukan', null, 404);
+            }
+        } else if ($request->nama) {
+            $pasien = PasienDB::where('nama_px', 'LIKE', '%' . $request->nama . '%')
+                ->get();
+            if ($pasien == null) {
+                return $this->sendError("Nama Pasien " . $request->nama . " Tidak Ditemukan.", null, 404);
+            }
+        } else {
+            return $this->sendError("Silahkan cari berdasarkan Nama atau No RM", null, 400);
+        }
+        return $this->sendResponse('OK', $pasien);
+    }
+    public function get_order_layanan(Request $request)
+    {
+        $data = OrderLayananDB::get();
+        return $this->sendResponse('OK', $data);
     }
     public function insert_layanan(Request $request)
     {
