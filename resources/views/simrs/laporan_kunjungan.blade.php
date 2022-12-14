@@ -3,7 +3,7 @@
 @section('title', 'Laporan Antrian - Aplikasi Pendaftaran')
 
 @section('content_header')
-    <h1>Laporan Antrian - Aplikasi Pendaftaran</h1>
+    <h1>Laporan Antrian - Aplikasi Pendaftarans</h1>
 @stop
 
 @section('content')
@@ -19,7 +19,7 @@
                                 ];
                             @endphp
                             <x-adminlte-date-range name="tanggal" label="Periode Tanggal Antrian"
-                                enable-default-ranges="Today" :config="$config">
+                                 value="{{ $request->tanggal }}" :config="$config">
                                 <x-slot name="prependSlot">
                                     <div class="input-group-text bg-primary">
                                         <i class="fas fa-calendar-alt"></i>
