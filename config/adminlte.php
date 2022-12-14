@@ -419,7 +419,7 @@ return [
                 ],
             ],
         ],
-        // KASIR
+        // FARMASI
         [
             'text'    => 'Aplikasi Farmasi',
             'icon'    => 'fas fa-prescription-bottle-alt',
@@ -431,6 +431,22 @@ return [
                     'url'  => 'antrian/farmasi',
                     'shift'   => 'ml-2',
                     'can' => 'farmasi',
+                ],
+            ],
+        ],
+        // YANMED
+        [
+            'text'    => 'Pelayanan Medis',
+            'icon'    => 'fas fa-briefcase-medical',
+            'can' => 'pelayanan-medis',
+            'submenu' => [
+                [
+                    'text' => 'Tarif Layanan',
+                    'icon'    => 'fas fa-hand-holding-medical',
+                    'url'  => 'pelayananmedis/tarif_layanan',
+                    'shift'   => 'ml-2',
+                    'can' => 'pelayanan-medis',
+
                 ],
             ],
         ],

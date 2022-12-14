@@ -1,23 +1,17 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\SIMRS;
 
-use App\Models\TarifLayanan;
-use App\Http\Requests\StoreTarifLayananRequest;
-use App\Http\Requests\UpdateTarifLayananRequest;
+use App\Http\Controllers\Controller;
 use App\Models\TarifLayananDB;
-use App\Models\TarifLayananDetail;
-use App\Models\TarifLayananDetailDB;
-use RealRashid\SweetAlert\Facades\Alert;
+use Illuminate\Http\Request;
 
 class TarifLayananController extends Controller
 {
     public function index()
     {
         $tariflayanans = TarifLayananDB::with(['tarifdeails'])->paginate();
-        // dd($tariflayanans);
-        // $tarifdetails = TarifLayananDetailDB::get();
-        return view('simrs.tarif_layanan_index', [
+        return view('simrs.pelyananmedis.tarif_layanan_index', [
             'tariflayanans' => $tariflayanans,
         ]);
     }
@@ -52,30 +46,5 @@ class TarifLayananController extends Controller
         }
         Alert::success('Berhasil', 'Data Tarif Kelompok Layanan Berhasil Diimport');
         return redirect()->route('tarif_layanan.index');
-    }
-
-    public function store(StoreTarifLayananRequest $request)
-    {
-        //
-    }
-
-    public function show(TarifLayanan $tarifLayanan)
-    {
-        //
-    }
-
-    public function edit(TarifLayanan $tarifLayanan)
-    {
-        //
-    }
-
-    public function update(UpdateTarifLayananRequest $request, TarifLayanan $tarifLayanan)
-    {
-        //
-    }
-
-    public function destroy(TarifLayanan $tarifLayanan)
-    {
-        //
     }
 }
