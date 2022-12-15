@@ -52,9 +52,6 @@ class SuratKontrolController extends Controller
             $request['message'] = "*Surat Kontrol Rawat Jalan*\nTelah berhasil pembuatan surat kontrol atas pasien sebagai berikut.\n\nNama : " . $suratkontrol->nama . "\nNo Surat Kontrol : " . $suratkontrol->noSuratKontrol . "\nTanggal Kontrol : " . $suratkontrol->tglRencanaKontrol . "\nPoliklinik : " . $poli->namasubspesialis . "\n\nUntuk surat kontrol online dapat diakses melalui link berikut.\nsim.rsudwaled.id/simrs/bpjs/vclaim/surat_kontrol_print/" . $suratkontrol->noSuratKontrol;
             $request['number'] = $peserta->mr->noTelepon;
             $wa->send_message($request);
-
-            $request['notif'] = "*Surat Kontrol Rawat Jalan*\nTelah berhasil pembuatan surat kontrol atas pasien sebagai berikut.\n\nNama : " . $suratkontrol->nama . "\nNo Surat Kontrol : " . $suratkontrol->noSuratKontrol . "\nTanggal Kontrol : " . $suratkontrol->tglRencanaKontrol . "\nPoliklinik : " . $poli->namasubspesialis . "\n\nUntuk surat kontrol online dapat diakses melalui link berikut.\nsim.rsudwaled.id/simrs/bpjs/vclaim/surat_kontrol_print/" . $suratkontrol->noSuratKontrol;
-            $wa->send_notif($request);
         }
         return $response;
     }
