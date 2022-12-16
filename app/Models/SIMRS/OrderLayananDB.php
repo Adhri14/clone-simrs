@@ -2,6 +2,7 @@
 
 namespace App\Models\SIMRS;
 
+use App\Models\LayananDB;
 use App\Models\ParamedisDB;
 use App\Models\PasienDB;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -13,17 +14,30 @@ class OrderLayananDB extends Model
 
     protected $connection = 'mysql2';
     protected $table = 'ts_layanan_header_order';
-    protected $primaryKey = 'idx';
 
-    protected $appends = ['nama_dokter_pic'];
-    // public function getNamaPasienAttribute()
-    // {
-    //     $pasien = PasienDB::firstWhere('no_rm', $this->no_rm)->nama_px;
-    //     return $pasien;
-    // }
+    protected $appends = ['nama_pasien', 'nama_dokter_pic', 'nama_layanan'];
+
+    public function getNamaPasienAttribute()
+    {
+        if (isset($this->no_rm)) {
+            $pasien = PasienDB::firstWhere('no_rm', $this->no_rm)->nama_px;
+        } else {
+            $pasien = '';
+        }
+        return $pasien;
+    }
     public function getNamaDokterPicAttribute()
     {
-        $pasien = ParamedisDB::firstWhere('kode_paramedis', $this->pic)->nama_paramedis;
-        return $pasien;
+        if (isset($this->pic)) {
+            $dokter = ParamedisDB::firstWhere('kode_paramedis', $this->pic)->nama_paramedis;
+        } else {
+            $dokter = '';
+        }
+        return $dokter;
+    }
+    public function getNamaLayananAttribute()
+    {
+        $layanandetail = OrderLayananDetailDB::where('kode_layanan_header', $this->kode_layanan_header)->first()->kode_tarif_detail;
+        return $layanandetail;
     }
 }
