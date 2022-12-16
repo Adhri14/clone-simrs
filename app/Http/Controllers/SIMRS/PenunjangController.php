@@ -51,8 +51,7 @@ class PenunjangController extends ApiController
         if ($request->nama) {
             $dokters = ParamedisDB::where('nama_paramedis', 'LIKE', "%" . $request->nama . "%")->get();
         } else {
-            $dokters = ParamedisDB::get();
-            return $this->sendError("Silahkan cari berdasarkan Nama atau No RM", null, 400);
+            $dokters = ParamedisDB::where('act', 1)->get();
         }
         return $this->sendResponse('OK', $dokters);
     }
