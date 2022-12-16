@@ -236,6 +236,7 @@ Route::prefix('bpjs')->name('api.bpjs.')->group(function () {
 // PENUNJANG
 Route::prefix('penunjang')->name('api.penunjang.')->group(function () {
     Route::get('cari_pasien', [PenunjangController::class, 'cari_pasien'])->name('cari_pasien');
+    Route::get('cari_dokter', [PenunjangController::class, 'cari_dokter'])->name('cari_dokter');
     Route::get('get_tarif_laboratorium', [PenunjangController::class, 'get_tarif_laboratorium'])->name('get_tarif_laboratorium');
     Route::get('get_order_layanan', [PenunjangController::class, 'get_order_layanan'])->name('get_order_layanan');
     Route::post('insert_layanan', [PenunjangController::class, 'insert_layanan'])->name('insert_layanan');

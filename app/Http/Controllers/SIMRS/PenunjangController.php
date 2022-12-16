@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\SIMRS;
 
 use App\Http\Controllers\API\ApiController;
+use App\Models\ParamedisDB;
 use App\Models\PasienDB;
 use App\Models\SIMRS\OrderLayananDB;
 use Illuminate\Http\Request;
@@ -45,6 +46,16 @@ class PenunjangController extends ApiController
         }
         return $this->sendResponse('OK', $pasien);
     }
+    public function cari_dokter(Request $request)
+    {
+        if ($request->nama) {
+            $dokters = ParamedisDB::where('nama_paramedis', 'LIKE', "%" . $request->nama . "%")->get();
+        } else {
+            $dokters = ParamedisDB::get();
+            return $this->sendError("Silahkan cari berdasarkan Nama atau No RM", null, 400);
+        }
+        return $this->sendResponse('OK', $dokters);
+    }
     public function get_order_layanan(Request $request)
     {
         $data = OrderLayananDB::get();
@@ -54,33 +65,12 @@ class PenunjangController extends ApiController
     {
         $validator = Validator::make(request()->all(), [
             "kodebooking" => "required",
-            "nomorkartu" =>  "required|digits:13|numeric",
-            "nik" =>  "required|digits:16|numeric",
-            "nohp" => "required|numeric",
-            "kodepoli" =>  "required",
-            "norm" =>  "required",
-            "pasienbaru" =>  "required",
-            "tanggalperiksa" =>  "required|date|date_format:Y-m-d",
-            "kodedokter" =>  "required",
-            "jampraktek" =>  "required",
-            "jeniskunjungan" => "required",
-            "jenispasien" =>  "required",
-            "namapoli" =>  "required",
-            "namadokter" =>  "required",
-            "nomorantrean" =>  "required",
-            "angkaantrean" =>  "required",
-            "estimasidilayani" =>  "required",
-            "sisakuotajkn" =>  "required",
-            "kuotajkn" => "required",
-            "sisakuotanonjkn" => "required",
-            "kuotanonjkn" => "required",
-            "keterangan" =>  "required",
-            "nama" =>  "required",
+
         ]);
         if ($validator->fails()) {
-            return response()->json('OK', 400);
+            return $this->sendError($validator->errors()->first(), null, 400);
         }
-        return response()->json('OK',200);
+        return response()->json('OK', 200);
     }
     public function print_nota(Request $request)
     {
