@@ -49,7 +49,7 @@ class PenunjangController extends ApiController
     public function cari_dokter(Request $request)
     {
         if ($request->nama) {
-            $dokters = ParamedisDB::where('nama_paramedis', 'LIKE', "%" . $request->nama . "%")->get();
+            $dokters = ParamedisDB::where('act', 1)->where('nama_paramedis', 'LIKE', "%" . $request->nama . "%")->get();
         } else {
             $dokters = ParamedisDB::where('act', 1)->get();
         }
