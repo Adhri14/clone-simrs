@@ -34,4 +34,8 @@ class PasienDB extends Model
     {
         return $this->hasOne(Kecamatan::class, 'kode_kecamatan', 'kecamatan');
     }
+    public function kabupaten()
+    {
+        return $this->hasOne(Kecamatan::class, 'kode_kecamatan', 'kecamatan');
+    }
 }

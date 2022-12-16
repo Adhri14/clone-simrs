@@ -80,6 +80,11 @@ class PenunjangController extends ApiController
         }
         return response()->json('OK', 200);
     }
+    public function get_ris_order(Request $request)
+    {
+        // $query = DB::connection('mysql2')->select("CALL RIS_order_save('','','')");
+        return $this->sendResponse('OK', 'query');
+    }
     public function print_nota(Request $request)
     {
         // buat kode transaksi

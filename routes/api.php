@@ -14,6 +14,7 @@ use App\Http\Controllers\SatuSehat\PatientController;
 use App\Http\Controllers\SatuSehat\PractitionerController;
 use App\Http\Controllers\SIMRS\ICD10Controller;
 use App\Http\Controllers\SIMRS\PenunjangController;
+use App\Http\Controllers\SIMRS\RISController;
 use App\Http\Controllers\VclaimController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -240,5 +241,12 @@ Route::prefix('penunjang')->name('api.penunjang.')->group(function () {
     Route::get('get_tarif_laboratorium', [PenunjangController::class, 'get_tarif_laboratorium'])->name('get_tarif_laboratorium');
     Route::get('get_order_layanan', [PenunjangController::class, 'get_order_layanan'])->name('get_order_layanan');
     Route::get('get_kunjungan_pasien', [PenunjangController::class, 'get_kunjungan_pasien'])->name('get_kunjungan_pasien');
+    Route::get('get_ris_order', [PenunjangController::class, 'get_ris_order'])->name('get_ris_order');
     Route::post('insert_layanan', [PenunjangController::class, 'insert_layanan'])->name('insert_layanan');
+});
+
+// RIS
+Route::prefix('ris')->name('api.ris.')->group(function () {
+    Route::get('pasien_get', [RISController::class, 'pasien_get'])->name('pasien_get');
+    Route::post('pasien_add', [RISController::class, 'pasien_add'])->name('pasien_add');
 });
