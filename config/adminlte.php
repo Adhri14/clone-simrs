@@ -368,8 +368,6 @@ return [
                     'url'  => 'poliklinik/antrian',
                     'shift'   => 'ml-2',
                     'can' => 'poliklinik',
-                    'label' => 'perbaikan',
-                    'label_color' => 'warning',
                 ],
                 [
                     'text' => 'Surat Kontrol Poliklinik',
@@ -377,8 +375,6 @@ return [
                     'url'  => 'poliklinik/suratkontrol_poliklinik',
                     'shift'   => 'ml-2',
                     'can' => 'poliklinik',
-                    'label' => 'perbaikan',
-                    'label_color' => 'warning',
                 ],
                 [
                     'text' => 'Jadwal Dokter Poliklinik',
