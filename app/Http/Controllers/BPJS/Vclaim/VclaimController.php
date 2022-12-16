@@ -833,7 +833,7 @@ class VclaimController extends ApiBPJSController
             "request" => [
                 "t_sep" => [
                     "noSep" => $request->noSep,
-                    "user" => Auth::user()->name,
+                    "user" => 'RSUD Waled',
                 ]
             ]
         ];

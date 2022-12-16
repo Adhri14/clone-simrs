@@ -8,6 +8,7 @@ use App\Models\PasienDB;
 use App\Models\PenjaminSimrs;
 use App\Models\TarifLayanan;
 use App\Models\TarifLayananDB;
+use App\Models\UnitDB;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -18,7 +19,7 @@ class OrderLayananDB extends Model
     protected $connection = 'mysql2';
     protected $table = 'ts_layanan_header_order';
 
-    protected $appends = ['nama_pasien', 'nama_dokter_pic', 'nama_layanan', 'nama_penjamin'];
+    protected $appends = ['nama_pasien', 'nama_unit_pengirim', 'nama_dokter_pic', 'nama_layanan', 'nama_penjamin', 'diskon_dokter', 'cyto',];
 
     public function getNamaPasienAttribute()
     {
@@ -52,5 +53,20 @@ class OrderLayananDB extends Model
             $penjamin = '';
         }
         return $penjamin;
+    }
+    public function getNamaUnitPengirimAttribute()
+    {
+        $unit = UnitDB::where('kode_unit', $this->unit_pengirim)->first()->nama_unit;
+        return $unit ?? null;
+    }
+    public function getDiskonDokterAttribute()
+    {
+        $diskon = OrderLayananDetailDB::where('kode_layanan_header', $this->kode_layanan_header)->first()->diskon_dokter;
+        return $diskon ?? null;
+    }
+    public function getCytoAttribute()
+    {
+        $cyto = OrderLayananDetailDB::where('kode_layanan_header', $this->kode_layanan_header)->first()->cyto;
+        return $cyto ?? null;
     }
 }
