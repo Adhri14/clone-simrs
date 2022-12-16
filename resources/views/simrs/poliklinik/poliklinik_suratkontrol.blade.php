@@ -54,7 +54,7 @@
                 <x-adminlte-card title="Kunjungan Poliklinik ({{ $kunjungans->count() }} Orang)" theme="primary"
                     icon="fas fa-info-circle" collapsible>
                     @php
-                        $heads = ['Tgl Kunjungan', 'Pasien', 'Action', 'SEP / Ref', 'Poliklinik'];
+                        $heads = ['Tgl Kunjungan', 'Pasien', 'Action', 'SEP / Ref', 'Poliklinik', 'NIK / Tgl Lahir'];
                         $config['paging'] = false;
                         $config['info'] = false;
                         $config['scrollY'] = '400px';
@@ -83,6 +83,11 @@
                                     Ref : {{ $item->no_rujukan }}
                                 </td>
                                 <td>{{ $item->unit->nama_unit }}<br>{{ $item->dokter->nama_paramedis }}</td>
+                                <td>
+                                    {{ $item->pasien->nik_bpjs }}
+                                    <br>
+                                    {{ \Carbon\Carbon::parse($item->pasien->tgl_lahir)->format('Y-m-d') }}
+                                </td>
                             </tr>
                         @endforeach
                     </x-adminlte-datatable>
@@ -102,8 +107,8 @@
                         $config['scrollX'] = true;
                         $config['scrollCollapse'] = true;
                     @endphp
-                    <x-adminlte-datatable id="table1" class="nowrap text-xs" :heads="$heads" :config="$config" striped bordered
-                        hoverable compressed>
+                    <x-adminlte-datatable id="table1" class="nowrap text-xs" :heads="$heads" :config="$config" striped
+                        bordered hoverable compressed>
                         @foreach ($surat_kontrols as $item)
                             <tr>
                                 <td>{{ $item->tglTerbitKontrol }}</td>
