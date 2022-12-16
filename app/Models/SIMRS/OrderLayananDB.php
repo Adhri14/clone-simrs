@@ -5,6 +5,9 @@ namespace App\Models\SIMRS;
 use App\Models\LayananDB;
 use App\Models\ParamedisDB;
 use App\Models\PasienDB;
+use App\Models\PenjaminSimrs;
+use App\Models\TarifLayanan;
+use App\Models\TarifLayananDB;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -15,7 +18,7 @@ class OrderLayananDB extends Model
     protected $connection = 'mysql2';
     protected $table = 'ts_layanan_header_order';
 
-    protected $appends = ['nama_pasien', 'nama_dokter_pic', 'nama_layanan'];
+    protected $appends = ['nama_pasien', 'nama_dokter_pic', 'nama_layanan', 'nama_penjamin'];
 
     public function getNamaPasienAttribute()
     {
@@ -38,6 +41,16 @@ class OrderLayananDB extends Model
     public function getNamaLayananAttribute()
     {
         $layanandetail = OrderLayananDetailDB::where('kode_layanan_header', $this->kode_layanan_header)->first()->kode_tarif_detail;
-        return $layanandetail;
+        $layanan = TarifLayananDB::firstWhere('KODE_TARIF_HEADER', substr($layanandetail, 0, -1));
+        return $layanan->NAMA_TARIF ?? null;
+    }
+    public function getNamaPenjaminAttribute()
+    {
+        if (isset($this->pic)) {
+            $penjamin = PenjaminSimrs::firstWhere('kode_penjamin', $this->kode_penjaminx)->nama_penjamin;
+        } else {
+            $penjamin = '';
+        }
+        return $penjamin;
     }
 }
