@@ -58,10 +58,6 @@ class KunjunganDB extends Model
     {
         return $this->hasOne(DiagnosaPoli::class, 'kode_kunjungan', 'kode_kunjungan');
     }
-    // public function layanans()
-    // {
-    //     return $this->hasMany(LayananHeaderDB::class, 'kode_kunjungan', 'kode_kunjungan');
-    // }
     public function dokter()
     {
         return $this->belongsTo(ParamedisDB::class, 'kode_paramedis', 'kode_paramedis');
@@ -69,5 +65,25 @@ class KunjunganDB extends Model
     public function surat_kontrol()
     {
         return $this->hasOne(SuratKontrol::class, 'noSepAsalKontrol', 'no_sep');
+    }
+
+    protected $appends = ['nama_pasien','nama_penjamin',];
+    public function getNamaPasienAttribute()
+    {
+        if (isset($this->no_rm)) {
+            $pasien = PasienDB::firstWhere('no_rm', $this->no_rm)->nama_px;
+        } else {
+            $pasien = '';
+        }
+        return $pasien;
+    }
+    public function getNamaPenjaminAttribute()
+    {
+        if (isset($this->kode_penjamin)) {
+            $penjamin = PenjaminSimrs::firstWhere('kode_penjamin', $this->kode_penjamin)->nama_penjamin;
+        } else {
+            $penjamin = '';
+        }
+        return $penjamin;
     }
 }

@@ -47,7 +47,7 @@ class OrderLayananDB extends Model
     }
     public function getNamaPenjaminAttribute()
     {
-        if (isset($this->pic)) {
+        if (isset($this->kode_penjaminx)) {
             $penjamin = PenjaminSimrs::firstWhere('kode_penjamin', $this->kode_penjaminx)->nama_penjamin;
         } else {
             $penjamin = '';
