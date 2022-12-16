@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\SIMRS;
 
 use App\Http\Controllers\API\ApiController;
+use App\Models\KunjunganDB;
 use App\Models\ParamedisDB;
 use App\Models\PasienDB;
 use App\Models\SIMRS\OrderLayananDB;
@@ -54,6 +55,14 @@ class PenunjangController extends ApiController
             $dokters = ParamedisDB::where('act', 1)->get();
         }
         return $this->sendResponse('OK', $dokters);
+    }
+    public function get_kunjungan_pasien(Request $request)
+    {
+        $request['tanggal'] = '2022-12-16';
+        $kunjungan = KunjunganDB::whereDate('tgl_masuk', $request->tanggal)
+            ->whereIn('kode_unit',  ['3002', '3003'])
+            ->get();
+        return $this->sendResponse('OK', $kunjungan);
     }
     public function get_order_layanan(Request $request)
     {

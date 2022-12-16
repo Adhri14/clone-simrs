@@ -12,24 +12,18 @@ class OrderLayananDB extends Model
     use HasFactory;
 
     protected $connection = 'mysql2';
-    protected $table = 'erm_order_header';
+    protected $table = 'ts_layanan_header_order';
     protected $primaryKey = 'idx';
 
-    protected $appends = ['nama_pasien', 'nama_dokter_pic', 'nama_dokter_pengirim'];
-
-    public function getNamaPasienAttribute()
-    {
-        $pasien = PasienDB::firstWhere('no_rm', $this->no_rm)->nama_px;
-        return $pasien;
-    }
+    protected $appends = ['nama_dokter_pic'];
+    // public function getNamaPasienAttribute()
+    // {
+    //     $pasien = PasienDB::firstWhere('no_rm', $this->no_rm)->nama_px;
+    //     return $pasien;
+    // }
     public function getNamaDokterPicAttribute()
     {
-        $pasien = ParamedisDB::firstWhere('kode_paramedis', $this->pic1)->nama_paramedis;
-        return $pasien;
-    }
-    public function getNamaDokterPengirimAttribute()
-    {
-        $pasien = ParamedisDB::firstWhere('kode_paramedis', $this->Dokter_pengirim)->nama_paramedis;
+        $pasien = ParamedisDB::firstWhere('kode_paramedis', $this->pic)->nama_paramedis;
         return $pasien;
     }
 }
