@@ -5,6 +5,11 @@ namespace App\Http\Controllers\SIMRS;
 use App\Http\Controllers\API\ApiController;
 use App\Http\Controllers\Controller;
 use App\Models\PasienDB;
+use App\Models\RIS\AsuransiRIS;
+use App\Models\RIS\JenisPemeriksaanRIS;
+use App\Models\RIS\OrderRIS;
+use App\Models\RIS\RuanganRIS;
+use App\Models\SIMRS\DokterRISDB;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
@@ -26,7 +31,7 @@ class RISController extends ApiController
             $data['kota'] = $pasien->kabupaten;
             $data['alamat'] = "KEC. " . $pasien->kecamatans->nama_kecamatan . ' ' . $pasien->alamat;
         } else {
-            $data = PasienDB::where('Kirim_ris_pasien', 1)->get(['no_urut', 'nama_px', 'no_rm', 'jenis_kelamin', 'tgl_lahir', 'kabupaten', 'alamat']);
+            $data = PasienDB::where('Kirim_ris_pasien', 1)->limit(100)->get(['no_urut', 'nama_px', 'no_rm', 'jenis_kelamin', 'tgl_lahir', 'kabupaten', 'alamat']);
         }
         return $this->sendResponse('OK', $data);
     }
@@ -66,5 +71,40 @@ class RISController extends ApiController
         } else {
             return $this->sendError($response->reason(), null, $response->status());
         }
+    }
+    public function dokter_get(Request $request)
+    {
+        if (isset($request->id)) {
+            $dokter = DokterRISDB::firstWhere('id', $request->id);
+            $data['id'] = $dokter->id;
+            $data['nama'] = $dokter->nama;
+            $data['jk'] = $dokter->jk;
+            $data['tgl_lahir'] = Carbon::parse($dokter->tgl_lahir)->format('Y-m-d');
+            $data['kota'] = $dokter->kota;
+            $data['alamat'] = $dokter->alamat;
+        } else {
+            $data = DokterRISDB::get();
+        }
+        return $this->sendResponse('OK', $data);
+    }
+    public function asuransi_get(Request $request)
+    {
+        $data = AsuransiRIS::get(['id', 'asuransi', 'kode_penjamin', 'status']);
+        return $this->sendResponse('OK', $data);
+    }
+    public function jenispemeriksaan_get(Request $request)
+    {
+        $data = JenisPemeriksaanRIS::get();
+        return $this->sendResponse('OK', $data);
+    }
+    public function ruangan_get(Request $request)
+    {
+        $data = RuanganRIS::get(['id', 'poli', 'ruangan', 'kode_unit', 'kelas', 'id_kelas']);
+        return $this->sendResponse('OK', $data);
+    }
+    public function order_get(Request $request)
+    {
+        $data = OrderRIS::limit(100)->get();
+        return $this->sendResponse('OK', $data);
     }
 }

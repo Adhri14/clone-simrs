@@ -208,7 +208,6 @@ Route::prefix('satusehat')->name('api.satusehat.')->group(function () {
     Route::get('encounter/', [EncounterController::class, 'index'])->name('encounter_index');
     Route::post('encounter/store', [EncounterController::class, 'encounter_store_api'])->name('encounter_store_api');
 });
-
 Route::prefix('bpjs')->name('api.bpjs.')->group(function () {
     // ANTRIAN
     Route::prefix('antrian')->name('antrian.')->group(function () {
@@ -233,7 +232,6 @@ Route::prefix('bpjs')->name('api.bpjs.')->group(function () {
         Route::post('jadwal_operasi_pasien', [AntrianAntrianController::class, 'jadwal_operasi_pasien'])->name('jadwal_operasi_pasien');
     });
 });
-
 // PENUNJANG
 Route::prefix('penunjang')->name('api.penunjang.')->group(function () {
     Route::get('cari_pasien', [PenunjangController::class, 'cari_pasien'])->name('cari_pasien');
@@ -244,9 +242,14 @@ Route::prefix('penunjang')->name('api.penunjang.')->group(function () {
     Route::get('get_ris_order', [PenunjangController::class, 'get_ris_order'])->name('get_ris_order');
     Route::post('insert_layanan', [PenunjangController::class, 'insert_layanan'])->name('insert_layanan');
 });
-
 // RIS
 Route::prefix('ris')->name('api.ris.')->group(function () {
     Route::get('pasien_get', [RISController::class, 'pasien_get'])->name('pasien_get');
     Route::post('pasien_add', [RISController::class, 'pasien_add'])->name('pasien_add');
+    Route::get('dokter_get', [RISController::class, 'dokter_get'])->name('dokter_get');
+    Route::get('asuransi_get', [RISController::class, 'asuransi_get'])->name('asuransi_get');
+    Route::get('jenispemeriksaan_get', [RISController::class, 'jenispemeriksaan_get'])->name('jenispemeriksaan_get');
+    Route::get('ruangan_get', [RISController::class, 'ruangan_get'])->name('ruangan_get');
+    Route::get('order_get', [RISController::class, 'order_get'])->name('order_get');
+
 });
