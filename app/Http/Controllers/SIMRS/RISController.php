@@ -37,7 +37,7 @@ class RISController extends ApiController
             if ($validator->fails()) {
                 return $this->sendError($validator->errors()->first(), null, 201);
             }
-            $pasien = PasienDB::firstWhere('no_rm', $request->norm);
+            $pasien = PasienDB::firstWhere('no_rm', 'LIKE', '%' . $request->norm . '%');
             if (isset($pasien)) {
                 $data['id'] = $pasien->no_urut;
                 $data['nama'] = $pasien->nama_px;
