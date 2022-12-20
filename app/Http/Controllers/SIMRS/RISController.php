@@ -30,6 +30,15 @@ class RISController extends ApiController
             $data['tgl_lahir'] = Carbon::parse($pasien->tgl_lahir)->format('Y-m-d');
             $data['kota'] = $pasien->kabupaten;
             $data['alamat'] = "KEC. " . $pasien->kecamatans->nama_kecamatan . ' ' . $pasien->alamat;
+        } else if ($request->norm) {
+            $pasien = PasienDB::firstWhere('no_rm', $request->norm);
+            $data['id'] = $pasien->no_urut;
+            $data['nama'] = $pasien->nama_px;
+            $data['norm'] = $pasien->no_rm;
+            $data['jk'] = $pasien->jenis_kelamin;
+            $data['tgl_lahir'] = Carbon::parse($pasien->tgl_lahir)->format('Y-m-d');
+            $data['kota'] = $pasien->kabupaten;
+            $data['alamat'] = "KEC. " . $pasien->kecamatans->nama_kecamatan . ' ' . $pasien->alamat;
         } else {
             $data = PasienDB::where('Kirim_ris_pasien', 1)->limit(100)->get(['no_urut', 'nama_px', 'no_rm', 'jenis_kelamin', 'tgl_lahir', 'kabupaten', 'alamat']);
         }
