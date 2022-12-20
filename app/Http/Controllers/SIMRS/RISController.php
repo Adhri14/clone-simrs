@@ -31,14 +31,25 @@ class RISController extends ApiController
             $data['kota'] = $pasien->kabupaten;
             $data['alamat'] = "KEC. " . $pasien->kecamatans->nama_kecamatan . ' ' . $pasien->alamat;
         } else if ($request->norm) {
+            $validator = Validator::make(request()->all(), [
+                "norm" =>  "required",
+            ]);
+            if ($validator->fails()) {
+                return $this->sendError($validator->errors()->first(), null, 201);
+            }
             $pasien = PasienDB::firstWhere('no_rm', $request->norm);
-            $data['id'] = $pasien->no_urut;
-            $data['nama'] = $pasien->nama_px;
-            $data['norm'] = $pasien->no_rm;
-            $data['jk'] = $pasien->jenis_kelamin;
-            $data['tgl_lahir'] = Carbon::parse($pasien->tgl_lahir)->format('Y-m-d');
-            $data['kota'] = $pasien->kabupaten;
-            $data['alamat'] = "KEC. " . $pasien->kecamatans->nama_kecamatan . ' ' . $pasien->alamat;
+            if (isset($pasien)) {
+                $data['id'] = $pasien->no_urut;
+                $data['nama'] = $pasien->nama_px;
+                $data['norm'] = $pasien->no_rm;
+                $data['jk'] = $pasien->jenis_kelamin;
+                $data['tgl_lahir'] = Carbon::parse($pasien->tgl_lahir)->format('Y-m-d');
+                $data['kota'] = $pasien->kabupaten;
+                $data['alamat'] = "KEC. " . $pasien->kecamatans->nama_kecamatan . ' ' . $pasien->alamat;
+            } else {
+                $data = null;
+                return $this->sendError('Data Tidak ditemukan', $data, 404);
+            }
         } else {
             $data = PasienDB::where('Kirim_ris_pasien', 1)->limit(100)->get(['no_urut', 'nama_px', 'no_rm', 'jenis_kelamin', 'tgl_lahir', 'kabupaten', 'alamat']);
         }
