@@ -207,6 +207,7 @@ Route::middleware('auth')->group(function () {
         Route::get('laporan_antrian_poliklinik', [SIMRSAntrianController::class, 'laporan_antrian_poliklinik'])->name('laporan_antrian_poliklinik');
         Route::get('dashboard_antrian_tanggal', [SIMRSAntrianController::class, 'dashboard_antrian_tanggal'])->name('dashboard_antrian_tanggal');
         Route::get('dashboard_antrian_bulan', [SIMRSAntrianController::class, 'dashboard_antrian_bulan'])->name('dashboard_antrian_bulan');
+        Route::resource('pasien', SIMRSPasienController::class);
     });
     // yanmed
     Route::middleware('permission:pelayanan-medis')->prefix('pelayananmedis')->name('pelayanan-medis.')->group(function () {

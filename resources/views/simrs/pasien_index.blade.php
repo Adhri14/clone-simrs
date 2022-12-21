@@ -43,7 +43,7 @@
                     </div>
                 </div>
                 @php
-                    $heads = ['Kode RM', 'BPJS', 'NIK', 'Nama Pasien (Umur)', 'Sex', 'Kecamatan', 'Alamat', 'Tgl Entry', 'Action'];
+                    $heads = ['Kode RM', 'BPJS', 'NIK', 'Nama Pasien (Sex)', 'Tanggal Lahir (Umur)', 'Kecamatan', 'Alamat', 'Tgl Entry', 'Action'];
                     $config['paging'] = false;
                     $config['lengthMenu'] = false;
                     $config['searching'] = false;
@@ -56,8 +56,9 @@
                             <td>{{ $item->no_rm }}</td>
                             <td>{{ $item->no_Bpjs }}</td>
                             <td>{{ $item->nik_bpjs }}</td>
-                            <td>{{ $item->nama_px }} ({{ \Carbon\Carbon::parse($item->tgl_lahir)->age }})</td>
-                            <td>{{ $item->jenis_kelamin }}</td>
+                            <td>{{ $item->nama_px }} ({{ $item->jenis_kelamin }})</td>
+                            <td>{{ \Carbon\Carbon::parse($item->tgl_lahir)->format('Y-m-d') }}
+                                ({{ \Carbon\Carbon::parse($item->tgl_lahir)->age }})</td>
                             <td>{{ $item->kecamatans ? $item->kecamatans->nama_kecamatan : '-' }}</td>
                             <td>{{ $item->alamat }}</td>
                             <td>{{ $item->tgl_entry }} ({{ $item->pic }})</td>
