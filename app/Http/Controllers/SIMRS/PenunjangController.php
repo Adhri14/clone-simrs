@@ -66,7 +66,14 @@ class PenunjangController extends ApiController
     }
     public function get_order_layanan(Request $request)
     {
-        $data = OrderLayananDB::get();
+        if ($request->kode_layanan) {
+            $data = OrderLayananDB::firstWhere('kode_layanan_header', $request->kode_layanan);
+            if (empty($data)) {
+                return $this->sendError('Data Tidak Ditemukan', null, 404);
+            }
+        } else {
+            $data = OrderLayananDB::get();
+        }
         return $this->sendResponse('OK', $data);
     }
     public function insert_layanan(Request $request)
