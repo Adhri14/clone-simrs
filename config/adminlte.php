@@ -386,6 +386,13 @@ return [
                     'label_color' => 'success',
                 ],
                 [
+                    'text' => 'Data Pasien',
+                    'icon'    => 'fas fa-user-injured',
+                    'url'  => 'poliklinik/pasien',
+                    'shift'   => 'ml-2',
+                    'can' => 'poliklinik',
+                ],
+                [
                     'text' => 'Laporan Kunjungan Poliklinik',
                     'icon'    => 'fas fa-chart-line',
                     'shift'   => 'ml-2',
