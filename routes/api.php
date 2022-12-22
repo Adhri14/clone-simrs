@@ -122,6 +122,7 @@ Route::prefix('bpjs')->name('api.bpjs.')->group(function () {
         Route::get('ref_poli', [AntrianAntrianController::class, 'ref_poli'])->name('ref_poli');
         Route::get('ref_dokter', [AntrianAntrianController::class, 'ref_dokter'])->name('ref_dokter');
         Route::get('ref_jadwal_dokter', [AntrianAntrianController::class, 'ref_jadwal_dokter'])->name('ref_jadwal_dokter');
+        Route::post('update_jadwal_dokter', [AntrianAntrianController::class, 'update_jadwal_dokter'])->name('update_jadwal_dokter');
         Route::post('tambah_antrean', [AntrianAntrianController::class, 'tambah_antrean'])->name('tambah_antrean');
         Route::post('update_antrean', [AntrianAntrianController::class, 'update_antrean'])->name('update_antrean');
         Route::post('batal_antrean', [AntrianAntrianController::class, 'batal_antrean'])->name('batal_antrean');
@@ -135,6 +136,7 @@ Route::prefix('bpjs')->name('api.bpjs.')->group(function () {
         Route::post('sisa_antrian', [AntrianAntrianController::class, 'sisa_antrian'])->name('sisa_antrian');
         Route::post('batal_antrian', [AntrianAntrianController::class, 'batal_antrian'])->name('batal_antrian');
         Route::post('checkin_antrian', [AntrianAntrianController::class, 'checkin_antrian'])->name('checkin_antrian');
+        Route::post('info_pasien_baru', [AntrianAntrianController::class, 'info_pasien_baru'])->name('info_pasien_baru');
         Route::post('jadwal_operasi_rs', [AntrianAntrianController::class, 'jadwal_operasi_rs'])->name('jadwal_operasi_rs');
         Route::post('jadwal_operasi_pasien', [AntrianAntrianController::class, 'jadwal_operasi_pasien'])->name('jadwal_operasi_pasien');
     });
@@ -162,12 +164,18 @@ Route::prefix('bpjs')->name('api.bpjs.')->group(function () {
         Route::delete('suratkontrol_delete', [VclaimVclaimController::class, 'suratkontrol_delete'])->name('suratkontrol_delete');
         // Route::post('spri_insert', [VclaimVclaimController::class, 'spri_insert'])->name('spri_insert');
         // Route::put('spri_update', [VclaimVclaimController::class, 'spri_update'])->name('spri_update');
+        // Route::get('suratkontrol_sep', [VclaimVclaimController::class, 'suratkontrol_sep'])->name('suratkontrol_sep');
         Route::get('suratkontrol_nomor', [VclaimVclaimController::class, 'suratkontrol_nomor'])->name('suratkontrol_nomor');
         Route::get('suratkontrol_peserta', [VclaimVclaimController::class, 'suratkontrol_peserta'])->name('suratkontrol_peserta');
         Route::get('suratkontrol_tanggal', [VclaimVclaimController::class, 'suratkontrol_tanggal'])->name('suratkontrol_tanggal');
-        // Route::get('suratkontrol_sep', [VclaimVclaimController::class, 'suratkontrol_sep'])->name('suratkontrol_sep');
-        // Route::get('suratkontrol_poli', [VclaimVclaimController::class, 'suratkontrol_poli'])->name('suratkontrol_poli');
-        // Route::get('suratkontrol_dokter', [VclaimVclaimController::class, 'suratkontrol_dokter'])->name('suratkontrol_dokter');
+        Route::get('suratkontrol_poli', [VclaimVclaimController::class, 'suratkontrol_poli'])->name('suratkontrol_poli');
+        Route::get('suratkontrol_dokter', [VclaimVclaimController::class, 'suratkontrol_dokter'])->name('suratkontrol_dokter');
+        // RUJUKAN
+        Route::get('rujukan_nomor', [VclaimVclaimController::class, 'rujukan_nomor'])->name('rujukan_nomor');
+        Route::get('rujukan_peserta', [VclaimVclaimController::class, 'rujukan_peserta'])->name('rujukan_peserta');
+        Route::get('rujukan_rs_nomor', [VclaimVclaimController::class, 'rujukan_rs_nomor'])->name('rujukan_rs_nomor');
+        Route::get('rujukan_rs_peserta', [VclaimVclaimController::class, 'rujukan_rs_peserta'])->name('rujukan_rs_peserta');
+        Route::get('rujukan_jumlah_sep', [VclaimVclaimController::class, 'rujukan_jumlah_sep'])->name('rujukan_jumlah_sep');
         // SEP
         Route::get('sep_nomor', [VclaimVclaimController::class, 'sep_nomor'])->name('sep_nomor');
         Route::delete('sep_delete', [VclaimVclaimController::class, 'sep_delete'])->name('sep_delete');
@@ -208,30 +216,6 @@ Route::prefix('satusehat')->name('api.satusehat.')->group(function () {
     Route::get('encounter/', [EncounterController::class, 'index'])->name('encounter_index');
     Route::post('encounter/store', [EncounterController::class, 'encounter_store_api'])->name('encounter_store_api');
 });
-Route::prefix('bpjs')->name('api.bpjs.')->group(function () {
-    // ANTRIAN
-    Route::prefix('antrian')->name('antrian.')->group(function () {
-        // API BPJS
-        Route::get('ref_poli', [AntrianAntrianController::class, 'ref_poli'])->name('ref_poli');
-        Route::get('ref_dokter', [AntrianAntrianController::class, 'ref_dokter'])->name('ref_dokter');
-        Route::get('ref_jadwal_dokter', [AntrianAntrianController::class, 'ref_jadwal_dokter'])->name('ref_jadwal_dokter');
-        Route::post('tambah_antrean', [AntrianAntrianController::class, 'tambah_antrean'])->name('tambah_antrean');
-        Route::post('update_antrean', [AntrianAntrianController::class, 'update_antrean'])->name('update_antrean');
-        Route::post('batal_antrean', [AntrianAntrianController::class, 'batal_antrean'])->name('batal_antrean');
-        Route::post('taskid_antrean', [AntrianAntrianController::class, 'taskid_antrean'])->name('taskid_antrean');
-        Route::get('dashboard_tanggal', [AntrianAntrianController::class, 'dashboard_tanggal'])->name('dashboard_tanggal');
-        Route::get('dashboard_bulan', [AntrianAntrianController::class, 'dashboard_bulan'])->name('dashboard_bulan');
-        // API SIMRS
-        Route::get('token', [AntrianAntrianController::class, 'token'])->name('token');
-        Route::post('status_antrian', [AntrianAntrianController::class, 'status_antrian'])->name('status_antrian');
-        Route::post('ambil_antrian', [AntrianAntrianController::class, 'ambil_antrian'])->name('ambil_antrian');
-        Route::post('sisa_antrian', [AntrianAntrianController::class, 'sisa_antrian'])->name('sisa_antrian');
-        Route::post('batal_antrian', [AntrianAntrianController::class, 'batal_antrian'])->name('batal_antrian');
-        Route::post('checkin_antrian', [AntrianAntrianController::class, 'checkin_antrian'])->name('checkin_antrian');
-        Route::post('jadwal_operasi_rs', [AntrianAntrianController::class, 'jadwal_operasi_rs'])->name('jadwal_operasi_rs');
-        Route::post('jadwal_operasi_pasien', [AntrianAntrianController::class, 'jadwal_operasi_pasien'])->name('jadwal_operasi_pasien');
-    });
-});
 // PENUNJANG
 Route::prefix('penunjang')->name('api.penunjang.')->group(function () {
     Route::get('cari_pasien', [PenunjangController::class, 'cari_pasien'])->name('cari_pasien');
@@ -251,5 +235,4 @@ Route::prefix('ris')->name('api.ris.')->group(function () {
     Route::get('jenispemeriksaan_get', [RISController::class, 'jenispemeriksaan_get'])->name('jenispemeriksaan_get');
     Route::get('ruangan_get', [RISController::class, 'ruangan_get'])->name('ruangan_get');
     Route::get('order_get', [RISController::class, 'order_get'])->name('order_get');
-
 });

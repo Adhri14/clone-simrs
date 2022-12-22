@@ -246,13 +246,13 @@ class AntrianController extends ApiBPJSController
     public function ref_jadwal_dokter(Request $request)
     {
         $validator = Validator::make(request()->all(), [
-            "kodepoli" => "required",
-            "tanggal" =>  "required|date|date_format:Y-m-d",
+            "kodePoli" => "required",
+            "tanggal" =>  "required|date",
         ]);
         if ($validator->fails()) {
             return $this->sendError($validator->errors()->first(), $validator->errors(), 201);
         }
-        $url = env('ANTRIAN_URL') . "jadwaldokter/kodepoli/" . $request->kodepoli . "/tanggal/" . $request->tanggal;
+        $url = env('ANTRIAN_URL') . "jadwaldokter/kodepoli/" . $request->kodePoli . "/tanggal/" . $request->tanggal;
         $signature = $this->signature();
         $response = Http::withHeaders($signature)->get($url);
         return $this->response_decrypt($response, $signature);
@@ -1380,133 +1380,134 @@ class AntrianController extends ApiBPJSController
     }
     public function info_pasien_baru(Request $request)
     {
-        // auth token
-        $auth = $this->auth_token($request);
-        if ($auth['metadata']['code'] != 200) {
-            return $auth;
-        }
-        // checking request
-        $validator = Validator::make(request()->all(), [
-            "nik" => "required|digits:16",
-            "nomorkartu" => "required|digits:13",
-            "nomorkk" => "required",
-            "nama" => "required",
-            "jeniskelamin" => "required",
-            "tanggallahir" => "required",
-            "nohp" => "required",
-            "alamat" => "required",
-            "kodeprop" => "required",
-            "namaprop" => "required",
-            "kodedati2" => "required",
-            "namadati2" => "required",
-            "kodekec" => "required",
-            "namakec" => "required",
-            "kodekel" => "required",
-            "namakel" => "required",
-            "rw" => "required",
-            "rt" => "required",
-        ]);
-        if ($validator->fails()) {
-            return [
-                'metadata' => [
-                    'code' => 201,
-                    'message' => $validator->errors()->first(),
-                ],
-            ];
-        }
-        $pasien = PasienDB::where('nik_bpjs', $request->nik)->first();
-        // cek jika pasien baru
-        if (empty($pasien)) {
-            // proses pendaftaran baru
-            // try {
-            //     // checking norm terakhir
-            //     $pasien_terakhir = PasienDB::latest()->first()->no_rm;
-            //     $request['status'] = 1;
-            //     $request['norm'] = $pasien_terakhir + 1;
-            //     // insert pasien
-            //     PasienDB::create(
-            //         [
-            //             "no_Bpjs" => $request->nomorkartu,
-            //             "nik_bpjs" => $request->nik,
-            //             "no_rm" => $request->norm,
-            //             // "nomorkk" => $request->nomorkk,
-            //             "nama_px" => $request->nama,
-            //             "jenis_kelamin" => $request->jeniskelamin,
-            //             "tgl_lahir" => $request->tanggallahir,
-            //             "no_tlp" => $request->nohp,
-            //             "alamat" => $request->alamat,
-            //             "kode_propinsi" => $request->kodeprop,
-            //             // "namaprop" => $request->namaprop,
-            //             "kode_kabupaten" => $request->kodedati2,
-            //             // "namadati2" => $request->namadati2,
-            //             "kode_kecamatan" => $request->kodekec,
-            //             // "namakec" => $request->namakec,
-            //             "kode_desa" => $request->kodekel,
-            //             // "namakel" => $request->namakel,
-            //             // "rw" => $request->rw,
-            //             // "rt" => $request->rt,
-            //             // "status" => $request->status,
-            //         ]
-            //     );
-            //     return  $response = [
-            //         "response" => [
-            //             "norm" => $request->norm,
-            //         ],
-            //         "metadata" => [
-            //             "message" => "Ok",
-            //             "code" => 200,
-            //         ],
-            //     ];
-            // } catch (\Throwable $th) {
-            //     $response = [
-            //         "metadata" => [
-            //             "message" => "Gagal Error Code " . $th->getMessage(),
-            //             "code" => 201,
-            //         ],
-            //     ];
-            //     return $response;
-            // }
-            return [
-                'metadata' => [
-                    'code' => 201,
-                    'message' => 'Mohon maaf untuk pasien baru tidak bisa didaftarkan secara online. Silahkan daftar secara offline dengan datang ke Rumah Sakit',
-                ],
-            ];
-        }
-        // cek jika pasien lama
-        else {
-            $pasien->update([
-                "no_Bpjs" => $request->nomorkartu,
-                // "nik_bpjs" => $request->nik,
-                // "no_rm" => $request->norm,
-                "nomorkk" => $request->nomorkk,
-                "nama_px" => $request->nama,
-                "jenis_kelamin" => $request->jeniskelamin,
-                "tgl_lahir" => $request->tanggallahir,
-                "no_tlp" => $request->nohp,
-                "alamat" => $request->alamat,
-                "kode_propinsi" => $request->kodeprop,
-                "namaprop" => $request->namaprop,
-                "kode_kabupaten" => $request->kodedati2,
-                "namadati2" => $request->namadati2,
-                "kode_kecamatan" => $request->kodekec,
-                "namakec" => $request->namakec,
-                "kode_desa" => $request->kodekel,
-                "namakel" => $request->namakel,
-                "rw" => $request->rw,
-                "rt" => $request->rt,
-                // "status" => $request->status,
-            ]);
-            return $response = [
-                "response" => [
-                    "norm" => $pasien->no_rm,
-                ],
-                "metadata" => [
-                    "message" => "Ok",
-                    "code" => 200,
-                ],
-            ];
-        }
+        return $this->sendError("Anda belum memiliki No RM di RSUD Waled (Pasien Baru). Silahkan daftar secara offline.", null, 400);
+        // // auth token
+        // $auth = $this->auth_token($request);
+        // if ($auth['metadata']['code'] != 200) {
+        //     return $auth;
+        // }
+        // // checking request
+        // $validator = Validator::make(request()->all(), [
+        //     "nik" => "required|digits:16",
+        //     "nomorkartu" => "required|digits:13",
+        //     "nomorkk" => "required",
+        //     "nama" => "required",
+        //     "jeniskelamin" => "required",
+        //     "tanggallahir" => "required",
+        //     "nohp" => "required",
+        //     "alamat" => "required",
+        //     "kodeprop" => "required",
+        //     "namaprop" => "required",
+        //     "kodedati2" => "required",
+        //     "namadati2" => "required",
+        //     "kodekec" => "required",
+        //     "namakec" => "required",
+        //     "kodekel" => "required",
+        //     "namakel" => "required",
+        //     "rw" => "required",
+        //     "rt" => "required",
+        // ]);
+        // if ($validator->fails()) {
+        //     return [
+        //         'metadata' => [
+        //             'code' => 201,
+        //             'message' => $validator->errors()->first(),
+        //         ],
+        //     ];
+        // }
+        // $pasien = PasienDB::where('nik_bpjs', $request->nik)->first();
+        // // cek jika pasien baru
+        // if (empty($pasien)) {
+        //     // proses pendaftaran baru
+        //     // try {
+        //     //     // checking norm terakhir
+        //     //     $pasien_terakhir = PasienDB::latest()->first()->no_rm;
+        //     //     $request['status'] = 1;
+        //     //     $request['norm'] = $pasien_terakhir + 1;
+        //     //     // insert pasien
+        //     //     PasienDB::create(
+        //     //         [
+        //     //             "no_Bpjs" => $request->nomorkartu,
+        //     //             "nik_bpjs" => $request->nik,
+        //     //             "no_rm" => $request->norm,
+        //     //             // "nomorkk" => $request->nomorkk,
+        //     //             "nama_px" => $request->nama,
+        //     //             "jenis_kelamin" => $request->jeniskelamin,
+        //     //             "tgl_lahir" => $request->tanggallahir,
+        //     //             "no_tlp" => $request->nohp,
+        //     //             "alamat" => $request->alamat,
+        //     //             "kode_propinsi" => $request->kodeprop,
+        //     //             // "namaprop" => $request->namaprop,
+        //     //             "kode_kabupaten" => $request->kodedati2,
+        //     //             // "namadati2" => $request->namadati2,
+        //     //             "kode_kecamatan" => $request->kodekec,
+        //     //             // "namakec" => $request->namakec,
+        //     //             "kode_desa" => $request->kodekel,
+        //     //             // "namakel" => $request->namakel,
+        //     //             // "rw" => $request->rw,
+        //     //             // "rt" => $request->rt,
+        //     //             // "status" => $request->status,
+        //     //         ]
+        //     //     );
+        //     //     return  $response = [
+        //     //         "response" => [
+        //     //             "norm" => $request->norm,
+        //     //         ],
+        //     //         "metadata" => [
+        //     //             "message" => "Ok",
+        //     //             "code" => 200,
+        //     //         ],
+        //     //     ];
+        //     // } catch (\Throwable $th) {
+        //     //     $response = [
+        //     //         "metadata" => [
+        //     //             "message" => "Gagal Error Code " . $th->getMessage(),
+        //     //             "code" => 201,
+        //     //         ],
+        //     //     ];
+        //     //     return $response;
+        //     // }
+        //     return [
+        //         'metadata' => [
+        //             'code' => 201,
+        //             'message' => 'Mohon maaf untuk pasien baru tidak bisa didaftarkan secara online. Silahkan daftar secara offline dengan datang ke Rumah Sakit',
+        //         ],
+        //     ];
+        // }
+        // // cek jika pasien lama
+        // else {
+        //     $pasien->update([
+        //         "no_Bpjs" => $request->nomorkartu,
+        //         // "nik_bpjs" => $request->nik,
+        //         // "no_rm" => $request->norm,
+        //         "nomorkk" => $request->nomorkk,
+        //         "nama_px" => $request->nama,
+        //         "jenis_kelamin" => $request->jeniskelamin,
+        //         "tgl_lahir" => $request->tanggallahir,
+        //         "no_tlp" => $request->nohp,
+        //         "alamat" => $request->alamat,
+        //         "kode_propinsi" => $request->kodeprop,
+        //         "namaprop" => $request->namaprop,
+        //         "kode_kabupaten" => $request->kodedati2,
+        //         "namadati2" => $request->namadati2,
+        //         "kode_kecamatan" => $request->kodekec,
+        //         "namakec" => $request->namakec,
+        //         "kode_desa" => $request->kodekel,
+        //         "namakel" => $request->namakel,
+        //         "rw" => $request->rw,
+        //         "rt" => $request->rt,
+        //         // "status" => $request->status,
+        //     ]);
+        //     return $response = [
+        //         "response" => [
+        //             "norm" => $pasien->no_rm,
+        //         ],
+        //         "metadata" => [
+        //             "message" => "Ok",
+        //             "code" => 200,
+        //         ],
+        //     ];
+        // }
     }
     public function jadwal_operasi_rs(Request $request)
     {
