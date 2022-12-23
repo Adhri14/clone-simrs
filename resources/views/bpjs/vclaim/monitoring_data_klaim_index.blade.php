@@ -11,24 +11,24 @@
                     @php
                         $config = ['format' => 'YYYY-MM-DD'];
                     @endphp
-                    <x-adminlte-input-date name="tanggalpulang" label="Tanggal Pulang" :config="$config"
-                        value="{{ \Carbon\Carbon::parse($request->tanggalpulang)->format('Y-m-d') }}">
+                    <x-adminlte-input-date name="tanggalPulang" label="Tanggal Pulang" :config="$config"
+                        value="{{ \Carbon\Carbon::parse($request->tanggalPulang)->format('Y-m-d') }}">
                         <x-slot name="prependSlot">
                             <div class="input-group-text bg-primary">
                                 <i class="fas fa-calendar-alt"></i>
                             </div>
                         </x-slot>
                     </x-adminlte-input-date>
-                    <x-adminlte-select2 name="jenispelayanan" label="Jenis Pelayanan">
-                        <option value="1" {{ $request->jenispelayanan == 1 ? 'selected' : null }}>Rawat Inap</option>
-                        <option value="2" {{ $request->jenispelayanan == 2 ? 'selected' : null }}>Rawat Jalan</option>
+                    <x-adminlte-select2 name="jenisPelayanan" label="Jenis Pelayanan">
+                        <option value="1" {{ $request->jenisPelayanan == 1 ? 'selected' : null }}>Rawat Inap</option>
+                        <option value="2" {{ $request->jenisPelayanan == 2 ? 'selected' : null }}>Rawat Jalan</option>
                     </x-adminlte-select2>
-                    <x-adminlte-select2 name="statusklaim" label="Status Klaim">
-                        <option value="1" {{ $request->statusklaim == 1 ? 'selected' : null }}>Proses Verifikasi
+                    <x-adminlte-select2 name="statusKlaim" label="Status Klaim">
+                        <option value="1" {{ $request->statusKlaim == 1 ? 'selected' : null }}>Proses Verifikasi
                             Pending</option>
-                        <option value="2" {{ $request->statusklaim == 2 ? 'selected' : null }}>Pending Varifikasi
+                        <option value="2" {{ $request->statusKlaim == 2 ? 'selected' : null }}>Pending Varifikasi
                         </option>
-                        <option value="3" {{ $request->statusklaim == 3 ? 'selected' : null }}>Klaim</option>
+                        <option value="3" {{ $request->statusKlaim == 3 ? 'selected' : null }}>Klaim</option>
                     </x-adminlte-select2>
                     <x-adminlte-button type="submit" class="withLoad" theme="primary" label="Submit Data Kunjungan" />
                 </form>

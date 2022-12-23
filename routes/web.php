@@ -33,6 +33,7 @@ use App\Http\Controllers\SIMRS\AntrianController as SIMRSAntrianController;
 use App\Http\Controllers\SIMRS\BukuTamuController;
 use App\Http\Controllers\SIMRS\DokterController as SIMRSDokterController;
 use App\Http\Controllers\SIMRS\KunjunganController as SIMRSKunjunganController;
+use App\Http\Controllers\SIMRS\MonitoringController;
 use App\Http\Controllers\SIMRS\PasienController as SIMRSPasienController;
 use App\Http\Controllers\SIMRS\SimrsController;
 use App\Http\Controllers\SIMRS\SuratKontrolController;
@@ -242,10 +243,10 @@ Route::middleware('auth')->group(function () {
         });
         // vclaim
         Route::prefix('vclaim')->name('vclaim.')->group(function () {
-            Route::get('monitoring_data_kunjungan', [VclaimVclaimController::class, 'monitoring_data_kunjungan_index'])->name('monitoring_data_kunjungan');
-            Route::get('monitoring_data_klaim', [VclaimVclaimController::class, 'monitoring_data_klaim_index'])->name('monitoring_data_klaim');
-            Route::get('monitoring_pelayanan_peserta', [VclaimVclaimController::class, 'monitoring_pelayanan_peserta_index'])->name('monitoring_pelayanan_peserta');
-            Route::get('monitoring_klaim_jasaraharja', [VclaimVclaimController::class, 'monitoring_klaim_jasaraharja_index'])->name('monitoring_klaim_jasaraharja');
+            Route::get('monitoring_data_kunjungan', [MonitoringController::class, 'monitoring_data_kunjungan_index'])->name('monitoring_data_kunjungan');
+            Route::get('monitoring_data_klaim', [MonitoringController::class, 'monitoring_data_klaim_index'])->name('monitoring_data_klaim');
+            Route::get('monitoring_pelayanan_peserta', [MonitoringController::class, 'monitoring_pelayanan_peserta_index'])->name('monitoring_pelayanan_peserta');
+            Route::get('monitoring_klaim_jasaraharja', [MonitoringController::class, 'monitoring_klaim_jasaraharja_index'])->name('monitoring_klaim_jasaraharja');
             Route::get('referensi', [VclaimVclaimController::class, 'referensi_index'])->name('referensi');
             Route::get('ref_diagnosa_api', [VclaimVclaimController::class, 'ref_diagnosa_api'])->name('ref_diagnosa_api');
             Route::get('ref_poliklinik_api', [VclaimVclaimController::class, 'ref_poliklinik_api'])->name('ref_poliklinik_api');

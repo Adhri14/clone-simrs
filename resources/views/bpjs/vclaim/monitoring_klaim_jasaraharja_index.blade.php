@@ -13,17 +13,17 @@
                             'locale' => ['format' => 'YYYY/MM/DD'],
                         ];
                     @endphp
-                    <x-adminlte-date-range name="tanggal" label="Periode Tanggal Antrian" enable-default-ranges="Today"
-                        :config="$config">
+                    <x-adminlte-date-range name="tanggal" label="Periode Tanggal Antrian" :config="$config"
+                        value="{{ $request->tanggal }}">
                         <x-slot name="prependSlot">
                             <div class="input-group-text bg-primary">
                                 <i class="fas fa-calendar-alt"></i>
                             </div>
                         </x-slot>
                     </x-adminlte-date-range>
-                    <x-adminlte-select2 name="jenispelayanan" label="Jenis Pelayanan">
-                        <option value="1" {{ $request->jenispelayanan == 1 ? 'selected' : null }}>Rawat Inap</option>
-                        <option value="2" {{ $request->jenispelayanan == 2 ? 'selected' : null }}>Rawat Jalan</option>
+                    <x-adminlte-select2 name="jenisPelayanan" label="Jenis Pelayanan">
+                        <option value="1" {{ $request->jenisPelayanan == 1 ? 'selected' : null }}>Rawat Inap</option>
+                        <option value="2" {{ $request->jenisPelayanan == 2 ? 'selected' : null }}>Rawat Jalan</option>
                     </x-adminlte-select2>
                     <x-adminlte-button type="submit" class="withLoad" theme="primary" label="Submit Data Kunjungan" />
                 </form>
@@ -32,7 +32,7 @@
         <div class="col-12">
             <x-adminlte-card title="Data Klaim BPJS" theme="secondary" collapsible>
                 @php
-                    $heads = ['FPK / SEP', 'Tgl Msuk / Plg', 'Poli / Kelas', 'Pasien', 'INACBG', 'Status', 'byTarifGruper', 'byTopup', 'byPengajuan', 'bySetujui', 'byTarifRS', 'LabaRugi'];
+                    $heads = ['SEP', 'Tgl SEP', 'Pasien', 'Pelayanan', 'Diagnosa', 'Tgl Kejadian', 'B. Dijamin','Plafon','Jml Dbayar','Keterangan'];
                 @endphp
                 <x-adminlte-datatable id="table2" class="nowrap text-xs" :heads="$heads" bordered hoverable compressed>
                     @php
@@ -44,57 +44,20 @@
                     @endphp
                     @isset($klaim)
                         @foreach ($klaim as $item)
+                            {{-- {{ dd($item) }} --}}
                             <tr>
-                                <td>
-                                    FPK : {{ $item->noFPK }}
-                                    <br>
-                                    SEP : {{ $item->noSEP }}
-                                </td>
-                                <td>
-                                    Msk : {{ $item->tglSep }}
-                                    <br>
-                                    Plg : {{ $item->tglPulang }}
-                                </td>
-                                <td>{{ $item->kelasRawat }} {{ $item->poli }}</td>
-                                <td>
-                                    {{ $item->peserta->noKartu }} - {{ $item->peserta->noMR }}
-                                    <br>
-                                    {{ $item->peserta->nama }}
-                                </td>
-                                <td>
-                                    {{ $item->Inacbg->kode }}
-                                    <br>
-                                    {{ substr($item->Inacbg->nama, 0, 20) }}..
-                                </td>
-                                <td>{{ $item->status }}</td>
-                                <td>{{ money($item->biaya->byTarifGruper, 'IDR') }}</td>
-                                <td>{{ money($item->biaya->byTopup, 'IDR') }}</td>
-                                <td>{{ money($item->biaya->byPengajuan, 'IDR') }}</td>
-                                <td>{{ money($item->biaya->bySetujui, 'IDR') }}</td>
-                                <td>{{ money($item->biaya->byTarifRS, 'IDR') }}</td>
-                                <td
-                                    class="{{ $item->biaya->bySetujui - $item->biaya->byTarifRS > 0 ? 'table-success' : 'table-danger' }}">
-                                    {{ number_format($item->biaya->bySetujui - $item->biaya->byTarifRS, 0, ',', '.') }}</td>
+                                <td>{{ $item->sep->noSEP }}</td>
+                                <td>{{ $item->sep->tglSEP }}</td>
+                                <td>{{ $item->sep->peserta->nama }}</td>
+                                <td>{{ $item->sep->jnsPelayanan }} {{ $item->sep->poli }}</td>
+                                <td>{{ $item->sep->diagnosa }}</td>
+                                <td>{{ $item->jasaRaharja->tglKejadian }}</td>
+                                <td>{{ $item->jasaRaharja->biayaDijamin }}</td>
+                                <td>{{ $item->jasaRaharja->plafon }}</td>
+                                <td>{{ $item->jasaRaharja->jmlDibayar }}</td>
+                                <td>{{ $item->jasaRaharja->resultsJasaRaharja }} {{ $item->jasaRaharja->ketStatusDikirim }} {{ $item->jasaRaharja->ketStatusDijamin }}</td>
                             </tr>
-                            @php
-                                $byTarifRS += $item->biaya->byTarifRS;
-                                $byTarifGruper += $item->biaya->byTarifGruper;
-                                $byTopup += $item->biaya->byTopup;
-                                $byPengajuan += $item->biaya->byPengajuan;
-                                $bySetujui += $item->biaya->bySetujui;
-                            @endphp
                         @endforeach
-                        <tfoot>
-                            <tr class="{{ $bySetujui - $byTarifRS > 0 ? 'table-success' : 'table-danger' }}">
-                                <th colspan="6" class="text-center">Total</th>
-                                <th>{{ money($byTarifGruper, 'IDR') }}</th>
-                                <th>{{ money($byTopup, 'IDR') }}</th>
-                                <th>{{ money($byPengajuan, 'IDR') }}</th>
-                                <th>{{ money($bySetujui, 'IDR') }}</th>
-                                <th>{{ money($byTarifRS, 'IDR') }}</th>
-                                <th>{{ money($bySetujui - $byTarifRS, 'IDR') }}</th>
-                            </tr>
-                        </tfoot>
                     @endisset
                 </x-adminlte-datatable>
             </x-adminlte-card>

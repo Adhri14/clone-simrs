@@ -141,4 +141,10 @@ class PasienController extends Controller
             'agama',
         ]));
     }
+    // API SIMRS
+    public function pasien_get(Request $request)
+    {
+
+    }
+
 }

@@ -4,22 +4,12 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\BPJS\Antrian\AntrianController;
 use App\Http\Controllers\BPJS\Vclaim\VclaimController;
-use App\Models\AntrianDB;
 use App\Models\JadwalDokter;
-use App\Models\JadwalLiburPoliDB;
-use App\Models\PasienDB;
-use App\Models\Poliklinik;
 use App\Models\PoliklinikDB;
-use App\Models\UnitDB;
 use Carbon\Carbon;
-use GuzzleHttp\Client;
-use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Http;
-use SebastianBergmann\CodeCoverage\Report\Xml\Unit;
-use Image;
-use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class WhatsappController extends Controller
 {

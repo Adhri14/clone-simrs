@@ -19,9 +19,9 @@
                             </div>
                         </x-slot>
                     </x-adminlte-input-date>
-                    <x-adminlte-select2 name="jenispelayanan" label="Jenis Pelayanan">
-                        <option value="1" {{ $request->jenispelayanan == 1 ? 'selected' : null }}>Rawat Inap</option>
-                        <option value="2" {{ $request->jenispelayanan == 2 ? 'selected' : null }}>Rawat Jalan</option>
+                    <x-adminlte-select2 name="jenisPelayanan" label="Jenis Pelayanan">
+                        <option value="1" {{ $request->jenisPelayanan == 1 ? 'selected' : null }}>Rawat Inap</option>
+                        <option value="2" {{ $request->jenisPelayanan == 2 ? 'selected' : null }}>Rawat Jalan</option>
                     </x-adminlte-select2>
                     <x-adminlte-button type="submit" class="withLoad" theme="primary" label="Submit Data Kunjungan" />
                 </form>
