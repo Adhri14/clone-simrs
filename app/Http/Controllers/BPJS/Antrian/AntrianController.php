@@ -40,68 +40,6 @@ class AntrianController extends ApiBPJSController
             'token'
         ]));
     }
-    public function poli()
-    {
-        $response = $this->ref_poli();
-        if ($response->status() == 200) {
-            $polikliniks = $response->getData()->response;
-            Alert::success($response->statusText(), 'Poliklinik Antrian BPJS');
-        } else {
-            $polikliniks = null;
-            Alert::error($response->getData()->metadata->message . ' ' . $response->status());
-        }
-        return view('bpjs.antrian.poli', compact([
-            'polikliniks'
-        ]));
-    }
-    public function dokter()
-    {
-        $response = $this->ref_dokter();
-        if ($response->status() == 200) {
-            $dokters = $response->getData()->response;
-            Alert::success($response->statusText(), 'Poliklinik Antrian BPJS');
-        } else {
-            $dokters = null;
-            Alert::error($response->getData()->metadata->message . ' ' . $response->status());
-        }
-        return view('bpjs.antrian.dokter', compact([
-            'dokters'
-        ]));
-    }
-    public function jadwal_dokter(Request $request)
-    {
-        // get dokter
-        $response = $this->ref_dokter();
-        if ($response->status() == 200) {
-            $dokters = $response->getData()->response;
-        } else {
-            $dokters = null;
-        }
-        // get poli
-        $response = $this->ref_poli();
-        if ($response->status() == 200) {
-            $polikliniks = $response->getData()->response;
-        } else {
-            $polikliniks = null;
-        }
-        // get jadwal
-        $jadwals = null;
-        if (isset($request->kodepoli)) {
-            $response = $this->ref_jadwal_dokter($request);
-            if ($response->status() == 200) {
-                $jadwals = collect($response->getData()->response);
-                Alert::success($response->statusText(), 'Jadwal Dokter Antrian BPJS Total : ' . $jadwals->count());
-            } else {
-                Alert::error($response->getData()->metadata->message . ' ' . $response->status());
-            }
-        }
-        return view('bpjs.antrian.jadwal_dokter', compact([
-            'request',
-            'dokters',
-            'polikliniks',
-            'jadwals',
-        ]));
-    }
     public function antrian(Request $request)
     {
         // get poli
@@ -214,9 +152,14 @@ class AntrianController extends ApiBPJSController
             $data = json_decode($decrypt);
             if ($response->json('metadata.code') == 1) {
                 $code = 200;
-            } else {
+            } else if ($response->json('metadata.code') == 2)
+                $code = 400;
+            else if ($response->json('metadata.code') == 204)
+                $code = 404;
+            else {
                 $code = $response->json('metadata.code');
             }
+
             return $this->sendResponse($response->json('metadata.message'), $data, $code);
         }
     }
@@ -234,6 +177,28 @@ class AntrianController extends ApiBPJSController
         $url = env('ANTRIAN_URL') . "ref/poli";
         $signature = $this->signature();
         $response = Http::withHeaders($signature)->get($url);
+        return $this->response_decrypt($response, $signature);
+    }
+    public function ref_poli_fingerprint()
+    {
+        $url = env('ANTRIAN_URL') . "ref/poli/fp";
+        $signature = $this->signature();
+        $response = Http::withHeaders($signature)->get($url);
+        return $this->response_decrypt($response, $signature);
+    }
+    public function ref_pasien_fingerprint(Request $request)
+    {
+        $validator = Validator::make(request()->all(), [
+            "jenisIdentitas" => "required",
+            "noIdentitas" =>  "required",
+        ]);
+        if ($validator->fails()) {
+            return $this->sendError($validator->errors()->first(), null, 201);
+        }
+        $url = env('ANTRIAN_URL') . "ref/pasien/fp/identitas/" . $request->jenisIdentitas . "/noidentitas/" . $request->noIdentitas;
+        $signature = $this->signature();
+        $response = Http::withHeaders($signature)->get($url);
+        // dd($response->json());
         return $this->response_decrypt($response, $signature);
     }
     public function ref_dokter()
@@ -350,6 +315,7 @@ class AntrianController extends ApiBPJSController
             "kodebooking" => "required",
             "taskid" =>  "required",
             "waktu" =>  "required",
+            "jenisResep" =>  "required",
         ]);
         if ($validator->fails()) {
             return $this->sendError($validator->errors()->first(), $validator->errors(), 201);
@@ -362,6 +328,7 @@ class AntrianController extends ApiBPJSController
                 "kodebooking" => $request->kodebooking,
                 "taskid" => $request->taskid,
                 "waktu" => $request->waktu,
+                "jenisresep" => $request->jenisResep,
             ]
         );
         return $this->response_decrypt($response, $signature);
@@ -432,6 +399,57 @@ class AntrianController extends ApiBPJSController
         $signature = $this->signature();
         $response = Http::withHeaders($signature)->get($url);
         return $this->response_no_decrypt($response);
+    }
+    public function antrian_tanggal(Request $request)
+    {
+        $validator = Validator::make(request()->all(), [
+            "tanggal" =>  "required|date",
+        ]);
+        if ($validator->fails()) {
+            return $this->sendError($validator->errors()->first(), null, 201);
+        }
+        $url = env('ANTRIAN_URL') . "antrean/pendaftaran/tanggal/" . $request->tanggal;
+        $signature = $this->signature();
+        $response = Http::withHeaders($signature)->get($url);
+        return $this->response_decrypt($response, $signature);
+    }
+    public function antrian_kodebooking(Request $request)
+    {
+        $validator = Validator::make(request()->all(), [
+            "kodeBooking" =>  "required",
+        ]);
+        if ($validator->fails()) {
+            return $this->sendError($validator->errors()->first(), null, 201);
+        }
+        $url = env('ANTRIAN_URL') . "antrean/pendaftaran/kodebooking/" . $request->kodeBooking;
+        $signature = $this->signature();
+        $response = Http::withHeaders($signature)->get($url);
+        return $this->response_decrypt($response, $signature);
+
+    }
+    public function antrian_pendaftaran(Request $request)
+    {
+        $url = env('ANTRIAN_URL') . "antrean/pendaftaran/aktif";
+        $signature = $this->signature();
+        $response = Http::withHeaders($signature)->get($url);
+        return $this->response_decrypt($response, $signature);
+    }
+    public function antrian_poliklinik(Request $request)
+    {
+        $validator = Validator::make(request()->all(), [
+            "kodePoli" =>  "required",
+            "kodeDokter" =>  "required",
+            "hari" =>  "required",
+            "jamPraktek" =>  "required",
+        ]);
+        if ($validator->fails()) {
+            return $this->sendError($validator->errors()->first(), null, 201);
+        }
+
+        $url = env('ANTRIAN_URL') . "antrean/pendaftaran/kodepoli/" . $request->kodePoli . "/kodedokter/" . $request->kodeDokter . "/hari/" . $request->hari . "/jampraktek/" . $request->jamPraktek;
+        $signature = $this->signature();
+        $response = Http::withHeaders($signature)->get($url);
+        return $this->response_decrypt($response, $signature);
     }
     // API SIMRS
     public function token(Request $request)

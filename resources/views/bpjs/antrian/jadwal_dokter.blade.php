@@ -13,10 +13,10 @@
                     @endphp
                     <x-adminlte-input-date name="tanggal" value="{{ $request->tanggal }}" placeholder="Silahkan Pilih Tanggal"
                         label="Tanggal Periksa" :config="$config" />
-                    <x-adminlte-select2 name="kodepoli" id="kodepoli" label="Poliklinik">
+                    <x-adminlte-select2 name="kodePoli" id="kodePoli" label="Poliklinik">
                         @foreach ($polikliniks as $poli)
                             <option value="{{ $poli->kdsubspesialis }}"
-                                {{ $request->kodepoli == $poli->kdsubspesialis ? 'selected' : null }}>
+                                {{ $request->kodePoli == $poli->kdsubspesialis ? 'selected' : null }}>
                                 {{ $poli->kdsubspesialis }} - {{ $poli->nmsubspesialis }}</option>
                         @endforeach
                     </x-adminlte-select2>
@@ -26,20 +26,19 @@
             </x-adminlte-card>
             <x-adminlte-card title="Referensi Jadwal Dokter Antrian BPJS" theme="secondary" collapsible>
                 @php
-                    $heads = ['No.', 'Hari', 'Jadwal', 'Poliklinik', 'Subspesialis','Dokter','Kuota','Status','Action'];
+                    $heads = ['No.', 'Hari', 'Jadwal', 'Poliklinik', 'Subspesialis', 'Dokter', 'Kuota', 'Action'];
                 @endphp
                 <x-adminlte-datatable id="table2" class="text-xs" :heads="$heads" hoverable bordered compressed>
                     @isset($jadwals)
                         @foreach ($jadwals as $jadwal)
-                            <tr>
+                            <tr class="{{ $jadwal->libur ? 'table-danger' : null }}  ">
                                 <td>{{ $loop->iteration }}</td>
-                                <td>{{ $jadwal->namahari }}</td>
+                                <td>{{ $jadwal->namahari }} {{ $jadwal->libur ? 'LIBUR' : null }} </td>
                                 <td>{{ $jadwal->jadwal }}</td>
-                                <td>{{ $jadwal->namapoli }} - {{ $jadwal->kodepoli }}</td>
-                                <td>{{ $jadwal->namasubspesialis }} - {{ $jadwal->kodesubspesialis }}</td>
-                                <td>{{ $jadwal->namadokter }} - {{ $jadwal->kodedokter }}</td>
+                                <td>{{ $jadwal->namapoli }} ({{ $jadwal->kodepoli }})</td>
+                                <td>{{ $jadwal->namasubspesialis }} ({{ $jadwal->kodesubspesialis }})</td>
+                                <td>{{ $jadwal->namadokter }} ({{ $jadwal->kodedokter }})</td>
                                 <td>{{ $jadwal->kapasitaspasien }}</td>
-                                <td></td>
                                 <td></td>
                             </tr>
                         @endforeach

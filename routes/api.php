@@ -127,6 +127,8 @@ Route::prefix('bpjs')->name('api.bpjs.')->group(function () {
         Route::get('ref_poli', [AntrianAntrianController::class, 'ref_poli'])->name('ref_poli');
         Route::get('ref_dokter', [AntrianAntrianController::class, 'ref_dokter'])->name('ref_dokter');
         Route::get('ref_jadwal_dokter', [AntrianAntrianController::class, 'ref_jadwal_dokter'])->name('ref_jadwal_dokter');
+        Route::get('ref_poli_fingerprint', [AntrianAntrianController::class, 'ref_poli_fingerprint'])->name('ref_poli_fingerprint');
+        Route::get('ref_pasien_fingerprint', [AntrianAntrianController::class, 'ref_pasien_fingerprint'])->name('ref_pasien_fingerprint');
         Route::post('update_jadwal_dokter', [AntrianAntrianController::class, 'update_jadwal_dokter'])->name('update_jadwal_dokter');
         Route::post('tambah_antrean', [AntrianAntrianController::class, 'tambah_antrean'])->name('tambah_antrean');
         Route::post('update_antrean', [AntrianAntrianController::class, 'update_antrean'])->name('update_antrean');
@@ -134,6 +136,10 @@ Route::prefix('bpjs')->name('api.bpjs.')->group(function () {
         Route::post('taskid_antrean', [AntrianAntrianController::class, 'taskid_antrean'])->name('taskid_antrean');
         Route::get('dashboard_tanggal', [AntrianAntrianController::class, 'dashboard_tanggal'])->name('dashboard_tanggal');
         Route::get('dashboard_bulan', [AntrianAntrianController::class, 'dashboard_bulan'])->name('dashboard_bulan');
+        Route::get('antrian_tanggal', [AntrianAntrianController::class, 'antrian_tanggal'])->name('antrian_tanggal');
+        Route::get('antrian_kodebooking', [AntrianAntrianController::class, 'antrian_kodebooking'])->name('antrian_kodebooking');
+        Route::get('antrian_pendaftaran', [AntrianAntrianController::class, 'antrian_pendaftaran'])->name('antrian_pendaftaran');
+        Route::get('antrian_poliklinik', [AntrianAntrianController::class, 'antrian_poliklinik'])->name('antrian_poliklinik');
         // API SIMRS
         Route::get('token', [AntrianAntrianController::class, 'token'])->name('token');
         Route::post('status_antrian', [AntrianAntrianController::class, 'status_antrian'])->name('status_antrian');
