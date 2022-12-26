@@ -442,7 +442,7 @@ class WhatsappController extends Controller
             $format = explode('#', $pesan)[1];
             $jadwal = explode('#', $pesan)[2];
             $tanggalperiksa = explode('#', $pesan)[3];
-            $request['nomorkartu'] = $nomorkartu;
+            $request['nomorKartu'] = $nomorkartu;
             $request['tanggal'] = $tanggalperiksa;
         } catch (\Throwable $th) {
             $request['notif'] = "6 cek nomor kartu " . $nomorkartu . " error : "  . $th->getMessage();
