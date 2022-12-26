@@ -29,10 +29,9 @@ class DatabaseSeeder extends Seeder
             VillagesSeeder::class,
         ]);
         $this->call(PoliklinikSeeder::class);
-        // $this->call(DokterSeeder::class);
+        $this->call(DokterSeeder::class);
         $this->call(RoleSeeder::class);
         $this->call(UserSeeder::class);
-        // User::factory(50)->create();
-        Pasien::factory(100)->create();
+        // Pasien::factory(100)->create();
     }
 }

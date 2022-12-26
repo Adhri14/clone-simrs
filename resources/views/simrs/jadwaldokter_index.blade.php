@@ -11,7 +11,7 @@
         <div class="col-12">
             @can('pelayanan-medis')
                 <x-adminlte-card title="Informasi Referensi Jadwal Dokter" theme="info" icon="fas fa-info-circle" collapsible>
-                    <form name="formJadwalHafiz" id="formJadwalHafiz" action="{{ route('jadwaldokter.store') }}" method="post">
+                    <form name="formJadwalHafiz" id="formJadwalHafiz" action="{{ route('pelayanan-medis.jadwaldokter.store') }}" method="post">
                         @csrf
                         <input type="hidden" name="method" value="GET">
                         @php
@@ -87,7 +87,7 @@
     </div>
     {{-- Modal Update Jadwal --}}
     <x-adminlte-modal id="modalJadwal" title="Jadwal Praktek" theme="warning" icon="fas fa-calendar-alt">
-        <form name="formUpdateJadwal" id="formUpdateJadwal" action="{{ route('jadwaldokter.store') }}" method="POST">
+        <form name="formUpdateJadwal" id="formUpdateJadwal" action="{{ route('pelayanan-medis.jadwaldokter.store') }}" method="POST">
             @csrf
             <input type="hidden" name="method" value="UPDATE">
             <input type="hidden" class="idjadwal" name="idjadwal" id="idjadwal">
@@ -132,7 +132,7 @@
                 @endforeach
             </x-adminlte-select2>
         </form>
-        <form name="formDeleteJadwal" id="formDeleteJadwal" action="{{ route('jadwaldokter.store') }}" method="POST">
+        <form name="formDeleteJadwal" id="formDeleteJadwal" action="{{ route('pelayanan-medis.jadwaldokter.store') }}" method="POST">
             @csrf
             <input type="hidden" name="method" value="DELETE">
             <input type="hidden" class="idjadwal" name="idjadwal" id="idjadwal">
@@ -158,7 +158,7 @@
             $('.btnJadwal').click(function() {
                 var jadwalid = $(this).data('id');
                 $.LoadingOverlay("show");
-                $.get("{{ route('jadwaldokter.index') }}" + '/' + jadwalid + '/edit', function(data) {
+                $.get("{{ route('pelayanan-medis.jadwaldokter.index') }}" + '/' + jadwalid + '/edit', function(data) {
                     console.log(data);
                     $('#kodesubspesialis').val(data.kodesubspesialis).trigger('change');
                     $('#kodedokter').val(data.kodedokter).trigger('change');

@@ -116,6 +116,7 @@ class MonitoringController extends Controller
     {
         $klaim = null;
         $vclaim = new VclaimController();
+
         if ($request->tanggal && $request->jenisPelayanan) {
             $tanggal = explode('-', $request->tanggal);
             $request['tanggalMulai'] = Carbon::parse($tanggal[0])->format('Y-m-d');

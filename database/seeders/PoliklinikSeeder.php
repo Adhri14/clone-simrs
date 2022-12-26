@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
-use App\Http\Controllers\API\AntrianBPJSController;
-use App\Models\Poliklinik;
+use App\Http\Controllers\BPJS\Antrian\AntrianController;
+use App\Models\BPJS\Antrian\PoliklinikAntrian;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -16,27 +16,20 @@ class PoliklinikSeeder extends Seeder
      */
     public function run()
     {
-        $api = new AntrianBPJSController();
-        $poli = $api->ref_poli()->response;
-        foreach ($poli as $value) {
-            if ($value->kdpoli == $value->kdsubspesialis) {
-                $subpesialis = 0;
-            } else {
-                $subpesialis = 1;
+        $api = new AntrianController();
+        $response = $api->ref_poli();
+        if ($response->status() == 200) {
+            $polikliniks = $response->getData()->response;
+            foreach ($polikliniks as $value) {
+                PoliklinikAntrian::firstOrCreate([
+                    'kodePoli' => $value->kdpoli,
+                    'namaPoli' => $value->nmpoli,
+                    'kodeSubspesialis' => $value->kdsubspesialis,
+                    'namaSubspesialis' => $value->nmsubspesialis,
+                ]);
             }
-            Poliklinik::updateOrCreate(
-                [
-                    'kodepoli' => $value->kdpoli,
-                    'kodesubspesialis' => $value->kdsubspesialis,
-                ],
-                [
-                    'namapoli' => $value->nmpoli,
-                    'namasubspesialis' => $value->nmsubspesialis,
-                    'subspesialis' => $subpesialis,
-                    'lokasi' => 1,
-                    'loket' => 1,
-                ]
-            );
+        } else {
+            return $response->getData()->metadata->message;
         }
     }
 }
