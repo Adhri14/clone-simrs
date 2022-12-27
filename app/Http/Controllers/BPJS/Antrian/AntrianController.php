@@ -700,7 +700,7 @@ class AntrianController extends ApiBPJSController
             ->where('taskid', '<=', 4)
             ->count();
         if ($antrian_nik) {
-            return $this->sendError("Terdapat antrian dengan nomor NIK yang sama pada tanggal tersebut yang belum selesai", null, 201);
+            return $this->sendError("Terdapat antrian dengan nomor NIK yang sama pada tanggal tersebut yang belum selesai. Silahkan batalkan terlebih dahulu jika ingin mendaftarkan lagi.", null, 201);
         }
         // cek pasien baru
         $pasien = PasienDB::where('no_Bpjs',  $request->nomorkartu)->first();
