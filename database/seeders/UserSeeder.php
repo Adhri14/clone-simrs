@@ -120,6 +120,8 @@ class UserSeeder extends Seeder
             'GND',
             'GPR',
             'IRM',
+            'ANA',
+            'SAR',
             'JIW',
             '020',
 
