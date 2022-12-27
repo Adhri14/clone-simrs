@@ -25,7 +25,7 @@
                             </x-adminlte-date-range>
                         </div>
                         <div class="col-6">
-                            <x-adminlte-select2 name="formatfilter" label="Format Filter">
+                            <x-adminlte-select2 name="formatFilter" label="Format Filter">
                                 <option value="1" {{ $request->jenispelayanan == 1 ? 'selected' : null }}>Tanggal Entri
                                 </option>
                                 <option value="2" {{ $request->jenispelayanan == 2 ? 'selected' : null }}>Tanggal
