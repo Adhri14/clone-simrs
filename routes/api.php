@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\WhatsappController as AdminWhatsappController;
 use App\Http\Controllers\AntrianController;
 use App\Http\Controllers\API\AntrianBPJSController;
 use App\Http\Controllers\API\VclaimBPJSController;
@@ -102,8 +103,8 @@ Route::prefix('vclaim')->group(function () {
     Route::get('surat_kontrol_dokter', [VclaimBPJSController::class, 'surat_kontrol_dokter'])->name('api.surat_kontrol_dokter');
 });
 Route::prefix('wa')->group(function () {
-    Route::get('test', [WhatsappController::class, 'index']);
-    Route::post('callback', [WhatsappController::class, 'callback']);
+    Route::get('test', [AdminWhatsappController::class, 'test']);
+    Route::post('callback', [AdminWhatsappController::class, 'callback']);
 });
 // APP.RSUDWALED.ID
 Route::get('token', [AntrianAntrianController::class, 'token']);

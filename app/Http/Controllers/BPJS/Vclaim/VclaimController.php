@@ -135,7 +135,7 @@ class VclaimController extends ApiBPJSController
     public function surat_kontrol_index(Request $request)
     {
         $suratkontrol = null;
-        if ($request->tanggal && $request->formatfilter) {
+        if ($request->tanggal && $request->formatFilter) {
             $tanggal = explode('-', $request->tanggal);
             $request['tanggalMulai'] = Carbon::parse($tanggal[0])->format('Y-m-d');
             $request['tanggalAkhir'] = Carbon::parse($tanggal[1])->format('Y-m-d');
@@ -288,7 +288,7 @@ class VclaimController extends ApiBPJSController
             "tanggal" => "required|date",
         ]);
         if ($validator->fails()) {
-            return $this->sendError($validator->errors()->first(), null, 201);
+            return $this->sendError($validator->errors()->first(), null, 400);
         }
         $url = env('VCLAIM_URL') . "Peserta/nokartu/" . $request->nomorKartu . "/tglSEP/" . $request->tanggal;
         $signature = $this->signature();
@@ -500,7 +500,7 @@ class VclaimController extends ApiBPJSController
             "formatFilter" => "required",
         ]);
         if ($validator->fails()) {
-            return $this->sendError($validator->errors()->first(), null, 201);
+            return $this->sendError($validator->errors()->first(), null, 400);
         }
         $url = env('VCLAIM_URL') . "RencanaKontrol/ListRencanaKontrol/Bulan/" . sprintf("%02d", $request->bulan)  . "/Tahun/" . $request->tahun . "/Nokartu/" . $request->nomorKartu . "/filter/" . $request->formatFilter;
         $signature = $this->signature();
@@ -613,7 +613,7 @@ class VclaimController extends ApiBPJSController
             "nomorRujukan" => "required",
         ]);
         if ($validator->fails()) {
-            return $this->sendError($validator->errors()->first(), null, 201);
+            return $this->sendError($validator->errors()->first(), null, 400);
         }
         $url = env('VCLAIM_URL') . "Rujukan/JumlahSEP/" . $request->jenisRujukan . "/" . $request->nomorRujukan;
         $signature = $this->signature();
