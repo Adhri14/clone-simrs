@@ -95,8 +95,8 @@ class WhatsappController extends Controller
     public function callback(Request $request)
     {
         $pesan = strtoupper($request->message);
-        if(!str_contains($request->number, '89529909036')){
-            $request['message'] = "Mohon maaf saat ini sistem sedang perbaikan. Mohon dimaklumi terimakasih.";
+        if (!str_contains($request->number, '89529909036')) {
+            $request['message'] = "*Layanan Whatsapp RSUD Waled 📱🏥*\nMohon maaf saat ini layanan Whatsapp sedang dalam perbaikan. Alternatif daftar online dapat melalui aplikasi Mobile JKN.\n\nhttps://play.google.com/store/apps/details?id=app.bpjs.mobile";
             return $this->send_message($request);
         }
         switch ($pesan) {
@@ -292,16 +292,12 @@ class WhatsappController extends Controller
                         $request['nomorreferensi'] = $suratkontrol->noSuratKontrol;
                         $antrian = new AntrianController();
                         $response = $antrian->ambil_antrian($request);
-                        dd($response->getData(), $suratkontrol);
-
-
-
-                        $request['contenttext'] = "Silahkan konfirmasi pendaftaran data pasien menggunakan surat kontrol berikut \n\n*No Surat* : " . $suratkontrol->noSuratKontrol . "\n*Tgl Surat* : " . $suratkontrol->tglTerbit . "\n*Pasien* : " . $peserta->nama  . "\n*Diagnosa* : " . $sep->diagnosa . "\n*Poli Tujuan* : " . $suratkontrol->namaPoliTujuan  . "\n*Dokter* : " . $suratkontrol->namaDokter . "\n*Tgl Kontrol* : " . $suratkontrol->tglRencanaKontrol . "\n\nApakah anda akan mendaftar pada tanggal tersebut atau ingin merubah jadwal kontrol ? Silahkan tentukan pilihannya dibawah ini.";
-                        $request['titletext'] = "4. Konfirmasi Daftar Kontrol";
-                        $request['buttontext'] = 'PILIHAN KONTROL';
-                        $request['rowtitle'] = 'DAFTAR KONTROL TGL ' . $suratkontrol->tglRencanaKontrol . ',RUBAH TANGGAL KONTROL';
-                        $request['rowdescription'] = '@DAFTARKONTROL#' . $suratkontrol->noSuratKontrol . ',@RUBAHKONTROL#' . $suratkontrol->noSuratKontrol;
-                        return $this->send_list($request);
+                        if ($response->status() === 200) {
+                            return $response->getData();
+                        } else {
+                            $request['message'] = "Maaf anda tidak bisa daftar : " .  $response->getData()->metadata->message . " Atau daftar melalui offline.";
+                            return $this->send_message($request);
+                        }
                     } else {
                         $request['message'] = "*5. Daftar Kontrol*\nMohon maaf " . $response->getData()->metadata->message;
                         return $this->send_message($request);
@@ -460,7 +456,7 @@ class WhatsappController extends Controller
                 }
                 // default
                 else {
-                    $request['contenttext'] = "Mohon maaf pesan yang anda kirim tidak dapat diproses oleh sistem ❎🙏\n\nUntuk pertanyaan & pengaduan silahkan hubungi :\n*Humas RSUD Waled 08983311118*\n\nSilahkan klik *MENU UTAMA* yang dapat diproses dibawah ini ⬇";
+                    $request['contenttext'] = "Selamat datang di layanan kami. Pesan ini dibalas oleh sistem pelayanan otomatis.🙏\n\nUntuk pertanyaan & pengaduan silahkan hubungi :\n*Humas RSUD Waled 08983311118*\n\nSilahkan klik *MENU UTAMA* yang dapat diproses dibawah ini ⬇";
                     $request['titletext'] = "Layanan Whatsapp RSUD Waled 📱🏥";
                     $request['buttontext'] = 'MENU UTAMA';
                     $request['rowtitle'] = 'INFO CARA PENDAFTARAN,DAFTAR RAWAT JALAN,INFO JADWAL POLIKLINIK,PERTANYAAN DAN PENGADUAN';
