@@ -25,7 +25,7 @@ return new class extends Migration
             $table->string('namaHari')->nullable();
             $table->string('jadwal')->nullable();
             $table->string('kapasitasPasien')->nullable();
-            $table->string('libur')->nullable();
+            $table->boolean('libur')->default(0);
             $table->timestamps();
         });
     }

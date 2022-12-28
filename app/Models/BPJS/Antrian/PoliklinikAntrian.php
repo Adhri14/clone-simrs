@@ -14,5 +14,6 @@ class PoliklinikAntrian extends Model
         'namaPoli',
         'kodeSubspesialis',
         'namaSubspesialis',
+        'status',
     ];
 }

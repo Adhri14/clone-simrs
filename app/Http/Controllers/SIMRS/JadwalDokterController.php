@@ -48,7 +48,6 @@ class JadwalDokterController extends Controller
     }
     public function jadwaldokter_simrs(Request $request)
     {
-
         // get jadwal
         $jadwals = null;
         if (isset($request->kodePoli)) {
@@ -87,17 +86,17 @@ class JadwalDokterController extends Controller
             'libur' => 'required',
         ]);
         JadwalDokterAntrian::firstOrCreate([
-            'kodePoli' => $request->kodePoli,
-            'namaPoli' => $request->namaPoli,
-            'kodeSubspesialis' => $request->kodeSubspesialis,
-            'namaSubspesialis' => $request->namaSubspesialis,
-            'kodeDokter' => $request->kodeDokter,
-            'namaDokter' => $request->namaDokter,
+            'kodepoli' => $request->kodePoli,
+            'namapoli' => $request->namaPoli,
+            'kodesubspesialis' => $request->kodeSubspesialis,
+            'namasubspesialis' => $request->namaSubspesialis,
+            'kodedokter' => $request->kodeDokter,
+            'namadokter' => $request->namaDokter,
             'hari' => $request->hari,
-            'namaHari' => $request->namaHari,
+            'namahari' => $request->namaHari,
         ], [
             'jadwal' => $request->jadwal,
-            'kapasitasPasien' => $request->kapasitasPasien,
+            'kapasitaspasien' => $request->kapasitasPasien,
             'libur' => $request->libur,
         ]);
         Alert::success('Success', 'Jadwal Dokter Telah Ditambahkan');

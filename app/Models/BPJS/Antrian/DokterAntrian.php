@@ -11,5 +11,6 @@ class DokterAntrian extends Model
     protected $fillable = [
         'kodeDokter',
         'namaDokter',
+        'status',
     ];
 }
