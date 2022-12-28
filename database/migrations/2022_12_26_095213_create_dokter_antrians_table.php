@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('kodeDokter')->nullable();
             $table->string('namaDokter')->nullable();
+            $table->boolean('status')->default(0);
             $table->timestamps();
         });
     }

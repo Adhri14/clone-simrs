@@ -50,7 +50,7 @@
                                 <td>{{ $jadwal->namadokter }} ({{ $jadwal->kodedokter }})</td>
                                 <td>{{ $jadwal->kapasitaspasien }}</td>
                                 <td>
-                                    @if ($jadwal_antrian->where('kodeSubspesialis', $jadwal->kodesubspesialis)->where('kodeDokter', $jadwal->kodedokter)->where('hari', $jadwal->hari)->first())
+                                    @if ($jadwal_antrian->where('kodesubspesialis', $jadwal->kodesubspesialis)->where('kodedokter', $jadwal->kodedokter)->where('hari', $jadwal->hari)->first())
                                         <button class="btn btn-secondary btn-xs">Sudah Ada</button>
                                     @else
                                         <form action="{{ route('pelayanan-medis.jadwaldokter_add') }}" method="POST">
@@ -87,25 +87,25 @@
                 @endphp
                 <x-adminlte-datatable id="table1" class="nowrap text-xs" :heads="$heads" :config="$config" striped
                     bordered hoverable compressed>
-                    @foreach ($jadwal_antrian->groupby('kodeDokter') as $item)
+                    @foreach ($jadwal_antrian->groupby('kodedokter') as $item)
                         <tr>
                             <td>
-                                {{ strtoupper($item->first()->namaSubspesialis) }}
-                                ({{ $item->first()->kodeSubspesialis }})
+                                {{ strtoupper($item->first()->namasubspesialis) }}
+                                ({{ $item->first()->kodesubspesialis }})
                             </td>
-                            <td>{{ $item->first()->namaDokter }} ({{ $item->first()->kodeDokter }} )</td>
+                            <td>{{ $item->first()->namadokter }} ({{ $item->first()->kodedokter }})</td>
                             @for ($i = 1; $i <= 6; $i++)
                                 <td>
                                     @foreach ($item as $jadwal)
                                         @if ($jadwal->hari == $i)
                                             @if ($jadwal->libur == 1)
                                                 <x-adminlte-button
-                                                    label="{{ $jadwal->jadwal }} / {{ $jadwal->kapasitasPasien }}"
+                                                    label="{{ $jadwal->jadwal }} / {{ $jadwal->kapasitaspasien }}"
                                                     class="btn-xs mb-1 btnJadwal" theme="danger" data-toggle="tooltip"
                                                     title="Jadwal Dokter" data-id="{{ $jadwal->id }}" />
                                             @else
                                                 <x-adminlte-button
-                                                    label="{{ $jadwal->jadwal }} / {{ $jadwal->kapasitasPasien }}"
+                                                    label="{{ $jadwal->jadwal }} / {{ $jadwal->kapasitaspasien }}"
                                                     class="btn-xs mb-1 btnJadwal" theme="warning" data-toggle="tooltip"
                                                     title="Jadwal Dokter" data-id="{{ $jadwal->id }}" />
                                             @endif

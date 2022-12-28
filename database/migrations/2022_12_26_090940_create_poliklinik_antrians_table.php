@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('namaPoli')->nullable();
             $table->string('kodeSubspesialis')->nullable();
             $table->string('namaSubspesialis')->nullable();
+            $table->boolean('status')->default(0);
             $table->timestamps();
         });
     }

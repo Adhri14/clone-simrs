@@ -57,7 +57,7 @@ class PoliklinikController extends Controller
     public function poliklik_antrian_yanmed()
     {
         $polikliniks = PoliklinikAntrian::get();
-        return view('simrs.pelyananmedis.poliklinik_antrian', compact([
+        return view('simrs.pelyananmedis.poliklinik_antrian_bpjs', compact([
             'polikliniks'
         ]));
     }
