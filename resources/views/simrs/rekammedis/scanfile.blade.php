@@ -17,7 +17,7 @@
                 {{-- <x-adminlte-input name="Tanggal Kunjungan" label="Nama Pasien" /> --}}
                 {{-- <x-adminlte-input name="Tanggal Kunjungan" label="Nama Pasien" /> --}}
                 {{-- scanner upload --}}
-                <form id="form1" action="http://192.168.2.30/antrian/public/scanner/real.php?action=upload" method="POST"
+                <form id="form1" action="http://192.168.2.30/simrs/public/scanner/real.php?action=upload" method="POST"
                     enctype="multipart/form-data" target="_blank">
                     @php
                         $config = ['format' => 'YYYY-MM-DD HH:MM:SS'];
