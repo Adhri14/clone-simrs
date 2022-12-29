@@ -209,7 +209,6 @@ class WhatsappController extends Controller
                                 $peserta = $rujukan->peserta;
                                 $poli = $rujukan->poliRujukan;
                                 $diagnosa = $rujukan->diagnosa;
-
                                 $rowtanggal = now()->translatedFormat('l') . ' ' . now()->translatedFormat('d M Y');
                                 $rowdesc = "@TGLRFKTP#" . $rujukan->noKunjungan . "#" . now()->translatedFormat('Y-m-d') . "#" . $poli->kode;
                                 for ($i = 0; $i < 6; $i++) {
@@ -302,6 +301,7 @@ class WhatsappController extends Controller
                         $request['kodedokter'] =  $jadwaldokter->kodedokter;
                         $request['jampraktek'] =  $jadwaldokter->jadwal;
                         $request['jeniskunjungan'] = 1;
+                        $request['method'] = "Whatsapp";
                         $request['nomorreferensi'] = $rujukan->noKunjungan;
                         $antrian = new AntrianController();
                         $response = $antrian->ambil_antrian($request);
@@ -361,8 +361,10 @@ class WhatsappController extends Controller
                         $request['contenttext'] = "Silahkan konfirmasi pendaftaran data pasien menggunakan surat kontrol berikut \n\n*No Surat* : " . $suratkontrol->noSuratKontrol . "\n*Tgl Surat* : " . $suratkontrol->tglTerbit . "\n*Pasien* : " . $peserta->nama  . "\n*Diagnosa* : " . $sep->diagnosa . "\n*Poli Tujuan* : " . $suratkontrol->namaPoliTujuan  . "\n*Dokter* : " . $suratkontrol->namaDokter . "\n*Tgl Kontrol* : " . $suratkontrol->tglRencanaKontrol . "\n\nApakah anda akan mendaftar pada tanggal tersebut atau ingin merubah jadwal kontrol ? Silahkan tentukan pilihannya dibawah ini.";
                         $request['titletext'] = "4. Konfirmasi Daftar Kontrol";
                         $request['buttontext'] = 'PILIHAN KONTROL';
-                        $request['rowtitle'] = 'DAFTAR KONTROL TGL ' . $suratkontrol->tglRencanaKontrol . ',RUBAH TANGGAL KONTROL';
-                        $request['rowdescription'] = '@DAFTARKONTROL#' . $suratkontrol->noSuratKontrol . ',@RUBAHKONTROL#' . $suratkontrol->noSuratKontrol;
+                        // $request['rowtitle'] = 'DAFTAR KONTROL TGL ' . $suratkontrol->tglRencanaKontrol . ',RUBAH TANGGAL KONTROL';
+                        // $request['rowdescription'] = '@DAFTARKONTROL#' . $suratkontrol->noSuratKontrol . ',@RUBAHKONTROL#' . $suratkontrol->noSuratKontrol;
+                        $request['rowtitle'] = 'DAFTAR KONTROL TGL ' . $suratkontrol->tglRencanaKontrol;
+                        $request['rowdescription'] = '@DAFTARKONTROL#' . $suratkontrol->noSuratKontrol;
                         return $this->send_list($request);
                     } else {
                         $request['message'] = "*4. Konfirmasi Daftar Kontrol*\nMohon maaf " . $response->getData()->metadata->message;
@@ -393,6 +395,7 @@ class WhatsappController extends Controller
                         $request['kodedokter'] =  $suratkontrol->kodeDokter;
                         $request['jampraktek'] =  $jadwaldokter->jadwal;
                         $request['jeniskunjungan'] = 3;
+                        $request['method'] = "Whatsapp";
                         $request['nomorreferensi'] = $suratkontrol->noSuratKontrol;
                         $antrian = new AntrianController();
                         $response = $antrian->ambil_antrian($request);
