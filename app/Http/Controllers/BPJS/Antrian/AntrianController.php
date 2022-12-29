@@ -198,7 +198,6 @@ class AntrianController extends ApiBPJSController
         $url = env('ANTRIAN_URL') . "ref/pasien/fp/identitas/" . $request->jenisIdentitas . "/noidentitas/" . $request->noIdentitas;
         $signature = $this->signature();
         $response = Http::withHeaders($signature)->get($url);
-        // dd($response->json());
         return $this->response_decrypt($response, $signature);
     }
     public function ref_dokter()
@@ -927,7 +926,7 @@ class AntrianController extends ApiBPJSController
             "keterangan" => "required",
         ]);
         if ($validator->fails()) {
-            return $this->sendError($validator->errors()->first(), null, 201);
+            return $this->sendError($validator->errors()->first(), null, 400);
         }
         $antrian = Antrian::firstWhere('kodebooking', $request->kodebooking);
         if (isset($antrian)) {

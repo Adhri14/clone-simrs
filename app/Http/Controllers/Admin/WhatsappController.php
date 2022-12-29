@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\BPJS\Antrian\AntrianController;
 use App\Http\Controllers\BPJS\Vclaim\VclaimController;
 use App\Http\Controllers\Controller;
+use App\Models\Antrian;
 use App\Models\BPJS\Antrian\JadwalDokterAntrian;
 use App\Models\PasienDB;
 use App\Models\PoliklinikDB;
@@ -275,7 +276,6 @@ class WhatsappController extends Controller
                         $request['message'] = "*5. Konfirmasi Daftar Menggunakan Rujukan*\nMohon maaf " . $response->getData()->metadata->message;
                         return $this->send_message($request);
                     }
-                    // dd($rujukan);
                     $request['contenttext'] = "Sebelum didaftarkan silahkan konfirmasi data pasien yang akan didaftarkan dibawah ini : \n*No Rujukan* : " . $rujukan->noKunjungan . "\n*Tgl Rujukan* : " . $rujukan->tglKunjungan . "\n*Faskes 1* : " . $rujukan->provPerujuk->nama . "\n*Pasien* : " . $peserta->nama . "\n*No RM* : " . $peserta->mr->noMR . "\n*NIK* : " . $peserta->nik . "\n*No BPJS* : " . $peserta->noKartu . "\n*Status* : " . $peserta->statusPeserta->keterangan . "\n*Diagnosa* : " . $diagnosa->nama . "\n*Keluhan* : " . $rujukan->keluhan . "\n\nAkan didaftarkan rawat jalan pada jadwal poliklinik berikut : \n*Poliklinik* : " . $jadwal->namasubspesialis . "\n*Dokter* : " . $jadwal->namadokter . "\n*Waktu* : " . $jadwal->namahari . " " . $jadwal->jadwal . "\n*Tanggal* : " . $request->tanggal . "\n\nSilahkan pilih jawaban konfirmasi dimenu dibawah ini.";
                     $request['titletext'] = "5. Konfirmasi Daftar Menggunakan Rujukan";
                     $request['buttontext'] = 'PILIH MENU';
@@ -417,46 +417,15 @@ class WhatsappController extends Controller
                 // BATAL ANTRIAN
                 else if (str_contains($pesan, "@BATALANTRI#")) {
                     $request['kodebooking'] = explode("#", explode('@', $pesan)[1])[1];
+                    $request['keterangan'] = "Dibatalkan melalui whatsapp";
                     $antrian = Antrian::firstWhere('kodebooking', $request->kodebooking);
-
-                    dd($antrian);
-
-                    $request['noSuratKontrol'] = explode("#", explode('@', $pesan)[1])[1];
-                    $vclaim = new VclaimController();
-                    $response = $vclaim->suratkontrol_nomor($request);
+                    $api = new AntrianController();
+                    $response = $api->batal_antrian($request);
                     if ($response->status() == 200) {
-                        $suratkontrol = $response->getData()->response;
-                        $sep = $suratkontrol->sep;
-                        $peserta = $sep->peserta;
-                        $pasien = PasienDB::where('no_Bpjs', $peserta->noKartu)->first();
-                        $hari = Carbon::parse($suratkontrol->tglRencanaKontrol)->dayOfWeek;
-                        $jadwaldokter = JadwalDokterAntrian::where('kodeDokter',  $suratkontrol->kodeDokter)
-                            ->where('hari', $hari)->first();
-                        if (empty($jadwaldokter) || $jadwaldokter->libur) {
-                            $request['message'] = "*5. Daftar Kontrol*\nMohon maaf pada tanggal " . $suratkontrol->tglRencanaKontrol . " jadwal dokter dipoliklinik tersebut diliburkan / ditutup.";
-                            return $this->send_message($request);
-                        }
-                        $request['nomorkartu'] = $peserta->noKartu;
-                        $request['nik'] =  $pasien->nik_bpjs;
-                        $request['nohp'] =  "0" . substr(str_replace("@c.us", "", $request->number), 2);
-                        $request['kodepoli'] =  $suratkontrol->poliTujuan;
-                        $request['norm'] =  $pasien->no_rm;
-                        $request['tanggalperiksa'] =  $suratkontrol->tglRencanaKontrol;
-                        $request['kodedokter'] =  $suratkontrol->kodeDokter;
-                        $request['jampraktek'] =  $jadwaldokter->jadwal;
-                        $request['jeniskunjungan'] = 3;
-                        $request['method'] = "Whatsapp";
-                        $request['nomorreferensi'] = $suratkontrol->noSuratKontrol;
-                        $antrian = new AntrianController();
-                        $response = $antrian->ambil_antrian($request);
-                        if ($response->status() === 200) {
-                            return $response->getData();
-                        } else {
-                            $request['message'] = "Maaf anda tidak bisa daftar : " .  $response->getData()->metadata->message . " Atau daftar melalui offline.";
-                            return $this->send_message($request);
-                        }
+                        $request['message'] = "*Keterangan Batal Antrian*\Antrian dengan kodebooking " . $request->kodebooking . " telah dibatalkan. Terima kasih.";
+                        return $this->send_message($request);
                     } else {
-                        $request['message'] = "*5. Daftar Kontrol*\nMohon maaf " . $response->getData()->metadata->message;
+                        $request['message'] = "*Keterangan Batal Antrian*\nMohon maaf " . $response->getData()->metadata->message;
                         return $this->send_message($request);
                     }
                 }
