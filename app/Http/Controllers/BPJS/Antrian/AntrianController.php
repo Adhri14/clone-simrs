@@ -425,7 +425,6 @@ class AntrianController extends ApiBPJSController
         $signature = $this->signature();
         $response = Http::withHeaders($signature)->get($url);
         return $this->response_decrypt($response, $signature);
-
     }
     public function antrian_pendaftaran(Request $request)
     {
@@ -739,12 +738,12 @@ class AntrianController extends ApiBPJSController
                 $request['nomorrujukan'] = $request->nomorreferensi;
                 // rujukan fktp
                 if ($request->jeniskunjungan == 1) {
-                    $request['jenisrujukan'] = 1;
+                    $request['jenisRujukan'] = 1;
                     $response =  $vclaim->rujukan_nomor($request);
                 }
                 // rujukan antar rs
                 else if ($request->jeniskunjungan == 4) {
-                    $request['jenisrujukan'] = 2;
+                    $request['jenisRujukan'] = 2;
                     $response =  $vclaim->rujukan_rs_nomor($request);
                 }
                 if ($response->status() == 200) {
@@ -752,19 +751,9 @@ class AntrianController extends ApiBPJSController
                     $jumlah_sep  = $vclaim->rujukan_jumlah_sep($request);
                     if ($jumlah_sep->status() == 200) {
                         $jumlah_sep =  $jumlah_sep->getData()->response->jumlahSEP;
-                        if ($jumlah_sep) {
-                            return $this->sendError("Mohon maaf Rujukan anda telah digunakan untuk kunjungan pertama kali. Untuk kunjungan selanjutnya silahkan gunakan Surat Kontrol yang dbuat di Poliklinik", null, $response->status());
+                        if ($jumlah_sep != 0) {
+                            return $this->sendError("Rujukan anda telah digunakan untuk berobat. Untuk kunjungan selanjutnya silahkan gunakan Surat Kontrol yang dibuat di Poliklinik.", null, 400);
                         }
-                        // // poli sama kunjungan dengan rujukan
-                        // if ($rujukan->poliRujukan->kode == $request->kodepoli) {
-                        //     if ($jumlah_sep) {
-                        //         return $this->sendError("Mohon maaf Rujukan anda telah digunakan untuk kunjungan pertama kali. Untuk kunjungan selanjutnya silahkan gunakan Surat Kontrol yang dbuat di Poliklinik", null, $response->status());
-                        //     }
-                        // }
-                        // // poli beda kunjungan dengan rujukan
-                        // else {
-                        //     # belum
-                        // }
                     } else {
                         return $this->sendError($jumlah_sep->getData()->metadata->message, null, $jumlah_sep->status());
                     }
@@ -793,7 +782,6 @@ class AntrianController extends ApiBPJSController
             ->count();
         $antrian_all = Antrian::where('tanggalperiksa', $request->tanggalperiksa)
             ->count();
-
         $request['nomorantrean'] = $request->kodepoli . "-" .  str_pad($antrian_poli + 1, 3, '0', STR_PAD_LEFT);
         $request['angkaantrean'] = $antrian_all + 1;
         $request['kodebooking'] = strtoupper(uniqid());
