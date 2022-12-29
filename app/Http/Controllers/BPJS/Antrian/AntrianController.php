@@ -69,7 +69,7 @@ class AntrianController extends ApiBPJSController
         // get antrian
         $taskid = null;
         if (isset($request->kodebooking)) {
-            $response =  $this->getlisttask($request);
+            $response =  $this->taskid_antrean($request);
             if ($response->status() == 200) {
                 $taskid = $response->getData()->response;
             }
