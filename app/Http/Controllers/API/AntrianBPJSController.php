@@ -1264,6 +1264,14 @@ class AntrianBPJSController extends Controller
                     ],
                 ];
             }
+            if ($antrian->taskid == 99) {
+                return [
+                    "metadata" => [
+                        "message" => "Antrian telah dibatalkan sebelumnya.",
+                        "code" => 201,
+                    ],
+                ];
+            }
             if ($antrian->pasienbaru) {
                 $request['pasienbaru_print'] = 'BARU';
             } else {
