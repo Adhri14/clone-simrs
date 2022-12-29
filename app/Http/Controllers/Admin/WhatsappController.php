@@ -422,7 +422,7 @@ class WhatsappController extends Controller
                     $api = new AntrianController();
                     $response = $api->batal_antrian($request);
                     if ($response->status() == 200) {
-                        $request['message'] = "*Keterangan Batal Antrian*\Antrian dengan kodebooking " . $request->kodebooking . " telah dibatalkan. Terima kasih.";
+                        $request['message'] = "*Keterangan Batal Antrian*\nAntrian dengan kodebooking " . $request->kodebooking . " telah dibatalkan. Terima kasih.";
                         return $this->send_message($request);
                     } else {
                         $request['message'] = "*Keterangan Batal Antrian*\nMohon maaf " . $response->getData()->metadata->message;
