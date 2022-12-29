@@ -298,7 +298,7 @@ class WhatsappController extends Controller
                         $pasien = PasienDB::where('no_Bpjs', $peserta->noKartu)->first();
                         $request['nomorkartu'] = $peserta->noKartu;
                         $request['nik'] =  $pasien->nik_bpjs;
-                        $request['nohp'] =  $request->number;
+                        $request['nohp'] =  "0" . substr(str_replace("@c.us", "", $request->number), 2);
                         $request['kodepoli'] =  $poli->kode;
                         $request['norm'] =  $pasien->no_rm;
                         $request['tanggalperiksa'] =  $request->tanggal;
@@ -392,7 +392,53 @@ class WhatsappController extends Controller
                         }
                         $request['nomorkartu'] = $peserta->noKartu;
                         $request['nik'] =  $pasien->nik_bpjs;
-                        $request['nohp'] =  $request->number;
+                        $request['nohp'] =  "0" . substr(str_replace("@c.us", "", $request->number), 2);
+                        $request['kodepoli'] =  $suratkontrol->poliTujuan;
+                        $request['norm'] =  $pasien->no_rm;
+                        $request['tanggalperiksa'] =  $suratkontrol->tglRencanaKontrol;
+                        $request['kodedokter'] =  $suratkontrol->kodeDokter;
+                        $request['jampraktek'] =  $jadwaldokter->jadwal;
+                        $request['jeniskunjungan'] = 3;
+                        $request['method'] = "Whatsapp";
+                        $request['nomorreferensi'] = $suratkontrol->noSuratKontrol;
+                        $antrian = new AntrianController();
+                        $response = $antrian->ambil_antrian($request);
+                        if ($response->status() === 200) {
+                            return $response->getData();
+                        } else {
+                            $request['message'] = "Maaf anda tidak bisa daftar : " .  $response->getData()->metadata->message . " Atau daftar melalui offline.";
+                            return $this->send_message($request);
+                        }
+                    } else {
+                        $request['message'] = "*5. Daftar Kontrol*\nMohon maaf " . $response->getData()->metadata->message;
+                        return $this->send_message($request);
+                    }
+                }
+                // BATAL ANTRIAN
+                else if (str_contains($pesan, "@BATALANTRI#")) {
+                    $request['kodebooking'] = explode("#", explode('@', $pesan)[1])[1];
+                    $antrian = Antrian::firstWhere('kodebooking', $request->kodebooking);
+
+                    dd($antrian);
+
+                    $request['noSuratKontrol'] = explode("#", explode('@', $pesan)[1])[1];
+                    $vclaim = new VclaimController();
+                    $response = $vclaim->suratkontrol_nomor($request);
+                    if ($response->status() == 200) {
+                        $suratkontrol = $response->getData()->response;
+                        $sep = $suratkontrol->sep;
+                        $peserta = $sep->peserta;
+                        $pasien = PasienDB::where('no_Bpjs', $peserta->noKartu)->first();
+                        $hari = Carbon::parse($suratkontrol->tglRencanaKontrol)->dayOfWeek;
+                        $jadwaldokter = JadwalDokterAntrian::where('kodeDokter',  $suratkontrol->kodeDokter)
+                            ->where('hari', $hari)->first();
+                        if (empty($jadwaldokter) || $jadwaldokter->libur) {
+                            $request['message'] = "*5. Daftar Kontrol*\nMohon maaf pada tanggal " . $suratkontrol->tglRencanaKontrol . " jadwal dokter dipoliklinik tersebut diliburkan / ditutup.";
+                            return $this->send_message($request);
+                        }
+                        $request['nomorkartu'] = $peserta->noKartu;
+                        $request['nik'] =  $pasien->nik_bpjs;
+                        $request['nohp'] =  "0" . substr(str_replace("@c.us", "", $request->number), 2);
                         $request['kodepoli'] =  $suratkontrol->poliTujuan;
                         $request['norm'] =  $pasien->no_rm;
                         $request['tanggalperiksa'] =  $suratkontrol->tglRencanaKontrol;

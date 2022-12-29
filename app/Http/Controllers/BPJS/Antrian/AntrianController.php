@@ -848,6 +848,13 @@ class AntrianController extends ApiBPJSController
             $request['caption'] = "Kode booking : " . $request->kodebooking . "\nSilahkan gunakan *QR Code* ini untuk checkin di mesin antrian rawat jalan.";
             $request['number'] = $request->nohp;
             $wa->send_image($request);
+            // kirim batal
+            $request['contenttext'] = "Silahkan pilih menu dibawah ini untuk membatalkan antrian.";
+            $request['titletext'] = "Pilihan Batal Antrian";
+            $request['buttontext'] = 'PILIH MENU';
+            $request['rowtitle'] = "BATAL ANTRIAN " . $request->kodebooking;
+            $request['rowdescription'] = "@BATALANTRI#" . $request->kodebooking;
+            $wa->send_list($request);
             // kirim notif
             $wa = new WhatsappController();
             $request['notif'] = 'Antrian berhasil didaftarkan melalui ' . $request->method . "\n*Nama :* " . $request->nama . "\n*Poliklinik :* " . $request->namapoli .  "\n*Tanggal Periksa :* " . $request->tanggalperiksa . "\n*Jenis Kunjungan :* " . $request->jeniskunjungan;
