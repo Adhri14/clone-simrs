@@ -145,6 +145,8 @@ class WhatsappController extends Controller
                 break;
             case 'PASIEN BPJS':
                 $request['message'] = "*2. Ketik Format Pasien BPJS*\nUntuk pasien JKN/BPJS silahkan ketik nomor kartu 13 digit yang tertera pada kartu bpjs anda dengan format seperti berikut : \n_*Nomor Kartu*_#BPJS\n(Contoh)\n0000067XX23XX#BPJS";
+                $this->send_message($request);
+                $request['message'] = "0000067XX23XX#BPJS";
                 return $this->send_message($request);
                 break;
             default:
@@ -259,6 +261,7 @@ class WhatsappController extends Controller
                     $request['nomorRujukan'] = explode("#", explode('@', $pesan)[1])[1];
                     $request['tanggal'] = explode("#", explode('@', $pesan)[1])[2];
                     $request['idJadwal'] = explode("#", explode('@', $pesan)[1])[3];
+                    $request['jenisRujukan'] = 1;
                     $hari = Carbon::parse($request->tanggal)->dayOfWeek;
                     $jadwal = JadwalDokterAntrian::find($request->idJadwal);
                     $vclaim = new VclaimController();
@@ -272,6 +275,7 @@ class WhatsappController extends Controller
                         $request['message'] = "*5. Konfirmasi Daftar Menggunakan Rujukan*\nMohon maaf " . $response->getData()->metadata->message;
                         return $this->send_message($request);
                     }
+                    // dd($rujukan);
                     $request['contenttext'] = "Sebelum didaftarkan silahkan konfirmasi data pasien yang akan didaftarkan dibawah ini : \n*No Rujukan* : " . $rujukan->noKunjungan . "\n*Tgl Rujukan* : " . $rujukan->tglKunjungan . "\n*Faskes 1* : " . $rujukan->provPerujuk->nama . "\n*Pasien* : " . $peserta->nama . "\n*No RM* : " . $peserta->mr->noMR . "\n*NIK* : " . $peserta->nik . "\n*No BPJS* : " . $peserta->noKartu . "\n*Status* : " . $peserta->statusPeserta->keterangan . "\n*Diagnosa* : " . $diagnosa->nama . "\n*Keluhan* : " . $rujukan->keluhan . "\n\nAkan didaftarkan rawat jalan pada jadwal poliklinik berikut : \n*Poliklinik* : " . $jadwal->namasubspesialis . "\n*Dokter* : " . $jadwal->namadokter . "\n*Waktu* : " . $jadwal->namahari . " " . $jadwal->jadwal . "\n*Tanggal* : " . $request->tanggal . "\n\nSilahkan pilih jawaban konfirmasi dimenu dibawah ini.";
                     $request['titletext'] = "5. Konfirmasi Daftar Menggunakan Rujukan";
                     $request['buttontext'] = 'PILIH MENU';

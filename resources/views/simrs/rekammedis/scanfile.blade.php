@@ -131,7 +131,6 @@
                 }]
             });
         }
-
         function displayResponseOnPage(successful, mesg, response) {
             if (!successful) { // On error
                 document.getElementById('response').innerHTML = 'Failed: ' + mesg;
