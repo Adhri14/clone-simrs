@@ -414,6 +414,157 @@ class WhatsappController extends Controller
                         return $this->send_message($request);
                     }
                 }
+                // DAFTAR PAKE RUJUKAN FKTP
+                else if (str_contains($pesan, "@ANTARRS#")) {
+                    $request['nomorKartu'] = explode("#", explode('@', $pesan)[1])[1];
+                    $vclaim = new VclaimController();
+                    $response = $vclaim->rujukan_rs_peserta($request);
+                    if ($response->status() == 200) {
+                        $rujukans = $response->getData()->response->rujukan;
+                        $rowrujukan = null;
+                        $descrujukan = null;
+                        foreach ($rujukans as $value) {
+                            if (Carbon::parse($value->tglKunjungan)->addMonth(3) > Carbon::now()) {
+                                $rowrujukan =  $rowrujukan . "POLI " . $value->poliRujukan->nama  . ',';
+                                $descrujukan =  $descrujukan . '@RFKTP#' . $value->noKunjungan . ',';
+                            }
+                        }
+                        if ($rowrujukan == null) {
+                            $request['message'] = "*4. Pilih Rujukan FKTP*\nMohon maaf semua rujukan anda sudah lebih adri 3 bulan lalu. Silahkan untuk mendapatkan surat rujukan ke faskes 1.";
+                            return $this->send_message($request);
+                        }
+                        $request['contenttext'] = "Silahkan pilih nomor rujukan yang akan digunakan untuk mendaftar.";
+                        $request['titletext'] = "4. Pilih Rujukan FKTP";
+                        $request['buttontext'] = 'PILIH RUJUKAN';
+                        $request['rowtitle'] = $rowrujukan;
+                        $request['rowdescription'] = $descrujukan;
+                        return $this->send_list($request);
+                    } else {
+                        $request['message'] = "*3. Pilih Rujukan FKTP Aktif*\nMohon maaf " . $response->getData()->metadata->message;
+                        return $this->send_message($request);
+                    }
+                } else if (str_contains($pesan, "@RANTARRS#")) {
+                    $request['nomorRujukan'] = explode("#", explode('@', $pesan)[1])[1];
+                    $request['jenisRujukan'] = 2;
+                    $vclaim = new VclaimController();
+                    $response = $vclaim->rujukan_jumlah_sep($request);
+                    if ($response->status() == 200) {
+                        $jumlah_sep = $response->getData()->response->jumlahSEP;
+                        if ($jumlah_sep == 0) {
+                            $response = $vclaim->rujukan_rs_nomor($request);
+                            if ($response->status() == 200) {
+                                $rujukan = $response->getData()->response->rujukan;
+                                $peserta = $rujukan->peserta;
+                                $poli = $rujukan->poliRujukan;
+                                $diagnosa = $rujukan->diagnosa;
+                                $rowtanggal = now()->translatedFormat('l') . ' ' . now()->translatedFormat('d M Y');
+                                $rowdesc = "@TGLRFKTP#" . $rujukan->noKunjungan . "#" . now()->translatedFormat('Y-m-d') . "#" . $poli->kode;
+                                for ($i = 0; $i < 6; $i++) {
+                                    $rowtanggal = $rowtanggal . ',' .   now()->addDays($i + 1)->translatedFormat('l') . ' ' . now()->addDays($i + 1)->translatedFormat('d M Y');
+                                    $rowdesc = $rowdesc . ',' .  "@TGLRFKTP#" . $rujukan->noKunjungan . "#" . now()->addDays($i + 1)->translatedFormat('Y-m-d') . "#" . $poli->kode;
+                                }
+                                $request['contenttext'] = "Informasi rujukan pasien :\n*No Rujukan* : " . $rujukan->noKunjungan . "\n*Tgl Rujukan* : " . $rujukan->tglKunjungan . "\n*Asal Rujukan* : " . $rujukan->provPerujuk->nama . "\n*Pasien* : " . $peserta->nama . "\n*No RM* : " . $peserta->mr->noMR . "\n*Status* : " . $peserta->statusPeserta->keterangan . "\n\n*Poliklinik* : " . $poli->nama  . "\n*Diagnosa* : " . $diagnosa->nama . "\n*Keluhan* : " . $rujukan->keluhan    . "\n\nSilahkan pilih tanggal daftar menggunakan rujukan dibawah ini.";
+                                $request['titletext'] = "4. Pilih Tanggal Kunjungan 🗓";
+                                $request['buttontext'] = 'PILIH TANGGAL';
+                                $request['rowtitle'] = $rowtanggal;
+                                $request['rowdescription'] = $rowdesc;
+                                return $this->send_list($request);
+                            } else {
+                                $request['message'] = "*4. Konfirmasi Rujukan FKTP*\nMohon maaf " . $response->getData()->metadata->message;
+                                return $this->send_message($request);
+                            }
+                        } else {
+                            $request['message'] = "Mohon maaf rujukan yang anda pilih telah digunakan. Anda harus mendaftar menggunakan *SURAT KONTROL* yang dibuat saat berobat sebelumnya.";
+                            return $this->send_message($request);
+                        }
+                    } else {
+                        $request['message'] = "*4. Konfirmasi Rujukan FKTP*\nMohon maaf jumlah SEP rujukan " . $response->getData()->metadata->message;
+                        return $this->send_message($request);
+                    }
+                } else if (str_contains($pesan, "@TGLANTARRS#")) {
+                    $request['nomorRujukan'] = explode("#", explode('@', $pesan)[1])[1];
+                    $request['tanggal'] = explode("#", explode('@', $pesan)[1])[2];
+                    $request['kodePoli'] = explode("#", explode('@', $pesan)[1])[3];
+                    $hari = Carbon::parse($request->tanggal)->dayOfWeek;
+                    $jadwals = JadwalDokterAntrian::where('hari', $hari)->where('kodesubspesialis', $request->kodePoli)->get();
+                    if ($jadwals->count() == 0) {
+                        $request['message'] = "*5. Daftar Kontrol*\nMohon maaf tidak ada jadwal dokter poliklinik pada hari tersebut.";
+                        return $this->send_message($request);
+                    }
+                    $rowjadwal = null;
+                    $rowdesc = null;
+                    foreach ($jadwals as $value) {
+                        $rowjadwal = $rowjadwal . str_replace(",", ".", $value->namadokter)  .  " " . $value->namahari .  " " . $value->jadwal . ",";
+                        $rowdesc = $rowdesc . "@JFKTP#" .  $request->nomorRujukan . "#" .  $request->tanggal . "#" .  $value->id . ",";
+                    }
+                    $request['contenttext'] = "Silahkan pilih jadwal dokter dibawah ini.";
+                    $request['titletext'] = "4. Pilih Jadwal Dokter 🗓";
+                    $request['buttontext'] = 'PILIH JADWAL DOKTER';
+                    $request['rowtitle'] = $rowjadwal;
+                    $request['rowdescription'] = $rowdesc;
+                    return $this->send_list($request);
+                } else if (str_contains($pesan, "@JANTARRS#")) {
+                    $request['nomorRujukan'] = explode("#", explode('@', $pesan)[1])[1];
+                    $request['tanggal'] = explode("#", explode('@', $pesan)[1])[2];
+                    $request['idJadwal'] = explode("#", explode('@', $pesan)[1])[3];
+                    $request['jenisRujukan'] = 1;
+                    $hari = Carbon::parse($request->tanggal)->dayOfWeek;
+                    $jadwal = JadwalDokterAntrian::find($request->idJadwal);
+                    $vclaim = new VclaimController();
+                    $response = $vclaim->rujukan_rs_nomor($request);
+                    if ($response->status() == 200) {
+                        $rujukan =  $response->getData()->response->rujukan;
+                        $peserta = $rujukan->peserta;
+                        $diagnosa = $rujukan->diagnosa;
+                        $poli = $rujukan->poliRujukan;
+                    } else {
+                        $request['message'] = "*5. Konfirmasi Daftar Menggunakan Rujukan*\nMohon maaf " . $response->getData()->metadata->message;
+                        return $this->send_message($request);
+                    }
+                    $request['contenttext'] = "Sebelum didaftarkan silahkan konfirmasi data pasien yang akan didaftarkan dibawah ini : \n*No Rujukan* : " . $rujukan->noKunjungan . "\n*Tgl Rujukan* : " . $rujukan->tglKunjungan . "\n*Faskes 1* : " . $rujukan->provPerujuk->nama . "\n*Pasien* : " . $peserta->nama . "\n*No RM* : " . $peserta->mr->noMR . "\n*NIK* : " . $peserta->nik . "\n*No BPJS* : " . $peserta->noKartu . "\n*Status* : " . $peserta->statusPeserta->keterangan . "\n*Diagnosa* : " . $diagnosa->nama . "\n*Keluhan* : " . $rujukan->keluhan . "\n\nAkan didaftarkan rawat jalan pada jadwal poliklinik berikut : \n*Poliklinik* : " . $jadwal->namasubspesialis . "\n*Dokter* : " . $jadwal->namadokter . "\n*Waktu* : " . $jadwal->namahari . " " . $jadwal->jadwal . "\n*Tanggal* : " . $request->tanggal . "\n\nSilahkan pilih jawaban konfirmasi dimenu dibawah ini.";
+                    $request['titletext'] = "5. Konfirmasi Daftar Menggunakan Rujukan";
+                    $request['buttontext'] = 'PILIH MENU';
+                    $request['rowtitle'] = 'DAFTAR TANGGAL ' . $request->tanggal . ' ,DAFTAR TANGGAL LAIN';
+                    $request['rowdescription'] = '@DAFTARFKTP#' . $request->nomorRujukan . '#' . $request->tanggal . '#' . $request->idJadwal . ',@RFKTP#' . $request->nomorRujukan;
+                    return $this->send_list($request);
+                } else if (str_contains($pesan, "@DAFTARANTARRS#")) {
+                    $request['nomorRujukan'] = explode("#", explode('@', $pesan)[1])[1];
+                    $request['tanggal'] = explode("#", explode('@', $pesan)[1])[2];
+                    $request['idJadwal'] = explode("#", explode('@', $pesan)[1])[3];
+                    $hari = Carbon::parse($request->tanggal)->dayOfWeek;
+                    $jadwaldokter = JadwalDokterAntrian::find($request->idJadwal);
+                    $vclaim = new VclaimController();
+                    $response = $vclaim->rujukan_rs_nomor($request);
+                    if ($response->status() == 200) {
+                        $rujukan =  $response->getData()->response->rujukan;
+                        $peserta = $rujukan->peserta;
+                        $diagnosa = $rujukan->diagnosa;
+                        $poli = $rujukan->poliRujukan;
+                        $pasien = PasienDB::where('no_Bpjs', $peserta->noKartu)->first();
+                        $request['nomorkartu'] = $peserta->noKartu;
+                        $request['nik'] =  $pasien->nik_bpjs;
+                        $request['nohp'] =  "0" . substr(str_replace("@c.us", "", $request->number), 2);
+                        $request['kodepoli'] =  $poli->kode;
+                        $request['norm'] =  $pasien->no_rm;
+                        $request['tanggalperiksa'] =  $request->tanggal;
+                        $request['kodedokter'] =  $jadwaldokter->kodedokter;
+                        $request['jampraktek'] =  $jadwaldokter->jadwal;
+                        $request['jeniskunjungan'] = 1;
+                        $request['method'] = "Whatsapp";
+                        $request['nomorreferensi'] = $rujukan->noKunjungan;
+                        $antrian = new AntrianController();
+                        $response = $antrian->ambil_antrian($request);
+                        if ($response->status() === 200) {
+                            return $response->getData();
+                        } else {
+                            $request['message'] = "Maaf anda tidak bisa daftar : " .  $response->getData()->metadata->message . " Atau daftar melalui offline.";
+                            return $this->send_message($request);
+                        }
+                    } else {
+                        $request['message'] = "*5. Konfirmasi Daftar Menggunakan Rujukan*\nMohon maaf " . $response->getData()->metadata->message;
+                        return $this->send_message($request);
+                    }
+                }
                 // BATAL ANTRIAN
                 else if (str_contains($pesan, "@BATALANTRI#")) {
                     $request['kodebooking'] = explode("#", explode('@', $pesan)[1])[1];
