@@ -430,21 +430,21 @@ class WhatsappController extends Controller
                         foreach ($rujukans as $value) {
                             if (Carbon::parse($value->tglKunjungan)->addMonth(3) > Carbon::now()) {
                                 $rowrujukan =  $rowrujukan . "POLI " . $value->poliRujukan->nama  . ',';
-                                $descrujukan =  $descrujukan . '@RFKTP#' . $value->noKunjungan . ',';
+                                $descrujukan =  $descrujukan . '@RANTARRS#' . $value->noKunjungan . ',';
                             }
                         }
                         if ($rowrujukan == null) {
-                            $request['message'] = "*4. Pilih Rujukan FKTP*\nMohon maaf semua rujukan anda sudah lebih adri 3 bulan lalu. Silahkan untuk mendapatkan surat rujukan ke faskes 1.";
+                            $request['message'] = "*4. Pilih Rujukan Antar RS*\nMohon maaf semua rujukan anda sudah lebih adri 3 bulan lalu. Silahkan untuk mendapatkan surat rujukan ke faskes 1.";
                             return $this->send_message($request);
                         }
                         $request['contenttext'] = "Silahkan pilih nomor rujukan yang akan digunakan untuk mendaftar.";
-                        $request['titletext'] = "4. Pilih Rujukan FKTP";
+                        $request['titletext'] = "4. Pilih Rujukan Antar RS";
                         $request['buttontext'] = 'PILIH RUJUKAN';
                         $request['rowtitle'] = $rowrujukan;
                         $request['rowdescription'] = $descrujukan;
                         return $this->send_list($request);
                     } else {
-                        $request['message'] = "*3. Pilih Rujukan FKTP Aktif*\nMohon maaf " . $response->getData()->metadata->message;
+                        $request['message'] = "*3. Pilih Rujukan Antar RS*\nMohon maaf " . $response->getData()->metadata->message;
                         return $this->send_message($request);
                     }
                 } else if (str_contains($pesan, "@RANTARRS#")) {
@@ -462,12 +462,12 @@ class WhatsappController extends Controller
                                 $poli = $rujukan->poliRujukan;
                                 $diagnosa = $rujukan->diagnosa;
                                 $rowtanggal = now()->translatedFormat('l') . ' ' . now()->translatedFormat('d M Y');
-                                $rowdesc = "@TGLRFKTP#" . $rujukan->noKunjungan . "#" . now()->translatedFormat('Y-m-d') . "#" . $poli->kode;
+                                $rowdesc = "@TGLANTARRS#" . $rujukan->noKunjungan . "#" . now()->translatedFormat('Y-m-d') . "#" . $poli->kode;
                                 for ($i = 0; $i < 6; $i++) {
                                     $rowtanggal = $rowtanggal . ',' .   now()->addDays($i + 1)->translatedFormat('l') . ' ' . now()->addDays($i + 1)->translatedFormat('d M Y');
-                                    $rowdesc = $rowdesc . ',' .  "@TGLRFKTP#" . $rujukan->noKunjungan . "#" . now()->addDays($i + 1)->translatedFormat('Y-m-d') . "#" . $poli->kode;
+                                    $rowdesc = $rowdesc . ',' .  "@TGLANTARRS#" . $rujukan->noKunjungan . "#" . now()->addDays($i + 1)->translatedFormat('Y-m-d') . "#" . $poli->kode;
                                 }
-                                $request['contenttext'] = "Informasi rujukan pasien :\n*No Rujukan* : " . $rujukan->noKunjungan . "\n*Tgl Rujukan* : " . $rujukan->tglKunjungan . "\n*Asal Rujukan* : " . $rujukan->provPerujuk->nama . "\n*Pasien* : " . $peserta->nama . "\n*No RM* : " . $peserta->mr->noMR . "\n*Status* : " . $peserta->statusPeserta->keterangan . "\n\n*Poliklinik* : " . $poli->nama  . "\n*Diagnosa* : " . $diagnosa->nama . "\n*Keluhan* : " . $rujukan->keluhan    . "\n\nSilahkan pilih tanggal daftar menggunakan rujukan dibawah ini.";
+                                $request['contenttext'] = "Informasi rujukan antar RS pasien :\n*No Rujukan* : " . $rujukan->noKunjungan . "\n*Tgl Rujukan* : " . $rujukan->tglKunjungan . "\n*Asal Rujukan* : " . $rujukan->provPerujuk->nama . "\n*Pasien* : " . $peserta->nama . "\n*No RM* : " . $peserta->mr->noMR . "\n*Status* : " . $peserta->statusPeserta->keterangan . "\n\n*Poliklinik* : " . $poli->nama  . "\n*Diagnosa* : " . $diagnosa->nama . "\n*Keluhan* : " . $rujukan->keluhan    . "\n\nSilahkan pilih tanggal daftar menggunakan rujukan dibawah ini.";
                                 $request['titletext'] = "4. Pilih Tanggal Kunjungan 🗓";
                                 $request['buttontext'] = 'PILIH TANGGAL';
                                 $request['rowtitle'] = $rowtanggal;
@@ -499,7 +499,7 @@ class WhatsappController extends Controller
                     $rowdesc = null;
                     foreach ($jadwals as $value) {
                         $rowjadwal = $rowjadwal . str_replace(",", ".", $value->namadokter)  .  " " . $value->namahari .  " " . $value->jadwal . ",";
-                        $rowdesc = $rowdesc . "@JFKTP#" .  $request->nomorRujukan . "#" .  $request->tanggal . "#" .  $value->id . ",";
+                        $rowdesc = $rowdesc . "@JANTARRS#" .  $request->nomorRujukan . "#" .  $request->tanggal . "#" .  $value->id . ",";
                     }
                     $request['contenttext'] = "Silahkan pilih jadwal dokter dibawah ini.";
                     $request['titletext'] = "4. Pilih Jadwal Dokter 🗓";
@@ -511,7 +511,7 @@ class WhatsappController extends Controller
                     $request['nomorRujukan'] = explode("#", explode('@', $pesan)[1])[1];
                     $request['tanggal'] = explode("#", explode('@', $pesan)[1])[2];
                     $request['idJadwal'] = explode("#", explode('@', $pesan)[1])[3];
-                    $request['jenisRujukan'] = 1;
+                    $request['jenisRujukan'] = 2;
                     $hari = Carbon::parse($request->tanggal)->dayOfWeek;
                     $jadwal = JadwalDokterAntrian::find($request->idJadwal);
                     $vclaim = new VclaimController();
@@ -529,7 +529,7 @@ class WhatsappController extends Controller
                     $request['titletext'] = "5. Konfirmasi Daftar Menggunakan Rujukan";
                     $request['buttontext'] = 'PILIH MENU';
                     $request['rowtitle'] = 'DAFTAR TANGGAL ' . $request->tanggal . ' ,DAFTAR TANGGAL LAIN';
-                    $request['rowdescription'] = '@DAFTARFKTP#' . $request->nomorRujukan . '#' . $request->tanggal . '#' . $request->idJadwal . ',@RFKTP#' . $request->nomorRujukan;
+                    $request['rowdescription'] = '@DAFTARANTARRS#' . $request->nomorRujukan . '#' . $request->tanggal . '#' . $request->idJadwal . ',@RANTARRS#' . $request->nomorRujukan;
                     return $this->send_list($request);
                 } else if (str_contains($pesan, "@DAFTARANTARRS#")) {
                     $request['nomorRujukan'] = explode("#", explode('@', $pesan)[1])[1];
