@@ -584,19 +584,19 @@ class WhatsappController extends Controller
                         return $this->send_message($request);
                     }
                 }
-                // // info jadwal poli
-                // else if (str_contains($pesan, 'JADWAL_POLIKLINIK_')) {
-                //     $poli = explode('_', $pesan)[2];
-                //     $rowjadwaldokter = null;
-                //     $jadwaldokters = JadwalDokter::where('namasubspesialis', $poli)->get();
-                //     foreach ($jadwaldokters as  $value) {
-                //         $rowjadwaldokter = $rowjadwaldokter . $this->hari[$value->hari] . '  : ' . $value->namadokter . ' ' . $value->jadwal . " KUOTA : " . $value->kapasitaspasien . "\n";
-                //     }
-                //     $request['contenttext'] = "Jadwal dokter poliklinik " . $poli . " sebagai berikut : \n\n" . $rowjadwaldokter;
-                //     $request['titletext'] = "3. Pilih Jadwal Dokter " . $poli;
-                //     $request['buttontext'] = 'INFO JADWAL POLIKLINIK';
-                //     return $this->send_button($request);
-                // }
+                // INFO JADWAL POLI
+                else if (str_contains($pesan, 'JADWAL_POLIKLINIK_')) {
+                    $poli = explode('_', $pesan)[2];
+                    $rowjadwaldokter = null;
+                    $jadwaldokters = JadwalDokterAntrian::where('namasubspesialis', $poli)->orderBy('hari')->get();
+                    foreach ($jadwaldokters as  $value) {
+                        $rowjadwaldokter = $rowjadwaldokter . $this->hari[$value->hari] . '  : ' . $value->namadokter . ' ' . $value->jadwal . "\n";
+                    }
+                    $request['contenttext'] = "Jadwal dokter poliklinik " . $poli . " sebagai berikut : \n\n" . $rowjadwaldokter;
+                    $request['titletext'] = "3. Pilih Jadwal Dokter " . $poli;
+                    $request['buttontext'] = 'INFO JADWAL POLIKLINIK';
+                    return $this->send_button($request);
+                }
                 // // 2. pilih poli terus tanggal
                 // else if (substr($pesan, 0, 11) == 'POLIKLINIK_') {
                 //     $poli = explode('_', $pesan)[1];
