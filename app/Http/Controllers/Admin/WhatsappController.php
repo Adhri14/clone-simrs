@@ -345,11 +345,11 @@ class WhatsappController extends Controller
                             }
                         }
                         if ($rowsuratkontrol == null) {
-                            $request['message'] = "*3. Pilih Aktif Kontrol Aktif*\nMohon maaf semua surat kontrol anda telah digunakan. \nUntuk penyesuaian yang akan datang silahkan minta daftarkan surat kontrol yang terintegrasi dengan sistem setelah pelayanan di Poliklinik. \nTerima kasih. ";
+                            $request['message'] = "*4. Pilih Aktif Kontrol Aktif*\nMohon maaf semua surat kontrol anda telah digunakan. \nUntuk penyesuaian yang akan datang silahkan minta daftarkan surat kontrol yang terintegrasi dengan sistem setelah pelayanan di Poliklinik. \nTerima kasih. ";
                             return $this->send_message($request);
                         };
                         $request['contenttext'] = "Silahkan pilih nomor surat kontrol yang akan digunakan untuk mendaftar.";
-                        $request['titletext'] = "3. Pilih Aktif Kontrol Aktif";
+                        $request['titletext'] = "4. Pilih Aktif Kontrol Aktif";
                         $request['buttontext'] = 'PILIH SURAT KONTROL';
                         $request['rowtitle'] = $rowsuratkontrol;
                         $request['rowdescription'] = $descsurarujukan;
@@ -553,7 +553,7 @@ class WhatsappController extends Controller
                         $request['tanggalperiksa'] =  $request->tanggal;
                         $request['kodedokter'] =  $jadwaldokter->kodedokter;
                         $request['jampraktek'] =  $jadwaldokter->jadwal;
-                        $request['jeniskunjungan'] = 1;
+                        $request['jeniskunjungan'] = 4;
                         $request['method'] = "Whatsapp";
                         $request['nomorreferensi'] = $rujukan->noKunjungan;
                         $antrian = new AntrianController();
