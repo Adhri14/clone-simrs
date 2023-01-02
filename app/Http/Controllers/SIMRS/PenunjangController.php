@@ -32,7 +32,7 @@ class PenunjangController extends ApiController
     public function cari_pasien(Request $request)
     {
         if ($request->norm) {
-            $pasien = PasienDB::where('no_rm', $request->norm)->first();
+            $pasien = PasienDB::where('no_rm', 'LIKE', '%' . $request->norm)->first();
             if ($pasien == null) {
                 return $this->sendError('No RM tidak ditemukan', null, 404);
             }
