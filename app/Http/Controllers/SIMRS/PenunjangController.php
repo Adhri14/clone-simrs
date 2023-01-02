@@ -72,7 +72,13 @@ class PenunjangController extends ApiController
                 return $this->sendError('Data Tidak Ditemukan', null, 404);
             }
         } else {
-            $data = OrderLayananDB::get();
+            if ($request->unit == '3003') {
+                $data = OrderLayananDB::where('kode_unit', '3003')->get();
+            } else if ($request->unit == '3002') {
+                $data = OrderLayananDB::where('kode_unit', '3002')->get();
+            } else {
+                $data = OrderLayananDB::get();
+            }
         }
         return $this->sendResponse('OK', $data);
     }

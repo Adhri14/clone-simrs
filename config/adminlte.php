@@ -359,8 +359,6 @@ return [
             'text'    => 'Aplikasi Poliklinik',
             'icon'    => 'fas fa-clinic-medical',
             'can' => 'poliklinik',
-            'label' => 'baru',
-            'label_color' => 'success',
             'submenu' => [
                 [
                     'text' => 'Antrian Pasien',
@@ -382,8 +380,6 @@ return [
                     'shift'   => 'ml-2',
                     'url'  => 'poliklinik/jadwaldokter',
                     'can' => 'poliklinik',
-                    'label' => 'baru',
-                    'label_color' => 'success',
                 ],
                 [
                     'text' => 'Data Pasien',
