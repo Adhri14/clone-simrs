@@ -79,7 +79,7 @@ class PasienController extends Controller
     }
     public function caripasien(Request $request)
     {
-        $pasien = PasienDB::firstWhere('no_rm', $request->norm);
+        $pasien = PasienDB::firstWhere('no_rm', 'LIKE', '%' . $request->norm);
         return response()->json($pasien);
     }
     public function destroy($no_rm)
