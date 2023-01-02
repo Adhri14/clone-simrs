@@ -96,10 +96,6 @@ class WhatsappController extends Controller
     public function callback(Request $request)
     {
         $pesan = strtoupper($request->message);
-        if (!str_contains($request->number, '89529909036')) {
-            $request['message'] = "*Layanan Whatsapp RSUD Waled 📱🏥*\nMohon maaf saat ini layanan Whatsapp sedang dalam perbaikan. Alternatif daftar online dapat melalui aplikasi Mobile JKN.\n\nhttps://play.google.com/store/apps/details?id=app.bpjs.mobile";
-            return $this->send_message($request);
-        }
         switch ($pesan) {
             case 'NOTIF':
                 $request['notif'] = "Test Send Notif";
