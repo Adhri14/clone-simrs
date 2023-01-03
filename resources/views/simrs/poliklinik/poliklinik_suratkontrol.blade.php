@@ -274,6 +274,7 @@
                         $.LoadingOverlay("hide");
                     },
                     error: function(data) {
+                        console.log(data);
                         swal.fire(
                             data.statusText + ' ' + data.status,
                             data.responseJSON.metadata.message,
@@ -308,6 +309,7 @@
                         $.LoadingOverlay("hide");
                     },
                     error: function(data) {
+                        console.log(data);
                         swal.fire(
                             data.statusText + ' ' + data.status,
                             data.responseJSON.metadata.message,
