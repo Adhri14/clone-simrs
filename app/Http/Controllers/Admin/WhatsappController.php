@@ -296,6 +296,10 @@ class WhatsappController extends Controller
                         $diagnosa = $rujukan->diagnosa;
                         $poli = $rujukan->poliRujukan;
                         $pasien = PasienDB::where('no_Bpjs', $peserta->noKartu)->first();
+                        if ($pasien == null) {
+                            $request['message'] = "Maaf anda tidak bisa daftar dikarenakan data Kartu BPJS pasien belum terdaftar di RSUD Waled. Silahkan lakukan pendaftaran offline. Terima kasih";
+                            return $this->send_message($request);
+                        }
                         $request['nomorkartu'] = $peserta->noKartu;
                         $request['nik'] =  $pasien->nik_bpjs;
                         $request['nohp'] =  "0" . substr(str_replace("@c.us", "", $request->number), 2);
@@ -383,6 +387,10 @@ class WhatsappController extends Controller
                         $sep = $suratkontrol->sep;
                         $peserta = $sep->peserta;
                         $pasien = PasienDB::where('no_Bpjs', $peserta->noKartu)->first();
+                        if ($pasien == null) {
+                            $request['message'] = "Maaf anda tidak bisa daftar dikarenakan data Kartu BPJS pasien belum terdaftar di RSUD Waled. Silahkan lakukan pendaftaran offline. Terima kasih";
+                            return $this->send_message($request);
+                        }
                         $hari = Carbon::parse($suratkontrol->tglRencanaKontrol)->dayOfWeek;
                         $jadwaldokter = JadwalDokterAntrian::where('kodeDokter',  $suratkontrol->kodeDokter)
                             ->where('hari', $hari)->first();
@@ -541,6 +549,10 @@ class WhatsappController extends Controller
                         $diagnosa = $rujukan->diagnosa;
                         $poli = $rujukan->poliRujukan;
                         $pasien = PasienDB::where('no_Bpjs', $peserta->noKartu)->first();
+                        if ($pasien == null) {
+                            $request['message'] = "Maaf anda tidak bisa daftar dikarenakan data Kartu BPJS pasien belum terdaftar di RSUD Waled. Silahkan lakukan pendaftaran offline. Terima kasih";
+                            return $this->send_message($request);
+                        }
                         $request['nomorkartu'] = $peserta->noKartu;
                         $request['nik'] =  $pasien->nik_bpjs;
                         $request['nohp'] =  "0" . substr(str_replace("@c.us", "", $request->number), 2);
