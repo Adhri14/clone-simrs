@@ -132,6 +132,7 @@ Route::prefix('bpjs')->name('api.bpjs.')->group(function () {
         Route::get('ref_pasien_fingerprint', [AntrianAntrianController::class, 'ref_pasien_fingerprint'])->name('ref_pasien_fingerprint');
         Route::post('update_jadwal_dokter', [AntrianAntrianController::class, 'update_jadwal_dokter'])->name('update_jadwal_dokter');
         Route::post('tambah_antrean', [AntrianAntrianController::class, 'tambah_antrean'])->name('tambah_antrean');
+        Route::post('tambah_antrean_farmasi', [AntrianAntrianController::class, 'tambah_antrean_farmasi'])->name('tambah_antrean_farmasi');
         Route::post('update_antrean', [AntrianAntrianController::class, 'update_antrean'])->name('update_antrean');
         Route::post('batal_antrean', [AntrianAntrianController::class, 'batal_antrean'])->name('batal_antrean');
         Route::post('taskid_antrean', [AntrianAntrianController::class, 'taskid_antrean'])->name('taskid_antrean');
@@ -148,6 +149,8 @@ Route::prefix('bpjs')->name('api.bpjs.')->group(function () {
         Route::post('sisa_antrian', [AntrianAntrianController::class, 'sisa_antrian'])->name('sisa_antrian');
         Route::post('batal_antrian', [AntrianAntrianController::class, 'batal_antrian'])->name('batal_antrian');
         Route::post('checkin_antrian', [AntrianAntrianController::class, 'checkin_antrian'])->name('checkin_antrian');
+        Route::post('ambil_antrian_farmasi', [AntrianAntrianController::class, 'ambil_antrian_farmasi'])->name('ambil_antrian_farmasi');
+        Route::post('status_antrian_farmasi', [AntrianAntrianController::class, 'status_antrian_farmasi'])->name('status_antrian_farmasi');
         Route::post('info_pasien_baru', [AntrianAntrianController::class, 'info_pasien_baru'])->name('info_pasien_baru');
         Route::post('jadwal_operasi_rs', [AntrianAntrianController::class, 'jadwal_operasi_rs'])->name('jadwal_operasi_rs');
         Route::post('jadwal_operasi_pasien', [AntrianAntrianController::class, 'jadwal_operasi_pasien'])->name('jadwal_operasi_pasien');

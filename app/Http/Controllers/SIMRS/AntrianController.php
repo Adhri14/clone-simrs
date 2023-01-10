@@ -12,6 +12,7 @@ use App\Models\KunjunganDB;
 use App\Models\ParamedisDB;
 use App\Models\PenjaminSimrs;
 use App\Models\PoliklinikDB;
+use App\Models\SIMRS\JadwalDokter as SIMRSJadwalDokter;
 use App\Models\SuratKontrol;
 use App\Models\UnitDB;
 use Carbon\Carbon;
@@ -51,7 +52,7 @@ class AntrianController extends Controller
         $antrians = null;
         if ($request->tanggal && $request->loket && $request->lantai) {
             $antrians = Antrian::whereDate('tanggalperiksa', $request->tanggal)
-            ->get();
+                ->get();
             if ($request->kodepoli != null) {
                 $antrians = $antrians->where('kodepoli', $request->kodepoli);
             }
@@ -172,11 +173,12 @@ class AntrianController extends Controller
     {
         $antrian = Antrian::firstWhere('kodebooking', $kodebooking);
         $request['kodebooking'] = $antrian->kodebooking;
+        $request['jenisResep'] = $antrian->jenisresep ?? 'racikan';
         $request['taskid'] = 5;
         $request['keterangan'] = "Silahkan tunggu di farmasi untuk pengambilan obat.";
         $request['waktu'] = Carbon::now()->timestamp * 1000;
-        $vclaim = new AntrianAntrianController();
-        $response = $vclaim->update_antrean($request);
+        $api = new AntrianAntrianController();
+        $response = $api->update_antrean($request);
         if ($response->status() == 200) {
             $antrian->update([
                 'taskid' => $request->taskid,
@@ -196,6 +198,12 @@ class AntrianController extends Controller
             Alert::success('Success', 'Pasien Dilanjutkan Ke Farmasi');
         } else {
             Alert::error('Error ' . $response->status(), $response->getData()->metadata->message);
+        }
+        $response = $api->ambil_antrian_farmasi($request);
+        if ($response->status() == 200) {
+            Alert::success('Success', 'Pasien Dilanjutkan Ke Farmasi');
+        } else {
+            Alert::error('Error Tambah Antrian Farmasi ' . $response->status(), $response->getData()->metadata->message);
         }
         return redirect()->back();
     }
@@ -378,5 +386,71 @@ class AntrianController extends Controller
                 return redirect()->route('antrian.laporan_bulan');
             }
         }
+    }
+    public function antrian_per_tanggal(Request $request)
+    {
+        $antrians = null;
+        if (isset($request->tanggal)) {
+            $api = new AntrianAntrianController();
+            $response = $api->antrian_tanggal($request);
+            if ($response->status() == 200) {
+                $antrians = $response->getData()->response;
+                Alert::success('Success', "Berhasil Dapatkan Data Antrian");
+            } else {
+                Alert::error('Error ' . $response->status(),  $response->getData()->metadata->message);
+                return redirect()->route('antrian.laporan_tanggal');
+            }
+        }
+        return view('simrs.antrian_per_tanggal', [
+            'antrians' => $antrians,
+            'request' => $request,
+        ]);
+    }
+    public function antrian_belum_dilayani(Request $request)
+    {
+        // $antrians = null;
+        // if (isset($request->tanggal)) {
+        $request['tanggal'] = now()->format('Y-m-d');
+        $api = new AntrianAntrianController();
+        $response = $api->antrian_belum_dilayani($request);
+        if ($response->status() == 200) {
+            $antrians = $response->getData()->response;
+            Alert::success('Success', "Berhasil Dapatkan Data Antrian");
+        } else {
+            $antrians = null;
+            Alert::error('Error ' . $response->status(),  $response->getData()->metadata->message);
+            return redirect()->route('antrian.laporan_tanggal');
+        }
+        // }
+        return view('simrs.antrian_belum_dilayani', [
+            'antrians' => $antrians,
+            'request' => $request,
+        ]);
+    }
+    public function antrian_per_dokter(Request $request)
+    {
+        $antrians = null;
+        $jadwaldokter = SIMRSJadwalDokter::orderBy('hari', 'ASC')->get();
+        if (isset($request->jadwaldokter)) {
+            $jadwal = SIMRSJadwalDokter::find($request->jadwaldokter);
+            $api = new AntrianAntrianController();
+            $request['kodePoli'] = $jadwal->kodesubspesialis;
+            $request['kodeDokter'] = $jadwal->kodedokter;
+            $request['hari'] = $jadwal->hari;
+            $request['jamPraktek'] = $jadwal->jadwal;
+            $response = $api->antrian_poliklinik($request);
+            if ($response->status() == 200) {
+                $antrians = $response->getData()->response;
+                Alert::success('Success', "Berhasil Dapatkan Data Antrian");
+            } else {
+                Alert::error('Error ' . $response->status(),  $response->getData()->metadata->message);
+                return redirect()->route('antrian.laporan_tanggal');
+            }
+        }
+        return view('simrs.antrian_per_dokter', [
+            'antrians' => $antrians,
+            'jadwaldokter' => $jadwaldokter,
+            'request' => $request,
+        ]);
     }
 }

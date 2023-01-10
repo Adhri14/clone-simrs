@@ -251,6 +251,9 @@ Route::middleware('auth')->group(function () {
             Route::get('dashboard_tanggal', [AntrianAntrianController::class, 'dashboard_tanggal_index'])->name('dashboard_tanggal');
             Route::get('dashboard_bulan', [AntrianAntrianController::class, 'dashboard_bulan_index'])->name('dashboard_bulan');
             Route::get('jadwal_operasi', [AntrianAntrianController::class, 'jadwal_operasi'])->name('jadwal_operasi');
+            Route::get('antrian_per_tanggal', [SIMRSAntrianController::class, 'antrian_per_tanggal'])->name('antrian_per_tanggal');
+            Route::get('antrian_belum_dilayani', [SIMRSAntrianController::class, 'antrian_belum_dilayani'])->name('antrian_belum_dilayani');
+            Route::get('antrian_per_dokter', [SIMRSAntrianController::class, 'antrian_per_dokter'])->name('antrian_per_dokter');
         });
         // vclaim
         Route::prefix('vclaim')->name('vclaim.')->group(function () {

@@ -10,11 +10,11 @@ class ApiBPJSController extends Controller
     public function sendResponse($message, $data, $code = 200)
     {
         $response = [
-            'metadata' => [
-                'code' => $code,
-                'message' => $message,
-            ],
             'response' => $data,
+            'metadata' => [
+                'message' => $message,
+                'code' => $code,
+            ],
         ];
         return response()->json($response, $code);
     }
@@ -22,8 +22,8 @@ class ApiBPJSController extends Controller
     {
         $response = [
             'metadata' => [
-                'code' => $code,
                 'message' => $error,
+                'code' => $code,
             ],
         ];
         if (!empty($errorMessages)) {
