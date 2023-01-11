@@ -14,6 +14,10 @@
                 @php
                     $heads = ['No.', 'No RM', ' Nama', 'Tgl Lahir', 'Nama Berkas', 'Tgl Scan', 'Jenis', 'Action'];
                     $config = [
+                        'scrollY' => '500px',
+                        'scrollCollapse' => true,
+                        'paging' => false,
+                        'order' => [0, 'desc'],
                         'buttons' => [
                             [
                                 'extend' => 'colvis',

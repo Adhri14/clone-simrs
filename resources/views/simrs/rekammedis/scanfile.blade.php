@@ -44,6 +44,7 @@
                         <option value="1">Rawat Inap</option>
                         <option value="2">Rawan Jalan</option>
                         <option value="3">Penunjang</option>
+                        <option value="5">IGD</option>
                     </x-adminlte-select>
                     <x-adminlte-input name="namafile" label="Keterangan E-File" placeholder="Keterangan E-File" />
                     <x-adminlte-input-date name="tanggalscan" label="Tanggal Scan E-File" :config="$config"
