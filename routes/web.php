@@ -143,7 +143,7 @@ Route::prefix('vclaim')->name('vclaim.')->middleware(['auth'])->group(function (
 
 Route::resource('poli', PoliklinikController::class)->only(['index', 'create', 'edit', 'show', 'store'])->middleware('permission:pelayanan-medis');
 Route::resource('jadwallibur', JadwalLiburController::class)->middleware(['auth', 'permission:pelayanan-medis']);
-Route::resource('jadwaldokter', JadwalDokterController::class)->middleware(['auth', 'permission:pelayanan-medis']);
+Route::resource('jadwaldokter', JadwalDokterController::class)->middleware(['auth']);
 Route::resource('jadwaloperasi', JadwalOperasiController::class)->only(['index', 'store', 'edit'])->middleware('permission:pelayanan-medis');
 Route::get('pasien_daerah', [PasienController::class, 'pasien_daerah'])->name('pasien_daerah');
 Route::get('pasien_demografi', [PasienController::class, 'pasien_demografi'])->name('pasien_demografi');
@@ -197,7 +197,7 @@ Route::middleware('auth')->group(function () {
         Route::get('antrian_pendaftaran', [SIMRSAntrianController::class, 'antrian_pendaftaran'])->name('antrian_pendaftaran');
     });
     // poliklinik
-    Route::middleware('permission:poliklinik')->prefix('poliklinik')->name('poliklinik.')->group(function () {
+    Route::prefix('poliklinik')->name('poliklinik.')->group(function () {
         Route::get('antrian', [SIMRSAntrianController::class, 'antrian_poliklinik'])->name('antrian');
         Route::get('antrian_panggil/{antrian}', [SIMRSAntrianController::class, 'panggil_poliklinik'])->name('antrian_panggil');
         Route::get('antrian_panggil_ulang/{antrian}', [SIMRSAntrianController::class, 'panggil_ulang_poliklinik'])->name('antrian_panggil_ulang');
