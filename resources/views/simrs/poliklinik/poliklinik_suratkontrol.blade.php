@@ -103,8 +103,8 @@
                         $config['paging'] = false;
                         $config['order'] = ['2', 'desc'];
                         $config['info'] = false;
-                        $config['scrollY'] = '400px';
                         $config['scrollX'] = true;
+                        $config['scrollY'] = '400px';
                         $config['scrollCollapse'] = true;
                     @endphp
                     <x-adminlte-datatable id="table1" class="nowrap text-xs" :heads="$heads" :config="$config" striped

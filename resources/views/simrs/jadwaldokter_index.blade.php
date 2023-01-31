@@ -11,7 +11,8 @@
         <div class="col-12">
             @can('pelayanan-medis')
                 <x-adminlte-card title="Informasi Referensi Jadwal Dokter" theme="info" icon="fas fa-info-circle" collapsible>
-                    <form name="formJadwalHafiz" id="formJadwalHafiz" action="{{ route('pelayanan-medis.jadwaldokter.store') }}" method="post">
+                    <form name="formJadwalHafiz" id="formJadwalHafiz" action="{{ route('pelayanan-medis.jadwaldokter.store') }}"
+                        method="post">
                         @csrf
                         <input type="hidden" name="method" value="GET">
                         @php
@@ -45,8 +46,8 @@
                     $heads = ['Nama Poliklinik', 'Dokter', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
                     $config['paging'] = false;
                 @endphp
-                <x-adminlte-datatable id="table1" class="nowrap text-xs" :heads="$heads" :config="$config" striped bordered
-                    hoverable compressed>
+                <x-adminlte-datatable id="table1" class="nowrap text-xs" :heads="$heads" :config="$config" striped
+                    bordered hoverable compressed>
                     @foreach ($jadwals->groupby('kodedokter') as $item)
                         <tr>
                             <td>{{ $item->first()->kodesubspesialis }} - {{ strtoupper($item->first()->namasubspesialis) }}
@@ -85,9 +86,8 @@
             </x-adminlte-card>
         </div>
     </div>
-    {{-- Modal Update Jadwal --}}
     <x-adminlte-modal id="modalJadwal" title="Jadwal Praktek" theme="warning" icon="fas fa-calendar-alt">
-        <form name="formUpdateJadwal" id="formUpdateJadwal" action="{{ route('pelayanan-medis.jadwaldokter.store') }}" method="POST">
+        <form name="form" id="form" action="">
             @csrf
             <input type="hidden" name="method" value="UPDATE">
             <input type="hidden" class="idjadwal" name="idjadwal" id="idjadwal">
@@ -132,7 +132,8 @@
                 @endforeach
             </x-adminlte-select2>
         </form>
-        <form name="formDeleteJadwal" id="formDeleteJadwal" action="{{ route('pelayanan-medis.jadwaldokter.store') }}" method="POST">
+        <form name="formDeleteJadwal" id="formDeleteJadwal" action="{{ route('pelayanan-medis.jadwaldokter.store') }}"
+            method="POST">
             @csrf
             <input type="hidden" name="method" value="DELETE">
             <input type="hidden" class="idjadwal" name="idjadwal" id="idjadwal">
@@ -158,21 +159,22 @@
             $('.btnJadwal').click(function() {
                 var jadwalid = $(this).data('id');
                 $.LoadingOverlay("show");
-                $.get("{{ route('pelayanan-medis.jadwaldokter.index') }}" + '/' + jadwalid + '/edit', function(data) {
-                    console.log(data);
-                    $('#kodesubspesialis').val(data.kodesubspesialis).trigger('change');
-                    $('#kodedokter').val(data.kodedokter).trigger('change');
-                    $('#hari').val(data.hari).trigger('change');
-                    $('#kapasitaspasien').val(data.kapasitaspasien);
-                    $('#labeljadwal').html("Jadwal ID : " + data.id);
-                    $('#jadwal').val(data.jadwal);
-                    $('.idjadwal').val(data.id);
-                    if (data.libur == 1) {
-                        $('#libur').prop('checked', true).trigger('change');
-                    }
-                    $.LoadingOverlay("hide", true);
-                    $('#modalJadwal').modal('show');
-                })
+                $.get("{{ route('pelayanan-medis.jadwaldokter.index') }}" + '/' + jadwalid + '/edit',
+                    function(data) {
+                        console.log(data);
+                        $('#kodesubspesialis').val(data.kodesubspesialis).trigger('change');
+                        $('#kodedokter').val(data.kodedokter).trigger('change');
+                        $('#hari').val(data.hari).trigger('change');
+                        $('#kapasitaspasien').val(data.kapasitaspasien);
+                        $('#labeljadwal').html("Jadwal ID : " + data.id);
+                        $('#jadwal').val(data.jadwal);
+                        $('.idjadwal').val(data.id);
+                        if (data.libur == 1) {
+                            $('#libur').prop('checked', true).trigger('change');
+                        }
+                        $.LoadingOverlay("hide", true);
+                        $('#modalJadwal').modal('show');
+                    })
 
             });
         });
