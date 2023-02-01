@@ -730,6 +730,13 @@ return [
                     'can' => 'bpjs',
                 ],
                 [
+                    'text' => 'Console Antrian',
+                    'icon'    => 'fas fa-desktop',
+                    'url'  => 'antrian/console',
+                    'shift'   => 'ml-2',
+                    'can' => 'pendaftaran',
+                ],
+                [
                     'text' => 'Antrian',
                     'icon'    => 'fas fa-hospital-user',
                     'url'  => 'bpjs/antrian/antrian',

@@ -790,6 +790,9 @@ class AntrianController extends ApiBPJSController
             $request['namapoli'] = $jadwal->namapoli;
             $request['namadokter'] = $jadwal->namadokter;
         }
+        else{
+            return $this->sendError('Kuota dokter sudah penuh', null, 400);
+        }
         $antrian_poli = Antrian::where('tanggalperiksa', $request->tanggalperiksa)
             ->where('kodepoli', $request->kodepoli)
             ->count();
@@ -888,7 +891,7 @@ class AntrianController extends ApiBPJSController
             ];
             return $this->sendResponse("OK", $response);
         } else {
-            return $this->sendError($response->getData()->metadata->message, null, $response->status());
+            return $this->sendError($response->getData()->metadata->message, null, 400);
         }
     }
     public function sisa_antrian(Request $request)
@@ -1026,19 +1029,19 @@ class AntrianController extends ApiBPJSController
                     $request['nomorreferensi'] = $antrian->nomorsuratkontrol;
                     $suratkontrol = $vclaim->surat_kontrol_nomor($request);
                     // berhasil get surat kontrol
-                    if ($suratkontrol->metaData->code == 200) {
+                    if ($suratkontrol->getData()->metadata->code == 200) {
                         $request['nomorsuratkontrol'] = $antrian->nomorsuratkontrol;
                         if ($suratkontrol->response->sep->jnsPelayanan == "Rawat Jalan") {
                             $request['nomorrujukan'] = $suratkontrol->response->sep->provPerujuk->noRujukan;
                             $request['jeniskunjungan_print'] = 'KONTROL';
                             $request['nomorreferensi'] = $antrian->nomorrujukan;
                             $data = $vclaim->rujukan_nomor($request);
-                            if ($data->metaData->code != 200) {
+                            if ($data->getData()->metadata->code != 200) {
                                 $data = $vclaim->rujukan_rs_nomor($request);
                             }
                             // berhasil get rujukan
-                            if ($data->metaData->code == 200) {
-                                $rujukan = $data->response->rujukan;
+                            if ($data->getData()->metadata->code == 200) {
+                                $rujukan = $data->getData()->response->rujukan;
                                 $peserta = $rujukan->peserta;
                                 $diganosa = $rujukan->diagnosa;
                                 $tujuan = $rujukan->poliRujukan;
@@ -1053,7 +1056,7 @@ class AntrianController extends ApiBPJSController
                                 // $request['pembiayaan'] = $peserta->jenisPeserta->kode;
                                 // $request['penanggungJawab'] =  $peserta->jenisPeserta->keterangan;
                                 // asal rujukan
-                                $request['asalRujukan'] = $data->response->asalFaskes; // get surat kontrol
+                                $request['asalRujukan'] = $data->getData()->response->asalFaskes; // get surat kontrol
                                 $request['tglRujukan'] = $rujukan->tglKunjungan; // get surat kontrol
                                 $request['noRujukan'] =   $rujukan->noKunjungan; // get surat kontrol
                                 $request['ppkRujukan'] = $rujukan->provPerujuk->kode; // get surat kontrol
@@ -1076,7 +1079,7 @@ class AntrianController extends ApiBPJSController
                             else {
                                 return [
                                     "metadata" => [
-                                        "message" => $data->metaData->message,
+                                        "message" => $data->getData()->metadata->message,
                                         "code" => 201,
                                     ],
                                 ];
@@ -1085,8 +1088,8 @@ class AntrianController extends ApiBPJSController
                             $request['nomorkartu'] = $antrian->nomorkartu;
                             $data = $vclaim->peserta_nomorkartu($request);
                             // berhasil get rujukan
-                            if ($data->metaData->code == 200) {
-                                $peserta = $data->response->peserta;
+                            if ($data->getData()->getData()->metadata->code == 200) {
+                                $peserta = $data->getData()->response->peserta;
                                 $diagnosa = $suratkontrol->response->sep->diagnosa;
                                 $asalRujukan = $suratkontrol->response->sep->provPerujuk->asalRujukan;
                                 $tglRujukan = $suratkontrol->response->sep->provPerujuk->tglRujukan;
@@ -1786,7 +1789,6 @@ class AntrianController extends ApiBPJSController
                 "keterangan" => $request->keterangan,
             ]
         );
-        // dd($url, $response->json(), $request->all());
         return $this->response_decrypt($response, $signature);
     }
     public function ambil_antrian_farmasi(Request $request)

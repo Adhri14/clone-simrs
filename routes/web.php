@@ -57,15 +57,10 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('', [HomeController::class, 'landingpage'])->name('landingpage');
-Route::get('daftar_pasien', function () {
-    return view('simrs.daftar_pasien');
-})->name('daftar_pasien');
-
 Auth::routes();
 Route::get('verifikasi_akun', [VerificationController::class, 'verifikasi_akun'])->name('verifikasi_akun');
 Route::post('verifikasi_kirim', [VerificationController::class, 'verifikasi_kirim'])->name('verifikasi_kirim');
 
-Route::get('daftar_pasien', [AntrianController::class, 'daftar_pasien'])->name('daftar_pasien');
 Route::get('info_jadwaldokter', [JadwalDokterController::class, 'index'])->name('info_jadwaldokter');
 Route::get('info_jadwallibur', [JadwalLiburController::class, 'index'])->name('info_jadwallibur');
 Route::get('info_jadwaloperasi', [JadwalOperasiController::class, 'index'])->name('info_jadwaloperasi');

@@ -1130,28 +1130,28 @@ class AntrianBPJSController extends Controller
         }
         // cek jika pasien lama
         else {
-            $pasien->update([
-                "no_Bpjs" => $request->nomorkartu,
-                // "nik_bpjs" => $request->nik,
-                // "no_rm" => $request->norm,
-                "nomorkk" => $request->nomorkk,
-                "nama_px" => $request->nama,
-                "jenis_kelamin" => $request->jeniskelamin,
-                "tgl_lahir" => $request->tanggallahir,
-                "no_tlp" => $request->nohp,
-                "alamat" => $request->alamat,
-                "kode_propinsi" => $request->kodeprop,
-                "namaprop" => $request->namaprop,
-                "kode_kabupaten" => $request->kodedati2,
-                "namadati2" => $request->namadati2,
-                "kode_kecamatan" => $request->kodekec,
-                "namakec" => $request->namakec,
-                "kode_desa" => $request->kodekel,
-                "namakel" => $request->namakel,
-                "rw" => $request->rw,
-                "rt" => $request->rt,
-                // "status" => $request->status,
-            ]);
+            // $pasien->update([
+            //     "no_Bpjs" => $request->nomorkartu,
+            //     // "nik_bpjs" => $request->nik,
+            //     // "no_rm" => $request->norm,
+            //     "nomorkk" => $request->nomorkk,
+            //     "nama_px" => $request->nama,
+            //     "jenis_kelamin" => $request->jeniskelamin,
+            //     "tgl_lahir" => $request->tanggallahir,
+            //     "no_tlp" => $request->nohp,
+            //     "alamat" => $request->alamat,
+            //     "kode_propinsi" => $request->kodeprop,
+            //     "namaprop" => $request->namaprop,
+            //     "kode_kabupaten" => $request->kodedati2,
+            //     "namadati2" => $request->namadati2,
+            //     "kode_kecamatan" => $request->kodekec,
+            //     "namakec" => $request->namakec,
+            //     "kode_desa" => $request->kodekel,
+            //     "namakel" => $request->namakel,
+            //     "rw" => $request->rw,
+            //     "rt" => $request->rt,
+            //     // "status" => $request->status,
+            // ]);
             return $response = [
                 "response" => [
                     "norm" => $pasien->no_rm,

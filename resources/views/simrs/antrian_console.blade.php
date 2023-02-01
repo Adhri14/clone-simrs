@@ -31,15 +31,11 @@
                     <div class="col-md-6">
                         <x-adminlte-info-box class="btnDaftar" title="Daftar Pasien BPJS" text="Rujukan Pertama FKTP"
                             theme="success" />
-                        <x-adminlte-info-box class="btnDaftar" title="Daftar Pasien BPJS" text="Rujukan Pertama Antar RS"
-                            theme="success" />
-                        <x-adminlte-info-box class="btnDaftar" title="Daftar Pasien BPJS" text="Rujukan Internal"
-                            theme="success" />
                     </div>
                     <div class="col-md-6">
-                        <x-adminlte-info-box class="btnDaftar" title="Daftar Pasien BPJS" text="Surat Kontrol"
-                            theme="success" />
                         <x-adminlte-info-box class="btnDaftar" text="Daftar Pasien Umum" theme="success" />
+                    </div>
+                    <div class="col-md-6">
                         <x-adminlte-button icon="fas fa-sync" class="withLoad reload" theme="warning" label="Reload" />
                         <a href="{{ route('antrian.cek_post') }}" class="btn btn-warning">Test Printer</a>
                     </div>
@@ -91,104 +87,9 @@
         </div>
     </div>
     {{-- Pilih Dokter --}}
-    <x-adminlte-modal id="modalDokter" size="lg" title="Daftar Pasien Anjungan Mandiri" theme="success"
-        icon="fas fa-user-md">
-        @if ($errors->any())
-            <x-adminlte-alert title="Ops Terjadi Masalah !" theme="danger" dismissable>
-                <ul>
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </x-adminlte-alert>
-        @endif
-        <form action="{{ route('api.ambil_antrean') }}" id="formDaftarPasien" method="post">
-            @csrf
-            <div class="row">
-                <div class="col-md-6">
-                    <x-adminlte-card title="Jadwal Dokter Poliklinik Rawat Jalan" theme="warning" collapsible>
-                        @php
-                            $config = [
-                                'format' => 'YYYY-MM-DD',
-                                'dayViewHeaderFormat' => 'MMM YYYY',
-                                'minDate' => "js:moment().add(-1, 'days')",
-                                'maxDate' => "js:moment().add(6, 'days')",
-                                'daysOfWeekDisabled' => [0],
-                            ];
-                        @endphp
-                        <x-adminlte-input-date name="tanggalperiksa" label="Tanggal Periksa" :config="$config"
-                            placeholder="Pilih Tanggal Surat Kontrol ..."
-                            value="{{ Carbon\Carbon::now()->format('Y-m-d') }}">
-                            <x-slot name="prependSlot">
-                                <div class="input-group-text bg-primary">
-                                    <i class="fas fa-calendar-alt"></i>
-                                </div>
-                            </x-slot>
-                        </x-adminlte-input-date>
-                        <x-adminlte-select2 name="pilihkodepoli" id="pilihkodepoli" label="Poliklinik">
-                            <option value="0" selected>PILIH POLIKLINIK</option>
-                            @foreach ($poliklinik as $item)
-                                <option value="{{ $item->kodesubspesialis }}">
-                                    {{ $item->kodesubspesialis }}
-                                    -
-                                    {{ $item->namasubspesialis }}
-                                </option>
-                            @endforeach
-                        </x-adminlte-select2>
-                        <input type="hidden" name="kodepoli" id="kodepoli">
-                        <x-adminlte-select fgroup-class="kodedokter" name="kodedokter" id="kodedokter" label="Dokter" />
-                        <x-slot name="footerSlot">
-                            <x-adminlte-button icon="fas fa-sync" id="reset_jadwal" theme="danger" label="Reset Jadwal" />
-                        </x-slot>
-                    </x-adminlte-card>
-                </div>
-                <div class="col-md-6">
-                    <x-adminlte-card title="Data Pasien Rawat Jalan" class="datapasien" theme="warning" collapsible>
-                        <x-adminlte-select name="pilihjeniskunjungan" id="pilihjeniskunjungan"
-                            label="Jenis Kunjungan Pasien">
-                            <option value="0" selected>PILIH JENIS KUNJUNGAN PASIEN</option>
-                            <option value="1">BPJS Rujukan Faskes 1</option>
-                            <option value="2">BPJS Rujukan Internal</option>
-                            <option value="3">BPJS Surat Kontrol</option>
-                            <option value="4">BPJS Rujukan Antar RS</option>
-                            <option value="5">UMUM (NON-JKN)</option>
-                        </x-adminlte-select>
-                        <input type="hidden" name="jeniskunjungan" id="jeniskunjungan">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <x-adminlte-input fgroup-class="nama" name="nama" label="Nama Pasien" />
-                            </div>
-                            <div class="col-md-6">
-                                <x-adminlte-input fgroup-class="norm" name="norm" label="No RM Pasien" />
-                            </div>
-                        </div>
-                        <x-adminlte-input fgroup-class="nomorkartu" name="nomorkartu" label="No Kartu BPJS"
-                            type="number">
-                            <x-slot name="appendSlot">
-                                <x-adminlte-button name="btn_check_nomorkartu" id="btn_check_nomorkartu" theme="success"
-                                    label="Cek" />
-                            </x-slot>
-                        </x-adminlte-input>
-                        <x-adminlte-input fgroup-class="nik" name="nik" label="NIK" type="number">
-                            <x-slot name="appendSlot">
-                                <x-adminlte-button name="btn_check_nik" id="btn_check_nik" theme="success"
-                                    label="Cek" />
-                            </x-slot>
-                        </x-adminlte-input>
-                        <x-adminlte-input fgroup-class="nohp" name="nohp" label="Nomor HP Pasien" />
-                        <x-adminlte-select name="nomorreferensi" fgroup-class="nomorreferensi" label="Nomor Referensi">
-                            <option value="0" selected>PILIH NOMOR REFERENSI</option>
-                        </x-adminlte-select>
-                        <x-slot name="footerSlot">
-                            {{-- <x-adminlte-button icon="fas fa-user-md" id="daftar_pasien" theme="success" label="Daftar Pasien" /> --}}
-                            <button type="submit" id="btnSubmitDaftar" form="formDaftarPasien" value="Submit"
-                                class="mr-auto btn btn-success withLoad">Buat Surat Kontrol</button>
-                            <x-adminlte-button icon="fas fa-sync" id="reset" theme="danger" label="Reset Pasien" />
-                        </x-slot>
-                    </x-adminlte-card>
-                </div>
-            </div>
-        </form>
+    <x-adminlte-modal id="modalDokter" size="xl" title="Daftar Pasien Anjungan Mandiri" theme="success"
+        icon="fas fa-user-plus">
+
     </x-adminlte-modal>
 @stop
 {{-- @section('plugins.Sweetalert2', true); --}}

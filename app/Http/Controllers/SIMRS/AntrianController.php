@@ -173,7 +173,7 @@ class AntrianController extends Controller
     {
         $antrian = Antrian::firstWhere('kodebooking', $kodebooking);
         $request['kodebooking'] = $antrian->kodebooking;
-        $request['jenisResep'] = $antrian->jenisresep ?? 'racikan';
+        $request['jenisresep'] = $antrian->jenisresep ?? 'racikan';
         $request['taskid'] = 5;
         $request['keterangan'] = "Silahkan tunggu di farmasi untuk pengambilan obat.";
         $request['waktu'] = Carbon::now()->timestamp * 1000;

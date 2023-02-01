@@ -28,10 +28,11 @@ class PoliklinikController extends Controller
             Alert::success($response->statusText(), 'Poliklinik Antrian BPJS');
         } else {
             $fingerprint = null;
-            Alert::error($response->getData()->metadata->message . ' ' . $response->status());
+            Alert::error($response->getData()->metadata->message . ' ' . $response->status(),  'Poliklinik Fingerprint Antrian BPJS');
         }
         return view('bpjs.antrian.poli', compact([
-            'polikliniks'
+            'polikliniks',
+            'fingerprint'
         ]));
     }
     public function poliklik_antrian_refresh()

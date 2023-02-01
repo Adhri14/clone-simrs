@@ -55,21 +55,6 @@ class AntrianController extends Controller
             ->where('kodesubspesialis', $poli->kodesubspesialis);
         return response()->json($jadwals);
     }
-    public function daftar_pasien()
-    {
-        // $unit = UnitDB::where('KDPOLI', "!=", null)
-        //     ->where('kode_unit', "!=", "1002")
-        //     ->get();
-
-        $poli = PoliklinikDB::where('status', 1)->get();
-        // $poli =   UnitDB::firstWhere('KDPOLI', $request->kodepoli);
-        // $dokters = ParamedisDB::where('unit', $poli->kode_unit)
-        //     ->where('kode_dokter_jkn', "!=", null)
-        //     ->get();
-        return view('simrs.daftar_pasien', [
-            "poli" => $poli,
-        ]);
-    }
     public function cek_post()
     {
         try {
@@ -1162,6 +1147,7 @@ class AntrianController extends Controller
     }
     public function lanjut_farmasi($kodebooking, Request $request)
     {
+        dd($antrian);
         $antrian = Antrian::where('kodebooking', $kodebooking)->first();
         $request['kodebooking'] = $antrian->kodebooking;
         $request['taskid'] = 5;

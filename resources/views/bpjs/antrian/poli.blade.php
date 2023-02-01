@@ -25,6 +25,26 @@
                 </x-adminlte-datatable>
             </x-adminlte-card>
         </div>
+        <div class="col-12">
+            <x-adminlte-card title="Referensi Poliklinik Fingerprint Antrian BPJS" theme="secondary" collapsible>
+                @php
+                    $heads = ['No', 'Nama Subspesialis', 'Kode Subspesialis', 'Nama Poli', 'Kode Poli', 'Status', 'Action'];
+                @endphp
+                <x-adminlte-datatable id="table2" class="text-xs" :heads="$heads" hoverable bordered compressed>
+                    @foreach ($fingerprint as $poliklinik)
+                        <tr>
+                            <td>{{ $loop->iteration }}</td>
+                            <td>{{ $poliklinik->namasubspesialis }}</td>
+                            <td>{{ $poliklinik->kodesubspesialis }}</td>
+                            <td>{{ $poliklinik->namapoli }}</td>
+                            <td>{{ $poliklinik->kodepoli }}</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    @endforeach
+                </x-adminlte-datatable>
+            </x-adminlte-card>
+        </div>
     </div>
 @stop
 
