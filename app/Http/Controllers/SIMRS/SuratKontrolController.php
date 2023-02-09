@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\SIMRS;
 
-use App\Http\Controllers\Admin\WhatsappController;
+use App\Http\Controllers\API\WhatsappController;
 use App\Http\Controllers\BPJS\Vclaim\VclaimController;
 use App\Http\Controllers\Controller;
 use App\Models\ParamedisDB;

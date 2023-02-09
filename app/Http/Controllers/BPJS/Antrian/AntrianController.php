@@ -667,6 +667,7 @@ class AntrianController extends ApiBPJSController
             ->where('jenispasien', "NON-JKN")->count();
 
         $response = [
+            "namasubspesialis" => $jadwal->namasubspesialis,
             "namapoli" => $jadwal->namapoli,
             "namadokter" => $jadwal->namadokter,
             "totalantrean" => $antrians,
@@ -787,7 +788,7 @@ class AntrianController extends ApiBPJSController
         $jadwal = $this->status_antrian($request);
         if ($jadwal->status() == 200) {
             $jadwal = $jadwal->getData()->response;
-            $request['namapoli'] = $jadwal->namapoli;
+            $request['namapoli'] = $jadwal->namasubspesialis;
             $request['namadokter'] = $jadwal->namadokter;
         }
         else{

@@ -1364,6 +1364,7 @@ class AntrianBPJSController extends Controller
                                 $ppkRujukan = $suratkontrol->response->sep->provPerujuk->kdProviderPerujuk;
                                 $penjamin = PenjaminDB::where('nama_penjamin_bpjs', $peserta->jenisPeserta->keterangan)->first(); // get peserta
                                 $request['kodepenjamin'] = $penjamin->kode_penjamin_simrs; // get peserta
+                                // $request['kodepenjamin'] = 'P13';
                                 // tujuan rujukan
                                 $request['ppkPelayanan'] = "1018R001";
                                 $request['jnsPelayanan'] = "2";
@@ -1423,6 +1424,7 @@ class AntrianBPJSController extends Controller
                         $tujuan = $rujukan->poliRujukan;
                         $penjamin = PenjaminDB::where('nama_penjamin_bpjs', $peserta->jenisPeserta->keterangan)->first();
                         $request['kodepenjamin'] = $penjamin->kode_penjamin_simrs;
+                        // $request['kodepenjamin'] = 'P13';
                         // tujuan rujukan
                         $request['ppkPelayanan'] = "1018R001";
                         $request['jnsPelayanan'] = "2";
