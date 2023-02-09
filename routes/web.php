@@ -19,8 +19,6 @@ use App\Http\Controllers\JadwalDokterController;
 use App\Http\Controllers\JadwalLiburController;
 use App\Http\Controllers\JadwalOperasiController;
 use App\Http\Controllers\KPOController;
-use App\Http\Controllers\KunjunganController;
-use App\Http\Controllers\PasienController;
 use App\Http\Controllers\PoliklinikController;
 use App\Http\Controllers\RekamMedis\IndexController;
 use App\Http\Controllers\SatuSehat\EncounterController;
@@ -140,12 +138,12 @@ Route::resource('poli', PoliklinikController::class)->only(['index', 'create', '
 Route::resource('jadwallibur', JadwalLiburController::class)->middleware(['auth', 'permission:pelayanan-medis']);
 Route::resource('jadwaldokter', JadwalDokterController::class)->middleware(['auth']);
 Route::resource('jadwaloperasi', JadwalOperasiController::class)->only(['index', 'store', 'edit'])->middleware('permission:pelayanan-medis');
-Route::get('pasien_daerah', [PasienController::class, 'pasien_daerah'])->name('pasien_daerah');
-Route::get('pasien_demografi', [PasienController::class, 'pasien_demografi'])->name('pasien_demografi');
+Route::get('pasien_daerah', [SIMRSPasienController::class, 'pasien_daerah'])->name('pasien_daerah');
+Route::get('pasien_demografi', [SIMRSPasienController::class, 'pasien_demografi'])->name('pasien_demografi');
 Route::get('index_penyakit_rajal', [IndexController::class, 'index_penyakit_rajal'])->name('index_penyakit_rajal');
 Route::get('index_dokter', [IndexController::class, 'index_dokter'])->name('index_dokter');
 
-Route::resource('tindakan', PasienController::class)->middleware('permission:rekam-medis');
+Route::resource('tindakan', SIMRSPasienController::class)->middleware('permission:rekam-medis');
 Route::resource('tarif_kelompok_layanan', TarifKelompokLayananController::class);
 Route::resource('icd10', Icd10Controller::class);
 Route::resource('efilerm', FileRMController::class);
@@ -209,6 +207,7 @@ Route::middleware('auth')->group(function () {
     });
     // yanmed
     Route::prefix('pelayananmedis')->name('pelayanan-medis.')->group(function () {
+        Route::resource('dokter', SIMRSDokterController::class);
         Route::resource('tarif_layanan', TarifLayananController::class)->only(['index']);
         Route::get('poliklinik_antrian', [SIMRSPoliklinikController::class, 'poliklik_antrian_yanmed'])->name('poliklinik_antrian');
         Route::get('poliklinik_antrian_refresh', [SIMRSPoliklinikController::class, 'poliklik_antrian_refresh'])->name('poliklinik_antrian_refresh');
@@ -219,6 +218,11 @@ Route::middleware('auth')->group(function () {
         Route::get('jadwaldokter/{id}/get', [SIMRSJadwalDokterController::class, 'jadwaldokter_get'])->name('jadwaldokter_get');
         Route::put('jadwaldokter_update', [SIMRSJadwalDokterController::class, 'jadwaldokter_update'])->name('jadwaldokter_update');
         Route::delete('jadwaldokter_delete', [SIMRSJadwalDokterController::class, 'jadwaldokter_delete'])->name('jadwaldokter_delete');
+    });
+    // rekam medis
+    Route::prefix('rekammedis')->name('rekam-medis.')->group(function () {
+        Route::resource('pasien', SIMRSPasienController::class);
+        Route::resource('kunjungan', SIMRSKunjunganController::class);
     });
     // simrs
     Route::prefix('simrs')->name('simrs.')->group(function () {

@@ -18,7 +18,6 @@ class DokterController extends Controller
             'dokters' => $dokters,
         ]);
     }
-
     public function create()
     {
         $api = new AntrianBPJSController();
@@ -45,30 +44,5 @@ class DokterController extends Controller
         }
         Alert::success('Success', 'Refresh Data Dokter Berhasil');
         return redirect()->route('dokter.index');
-    }
-
-    public function store(Request $request)
-    {
-        //
-    }
-
-    public function show($id)
-    {
-        //
-    }
-
-    public function edit($id)
-    {
-        //
-    }
-
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    public function destroy($id)
-    {
-        //
     }
 }

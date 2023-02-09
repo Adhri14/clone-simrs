@@ -11,7 +11,7 @@ class PasienController extends Controller
 {
     public function index(Request $request)
     {
-        $pasiens = PasienDB::latest()
+        $pasiens = PasienDB::with(['kecamatans'])->latest()
             ->where('no_rm', 'LIKE', "%{$request->search}%")
             ->orWhere('nama_px', 'LIKE', "%{$request->search}%")
             ->orWhere('nik_bpjs', 'LIKE', "%{$request->search}%")

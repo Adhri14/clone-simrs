@@ -1,11 +1,11 @@
 @extends('adminlte::page')
-@section('title', 'Jadwal Dokter - Pelayanan Medis')
+@section('title', 'Jadwal Dokter')
 @section('content_header')
-    <h1 class="m-0 text-dark">Jadwal Dokter - Pelayanan Medis</h1>
+    <h1>Jadwal Dokter</h1>
 @stop
 @section('content')
     <div class="row">
-        <div class="col-3">
+        <div class="col-md-3">
             <x-adminlte-card title="Pencarian Jadwal Dokter HAFIS" theme="secondary" icon="fas fa-search" collapsible>
                 <form action="">
                     @php
@@ -25,16 +25,8 @@
                 </form>
             </x-adminlte-card>
         </div>
-        <div class="col-9">
+        <div class="col-md-9">
             <x-adminlte-card title="Referensi Jadwal Dokter HAFIS" icon="fas fa-calendar-alt" theme="secondary" collapsible>
-                @if ($errors->any())
-                    <x-adminlte-alert theme="danger" title="Error Message!" dismissable>
-                        @foreach ($errors->all() as $error)
-                            <div>{{ $error }}</div>
-                        @endforeach
-                    </x-adminlte-alert>
-                @endif
-
                 @php
                     $heads = ['No.', 'Hari', 'Jadwal', 'Poliklinik', 'Subspesialis', 'Dokter', 'Kuota', 'Action'];
                 @endphp
@@ -127,18 +119,18 @@
             <input type="hidden" name="method" value="UPDATE">
             <input type="hidden" class="idjadwal" name="idjadwal" id="idjadwal">
             <label id="labeljadwal">Jadwal ID : 1</label>
-            <x-adminlte-input name="namaSubspesialis" label="Poliklinik / Subspesialis"
+            <x-adminlte-input name="namasubspesialis" label="Poliklinik / Subspesialis"
                 placeholder="Poliklinik / Subspesialis" readonly />
-            <x-adminlte-input name="namaDokter" label="Dokter" placeholder="Dokter" readonly />
+            <x-adminlte-input name="namadokter" label="Dokter" placeholder="Dokter" readonly />
             <div class="row">
                 <div class="col-md-6">
-                    <x-adminlte-input name="namaHari" label="Hari" placeholder="Hari" readonly />
+                    <x-adminlte-input name="namahari" label="Hari" placeholder="Hari" readonly />
                 </div>
                 <div class="col-md-6">
                     <x-adminlte-input name="jadwal" label="Jadwal Praktek" placeholder="Jadwal Praktek" />
                 </div>
                 <div class="col-md-6">
-                    <x-adminlte-input name="kapasitasPasien" label="Kapasitas Pasien" placeholder="Kapasitas Pasien"
+                    <x-adminlte-input name="kapasitaspasien" label="Kapasitas Pasien" placeholder="Kapasitas Pasien"
                         enable-old-support />
                 </div>
                 <div class="col-md-6">
@@ -176,15 +168,17 @@
                 $.get("{{ route('pelayanan-medis.jadwaldokter.index') }}" + '/' + jadwalid + '/get',
                     function(data) {
                         console.log(data);
-                        $('#namaSubspesialis').val(data.namaSubspesialis);
-                        $('#namaDokter').val(data.namaDokter);
-                        $('#namaHari').val(data.namaHari);
-                        $('#kapasitasPasien').val(data.kapasitasPasien);
+                        $('#namasubspesialis').val(data.namasubspesialis);
+                        $('#namadokter').val(data.namadokter);
+                        $('#namahari').val(data.namahari);
+                        $('#kapasitaspasien').val(data.kapasitaspasien);
                         $('#jadwal').val(data.jadwal);
                         $('#labeljadwal').html("Jadwal ID : " + data.id);
                         $('.idjadwal').val(data.id);
                         if (data.libur == 1) {
                             $('#libur').prop('checked', true).trigger('change');
+                        } else {
+                            $('#libur').prop('checked', false).trigger('change');
                         }
                         $.LoadingOverlay("hide", true);
                         $('#modalJadwal').modal('show');
