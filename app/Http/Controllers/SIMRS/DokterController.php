@@ -12,6 +12,47 @@ use RealRashid\SweetAlert\Facades\Alert;
 
 class DokterController extends Controller
 {
+    public function index(Request $request)
+    {
+        $paramedis = ParamedisDB::paginate();
+        $paramedis_total = ParamedisDB::count();
+        $total_paramedis = ParamedisDB::count();
+        $dokters = Dokter::get();
+        return view('simrs.dokter_index', compact([
+            'request',
+            'dokters',
+            'paramedis',
+            'paramedis_total',
+            'total_paramedis',
+        ]));
+    }
+    public function create()
+    {
+        $api = new AntrianBPJSController();
+        $dokters = $api->ref_dokter()->response;
+        foreach ($dokters as $value) {
+            Dokter::updateOrCreate(
+                [
+                    'kodedokter' => $value->kodedokter,
+                ],
+                [
+                    'namadokter' => $value->namadokter,
+                    'status' => 1,
+                ]
+            );
+            $user = User::updateOrCreate([
+                'email' => $value->kodedokter . '@gmail.com',
+                'username' => $value->kodedokter,
+            ], [
+                'name' => $value->namadokter,
+                'phone' => $value->kodedokter,
+                'password' => bcrypt($value->kodedokter),
+            ]);
+            $user->assignRole('Dokter');
+        }
+        Alert::success('Success', 'Refresh Data Dokter Berhasil');
+        return redirect()->route('dokter.index');
+    }
     public function dokter_antrian_bpjs()
     {
         $controller = new AntrianController();

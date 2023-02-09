@@ -111,7 +111,7 @@ class JadwalDokterController extends Controller
     {
         $request->validate([
             'jadwal' => 'required',
-            'kapasitasPasien' => 'required',
+            'kapasitaspasien' => 'required',
         ]);
         if ($request->libur == "true") {
             $libur = 1;
@@ -121,7 +121,7 @@ class JadwalDokterController extends Controller
         $jadwal = JadwalDokterAntrian::find($request->idjadwal);
         $jadwal->update([
             'jadwal' => $request->jadwal,
-            'kapasitasPasien' => $request->kapasitasPasien,
+            'kapasitaspasien' => $request->kapasitaspasien,
             'libur' => $libur,
         ]);
         Alert::success('Success', 'Jadwal Dokter Telah Diupdate');

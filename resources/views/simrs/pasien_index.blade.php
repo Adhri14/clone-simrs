@@ -8,14 +8,14 @@
         <div class="col-md-3">
             <x-adminlte-small-box title="{{ $total_pasien }}" text="Total Pasien" theme="success" icon="fas fa-users" />
         </div>
-        <div class="col-md-3">
+        {{-- <div class="col-md-3">
             <x-adminlte-small-box title="{{ $pasien_jkn }} {{ round(($pasien_jkn / $total_pasien) * 100) }}%"
                 text="Pasien memiliki Kartu" theme="warning" icon="fas fa-users" />
         </div>
         <div class="col-md-3">
             <x-adminlte-small-box title="{{ $pasien_nik }} {{ round(($pasien_jkn / $total_pasien) * 100) }}%"
                 text="Pasien memiliki NIK" theme="warning" icon="fas fa-users" />
-        </div>
+        </div> --}}
         <div class="col-12">
             <x-adminlte-card title="Grafik Pasien" theme="secondary" collapsible="collapsed">
                 asdasd
@@ -58,7 +58,8 @@
                             <td>{{ $item->nik_bpjs }}</td>
                             <td>{{ $item->nama_px }} ({{ $item->jenis_kelamin }})</td>
                             <td>{{ \Carbon\Carbon::parse($item->tgl_lahir)->format('Y-m-d') }}
-                                ({{ \Carbon\Carbon::parse($item->tgl_lahir)->age }})</td>
+                                ({{ \Carbon\Carbon::parse($item->tgl_lahir)->age }})
+                            </td>
                             <td>{{ $item->kecamatans ? $item->kecamatans->nama_kecamatan : '-' }}</td>
                             <td>{{ $item->alamat }}</td>
                             <td>{{ $item->tgl_entry }} ({{ $item->pic }})</td>
@@ -89,7 +90,7 @@
             </x-adminlte-card>
         </div>
     </div>
-    <x-adminlte-modal id="modalCustom" title="Tambah User" theme="success" size="lg" v-centered static-backdrop
+    {{-- <x-adminlte-modal id="modalCustom" title="Tambah User" theme="success" size="lg" v-centered static-backdrop
         scrollable>
         <form action="{{ route('simrs.pasien.store') }}" id="myform" method="post">
             @csrf
@@ -141,9 +142,7 @@
             <x-adminlte-button form="myform" class="mr-auto" type="submit" theme="success" label="Simpan" />
             <x-adminlte-button theme="danger" label="Kembali" data-dismiss="modal" />
         </x-slot>
-    </x-adminlte-modal>
+    </x-adminlte-modal> --}}
 @stop
 
 @section('plugins.Datatables', true)
-@section('plugins.Select2', true)
-@section('plugins.TempusDominusBs4', true)

@@ -241,7 +241,7 @@ class AntrianController extends ApiBPJSController
                 "kodepoli" => $request->kodepoli,
                 "kodesubspesialis" => $request->kodesubspesialis,
                 "kodedokter" => $request->kodedokter,
-                "jadwal" => json_decode($request->jadwal),
+                "jadwal" => $request->jadwal,
             ]
         );
         return $this->response_decrypt($response, $signature);
@@ -790,8 +790,7 @@ class AntrianController extends ApiBPJSController
             $jadwal = $jadwal->getData()->response;
             $request['namapoli'] = $jadwal->namasubspesialis;
             $request['namadokter'] = $jadwal->namadokter;
-        }
-        else{
+        } else {
             return $this->sendError('Kuota dokter sudah penuh', null, 400);
         }
         $antrian_poli = Antrian::where('tanggalperiksa', $request->tanggalperiksa)

@@ -440,6 +440,13 @@ return [
             'can' => 'pelayanan-medis',
             'submenu' => [
                 [
+                    'text' => 'Dokter',
+                    'icon'    => 'fas fa-user-md',
+                    'url'  => 'pelayananmedis/dokter',
+                    'shift'   => 'ml-2',
+                    'can' => 'admin',
+                ],
+                [
                     'text' => 'Tarif Layanan',
                     'icon'    => 'fas fa-hand-holding-medical',
                     'url'  => 'pelayananmedis/tarif_layanan',
@@ -477,18 +484,18 @@ return [
             'can' => 'rekam-medis',
             'submenu' => [
                 [
-                    'text' => 'Kunjungan',
-                    'icon'    => 'fas fa-hospital-user',
-                    'url'  => 'kunjungan',
+                    'text' => 'Pasien',
+                    'icon'    => 'fas fa-user-injured',
+                    'url'  => 'rekammedis/pasien',
                     'shift'   => 'ml-2',
+                    'active'  => ['pasien', 'pasien/create', 'regex:@^pasien(\/[0-9]+)?+$@', 'regex:@^pasien(\/[0-9]+)?\/edit+$@',],
                     'can' => 'rekam-medis',
                 ],
                 [
-                    'text' => 'Pasien',
-                    'icon'    => 'fas fa-user-injured',
-                    'url'  => 'pasien',
+                    'text' => 'Kunjungan',
+                    'icon'    => 'fas fa-hospital-user',
+                    'url'  => 'rekammedis/kunjungan',
                     'shift'   => 'ml-2',
-                    'active'  => ['pasien', 'pasien/create', 'regex:@^pasien(\/[0-9]+)?+$@', 'regex:@^pasien(\/[0-9]+)?\/edit+$@',],
                     'can' => 'rekam-medis',
                 ],
                 [
@@ -608,13 +615,7 @@ return [
                     'shift'   => 'ml-2',
                     'can' => 'admin',
                 ],
-                [
-                    'text' => 'Dokter',
-                    'icon'    => 'fas fa-user-md',
-                    'url'  => 'simrs/dokter',
-                    'shift'   => 'ml-2',
-                    'can' => 'admin',
-                ],
+
                 [
                     'text' => 'Kunjungan',
                     'icon'    => 'fas fa-hospital-user',
@@ -665,14 +666,14 @@ return [
             ],
         ],
         // KEPEGAWAIAN
-        [
-            'text'    => 'Aplikasi Kepegawaian',
-            'icon'    => 'fas fa-user-tie',
-            'can' => ['admin'],
-            'label' => 'onbuild',
-            'label_color' => 'danger',
-            'submenu' => []
-        ],
+        // [
+        //     'text'    => 'Aplikasi Kepegawaian',
+        //     'icon'    => 'fas fa-user-tie',
+        //     'can' => ['admin'],
+        //     'label' => 'onbuild',
+        //     'label_color' => 'danger',
+        //     'submenu' => []
+        // ],
         // BUKU TAMU
         [
             'text'    => 'Aplikasi Buku Tamu',
