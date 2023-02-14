@@ -60,14 +60,14 @@ Route::prefix('wsrs')->group(function () {
     Route::post('batal_antrian', [AntrianBPJSController::class, 'batal_antrian']);
     Route::post('checkin_antrian', [AntrianBPJSController::class, 'checkin_antrian']);
     Route::post('info_pasien_baru', [AntrianBPJSController::class, 'info_pasien_baru']);
-
     Route::post('pasien_pendaftaran', [AntrianBPJSController::class, 'pasien_pendaftaran']);
     Route::post('panggil_pendaftaran', [AntrianBPJSController::class, 'panggil_pendaftaran']);
     Route::post('update_pendaftaran_offline', [AntrianBPJSController::class, 'update_pendaftaran_offline']);
     Route::post('update_pendaftaran_online', [AntrianBPJSController::class, 'update_pendaftaran_online']);
-
     Route::post('jadwal_operasi_rs', [AntrianAntrianController::class, 'jadwal_operasi_rs']);
     Route::post('jadwal_operasi_pasien', [AntrianAntrianController::class, 'jadwal_operasi_pasien']);
+    Route::post('ambil_antrean_farmasi', [AntrianAntrianController::class, 'ambil_antrian_farmasi']);
+    Route::post('status_antrean_farmasi', [AntrianAntrianController::class, 'status_antrian_farmasi']);
 });
 Route::prefix('vclaim')->group(function () {
     // ref
