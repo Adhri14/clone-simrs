@@ -31,9 +31,10 @@ use App\Http\Controllers\SIMRS\AntrianController as SIMRSAntrianController;
 use App\Http\Controllers\SIMRS\BukuTamuController;
 use App\Http\Controllers\SIMRS\DokterController as SIMRSDokterController;
 use App\Http\Controllers\SIMRS\JadwalDokterController as SIMRSJadwalDokterController;
+use App\Http\Controllers\SIMRS\JadwalOperasiController as SIMRSJadwalOperasiController;
 use App\Http\Controllers\SIMRS\KunjunganController as SIMRSKunjunganController;
 use App\Http\Controllers\SIMRS\MonitoringController;
-use App\Http\Controllers\SIMRS\PasienController as SIMRSPasienController;
+use App\Http\Controllers\SIMRS\PasienController;
 use App\Http\Controllers\SIMRS\PoliklinikController as SIMRSPoliklinikController;
 use App\Http\Controllers\SIMRS\SimrsController;
 use App\Http\Controllers\SIMRS\SuratKontrolController;
@@ -94,6 +95,7 @@ Route::prefix('antrian')->name('antrian.')->middleware(['auth'])->group(function
     Route::get('poli', [AntrianController::class, 'poli'])->name('poli')->middleware('permission:poliklinik');
     Route::get('panggil_poli/{kodebooking}', [AntrianController::class, 'panggil_poli'])->name('panggil_poli')->middleware('permission:poliklinik');
     Route::get('lanjut_farmasi/{kodebooking}', [AntrianController::class, 'lanjut_farmasi'])->name('lanjut_farmasi')->middleware('permission:poliklinik');
+    Route::get('lanjut_farmasi_racikan/{kodebooking}', [AntrianController::class, 'lanjut_farmasi_racikan'])->name('lanjut_farmasi_racikan')->middleware('permission:poliklinik');
     Route::get('selesai/{kodebooking}', [AntrianController::class, 'selesai'])->name('selesai')->middleware('permission:poliklinik');
     Route::get('selesai_semua/{kodepoli}', [AntrianController::class, 'selesai_semua'])->name('selesai_semua')->middleware('permission:poliklinik');
     // Route::get('surat_kontrol_poli', [AntrianController::class, 'surat_kontrol_poli'])->name('surat_kontrol_poli')->middleware('permission:poliklinik');
@@ -139,12 +141,12 @@ Route::resource('poli', PoliklinikController::class)->only(['index', 'create', '
 Route::resource('jadwallibur', JadwalLiburController::class)->middleware(['auth', 'permission:pelayanan-medis']);
 Route::resource('jadwaldokter', JadwalDokterController::class)->middleware(['auth']);
 Route::resource('jadwaloperasi', JadwalOperasiController::class)->only(['index', 'store', 'edit'])->middleware('permission:pelayanan-medis');
-Route::get('pasien_daerah', [SIMRSPasienController::class, 'pasien_daerah'])->name('pasien_daerah');
-Route::get('pasien_demografi', [SIMRSPasienController::class, 'pasien_demografi'])->name('pasien_demografi');
+Route::get('pasien_daerah', [PasienController::class, 'pasien_daerah'])->name('pasien_daerah');
+Route::get('pasien_demografi', [PasienController::class, 'pasien_demografi'])->name('pasien_demografi');
 Route::get('index_penyakit_rajal', [IndexController::class, 'index_penyakit_rajal'])->name('index_penyakit_rajal');
 Route::get('index_dokter', [IndexController::class, 'index_dokter'])->name('index_dokter');
 
-Route::resource('tindakan', SIMRSPasienController::class)->middleware('permission:rekam-medis');
+Route::resource('tindakan', PasienController::class)->middleware('permission:rekam-medis');
 Route::resource('tarif_kelompok_layanan', TarifKelompokLayananController::class);
 Route::resource('icd10', Icd10Controller::class);
 Route::resource('efilerm', FileRMController::class);
@@ -203,7 +205,7 @@ Route::middleware('auth')->group(function () {
         Route::get('laporan_antrian_poliklinik', [SIMRSAntrianController::class, 'laporan_antrian_poliklinik'])->name('laporan_antrian_poliklinik');
         Route::get('dashboard_antrian_tanggal', [SIMRSAntrianController::class, 'dashboard_antrian_tanggal'])->name('dashboard_antrian_tanggal');
         Route::get('dashboard_antrian_bulan', [SIMRSAntrianController::class, 'dashboard_antrian_bulan'])->name('dashboard_antrian_bulan');
-        Route::resource('pasien', SIMRSPasienController::class);
+        Route::resource('pasien', PasienController::class);
     });
     // yanmed
     Route::prefix('pelayananmedis')->name('pelayanan-medis.')->group(function () {
@@ -221,7 +223,7 @@ Route::middleware('auth')->group(function () {
     });
     // rekam medis
     Route::prefix('rekammedis')->name('rekam-medis.')->group(function () {
-        Route::resource('pasien', SIMRSPasienController::class);
+        Route::resource('pasien', PasienController::class);
         Route::resource('kunjungan', SIMRSKunjunganController::class);
     });
     // simrs
@@ -233,7 +235,7 @@ Route::middleware('auth')->group(function () {
             Route::get('laporan', [SIMRSAntrianController::class, 'laporan'])->name('laporan');
             Route::get('laporan_kunjungan', [SIMRSAntrianController::class, 'laporan_kunjungan'])->name('laporan_kunjungan');
         });
-        Route::resource('pasien', SIMRSPasienController::class);
+        Route::resource('pasien', PasienController::class);
         Route::resource('dokter', SIMRSDokterController::class);
         Route::resource('kunjungan', SIMRSKunjunganController::class);
     });
@@ -245,12 +247,14 @@ Route::middleware('auth')->group(function () {
             Route::get('poli', [SIMRSPoliklinikController::class, 'poliklik_antrian_bpjs'])->name('poli');
             Route::get('dokter', [SIMRSDokterController::class, 'dokter_antrian_bpjs'])->name('dokter');
             Route::get('jadwal_dokter', [SIMRSJadwalDokterController::class, 'jadwal_dokter_bpjs'])->name('jadwal_dokter');
+            Route::get('fingerprint_peserta', [PasienController::class, 'fingerprint_peserta'])->name('fingerprint_peserta');
             Route::get('antrian', [AntrianAntrianController::class, 'antrian'])->name('antrian');
             Route::get('list_task', [AntrianAntrianController::class, 'list_task'])->name('list_task');
             Route::get('dashboard_tanggal', [AntrianAntrianController::class, 'dashboard_tanggal_index'])->name('dashboard_tanggal');
             Route::get('dashboard_bulan', [AntrianAntrianController::class, 'dashboard_bulan_index'])->name('dashboard_bulan');
-            Route::get('jadwal_operasi', [AntrianAntrianController::class, 'jadwal_operasi'])->name('jadwal_operasi');
+            Route::get('jadwal_operasi', [SIMRSJadwalOperasiController::class, 'index'])->name('jadwal_operasi');
             Route::get('antrian_per_tanggal', [SIMRSAntrianController::class, 'antrian_per_tanggal'])->name('antrian_per_tanggal');
+            Route::get('antrian_per_kodebooking', [SIMRSAntrianController::class, 'antrian_per_kodebooking'])->name('antrian_per_kodebooking');
             Route::get('antrian_belum_dilayani', [SIMRSAntrianController::class, 'antrian_belum_dilayani'])->name('antrian_belum_dilayani');
             Route::get('antrian_per_dokter', [SIMRSAntrianController::class, 'antrian_per_dokter'])->name('antrian_per_dokter');
         });

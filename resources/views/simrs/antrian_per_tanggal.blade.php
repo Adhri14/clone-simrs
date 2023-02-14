@@ -3,7 +3,6 @@
 @section('content_header')
     <h1>Antrian Per Tanggal</h1>
 @stop
-
 @section('content')
     <div class="row">
         <div class="col-md-12">

@@ -397,6 +397,8 @@
                                 icon="fas fa-prescription-bottle-alt" />
                             <a href="#" id="lanjutFarmasi" class="btn btn-success withLoad"> <i
                                     class="fas fa-prescription-bottle-alt"></i> Lanjut Farmasi</a>
+                            <a href="#" id="lanjutFarmasiRacikan" class="btn btn-success withLoad"> <i
+                                    class="fas fa-prescription-bottle-alt"></i> Lanjut Farmasi Racikan</a>
                             <a href="#" id="selesaiPoliklinik" class="btn btn-warning withLoad"> <i
                                     class="fas fa-check"></i> Selesai</a>
                             <x-adminlte-button theme="danger" label="Tutup" data-dismiss="modal" />
@@ -411,7 +413,7 @@
                             $config = [
                                 'format' => 'YYYY-MM-DD',
                                 'dayViewHeaderFormat' => 'MMMM YYYY',
-                                'minDate' => "js:moment()",
+                                'minDate' => 'js:moment()',
                                 'daysOfWeekDisabled' => [0],
                             ];
                         @endphp
@@ -513,6 +515,12 @@
                         "/poliklinik/lanjut_farmasi/" + data
                         .kodebooking;
                     $("#lanjutFarmasi").attr("href", urlLanjutFarmasi);
+
+                    var urlLanjutFarmasiRacikan = "{{ route('landingpage') }}" +
+                        "/poliklinik/lanjut_farmasi_racikan/" + data
+                        .kodebooking;
+                    $("#lanjutFarmasiRacikan").attr("href", urlLanjutFarmasiRacikan);
+
                     var urlSelesaiPoliklinik = "{{ route('landingpage') }}" +
                         "/poliklinik/selesai_poliklinik/" + data
                         .kodebooking;

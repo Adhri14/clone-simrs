@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\SIMRS;
 
+use App\Http\Controllers\BPJS\Antrian\AntrianController;
 use App\Http\Controllers\Controller;
 use App\Models\PasienDB;
 use Illuminate\Http\Request;
@@ -141,10 +142,28 @@ class PasienController extends Controller
             'agama',
         ]));
     }
-    // API SIMRS
-    public function pasien_get(Request $request)
+    public function fingerprint_peserta(Request $request)
     {
-
+        $peserta = null;
+        if ($request->nomorkartu) {
+            $request['jenisIdentitas'] = 'noka';
+            $request['noIdentitas'] = $request->nomorkartu;
+            $api = new AntrianController();
+            $response =  $api->ref_pasien_fingerprint($request);
+            if ($response->getData()->metadata->code == 200) {
+                $peserta = $response->getData()->response;
+                if ($peserta->daftarfp == 0) {
+                    Alert::error('Maaf', 'Pasien Belum memeliki Fingerprint BPJS');
+                } else {
+                    Alert::success('Success', 'Pasien Belum memeliki Fingerprint BPJS');
+                }
+            } else {
+                Alert::error('Maaf', $response->getData()->metadata->message);
+            }
+        }
+        return view('bpjs.antrian.fingerprint_peserta', compact([
+            'request',
+            'peserta'
+        ]));
     }
-
 }

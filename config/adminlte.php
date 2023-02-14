@@ -444,7 +444,7 @@ return [
                     'icon'    => 'fas fa-user-md',
                     'url'  => 'pelayananmedis/dokter',
                     'shift'   => 'ml-2',
-                    'can' => 'admin',
+                    'can' => 'pelayanan-medis',
                 ],
                 [
                     'text' => 'Tarif Layanan',
@@ -665,15 +665,6 @@ return [
 
             ],
         ],
-        // KEPEGAWAIAN
-        // [
-        //     'text'    => 'Aplikasi Kepegawaian',
-        //     'icon'    => 'fas fa-user-tie',
-        //     'can' => ['admin'],
-        //     'label' => 'onbuild',
-        //     'label_color' => 'danger',
-        //     'submenu' => []
-        // ],
         // BUKU TAMU
         [
             'text'    => 'Aplikasi Buku Tamu',
@@ -727,6 +718,13 @@ return [
                     'text' => 'Jadwal Dokter',
                     'icon'    => 'fas fa-calendar-alt',
                     'url'  => 'bpjs/antrian/jadwal_dokter',
+                    'shift'   => 'ml-2',
+                    'can' => 'bpjs',
+                ],
+                [
+                    'text' => 'Cek Fingerprint Peserta',
+                    'icon'    => 'fas fa-fingerprint',
+                    'url'  => 'bpjs/antrian/fingerprint_peserta',
                     'shift'   => 'ml-2',
                     'can' => 'bpjs',
                 ],

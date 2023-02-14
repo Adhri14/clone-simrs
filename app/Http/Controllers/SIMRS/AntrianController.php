@@ -398,13 +398,30 @@ class AntrianController extends Controller
                 Alert::success('Success', "Berhasil Dapatkan Data Antrian");
             } else {
                 Alert::error('Error ' . $response->status(),  $response->getData()->metadata->message);
-                return redirect()->route('antrian.laporan_tanggal');
+                return redirect()->route('bpjs.antrian.antrian_per_tanggal');
             }
         }
         return view('simrs.antrian_per_tanggal', [
             'antrians' => $antrians,
             'request' => $request,
         ]);
+    }
+    public function antrian_per_kodebooking(Request $request)
+    {
+        $antrian = null;
+        if ($request->kodebooking) {
+            $request['kodeBooking'] = $request->kodebooking;
+            $api = new AntrianAntrianController();
+            $response = $api->antrian_kodebooking($request);
+            if ($response->status() == 200) {
+                $antrian = $response->getData()->response[0];
+            }
+        } else {
+            # code...
+        }
+        return view('bpjs.antrian.antrian_per_kodebooking', compact([
+            'request', 'antrian'
+        ]));
     }
     public function antrian_belum_dilayani(Request $request)
     {
@@ -444,7 +461,6 @@ class AntrianController extends Controller
                 Alert::success('Success', "Berhasil Dapatkan Data Antrian");
             } else {
                 Alert::error('Error ' . $response->status(),  $response->getData()->metadata->message);
-                return redirect()->route('antrian.laporan_tanggal');
             }
         }
         return view('simrs.antrian_per_dokter', [

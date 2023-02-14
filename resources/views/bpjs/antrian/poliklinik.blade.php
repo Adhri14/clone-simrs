@@ -1,11 +1,11 @@
 @extends('adminlte::page')
 @section('title', 'Poliklinik - Antrian BPJS')
 @section('content_header')
-    <h1 class="m-0 text-dark">Poliklinik Antrian BPJS</h1>
+    <h1>Poliklinik Antrian BPJS</h1>
 @stop
 @section('content')
     <div class="row">
-        <div class="col-12">
+        <div class="col-md-12">
             <x-adminlte-card title="Referensi Poliklinik Antrian BPJS" theme="secondary" collapsible>
                 @php
                     $heads = ['No', 'Nama Subspesialis', 'Kode Subspesialis', 'Nama Poli', 'Kode Poli', 'Status', 'Action'];
@@ -24,8 +24,6 @@
                     @endforeach
                 </x-adminlte-datatable>
             </x-adminlte-card>
-        </div>
-        <div class="col-12">
             <x-adminlte-card title="Referensi Poliklinik Fingerprint Antrian BPJS" theme="secondary" collapsible>
                 @php
                     $heads = ['No', 'Nama Subspesialis', 'Kode Subspesialis', 'Nama Poli', 'Kode Poli', 'Status', 'Action'];

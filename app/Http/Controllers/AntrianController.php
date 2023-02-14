@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\API\AntrianBPJSController;
 use App\Http\Controllers\API\VclaimBPJSController;
 use App\Http\Controllers\API\WhatsappController;
+use App\Http\Controllers\BPJS\Antrian\AntrianController as AntrianAntrianController;
 use App\Models\Antrian;
 use App\Models\Dokter;
 use App\Models\ICD10;
@@ -1147,7 +1148,6 @@ class AntrianController extends Controller
     }
     public function lanjut_farmasi($kodebooking, Request $request)
     {
-        dd($antrian);
         $antrian = Antrian::where('kodebooking', $kodebooking)->first();
         $request['kodebooking'] = $antrian->kodebooking;
         $request['taskid'] = 5;
@@ -1155,6 +1155,34 @@ class AntrianController extends Controller
         $request['waktu'] = Carbon::now()->timestamp * 1000;
         $vclaim = new AntrianBPJSController();
         $response = $vclaim->update_antrian($request);
+        $antrian->update([
+            'taskid' => $request->taskid,
+            'status_api' => 0,
+            'keterangan' => $request->keterangan,
+            // 'user' => Auth::user()->name,
+        ]);
+        // try {
+        //     // notif wa
+        //     $wa = new WhatsappController();
+        //     $request['message'] = "Pelayanan di poliklinik atas nama pasien " . $antrian->nama . " dengan nomor antrean " . $antrian->nomorantrean . " telah selesai. " . $request->keterangan;
+        //     $request['number'] = $antrian->nohp;
+        //     $wa->send_message($request);
+        // } catch (\Throwable $th) {
+        //     //throw $th;
+        // }
+        Alert::success('Success', "Antrian Berhasil Dilanjutkan ke Farmasi.\n" . $response->metadata->message);
+        return redirect()->back();
+    }
+    public function lanjut_farmasi_racikan($kodebooking, Request $request)
+    {
+        $antrian = Antrian::where('kodebooking', $kodebooking)->first();
+        $request['kodebooking'] = $antrian->kodebooking;
+        $request['taskid'] = 5;
+        $request['jenisresep'] = "Racikan";
+        $request['keterangan'] = "Silahkan tunggu di farmasi untuk pengambilan obat.";
+        $request['waktu'] = Carbon::now()->timestamp * 1000;
+        $vclaim = new AntrianAntrianController();
+        $response = $vclaim->update_antrean($request);
         $antrian->update([
             'taskid' => $request->taskid,
             'status_api' => 0,

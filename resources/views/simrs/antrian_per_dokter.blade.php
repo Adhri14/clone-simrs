@@ -11,10 +11,27 @@
                 <form action="" method="get">
                     <div class="row">
                         <div class="col-md-12">
+                            <x-adminlte-select2 name="hari" id="hari" label="Hari">
+                                @foreach ($jadwaldokter as $item)
+                                    <option value="1">Senin</option>
+                                    <option value="2">Selasa</option>
+                                    <option value="3">Rabu</option>
+                                    <option value="4">Kamis</option>
+                                    <option value="5">Jumat</option>
+                                    <option value="6">Sabtu</option>
+                                    <option value="7">Minggu</option>
+                                @endforeach
+                            </x-adminlte-select2>
+                            <x-adminlte-select2 name="kodepoli" id="kodepoli" label="Poliklinik">
+                                @foreach ($jadwaldokter as $item)
+                                    <option value="{{ $item->id }}">
+                                        {{ $item->namasubspesialis }}
+                                    </option>
+                                @endforeach
+                            </x-adminlte-select2>
                             <x-adminlte-select2 name="jadwaldokter" id="jadwaldokter" label="Jadwal Dokter">
                                 @foreach ($jadwaldokter as $item)
-                                    <option value="{{ $item->id }}">{{ $item->namahari }} -
-                                        {{ $item->kodesubspesialis }} -
+                                    <option value="{{ $item->id }}">
                                         {{ $item->namadokter }}
                                     </option>
                                 @endforeach

@@ -1312,7 +1312,9 @@ class AntrianBPJSController extends Controller
                                 $peserta = $rujukan->peserta;
                                 $diganosa = $rujukan->diagnosa;
                                 $tujuan = $rujukan->poliRujukan;
+                                // dd($peserta);
                                 $penjamin = PenjaminDB::where('nama_penjamin_bpjs', $peserta->jenisPeserta->keterangan)->first(); // get peserta
+                                // $request['kodepenjamin'] = 'P13';
                                 $request['kodepenjamin'] = $penjamin->kode_penjamin_simrs; // get peserta
                                 // tujuan rujukan
                                 $request['ppkPelayanan'] = "1018R001";

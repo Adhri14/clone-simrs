@@ -116,6 +116,8 @@ Route::post('checkin', [AntrianAntrianController::class, 'checkin_antrian']);
 Route::post('infopasienbaru', [AntrianAntrianController::class, 'infoPasienBaru']);
 Route::post('jadwaloperasi', [AntrianAntrianController::class, 'jadwal_operasi_rs']);
 Route::post('jadwaloperasipasien', [AntrianAntrianController::class, 'jadwal_operasi_pasien']);
+Route::post('ambilantreanfarmasi', [AntrianAntrianController::class, 'ambil_antrian_farmasi']);
+Route::post('statusantreanfarmasi', [AntrianAntrianController::class, 'status_antrian_farmasi']);
 // API SIMRS
 Route::prefix('simrs')->name('api.simrs.')->group(function () {
     Route::get('get_icd10', [ICD10Controller::class, 'get_icd10'])->name('get_icd10');

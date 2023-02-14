@@ -1,13 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\SIMRS;
 
+use App\Http\Controllers\Controller;
 use App\Models\Dokter;
 use App\Models\JadwalOperasi;
 use App\Models\Poliklinik;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
-use RealRashid\SweetAlert\Facades\Alert;
 
 class JadwalOperasiController extends Controller
 {
@@ -15,7 +14,8 @@ class JadwalOperasiController extends Controller
     {
         $dokters = Dokter::get();
         $poli = Poliklinik::get();
-        $jadwals = JadwalOperasi::get();
+        $jadwals = JadwalOperasi::whereYear('tanggal', '=', 2023)
+            ->get();
         return view('simrs.jadwaloperasi_index', [
             'dokters' => $dokters,
             'poli' => $poli,
