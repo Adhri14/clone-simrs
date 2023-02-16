@@ -179,6 +179,7 @@ Route::middleware('auth')->group(function () {
         Log::debug($message);
     });
     Route::get('kunjungan/show/{kodekunjungan}', [SIMRSKunjunganController::class, 'show'])->name('kunjungan.show');
+    Route::get('kunjungan_tanggal/{tanggal}', [SIMRSKunjunganController::class, 'kunjungan_tanggal'])->name('kunjungan_tanggal');
     // admin
     Route::middleware('permission:admin')->group(function () {
         Route::resource('user', UserController::class);

@@ -9,6 +9,7 @@
 @section('content')
     <div class="row">
         <div class="col-4">
+            {{-- pencarian pasien --}}
             <x-adminlte-card title="Data Pasien" theme="warning" collapsible>
                 @php
                     $config = ['format' => 'YYYY-MM-DD'];
@@ -41,33 +42,28 @@
                     <dd class="col-sm-9">: -</dd>
                 </dl>
             </x-adminlte-card>
+            {{-- kelompok diagnisa --}}
             <div class="card card-primary card-tabs">
                 <div class="card-header p-0 pt-1">
-                    <ul class="nav nav-tabs" id="custom-tabs-two-tab" role="tablist">
+                    <ul class="nav nav-tabs">
                         <li class="pt-2 px-3">
                             <h3 class="card-title"><b>Diagnosa</b></h3>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link active" id="custom-tabs-two-home-tab" data-toggle="pill"
-                                href="#custom-tabs-two-home" role="tab" aria-controls="custom-tabs-two-home"
-                                aria-selected="true">Infeksi</a>
+                            <a class="nav-link active" data-toggle="pill" href="#diagTab">Infeksi</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="custom-tabs-two-profile-tab" data-toggle="pill"
-                                href="#custom-tabs-two-profile" role="tab" aria-controls="custom-tabs-two-profile"
-                                aria-selected="false">ICD-10</a>
+                            <a class="nav-link" data-toggle="pill" href="#icd10Tab">ICD-10</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="custom-tabs-two-profile-tab" data-toggle="pill"
-                                href="#custom-tabs-two-messages" role="tab" aria-controls="custom-tabs-two-messages"
-                                aria-selected="false">ICD-9</a>
+                            <a class="nav-link" data-toggle="pill" href="#icd9Tab">ICD-9</a>
                         </li>
                     </ul>
                 </div>
                 <div class="card-body">
-                    <div class="tab-content" id="custom-tabs-two-tabContent">
-                        <div class="tab-pane fade show active" id="custom-tabs-two-home" role="tabpanel"
-                            aria-labelledby="custom-tabs-two-home-tab">
+                    <div class="tab-content">
+                        <div class="tab-pane fade show active" id="diagTab">
+                            <h5>Kelompok Diagnosa Infeksi</h5>
                             <div class="form-group">
                                 <div class="custom-control custom-checkbox">
                                     <input class="custom-control-input" type="checkbox" id="sepsis" value="sepsis">
@@ -173,16 +169,15 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="tab-pane fade" id="custom-tabs-two-profile" role="tabpanel"
-                            aria-labelledby="custom-tabs-two-profile-tab">
+                        <div class="tab-pane fade" id="icd10Tab">
                             @php
                                 $config = [
                                     'placeholder' => 'Select multiple options...',
                                     'allowClear' => true,
                                 ];
                             @endphp
-                            <x-adminlte-select2 id="sel2Category" name="sel2Category[]" label="Diagnosa ICD-10"
-                                :config="$config" multiple>
+                            <x-adminlte-select2 id="icd10" name="icd10[]" label="Diagnosa ICD-10" :config="$config"
+                                multiple>
                                 @foreach ($roles as $role)
                                     <option value="{{ $role->diag }}">
                                         {{ $role->diag }} - {{ $role->nama }}
@@ -190,23 +185,59 @@
                                 @endforeach
                             </x-adminlte-select2>
                         </div>
-                        <div class="tab-pane fade" id="custom-tabs-two-messages" role="tabpanel"
-                            aria-labelledby="custom-tabs-two-messages-tab">
-                            Morbi turpis dolor, vulputate vitae felis non, tincidunt congue mauris. Phasellus volutpat augue
-                            id mi placerat mollis. Vivamus faucibus eu massa eget condimentum. Fusce nec hendrerit sem, ac
-                            tristique nulla. Integer vestibulum orci odio. Cras nec augue ipsum. Suspendisse ut velit
-                            condimentum, mattis urna a, malesuada nunc. Curabitur eleifend facilisis velit finibus
-                            tristique. Nam vulputate, eros non luctus efficitur, ipsum odio volutpat massa, sit amet
-                            sollicitudin est libero sed ipsum. Nulla lacinia, ex vitae gravida fermentum, lectus ipsum
-                            gravida arcu, id fermentum metus arcu vel metus. Curabitur eget sem eu risus tincidunt eleifend
-                            ac ornare magna.
+                        <div class="tab-pane fade" id="icd9Tab">
+                            @php
+                                $config = [
+                                    'placeholder' => 'Select multiple options...',
+                                    'allowClear' => true,
+                                ];
+                            @endphp
+                            <x-adminlte-select2 id="icd9" name="icd9[]" label="Tindakan ICD-9" :config="$config"
+                                multiple>
+                                @foreach ($roles as $role)
+                                    <option value="{{ $role->diag }}">
+                                        {{ $role->diag }} - {{ $role->nama }}
+                                    </option>
+                                @endforeach
+                            </x-adminlte-select2>
                         </div>
                     </div>
                 </div>
-                <!-- /.card -->
             </div>
         </div>
         <div class="col-8">
+            <x-adminlte-card title="Data Pasien" theme="warning" collapsible>
+                @php
+                    $config = ['format' => 'YYYY-MM-DD'];
+                @endphp
+                <x-adminlte-input-date name="tanggal" id="tanggal" label="Tanggal Kunjungan" :config="$config"
+                    value="{{ \Carbon\Carbon::parse($request->tanggal)->format('Y-m-d') }}">
+                    <x-slot name="prependSlot">
+                        <div class="input-group-text bg-primary">
+                            <i class="fas fa-calendar-alt"></i>
+                        </div>
+                    </x-slot>
+                    <x-slot name="appendSlot">
+                        <x-adminlte-button theme="success" class="cariPasien" label="Cari Pasien" />
+                    </x-slot>
+                </x-adminlte-input-date>
+                <dl class="row">
+                    <dt class="col-sm-3">No RM</dt>
+                    <dd class="col-sm-9">: -</dd>
+                    <dt class="col-sm-3">Nama</dt>
+                    <dd class="col-sm-9">: -</dd>
+                    <dt class="col-sm-3">Alamat</dt>
+                    <dd class="col-sm-9">: -</dd>
+                    <dt class="col-sm-3">Dokter DPJP</dt>
+                    <dd class="col-sm-9">: -</dd>
+                    <dt class="col-sm-3">Ruangan</dt>
+                    <dd class="col-sm-9">: -</dd>
+                    <dt class="col-sm-3">Dokter</dt>
+                    <dd class="col-sm-9">: -</dd>
+                    <dt class="col-sm-3">Nama</dt>
+                    <dd class="col-sm-9">: -</dd>
+                </dl>
+            </x-adminlte-card>
             <div class="card card-primary card-tabs">
                 <div class="card-header p-0 pt-1">
                     <ul class="nav nav-tabs" id="custom-tabs-two-tab" role="tablist">
@@ -400,14 +431,15 @@
     <script>
         $(function() {
             $('.cariPasien').click(function() {
+                $.LoadingOverlay("show");
                 var tanggal = $('#tanggal').val();
-                $('#tanggalKunjungan').html(tanggal);
-                var url =
-                    "{{ route('kpo.index') }}" + "/tanggal/" + tanggal;
-                alert(url);
-                // $.LoadingOverlay("show");
-                // $.LoadingOverlay("show");
-                // $('#kunjunganPasien').modal('show');
+                var url = "{{ route('kpo.index') }}" + "/tanggal/" + tanggal;
+                $('#kunjunganPasien').modal('show');
+
+                $.get(url, function(data) {
+                    console.log(data);
+                    $.LoadingOverlay("hide", true);
+                });
 
             });
         });
