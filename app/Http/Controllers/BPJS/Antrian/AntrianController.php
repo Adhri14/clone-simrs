@@ -962,10 +962,10 @@ class AntrianController extends ApiBPJSController
             $response = $this->batal_antrean($request);
             if ($response->status() == 200) {
                 // kirim notif wa
-                // $wa = new WhatsappController();
-                // $request['message'] = "Kode antrian " . $antrian->kodebooking . " telah dibatakan\n" . $request->keterangan;
-                // $request['number'] = $antrian->nohp;
-                // $wa->send_message($request);
+                $wa = new WhatsappController();
+                $request['message'] = "Kode antrian " . $antrian->kodebooking . " telah dibatakan\n" . $request->keterangan;
+                $request['number'] = $antrian->nohp;
+                $wa->send_message($request);
                 $antrian->update([
                     "taskid" => 99,
                     "status_api" => 1,
