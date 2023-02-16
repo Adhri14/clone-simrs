@@ -375,6 +375,13 @@ return [
                     'can' => 'poliklinik',
                 ],
                 [
+                    'text' => 'Aplikasi KPO',
+                    'icon'    => 'fas fa-pills',
+                    'url'  => 'kpo',
+                    'shift'   => 'ml-2',
+                    'can' => 'rekam-medis',
+                ],
+                [
                     'text' => 'Jadwal Dokter Poliklinik',
                     'icon'    => 'fas fa-calendar-alt',
                     'shift'   => 'ml-2',

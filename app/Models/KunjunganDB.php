@@ -67,23 +67,24 @@ class KunjunganDB extends Model
         return $this->hasOne(SuratKontrol::class, 'noSepAsalKontrol', 'no_sep');
     }
 
-    protected $appends = ['nama_pasien','nama_penjamin',];
+    protected $appends = ['nama_pasien'];
     public function getNamaPasienAttribute()
     {
-        if (isset($this->no_rm)) {
-            $pasien = PasienDB::firstWhere('no_rm', $this->no_rm)->nama_px;
+        $pasien = PasienDB::firstWhere('no_rm', $this->no_rm);
+        if (isset($pasien)) {
+            $pasien = $pasien->nama_px;
         } else {
             $pasien = '';
         }
         return $pasien;
     }
-    public function getNamaPenjaminAttribute()
-    {
-        if (isset($this->kode_penjamin)) {
-            $penjamin = PenjaminSimrs::firstWhere('kode_penjamin', $this->kode_penjamin)->nama_penjamin;
-        } else {
-            $penjamin = '';
-        }
-        return $penjamin;
-    }
+    // public function getNamaPenjaminAttribute()
+    // {
+    //     if (isset($this->kode_penjamin)) {
+    //         $penjamin = PenjaminSimrs::firstWhere('kode_penjamin', $this->kode_penjamin)->nama_penjamin;
+    //     } else {
+    //         $penjamin = '';
+    //     }
+    //     return $penjamin;
+    // }
 }

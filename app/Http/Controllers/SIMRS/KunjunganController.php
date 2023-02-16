@@ -44,4 +44,9 @@ class KunjunganController extends ApiController
         $data['kodeDokter'] = $kunjungan->dokter ? (string) $kunjungan->dokter->kode_dokter_jkn : null;
         return $this->sendResponse('OK', $data, 200);
     }
+    public function kunjungan_tanggal($tanggal)
+    {
+        $kunjungans = KunjunganDB::whereDate('tgl_masuk',$tanggal)->get(['no_rm','kode_unit','kode_paramedis','tgl_masuk']);
+        return response()->json($kunjungans);
+    }
 }
