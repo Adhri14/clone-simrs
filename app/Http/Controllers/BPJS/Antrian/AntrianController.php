@@ -642,9 +642,6 @@ class AntrianController extends ApiBPJSController
         if ($jadwals->count() == 0) {
             return $this->sendError("Tidak ada jadwal poliklinik dihari tersebut", null, 201);
         }
-        if ($jadwals->libur) {
-            return $this->sendError("Jadwal Poliklinik Libur / Tutup", null, 201);
-        }
         // cek jadwal dokter
         $jadwal = $jadwals->where('kodedokter', $request->kodedokter)->first();
         $antrians = Antrian::where('kodepoli', $request->kodepoli)
