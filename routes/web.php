@@ -34,6 +34,7 @@ use App\Http\Controllers\SIMRS\JadwalDokterController as SIMRSJadwalDokterContro
 use App\Http\Controllers\SIMRS\JadwalOperasiController as SIMRSJadwalOperasiController;
 use App\Http\Controllers\SIMRS\KunjunganController as SIMRSKunjunganController;
 use App\Http\Controllers\SIMRS\MonitoringController;
+use App\Http\Controllers\SIMRS\ObatController;
 use App\Http\Controllers\SIMRS\PasienController;
 use App\Http\Controllers\SIMRS\PoliklinikController as SIMRSPoliklinikController;
 use App\Http\Controllers\SIMRS\SimrsController;
@@ -226,6 +227,10 @@ Route::middleware('auth')->group(function () {
     Route::prefix('rekammedis')->name('rekam-medis.')->group(function () {
         Route::resource('pasien', PasienController::class);
         Route::resource('kunjungan', SIMRSKunjunganController::class);
+    });
+     // rekam medis
+     Route::prefix('farmasi')->name('farmasi.')->group(function () {
+        Route::resource('obat', ObatController::class);
     });
     // simrs
     Route::prefix('simrs')->name('simrs.')->group(function () {

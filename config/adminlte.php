@@ -375,13 +375,6 @@ return [
                     'can' => 'poliklinik',
                 ],
                 [
-                    'text' => 'Aplikasi KPO',
-                    'icon'    => 'fas fa-pills',
-                    'url'  => 'kpo',
-                    'shift'   => 'ml-2',
-                    'can' => 'rekam-medis',
-                ],
-                [
                     'text' => 'Jadwal Dokter Poliklinik',
                     'icon'    => 'fas fa-calendar-alt',
                     'shift'   => 'ml-2',
@@ -437,6 +430,13 @@ return [
                     'url'  => 'antrian/farmasi',
                     'shift'   => 'ml-2',
                     'can' => 'farmasi',
+                ],
+                [
+                    'text' => 'Obat',
+                    'icon'    => 'fas fa-pills',
+                    'url'  => 'farmasi/obat',
+                    'shift'   => 'ml-2',
+                    'can' => 'rekam-medis',
                 ],
             ],
         ],
@@ -565,13 +565,7 @@ return [
                     'shift'   => 'ml-2',
                     'can' => 'rekam-medis',
                 ],
-                [
-                    'text' => 'Obat',
-                    'icon'    => 'fas fa-pills',
-                    'url'  => 'obat',
-                    'shift'   => 'ml-2',
-                    'can' => 'rekam-medis',
-                ],
+
             ],
         ],
         // SIMRS
