@@ -369,10 +369,10 @@ class WhatsappController extends Controller
                         $request['contenttext'] = "Silahkan konfirmasi pendaftaran data pasien menggunakan surat kontrol berikut \n\n*No Surat* : " . $suratkontrol->noSuratKontrol . "\n*Tgl Surat* : " . $suratkontrol->tglTerbit . "\n*Pasien* : " . $peserta->nama  . "\n*Diagnosa* : " . $sep->diagnosa . "\n*Poli Tujuan* : " . $suratkontrol->namaPoliTujuan  . "\n*Dokter* : " . $suratkontrol->namaDokter . "\n*Tgl Kontrol* : " . $suratkontrol->tglRencanaKontrol . "\n\nApakah anda akan mendaftar pada tanggal tersebut atau ingin merubah jadwal kontrol ? Silahkan tentukan pilihannya dibawah ini.";
                         $request['titletext'] = "4. Konfirmasi Daftar Kontrol";
                         $request['buttontext'] = 'PILIHAN KONTROL';
-                        // $request['rowtitle'] = 'DAFTAR KONTROL TGL ' . $suratkontrol->tglRencanaKontrol . ',RUBAH TANGGAL KONTROL';
-                        // $request['rowdescription'] = '@DAFTARKONTROL#' . $suratkontrol->noSuratKontrol . ',@RUBAHKONTROL#' . $suratkontrol->noSuratKontrol;
-                        $request['rowtitle'] = 'DAFTAR KONTROL TGL ' . $suratkontrol->tglRencanaKontrol;
-                        $request['rowdescription'] = '@DAFTARKONTROL#' . $suratkontrol->noSuratKontrol;
+                        $request['rowtitle'] = 'DAFTAR KONTROL TGL ' . $suratkontrol->tglRencanaKontrol . ',UBAH TANGGAL KONTROL';
+                        $request['rowdescription'] = '@DAFTARKONTROL#' . $suratkontrol->noSuratKontrol . ',@UBAHKONTROL#' . $suratkontrol->noSuratKontrol;
+                        // $request['rowtitle'] = 'DAFTAR KONTROL TGL ' . $suratkontrol->tglRencanaKontrol;
+                        // $request['rowdescription'] = '@DAFTARKONTROL#' . $suratkontrol->noSuratKontrol;
                         return $this->send_list($request);
                     } else {
                         $request['message'] = "*4. Konfirmasi Daftar Kontrol*\nMohon maaf " . $response->getData()->metadata->message;
@@ -419,6 +419,63 @@ class WhatsappController extends Controller
                         }
                     } else {
                         $request['message'] = "*5. Daftar Kontrol*\nMohon maaf " . $response->getData()->metadata->message;
+                        return $this->send_message($request);
+                    }
+                } else if (str_contains($pesan, "@UBAHKONTROL#")) {
+                    $request['noSuratKontrol'] = explode("#", explode('@', $pesan)[1])[1];
+                    $vclaim = new VclaimController();
+                    $response = $vclaim->suratkontrol_nomor($request);
+                    if ($response->status() == 200) {
+                        $suratkontrol = $response->getData()->response;
+                        $tanggal = Carbon::parse($suratkontrol->tglRencanaKontrol);
+                        $rowtanggal = $tanggal->addDay(1)->translatedFormat('l Y-m-d');
+                        $rowdesc = "@TGLKONTROL#" . $tanggal->translatedFormat('Y-m-d') . '#' . $request->noSuratKontrol;
+                        for ($i = 0; $i < 6; $i++) {
+                            $rowtanggal = $rowtanggal . ',' . $tanggal->addDay(1)->translatedFormat('l Y-m-d');
+                            $rowdesc = $rowdesc . ',' . "@TGLKONTROL#" . $tanggal->translatedFormat('Y-m-d') . '#' . $request->noSuratKontrol;
+                        }
+                        $request['contenttext'] = "*Catatan Medis*\n1. Mengubah tanggal kontrol hanya untuk pasien yang terlewat tanggal kontrol.\n2. Kuota pasien penuh pada tanggal kontrol yang telah ditentukan.\n3. Tanggal yang tersedia hanya 7 hari dari tanggal yang telah ditentukan dokter.\n4. Diluar keperluan tersebut silahkan konsultasikan dengan Tenaga Medis. \n\nSilahkan pilih tanggal untuk merubah surat kontrol dibawah ini.";
+                        $request['titletext'] = "UBAH TANGGAL SURAT KONTROL";
+                        $request['buttontext'] = 'PILIH TANGGAL';
+                        $request['rowtitle'] = $rowtanggal;
+                        $request['rowdescription'] = $rowdesc;
+                        return $this->send_list($request);
+                    } else {
+                        $request['message'] = "*5. Daftar Kontrol*\nMohon maaf " . $response->getData()->metadata->message;
+                        return $this->send_message($request);
+                    }
+                } else if (str_contains($pesan, "@TGLKONTROL#")) {
+                    $request['noSuratKontrol'] = explode("#", explode('@', $pesan)[1])[2];
+                    $vclaim = new VclaimController();
+                    $response = $vclaim->suratkontrol_nomor($request);
+                    try {
+                        $suratkontrol = $response->getData()->response;
+                        $request['noSep'] = $suratkontrol->sep->noSep;
+                        $request['kodeDokter'] = $suratkontrol->kodeDokter;
+                        $request['poliKontrol'] = $suratkontrol->poliTujuan;
+                        $request['tglRencanaKontrol'] = explode("#", explode('@', $pesan)[1])[1];
+                        $request['user'] = $request->number;
+                    } catch (\Throwable $th) {
+                        $request['message'] = "*UBAH SURAT KONTROL*\nMohon maaf " . $response->getData()->metadata->message;
+                        return $this->send_message($request);
+                    }
+                    $response = $vclaim->suratkontrol_update($request);
+                    if ($response->status() == 200) {
+                        $suratkontrol = $response->getData()->response;
+                        $noSuratKontrol = $suratkontrol->noSuratKontrol;
+                        $tglRencanaKontrol = $suratkontrol->tglRencanaKontrol;
+                        $namaDokter = $suratkontrol->namaDokter;
+                        $noKartu = $suratkontrol->noKartu;
+                        $nama = $suratkontrol->nama;
+                        $namaDiagnosa = $suratkontrol->namaDiagnosa;
+                        $request['contenttext'] = "Anda berhasil ubah tanggal kontrol dengan data dibawah ini. \n\n*No Surat :* " . $noSuratKontrol . "\n*Tgl Kontrol :* " . $tglRencanaKontrol . "\n*Dokter :* " . $namaDokter . "\n*No BPJS :* " . $noKartu . "\n*Pasien :* " . $nama . "\n*Diagnosa :* " . $namaDiagnosa . " \n\nSilahkan pilih daftar jika ingin mendaftarkan untuk kunjungan berikutnya.";
+                        $request['titletext'] = "BERHASIL UBAH TANGGAL SURAT KONTROL";
+                        $request['buttontext'] = 'PILIHAN KONTROL';
+                        $request['rowtitle'] = 'DAFTAR KONTROL TGL ' . $suratkontrol->tglRencanaKontrol . ',UBAH TANGGAL KONTROL';
+                        $request['rowdescription'] = '@DAFTARKONTROL#' . $suratkontrol->noSuratKontrol . ',@UBAHKONTROL#' . $suratkontrol->noSuratKontrol;
+                        return $this->send_list($request);
+                    } else {
+                        $request['message'] = "*UBAH SURAT KONTROL*\nMohon maaf " . $response->getData()->metadata->message;
                         return $this->send_message($request);
                     }
                 }
