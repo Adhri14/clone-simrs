@@ -14,6 +14,9 @@ use App\Http\Controllers\SatuSehat\OrganizationController;
 use App\Http\Controllers\SatuSehat\PatientController;
 use App\Http\Controllers\SatuSehat\PractitionerController;
 use App\Http\Controllers\SIMRS\ICD10Controller;
+use App\Http\Controllers\SIMRS\ICD9Controller;
+use App\Http\Controllers\SIMRS\LayananController;
+use App\Http\Controllers\SIMRS\ObatController;
 use App\Http\Controllers\SIMRS\PenunjangController;
 use App\Http\Controllers\SIMRS\RISController;
 use App\Http\Controllers\VclaimController;
@@ -121,6 +124,9 @@ Route::post('statusantreanfarmasi', [AntrianAntrianController::class, 'status_an
 // API SIMRS
 Route::prefix('simrs')->name('api.simrs.')->group(function () {
     Route::get('get_icd10', [ICD10Controller::class, 'get_icd10'])->name('get_icd10');
+    Route::get('get_icd9', [ICD9Controller::class, 'get_icd9'])->name('get_icd9');
+    Route::get('get_obats', [ObatController::class, 'get_obats'])->name('get_obats');
+    Route::get('get_layanans', [LayananController::class, 'get_layanans'])->name('get_layanans');
 });
 // API BPJS
 Route::prefix('bpjs')->name('api.bpjs.')->group(function () {

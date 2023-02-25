@@ -434,7 +434,7 @@ class WhatsappController extends Controller
                             $rowtanggal = $rowtanggal . ',' . $tanggal->addDay(1)->translatedFormat('l Y-m-d');
                             $rowdesc = $rowdesc . ',' . "@TGLKONTROL#" . $tanggal->translatedFormat('Y-m-d') . '#' . $request->noSuratKontrol;
                         }
-                        $request['contenttext'] = "*Catatan Medis*\n1. Mengubah tanggal kontrol hanya untuk pasien yang terlewat tanggal kontrol.\n2. Kuota pasien penuh pada tanggal kontrol yang telah ditentukan.\n3. Tanggal yang tersedia hanya 7 hari dari tanggal yang telah ditentukan dokter.\n4. Diluar keperluan tersebut silahkan konsultasikan dengan Tenaga Medis. \n\nSilahkan pilih tanggal untuk merubah surat kontrol dibawah ini.";
+                        $request['contenttext'] = "*Catatan*\n1. Mengubah tanggal kontrol hanya untuk pasien yang terlewat tanggal kontrol.\n2. Kuota pasien penuh pada tanggal kontrol yang telah ditentukan.\n3. Tanggal yang tersedia hanya 7 hari dari tanggal yang telah ditentukan dokter.\n4. Diluar keperluan tersebut silahkan konsultasikan dengan Tenaga Medis. \n\nSilahkan pilih tanggal untuk merubah surat kontrol dibawah ini.";
                         $request['titletext'] = "UBAH TANGGAL SURAT KONTROL";
                         $request['buttontext'] = 'PILIH TANGGAL';
                         $request['rowtitle'] = $rowtanggal;

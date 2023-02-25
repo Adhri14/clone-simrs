@@ -8,81 +8,70 @@ use Illuminate\Http\Request;
 
 class ObatController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+    public function index(Request $request)
     {
-        $barangs = Barang::paginate();
+        $barangs = Barang::where(function ($query) use ($request) {
+            $query->where('nama_barang', "like", "%" . $request->search . "%");
+        })
+            ->paginate();
 
+        $barang_total = Barang::count();
         return view('simrs.farmasi.obat', compact([
-            'barangs'
+            'request',
+            'barangs',
+            'barang_total',
         ]));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
         //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         //
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function show($id)
     {
-        //
+        $barang = Barang::where('kode_barang', $id)->first();
+        return response()->json($barang);
+    }
+    public function get_obats(Request $request)
+    {
+        $search = $request->search;
+        if ($search == '') {
+            $barangs = Barang::orderby('kode_barang', 'asc')
+                ->select('kode_barang', 'nama_barang')
+                ->limit(10)->get();
+        } else {
+            $barangs = Barang::orderby('kode_barang', 'asc')
+                ->select('kode_barang', 'nama_barang')
+                ->where('kode_barang', 'like', '%' . $search . '%')
+                ->orWhere('nama_barang', 'like', '%' . $search . '%')
+                ->limit(10)->get();
+        }
+        $response = array();
+        foreach ($barangs as $item) {
+            $response[] = array(
+                "id" => $item->kode_barang,
+                "text" =>  $item->nama_barang
+            );
+        }
+        return response()->json($response);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit($id)
     {
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
         //

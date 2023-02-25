@@ -438,6 +438,13 @@ return [
                     'shift'   => 'ml-2',
                     'can' => 'rekam-medis',
                 ],
+                [
+                    'text' => 'Aplikasi KPO',
+                    'icon'    => 'fas fa-pills',
+                    'url'  => 'kpo',
+                    'shift'   => 'ml-2',
+                    'can' => 'rekam-medis',
+                ],
             ],
         ],
         // YANMED
@@ -558,13 +565,7 @@ return [
                     'shift'   => 'ml-2',
                     'can' => 'rekam-medis',
                 ],
-                [
-                    'text' => 'Aplikasi KPO',
-                    'icon'    => 'fas fa-pills',
-                    'url'  => 'kpo',
-                    'shift'   => 'ml-2',
-                    'can' => 'rekam-medis',
-                ],
+
 
             ],
         ],

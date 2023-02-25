@@ -4,8 +4,12 @@ namespace App\Http\Controllers\SIMRS;
 
 use App\Http\Controllers\BPJS\Antrian\AntrianController;
 use App\Http\Controllers\Controller;
+use App\Models\Agama;
 use App\Models\PasienDB;
+use App\Models\Pekerjaan;
+use App\Models\Pendidikan;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class PasienController extends Controller
