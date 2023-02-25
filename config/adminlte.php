@@ -542,6 +542,13 @@ return [
                     ]
                 ],
                 [
+                    'text' => 'Laporan Kunjungan Poliklinik',
+                    'icon'    => 'fas fa-disease',
+                    'url'  => 'rekammedis/kunjungan_poliklinik',
+                    'shift'   => 'ml-2',
+                    'can' => 'rekam-medis',
+                ],
+                [
                     'text' => 'Diagnosa ICD-10',
                     'icon'    => 'fas fa-diagnoses',
                     'url'  => 'icd10',

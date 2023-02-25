@@ -11,7 +11,6 @@ use App\Http\Controllers\AntrianController;
 use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers\BPJS\Antrian\AntrianController as AntrianAntrianController;
 use App\Http\Controllers\BPJS\Vclaim\VclaimController as VclaimVclaimController;
-use App\Http\Controllers\DokterController;
 use App\Http\Controllers\FileRMController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Icd10Controller;
@@ -32,7 +31,7 @@ use App\Http\Controllers\SIMRS\BukuTamuController;
 use App\Http\Controllers\SIMRS\DokterController as SIMRSDokterController;
 use App\Http\Controllers\SIMRS\JadwalDokterController as SIMRSJadwalDokterController;
 use App\Http\Controllers\SIMRS\JadwalOperasiController as SIMRSJadwalOperasiController;
-use App\Http\Controllers\SIMRS\KunjunganController as SIMRSKunjunganController;
+use App\Http\Controllers\SIMRS\KunjunganController;
 use App\Http\Controllers\SIMRS\MonitoringController;
 use App\Http\Controllers\SIMRS\ObatController;
 use App\Http\Controllers\SIMRS\PasienController;
@@ -179,8 +178,8 @@ Route::middleware('auth')->group(function () {
         Log::info($message);
         Log::debug($message);
     });
-    Route::get('kunjungan/show/{kodekunjungan}', [SIMRSKunjunganController::class, 'show'])->name('kunjungan.show');
-    Route::get('kunjungan_tanggal/{tanggal}', [SIMRSKunjunganController::class, 'kunjungan_tanggal'])->name('kunjungan_tanggal');
+    Route::get('kunjungan/show/{kodekunjungan}', [KunjunganController::class, 'show'])->name('kunjungan.show');
+    Route::get('kunjungan_tanggal/{tanggal}', [KunjunganController::class, 'kunjungan_tanggal'])->name('kunjungan_tanggal');
     // admin
     Route::middleware('permission:admin')->group(function () {
         Route::resource('user', UserController::class);
@@ -210,7 +209,7 @@ Route::middleware('auth')->group(function () {
         Route::resource('pasien', PasienController::class);
     });
     // yanmed
-    Route::prefix('pelayananmedis')->name('pelayanan-medis.')->group(function () {
+    Route::prefix('pelayananmedis')->name('pelayananmedis.')->group(function () {
         Route::resource('dokter', SIMRSDokterController::class);
         Route::resource('tarif_layanan', TarifLayananController::class)->only(['index']);
         Route::get('poliklinik_antrian', [SIMRSPoliklinikController::class, 'poliklik_antrian_yanmed'])->name('poliklinik_antrian');
@@ -224,12 +223,13 @@ Route::middleware('auth')->group(function () {
         Route::delete('jadwaldokter_delete', [SIMRSJadwalDokterController::class, 'jadwaldokter_delete'])->name('jadwaldokter_delete');
     });
     // rekam medis
-    Route::prefix('rekammedis')->name('rekam-medis.')->group(function () {
+    Route::prefix('rekammedis')->name('rekammedis.')->group(function () {
         Route::resource('pasien', PasienController::class);
-        Route::resource('kunjungan', SIMRSKunjunganController::class);
+        Route::resource('kunjungan', KunjunganController::class);
+        Route::get('kunjungan_poliklinik', [KunjunganController::class, 'kunjungan_poliklinik'])->name('kunjungan_poliklinik');
     });
-     // rekam medis
-     Route::prefix('farmasi')->name('farmasi.')->group(function () {
+    // farmasi
+    Route::prefix('farmasi')->name('farmasi.')->group(function () {
         Route::resource('obat', ObatController::class);
     });
     // simrs
@@ -243,7 +243,7 @@ Route::middleware('auth')->group(function () {
         });
         Route::resource('pasien', PasienController::class);
         Route::resource('dokter', SIMRSDokterController::class);
-        Route::resource('kunjungan', SIMRSKunjunganController::class);
+        Route::resource('kunjungan', KunjunganController::class);
     });
     // bpjs
     Route::prefix('bpjs')->name('bpjs.')->group(function () {

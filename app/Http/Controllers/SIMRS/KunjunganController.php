@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\AlasanMasukDB;
 use App\Models\AlasanPulangDB;
 use App\Models\KunjunganDB;
+use App\Models\SIMRS\Unit;
 use App\Models\StatusKunjunganDB;
 use Illuminate\Http\Request;
 
@@ -51,7 +52,23 @@ class KunjunganController extends ApiController
     }
     public function kunjungan_tanggal($tanggal)
     {
-        $kunjungans = KunjunganDB::whereDate('tgl_masuk',$tanggal)->get(['no_rm','kode_unit','kode_paramedis','tgl_masuk']);
+        $kunjungans = KunjunganDB::whereDate('tgl_masuk', $tanggal)->get(['no_rm', 'kode_unit', 'kode_paramedis', 'tgl_masuk']);
         return response()->json($kunjungans);
+    }
+    public function kunjungan_poliklinik(Request $request)
+    {
+        // $kunjungans = KunjunganDB::whereDate('tgl_masuk', $tanggal)->get(['no_rm', 'kode_unit', 'kode_paramedis', 'tgl_masuk']);
+        // return response()->json($kunjungans);
+        $units = Unit::where('kelas_unit', 1)->get();
+        $kunjungans = null;
+        if (isset($request->kodepoli)) {
+            $kunjungans = KunjunganDB::whereDate('tgl_masuk', $request->tanggal)->where('kode_unit', $request->kodepoli)->get();
+
+        }
+        return view('simrs.rekammedis.kunjungan_poliklinik', compact([
+            'request',
+            'units',
+            'kunjungans',
+        ]));
     }
 }
