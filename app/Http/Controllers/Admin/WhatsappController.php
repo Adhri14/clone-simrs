@@ -327,7 +327,22 @@ class WhatsappController extends Controller
                 // DAFTAR PAKE SURAT KONTROL
                 else if (str_contains($pesan, "@KONTROL#")) {
                     $request['nomorKartu'] = explode("#", explode('@', $pesan)[1])[1];
-                    $request['bulan'] = now()->format('m');
+
+                    $rowbulan = 'Kontrol ' . now()->translatedFormat('F');
+                    $rowdesc = '@BULANKONTROL#' . now()->translatedFormat('m') . '#' . $request->nomorKartu;
+                    for ($i = 1; $i < 3; $i++) {
+                        $rowbulan = $rowbulan . ', Kontrol ' . now()->addMonth($i)->translatedFormat('F');
+                        $rowdesc = $rowdesc . ', @BULANKONTROL#' . now()->addMonth($i)->translatedFormat('m') . '#' . $request->nomorKartu;
+                    }
+                    $request['contenttext'] = "Silahkan bulan kapan anda akan periksa kontrol ?";
+                    $request['titletext'] = "4. Pilih Bulan Kontrol";
+                    $request['buttontext'] = 'PILIH BULAN KONTROL';
+                    $request['rowtitle'] = $rowbulan;
+                    $request['rowdescription'] = $rowdesc;
+                    return $this->send_list($request);
+                } else if (str_contains($pesan, "@BULANKONTROL#")) {
+                    $request['nomorKartu'] = explode("#", explode('@', $pesan)[1])[2];
+                    $request['bulan'] =  explode("#", explode('@', $pesan)[1])[1];
                     $request['tahun'] = now()->format('Y');
                     $request['formatFilter'] = 2;
                     $vclaim = new VclaimController();
