@@ -28,6 +28,7 @@ use App\Http\Controllers\SatuSehat\PractitionerController;
 use App\Http\Controllers\SatuSehat\TokenController;
 use App\Http\Controllers\SIMRS\AntrianController as SIMRSAntrianController;
 use App\Http\Controllers\SIMRS\BukuTamuController;
+use App\Http\Controllers\SIMRS\DisposisiController;
 use App\Http\Controllers\SIMRS\DokterController as SIMRSDokterController;
 use App\Http\Controllers\SIMRS\JadwalDokterController as SIMRSJadwalDokterController;
 use App\Http\Controllers\SIMRS\JadwalOperasiController as SIMRSJadwalOperasiController;
@@ -38,6 +39,7 @@ use App\Http\Controllers\SIMRS\PasienController;
 use App\Http\Controllers\SIMRS\PoliklinikController as SIMRSPoliklinikController;
 use App\Http\Controllers\SIMRS\SimrsController;
 use App\Http\Controllers\SIMRS\SuratKontrolController;
+use App\Http\Controllers\SIMRS\SuratMasukController;
 use App\Http\Controllers\SIMRS\TarifLayananController;
 use App\Http\Controllers\TarifKelompokLayananController;
 use App\Http\Controllers\VclaimController;
@@ -227,6 +229,11 @@ Route::middleware('auth')->group(function () {
         Route::resource('pasien', PasienController::class);
         Route::resource('kunjungan', KunjunganController::class);
         Route::get('kunjungan_poliklinik', [KunjunganController::class, 'kunjungan_poliklinik'])->name('kunjungan_poliklinik');
+    });
+    // bagum
+    Route::prefix('bagianumum')->name('bagianumum.')->group(function () {
+        Route::resource('suratmasuk', SuratMasukController::class);
+        Route::resource('disposisi', DisposisiController::class);
     });
     // farmasi
     Route::prefix('farmasi')->name('farmasi.')->group(function () {

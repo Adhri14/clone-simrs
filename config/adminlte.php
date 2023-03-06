@@ -576,6 +576,28 @@ return [
 
             ],
         ],
+        // BAGIAN UMUM
+        [
+            'text'    => 'Bagian Umum',
+            'icon'    => 'fas fa-briefcase-medical',
+            // 'can' => 'rekam-medis',
+            'submenu' => [
+                [
+                    'text' => 'Surat Masuk',
+                    'icon'    => 'fas fa-user-injured',
+                    'url'  => 'bagianumum/suratmasuk',
+                    'shift'   => 'ml-2',
+                    // 'can' => 'bagianumum',
+                ],
+                [
+                    'text' => 'Surat Keluar',
+                    'icon'    => 'fas fa-user-injured',
+                    'url'  => 'bagianumum/suratkeluar',
+                    'shift'   => 'ml-2',
+                    // 'can' => 'bagianumum',
+                ],
+            ],
+        ],
         // SIMRS
         [
             'text' => 'Aplikasi SIMRS',

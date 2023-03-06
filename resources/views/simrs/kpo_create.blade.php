@@ -36,7 +36,7 @@
                 </form>
                 <x-adminlte-button theme="success" class="cariPasien" type="submit" label="Pilih Pasien" />
                 <dl class="row">
-                    <input type="text" id="kode_kunjungan">
+                    <input type="hidden" name="kode_kunjungan" id="kode_kunjungan">
                     <dt class="col-sm-3">No RM</dt>
                     <dd class="col-sm-9">: <span id="no_rm"></span></dd>
                     <dt class="col-sm-3">Nama</dt>
@@ -115,102 +115,87 @@
                                     <label for="sepsis" class="custom-control-label">Sepsis</label>
                                 </div>
                                 <div class="custom-control custom-checkbox">
-                                    <input class="custom-control-input" type="checkbox" id="pnemonia-bakterial"
-                                        value="pnemonia-bakterial">
+                                    <input class="custom-control-input" type="checkbox" id="pnemonia-bakterial">
                                     <label for="pnemonia-bakterial" class="custom-control-label">Pnemonia Bakterial</label>
                                 </div>
                                 <div class="custom-control custom-checkbox">
-                                    <input class="custom-control-input" type="checkbox" id="intraabdomen-komplikata"
-                                        value="intraabdomen-komplikata">
+                                    <input class="custom-control-input" type="checkbox" id="intraabdomen-komplikata">
                                     <label for="intraabdomen-komplikata" class="custom-control-label">Infeksi
                                         Intra-abdomen
                                         Komplikata</label>
                                 </div>
                                 <br>
                                 <div class="custom-control custom-checkbox">
-                                    <input class="custom-control-input" type="checkbox" id="meningitis-encefalitis"
-                                        value="meningitis-encefalitis">
+                                    <input class="custom-control-input" type="checkbox" id="meningitis-encefalitis">
                                     <label for="meningitis-encefalitis" class="custom-control-label">Meningitis /
                                         Encefalitis Bakterial</label>
                                 </div>
                                 <div class="custom-control custom-checkbox">
-                                    <input class="custom-control-input" type="checkbox" id="customCheckbox1"
-                                        value="option1">
-                                    <label for="customCheckbox1" class="custom-control-label">Infeksi Kulit &
+                                    <input class="custom-control-input" type="checkbox" id="infeksi_kulit_jaringan">
+                                    <label for="infeksi_kulit_jaringan" class="custom-control-label">Infeksi Kulit &
                                         Jaringan</label>
                                 </div>
                                 <div class="custom-control custom-checkbox">
-                                    <input class="custom-control-input" type="checkbox" id="customCheckbox1"
-                                        value="option1">
-                                    <label for="customCheckbox1" class="custom-control-label">Infeksi Mata /
+                                    <input class="custom-control-input" type="checkbox" id="infeksi_mata_telinga">
+                                    <label for="infeksi_mata_telinga" class="custom-control-label">Infeksi Mata /
                                         Telinga</label>
                                 </div>
                                 <div class="custom-control custom-checkbox">
-                                    <input class="custom-control-input" type="checkbox" id="customCheckbox1"
-                                        value="option1">
-                                    <label for="customCheckbox1" class="custom-control-label">Infeksi Sendi &
+                                    <input class="custom-control-input" type="checkbox" id="infeksi_sendi_tulang">
+                                    <label for="infeksi_sendi_tulang" class="custom-control-label">Infeksi Sendi &
                                         Tulang</label>
                                 </div>
                                 <div class="custom-control custom-checkbox">
-                                    <input class="custom-control-input" type="checkbox" id="customCheckbox1"
-                                        value="option1">
-                                    <label for="customCheckbox1" class="custom-control-label">Pnemonia Non
+                                    <input class="custom-control-input" type="checkbox" id="pnemonia_non_bakterial">
+                                    <label for="pnemonia_non_bakterial" class="custom-control-label">Pnemonia Non
                                         Bakterial</label>
                                 </div>
                                 <div class="custom-control custom-checkbox">
-                                    <input class="custom-control-input" type="checkbox" id="customCheckbox1"
-                                        value="option1">
-                                    <label for="customCheckbox1" class="custom-control-label">Infeksi Saluran Cerna /
+                                    <input class="custom-control-input" type="checkbox" id="infeksi_saluran_cerna">
+                                    <label for="infeksi_saluran_cerna" class="custom-control-label">Infeksi Saluran Cerna
+                                        /
                                         Hepatobilier Pancreas</label>
                                 </div>
                                 <div class="custom-control custom-checkbox">
-                                    <input class="custom-control-input" type="checkbox" id="customCheckbox1"
-                                        value="option1">
-                                    <label for="customCheckbox1" class="custom-control-label">Infeksi Ginjal & Saluran
+                                    <input class="custom-control-input" type="checkbox" id="infeksi_ginjal_kemih">
+                                    <label for="infeksi_ginjal_kemih" class="custom-control-label">Infeksi Ginjal &
+                                        Saluran
                                         Kemih</label>
                                 </div>
                                 <div class="custom-control custom-checkbox">
-                                    <input class="custom-control-input" type="checkbox" id="customCheckbox1"
-                                        value="option1">
-                                    <label for="customCheckbox1" class="custom-control-label">Infeksi Otak & Sumsum
+                                    <input class="custom-control-input" type="checkbox" id="infeksi_otak_sumsum">
+                                    <label for="infeksi_otak_sumsum" class="custom-control-label">Infeksi Otak & Sumsum
                                         Tulang</label>
                                 </div>
                                 <div class="custom-control custom-checkbox">
-                                    <input class="custom-control-input" type="checkbox" id="customCheckbox1"
-                                        value="option1">
-                                    <label for="customCheckbox1" class="custom-control-label">Infeksi Obsteri /
+                                    <input class="custom-control-input" type="checkbox" id="infeksi_obsteri">
+                                    <label for="infeksi_obsteri" class="custom-control-label">Infeksi Obsteri /
                                         Ginekologi</label>
                                 </div>
                                 <div class="custom-control custom-checkbox">
-                                    <input class="custom-control-input" type="checkbox" id="customCheckbox1"
-                                        value="option1">
-                                    <label for="customCheckbox1" class="custom-control-label">Infeksi TB Paru</label>
+                                    <input class="custom-control-input" type="checkbox" id="infeksi_tb">
+                                    <label for="infeksi_tb" class="custom-control-label">Infeksi TB Paru</label>
                                 </div>
                                 <div class="custom-control custom-checkbox">
-                                    <input class="custom-control-input" type="checkbox" id="customCheckbox1"
-                                        value="option1">
-                                    <label for="customCheckbox1" class="custom-control-label">Infeksi TB Extra
+                                    <input class="custom-control-input" type="checkbox" id="infeksi_tb_extra">
+                                    <label for="infeksi_tb_extra" class="custom-control-label">Infeksi TB Extra
                                         Paru</label>
                                 </div>
                                 <div class="custom-control custom-checkbox">
-                                    <input class="custom-control-input" type="checkbox" id="customCheckbox1"
-                                        value="option1">
-                                    <label for="customCheckbox1" class="custom-control-label">LEPRA</label>
+                                    <input class="custom-control-input" type="checkbox" id="lepra">
+                                    <label for="lepra" class="custom-control-label">LEPRA</label>
                                 </div>
                                 <div class="custom-control custom-checkbox">
-                                    <input class="custom-control-input" type="checkbox" id="customCheckbox1"
-                                        value="option1">
-                                    <label for="customCheckbox1" class="custom-control-label">Infeksi Jamur</label>
+                                    <input class="custom-control-input" type="checkbox" id="infeksi_jamur">
+                                    <label for="infeksi_jamur" class="custom-control-label">Infeksi Jamur</label>
                                 </div>
                                 <div class="custom-control custom-checkbox">
-                                    <input class="custom-control-input" type="checkbox" id="customCheckbox1"
-                                        value="option1">
-                                    <label for="customCheckbox1" class="custom-control-label">Infeksi Virus</label>
+                                    <input class="custom-control-input" type="checkbox" id="infeksi_virus">
+                                    <label for="infeksi_virus" class="custom-control-label">Infeksi Virus</label>
                                 </div>
                                 <div class="custom-control custom-checkbox">
-                                    <input class="custom-control-input" type="checkbox" id="customCheckbox1"
-                                        value="option1">
-                                    <label for="customCheckbox1" class="custom-control-label">Non Infeksi
+                                    <input class="custom-control-input" type="checkbox" id="non_infeksi">
+                                    <label for="non_infeksi" class="custom-control-label">Non Infeksi
                                         (Inflamasi)</label>
                                 </div>
                             </div>
@@ -362,6 +347,9 @@
                     $('#kode_kunjungan').val(data.kode_kunjungan);
                     $.LoadingOverlay("hide");
                 });
+            });
+            $('.tambahObat').click(function() {
+                alert('simpan obat sementara')
             });
             $('#btnLayanan').click(function() {
                 $.LoadingOverlay("show");
