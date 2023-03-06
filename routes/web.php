@@ -209,7 +209,7 @@ Route::middleware('auth')->group(function () {
         Route::resource('pasien', PasienController::class);
     });
     // yanmed
-    Route::prefix('pelayananmedis')->name('pelayananmedis.')->group(function () {
+    Route::prefix('pelayananmedis')->name('pelayanan-medis.')->group(function () {
         Route::resource('dokter', SIMRSDokterController::class);
         Route::resource('tarif_layanan', TarifLayananController::class)->only(['index']);
         Route::get('poliklinik_antrian', [SIMRSPoliklinikController::class, 'poliklik_antrian_yanmed'])->name('poliklinik_antrian');
