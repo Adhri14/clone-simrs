@@ -517,7 +517,7 @@
                                 </div>
                             </div>
                         </x-adminlte-card>
-                        <x-adminlte-card theme="primary" title="E-Rekam Medis Pasien" collapsible="collapsed">
+                        <x-adminlte-card theme="primary" title="Pendaftaran Pasien Baru" collapsible="collapsed">
                             <div class="row">
                                 Kosong
                             </div>

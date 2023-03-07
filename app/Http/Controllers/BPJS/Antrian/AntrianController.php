@@ -697,7 +697,7 @@ class AntrianController extends ApiBPJSController
             "nik" => "required|numeric|digits:16",
             "nohp" => "required",
             "kodepoli" => "required",
-            "norm" => "required",
+            // "norm" => "required",
             "tanggalperiksa" => "required",
             "kodedokter" => "required",
             "jampraktek" => "required",
@@ -918,7 +918,7 @@ class AntrianController extends ApiBPJSController
             "nik" => "required|numeric|digits:16",
             "nohp" => "required",
             "kodepoli" => "required",
-            "norm" => "required",
+            // "norm" => "required",
             "tanggalperiksa" => "required",
             "kodedokter" => "required",
             "jampraktek" => "required",
@@ -946,12 +946,16 @@ class AntrianController extends ApiBPJSController
         // cek pasien baru
         $pasien = PasienDB::where('no_Bpjs',  $request->nomorkartu)->first();
         if (empty($pasien)) {
-            return $this->sendError("Nomor Kartu BPJS Pasien termasuk Pasien Baru di RSUD Waled. Silahkan daftar melalui pendaftaran offline", null, 201);
+            $request['pasienbaru'] = 1;
+            // return $this->sendError("Nomor Kartu BPJS Pasien termasuk Pasien Baru di RSUD Waled. Silahkan daftar melalui pendaftaran offline", null, 201);
+        } else {
+            $request['pasienbaru'] = 0;
+            // cek no kartu sesuai tidak
+            if ($pasien->nik_bpjs != $request->nik) {
+                return $this->sendError("NIK anda yang terdaftar di BPJS dengan Di RSUD Waled berbeda. Silahkan perbaiki melalui pendaftaran offline", null, 201);
+            }
         }
-        // cek no kartu sesuai tidak
-        if ($pasien->nik_bpjs != $request->nik) {
-            return $this->sendError("NIK anda yang terdaftar di BPJS dengan Di RSUD Waled berbeda. Silahkan perbaiki melalui pendaftaran offline", null, 201);
-        }
+
         // cek jika jkn
         // if (isset($request->nomorreferensi)) {
         //     $request['jenispasien'] = 'JKN';
@@ -1010,9 +1014,8 @@ class AntrianController extends ApiBPJSController
         //     $request['jenispasien'] = 'NON-JKN';
         // }
         // ambil data pasien
-        $request['norm'] = $pasien->no_rm;
-        $request['nama'] = $pasien->nama_px;
-        $request['pasienbaru'] = 0;
+        $request['norm'] = $request->norm;
+        $request['nama'] = $request->nama;
         // cek jadwal
         $jadwal = $this->status_antrian($request);
         if ($jadwal->status() == 200) {

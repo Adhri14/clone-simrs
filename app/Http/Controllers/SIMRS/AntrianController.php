@@ -141,12 +141,19 @@ class AntrianController extends Controller
             Alert::error('Error',  "Jadwal tidak ditemukan");
             return redirect()->route('antrian.console');
         }
-
+        if ($peserta->mr->noTelepon == null) {
+            $request['nohp'] = "089529909036";
+        } else {
+            $request['nohp'] = $peserta->mr->noTelepon;
+        }
+        if ($peserta->mr->noMR == null) {
+            $request['norm'] = null;
+        } else {
+            $request['norm'] = $peserta->mr->noMR;
+        }
         $request['nik'] = $peserta->nik;
         $request['nomorkartu'] = $peserta->noKartu;
         $request['nama'] = $peserta->nama;
-        $request['nohp'] = $peserta->mr->noTelepon;
-        $request['norm'] = $peserta->mr->noMR;
         $request['jampraktek'] = $jadwal->jadwal;
         $request['jenispasien'] = 'NON-JKN';
         $request['method'] = 'Offline';
@@ -277,28 +284,33 @@ class AntrianController extends Controller
                 'status_api' => 1,
                 'keterangan' => "Panggilan ke loket pendaftaran",
                 'taskid2' => $now,
-                // 'user' => Auth::user()->name,
+                'user' => Auth::user()->name,
             ]);
             //panggil urusan mesin antrian
             try {
                 // notif wa
                 $wa = new WhatsappController();
-                $request['message'] = "Panggilan kepada " . $antrian->nama . " Antrian dengan kode booking " . $antrian->kodebooking . " untuk melakukan pendaftaran di Loket pendaftaran.";
+                $request['message'] = "Panggilan antrian atas nama pasien " . $antrian->nama . " dengan nomor antrian " . $antrian->angkaantrean . "/" . $antrian->nomorantrean . " untuk melakukan pendaftaran di Loket " . $loket . " Lantai " . $lantai;
                 $request['number'] = $antrian->nohp;
                 $wa->send_message($request);
 
                 $tanggal = now()->format('Y-m-d');
                 $urutan = $antrian->angkaantrean;
+                if ($antrian->jenispasien == 'JKN') {
+                    $tipeloket = 'BPJS';
+                } else {
+                    $tipeloket = 'UMUM';
+                }
                 $mesin_antrian = DB::connection('mysql3')->table('tb_counter')
                     ->where('tgl', $tanggal)
-                    ->where('kategori', 'JKN')
+                    ->where('kategori', $tipeloket)
                     ->where('loket', $loket)
                     ->where('lantai', $lantai)
                     ->get();
                 if ($mesin_antrian->count() < 1) {
                     $mesin_antrian = DB::connection('mysql3')->table('tb_counter')->insert([
                         'tgl' => $tanggal,
-                        'kategori' => 'JKN',
+                        'kategori' => $tipeloket,
                         'loket' => $loket,
                         'counterloket' => $urutan,
                         'lantai' => $lantai,
@@ -308,7 +320,7 @@ class AntrianController extends Controller
                 } else {
                     DB::connection('mysql3')->table('tb_counter')
                         ->where('tgl', $tanggal)
-                        ->where('kategori', 'JKN')
+                        ->where('kategori', $tipeloket)
                         ->where('loket', $loket)
                         ->where('lantai', $lantai)
                         ->limit(1)
@@ -336,9 +348,16 @@ class AntrianController extends Controller
         $antrian = Antrian::where('kodebooking', $kodebooking)->first();
         $request['kodebooking'] = $antrian->kodebooking;
         $request['taskid'] = 3;
-        $request['keterangan'] = "Silahkan menunggu dipoliklinik";
         $request['waktu'] = Carbon::now()->timestamp * 1000;
-        $vclaim = new AntrianAntrianController();
+
+        if ($antrian->jenispasien == 'JKN') {
+            $request['keterangan'] = "Silahkan menunggu dipoliklinik";
+            $request['status_api'] = 1;
+        } else {
+            $request['keterangan'] = "Silahkan lakukan pembayaran di Loket Pembayaran, setelah itu dapat menunggu dipoliklinik";
+            $request['status_api'] = 0;
+        }
+        // $vclaim = new AntrianAntrianController();
         // $response = $vclaim->update_antrean($request);
         // if ($response->status() == 200) {
         // } else {
@@ -346,6 +365,7 @@ class AntrianController extends Controller
         // }
         $antrian->update([
             'taskid' => $request->taskid,
+            'status_api' => $request->status_api,
             'keterangan' => $request->keterangan,
             'user' => Auth::user()->name,
         ]);
