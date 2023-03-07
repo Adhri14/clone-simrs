@@ -969,8 +969,8 @@ class AntrianController extends ApiBPJSController
             if ($response->status() == 200) {
                 // kirim notif wa
                 $wa = new WhatsappController();
-                $request['message'] = "Kode antrian " . $antrian->kodebooking . " telah dibatakan\n" . $request->keterangan . "\nJika ada pertanayaan atau informasi lebih lanjut silahkan hubungi *08983311118 Humas RSUD Waled*";
-                // $request['message'] = "Kode antrian " . $antrian->kodebooking . " telah dibatakan karena perubahan jadwal. \nJika ada pertanayaan atau informasi lebih lanjut silahkan hubungi *08983311118 Humas RSUD Waled*";;
+                // $request['message'] = "Kode antrian " . $antrian->kodebooking . " telah dibatakan\n" . $request->keterangan . "\nJika ada pertanayaan atau informasi lebih lanjut silahkan hubungi *08983311118 Humas RSUD Waled*";
+                $request['message'] = "Kode antrian " . $antrian->kodebooking . " telah dibatakan karena perubahan jadwal. \nJika ada pertanayaan atau informasi lebih lanjut silahkan hubungi *08983311118 Humas RSUD Waled*";;
                 $request['number'] = $antrian->nohp;
                 $wa->send_message($request);
                 $antrian->update([
