@@ -647,6 +647,7 @@ class AntrianController extends ApiBPJSController
         $antrians = Antrian::where('kodepoli', $request->kodepoli)
             ->where('kodedokter', $request->kodedokter)
             ->where('tanggalperiksa', $request->tanggalperiksa)
+            ->where('taskid', '!=', 99)
             ->count();
         if (isset($jadwal)) {
             // cek jadwal libur
@@ -670,11 +671,14 @@ class AntrianController extends ApiBPJSController
         }
         $antrianjkn = Antrian::where('kodepoli', $request->kodepoli)
             ->where('tanggalperiksa', $request->tanggalperiksa)
+            ->where('taskid', '!=', 99)
+            ->where('kodedokter', $request->kodedokter)
             ->where('jenispasien', "JKN")->count();
         $antriannonjkn = Antrian::where('kodepoli', $request->kodepoli)
             ->where('tanggalperiksa', $request->tanggalperiksa)
+            ->where('kodedokter', $request->kodedokter)
+            ->where('taskid', '!=', 99)
             ->where('jenispasien', "NON-JKN")->count();
-
         $response = [
             "namasubspesialis" => $jadwal->namasubspesialis,
             "namapoli" => $jadwal->namapoli,

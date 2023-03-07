@@ -225,94 +225,94 @@
                                 @foreach ($antrians->where('taskid', 2) as $antrian)
                                     <tr>
                                         <td>
-                                            {{ $item->angkaantrean }}<br>
-                                            {{ $item->nomorantrean }}<br>
+                                            {{ $antrian->angkaantrean }}<br>
+                                            {{ $antrian->nomorantrean }}<br>
                                         </td>
                                         <td>
-                                            RM : {{ $item->norm }}<br>
-                                            <b>{{ $item->nama }}</b>
-                                            @isset($item->nomorkartu)
-                                                <br>{{ $item->nomorkartu }}
+                                            RM : {{ $antrian->norm }}<br>
+                                            <b>{{ $antrian->nama }}</b>
+                                            @isset($antrian->nomorkartu)
+                                                <br>{{ $antrian->nomorkartu }}
                                             @endisset
 
                                         </td>
                                         <td>
-                                            @if ($item->taskid == 0)
+                                            @if ($antrian->taskid == 0)
                                                 <span class="badge bg-secondary">0. Antri Pendaftaran</span>
                                             @endif
-                                            @if ($item->taskid == 1)
-                                                <span class="badge bg-secondary">{{ $item->taskid }}. Chekcin</span>
+                                            @if ($antrian->taskid == 1)
+                                                <span class="badge bg-secondary">{{ $antrian->taskid }}. Chekcin</span>
                                             @endif
-                                            @if ($item->taskid == 2)
-                                                <span class="badge bg-secondary">{{ $item->taskid }}. Pendaftaran</span>
+                                            @if ($antrian->taskid == 2)
+                                                <span class="badge bg-secondary">{{ $antrian->taskid }}. Pendaftaran</span>
                                             @endif
-                                            @if ($item->taskid == 3)
-                                                @if ($item->status_api == 0)
-                                                    <span class="badge bg-warning">{{ $item->taskid }}. Belum
+                                            @if ($antrian->taskid == 3)
+                                                @if ($antrian->status_api == 0)
+                                                    <span class="badge bg-warning">{{ $antrian->taskid }}. Belum
                                                         Pembayaran</span>
                                                 @else
-                                                    <span class="badge bg-warning">{{ $item->taskid }}. Tunggu Poli</span>
+                                                    <span class="badge bg-warning">{{ $antrian->taskid }}. Tunggu Poli</span>
                                                 @endif
                                             @endif
-                                            @if ($item->taskid == 4)
-                                                <span class="badge bg-success">{{ $item->taskid }}. Periksa Poli</span>
+                                            @if ($antrian->taskid == 4)
+                                                <span class="badge bg-success">{{ $antrian->taskid }}. Periksa Poli</span>
                                             @endif
-                                            @if ($item->taskid == 5)
-                                                @if ($item->status_api == 0)
-                                                    <span class="badge bg-success">{{ $item->taskid }}. Tunggu
+                                            @if ($antrian->taskid == 5)
+                                                @if ($antrian->status_api == 0)
+                                                    <span class="badge bg-success">{{ $antrian->taskid }}. Tunggu
                                                         Farmasi</span>
                                                 @endif
-                                                @if ($item->status_api == 1)
-                                                    <span class="badge bg-success">{{ $item->taskid }}. Selesai</span>
+                                                @if ($antrian->status_api == 1)
+                                                    <span class="badge bg-success">{{ $antrian->taskid }}. Selesai</span>
                                                 @endif
                                             @endif
-                                            @if ($item->taskid == 6)
-                                                <span class="badge bg-success">{{ $item->taskid }}. Racik Obat</span>
+                                            @if ($antrian->taskid == 6)
+                                                <span class="badge bg-success">{{ $antrian->taskid }}. Racik Obat</span>
                                             @endif
-                                            @if ($item->taskid == 7)
-                                                <span class="badge bg-success">{{ $item->taskid }}. Selesai</span>
+                                            @if ($antrian->taskid == 7)
+                                                <span class="badge bg-success">{{ $antrian->taskid }}. Selesai</span>
                                             @endif
-                                            @if ($item->taskid == 99)
-                                                <span class="badge bg-danger">{{ $item->taskid }}. Batal</span>
+                                            @if ($antrian->taskid == 99)
+                                                <span class="badge bg-danger">{{ $antrian->taskid }}. Batal</span>
                                             @endif
                                             <br>
-                                            @if ($item->taskid == 2)
+                                            @if ($antrian->taskid == 2)
                                                 <x-adminlte-button class="btn-xs mt-1 withLoad btnLayani" label="Layani"
                                                     theme="success" icon="fas fa-volume-down" data-toggle="tooltip"
-                                                    title="Layani Antrian {{ $item->nomorantrean }}"
-                                                    data-id="{{ $item->id }}" />
+                                                    title="Layani Antrian {{ $antrian->nomorantrean }}"
+                                                    data-id="{{ $antrian->id }}" />
                                                 <x-adminlte-button class="btn-xs mt-1" label="Panggil" theme="primary"
                                                     icon="fas fa-volume-down" data-toggle="tooltip"
-                                                    title="Panggil Antrian {{ $item->nomorantrean }}"
-                                                    onclick="window.location='{{ route('pendaftaran.panggil_pendaftaran', [$item->kodebooking, $request->loket, $request->lantai]) }}'" />
+                                                    title="Panggil Antrian {{ $antrian->nomorantrean }}"
+                                                    onclick="window.location='{{ route('pendaftaran.panggil_pendaftaran', [$antrian->kodebooking, $request->loket, $request->lantai]) }}'" />
                                             @endif
                                             <x-adminlte-button class="btn-xs mt-1 withLoad" theme="danger"
                                                 icon="fas fa-times" data-toggle="tooltop"
-                                                title="Batal Antrian {{ $item->nomorantrean }}"
-                                                onclick="window.location='{{ route('poliklinik.antrian_batal', $item) }}'" />
+                                                title="Batal Antrian {{ $antrian->nomorantrean }}"
+                                                onclick="window.location='{{ route('poliklinik.antrian_batal', $antrian) }}'" />
                                         </td>
                                         <td>
-                                            @if ($item->jeniskunjungan == 0)
+                                            @if ($antrian->jeniskunjungan == 0)
                                                 Offline
                                             @endif
-                                            @if ($item->jeniskunjungan == 1)
+                                            @if ($antrian->jeniskunjungan == 1)
                                                 Rujukan FKTP
                                             @endif
-                                            @if ($item->jeniskunjungan == 3)
+                                            @if ($antrian->jeniskunjungan == 3)
                                                 Kontrol
                                             @endif
-                                            @if ($item->jeniskunjungan == 4)
+                                            @if ($antrian->jeniskunjungan == 4)
                                                 Rujukan RS
                                             @endif
-                                            <br>{{ $item->jenispasien }}
-                                            @if ($item->pasienbaru == 1)
+                                            <br>{{ $antrian->jenispasien }}
+                                            @if ($antrian->pasienbaru == 1)
                                                 <span class="badge bg-secondary">Baru</span>
                                             @endif
-                                            @if ($item->pasienbaru == 0)
+                                            @if ($antrian->pasienbaru == 0)
                                                 <span class="badge bg-secondary">Lama</span>
                                             @endif
-                                            <span class="badge bg-success">{{ $item->kodepoli }}</span>
-                                            <br>{{ substr($item->namadokter, 0, 19) }}...
+                                            <span class="badge bg-success">{{ $antrian->kodepoli }}</span>
+                                            <br>{{ substr($antrian->namadokter, 0, 19) }}...
                                         </td>
                                         <td>
                                             @isset($antrian->nomorsep)
