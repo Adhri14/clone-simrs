@@ -277,7 +277,7 @@
             });
             $('.btnDaftarBPJS').click(function() {
                 $('#modalBPJS').modal('show');
-                $('#inputNIK').hide();
+                $('#inputNIK').show();
                 $('#btnDaftarPoliUmum').hide();
                 $('#btnDaftarPoliBPJS').show();
                 $('#inputKartu').show();
@@ -327,10 +327,11 @@
             });
             $('#btnDaftarPoliBPJS').click(function() {
                 var nomorkartu = $('#nomorkartu').val();
+                var nik = $('#nik').val();
                 var kodesubspesialis = $("input[name=kodesubspesialis]:checked").val();
                 var kodedokter = $("input[name=kodedokter]:checked").val();
                 var url = "{{ route('antrian.daftar_pasien_bpjs_offline') }}" + "?nomorkartu=" +
-                    nomorkartu + "&kodesubspesialis=" + kodesubspesialis + "&kodedokter=" + kodedokter;
+                    nomorkartu + "&kodesubspesialis=" + kodesubspesialis + "&kodedokter=" + kodedokter+"&nik=" + nik;
                 window.location.href = url;
             });
             $('#btnDaftarPoliUmum').click(function() {

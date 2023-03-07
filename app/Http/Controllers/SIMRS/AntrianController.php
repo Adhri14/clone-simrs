@@ -46,7 +46,6 @@ class AntrianController extends Controller
         $validator = Validator::make(request()->all(), [
             "kodesubspesialis" => "required",
             "kodedokter" => "required",
-            "nomorkartu" => "required|numeric",
         ]);
         if ($validator->fails()) {
             Alert::error('Error', $validator->errors()->first());
@@ -55,9 +54,13 @@ class AntrianController extends Controller
 
         // cek peserta
         $api = new VclaimController();
-        $request['nomorKartu'] = $request->nomorkartu;
         $request['tanggal'] = $request->tanggalperiksa;
-        $response =  $api->peserta_nomorkartu($request);
+        if ($request->nik) {
+            $response =  $api->peserta_nik($request);
+        } else {
+            $request['nomorKartu'] = $request->nomorkartu;
+            $response =  $api->peserta_nomorkartu($request);
+        }
         if ($response->status() == 200) {
             $peserta = $response->getData()->response->peserta;
             // dd($peserta);
@@ -70,7 +73,6 @@ class AntrianController extends Controller
             Alert::error('Error ' . $response->getData()->metadata->code,  $response->getData()->metadata->message);
             return redirect()->route('antrian.console');
         }
-
         // get jadwal
         $jadwal = JadwalDokterAntrian::where('kodesubspesialis', $request->kodesubspesialis)
             ->where('kodedokter', $request->kodedokter)
@@ -82,6 +84,7 @@ class AntrianController extends Controller
 
         $request['nik'] = $peserta->nik;
         $request['nama'] = $peserta->nama;
+        $request['nomorkartu'] = $peserta->noKartu;
         $request['nohp'] = $peserta->mr->noTelepon;
         $request['norm'] = $peserta->mr->noMR;
         $request['jampraktek'] = $jadwal->jadwal;
@@ -192,7 +195,7 @@ class AntrianController extends Controller
         $printer->text("================================================\n");
         $printer->text("No. RM : " . $request->norm . "\n");
         $printer->text("Nama : " . $request->nama . "\n");
-        $printer->text("NIK : " . $request->nik . "\n");
+        $printer->text("NIK : " .  substr($request->nik, 0, -12) . "XXXX" . substr($request->nik, 8) . "\n");
         $printer->text("No. Kartu JKN : " . $request->nomorkartu . "\n");
         $printer->text("No. Telp. : " . $request->nohp . "\n");
         $printer->text("================================================\n");
