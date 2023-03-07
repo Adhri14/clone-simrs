@@ -63,21 +63,21 @@
             @if (isset($antrians))
                 <div class="row">
                     <div class="col-md-3">
-                        <x-adminlte-small-box title="{{ $antrians->where('taskid', 2)->first()->nomorantrean ?? '0' }}"
+                        <x-adminlte-small-box title="{{ $antrians->where('taskid', 2)->where('lantaipendaftaran', $request->lantai)->first()->nomorantrean ?? '0' }}"
                             text="Antrian Saat Ini" theme="primary" icon="fas fa-user-injured" />
                     </div>
                     <div class="col-md-3">
                         <x-adminlte-small-box
-                            title="{{ $antrians->where('method', 'Offline')->where('taskid', 0)->first()->nomorantrean ?? '0' }}"
+                            title="{{ $antrians->where('method', 'Offline')->where('taskid', 0)->where('lantaipendaftaran', $request->lantai)->first()->nomorantrean ?? '0' }}"
                             text="Antrian Selanjutnya" theme="success" icon="fas fa-user-injured" />
                     </div>
                     <div class="col-md-3">
                         <x-adminlte-small-box
-                            title="{{ $antrians->where('method', 'Offline')->where('taskid', '<', 1)->count() }}"
+                            title="{{ $antrians->where('method', 'Offline')->where('taskid', '<', 1)->where('lantaipendaftaran', $request->lantai)->count() }}"
                             text="Sisa Antrian" theme="warning" icon="fas fa-user-injured" />
                     </div>
                     <div class="col-md-3">
-                        <x-adminlte-small-box title="{{ $antrians->where('method', 'Offline')->count() }}"
+                        <x-adminlte-small-box title="{{ $antrians->where('method', 'Offline')->where('lantaipendaftaran', $request->lantai)->count() }}"
                             text="Total Antrian" theme="success" icon="fas fa-user-injured" />
                     </div>
                 </div>
