@@ -149,7 +149,7 @@
         </x-slot>
     </x-adminlte-modal>
 @stop
-@section('plugins.Sweetalert2', true);
+@section('plugins.Sweetalert2', true)
 {{-- @section('plugins.Datatables', true) --}}
 @include('sweetalert::alert')
 @section('adminlte_css')
