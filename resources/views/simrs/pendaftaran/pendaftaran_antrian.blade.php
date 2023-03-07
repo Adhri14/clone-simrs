@@ -84,7 +84,7 @@
                 <div class="row">
                     <div class="col-md-6">
                         <x-adminlte-card
-                            title="Antrian Offline Pasien ({{ $antrians->where('method', 'Offline')->count() }} Orang)"
+                            title="Antrian Offline Pasien ({{ $antrians->where('method', 'Offline')->where('lantaipendaftaran', $request->lantai)->count() }} Orang)"
                             theme="warning" icon="fas fa-info-circle" collapsible>
                             @php
                                 $heads = ['Antrian', 'Pasien', 'Status / Action', 'Kunjungan', 'SEP / Ref'];
@@ -97,7 +97,7 @@
                             @endphp
                             <x-adminlte-datatable id="table2" class="nowrap text-xs" :heads="$heads" :config="$config"
                                 striped bordered hoverable compressed>
-                                @foreach ($antrians->where('method', 'Offline') as $item)
+                                @foreach ($antrians->where('method', 'Offline')->where('lantaipendaftaran', $request->lantai) as $item)
                                     <tr>
                                         <td>
                                             {{ $item->angkaantrean }}<br>
@@ -210,7 +210,7 @@
                     </div>
                     <div class="col-md-6">
                         <x-adminlte-card theme="success" icon="fas fa-info-circle" collapsible
-                            title="Proses Pendaftaran Antrian Offline ({{ $antrians->where('taskid', 2)->count() }} Orang)">
+                            title="Proses Pendaftaran Antrian Offline ({{ $antrians->where('taskid', 2)->where('lantaipendaftaran', $request->lantai)->count() }} Orang)">
                             @php
                                 $heads = ['Antrian', 'Pasien', 'Status/Action', 'Kunjungan', 'SEP / Ref'];
                                 $config['order'] = ['3', 'asc'];
@@ -222,7 +222,7 @@
                             @endphp
                             <x-adminlte-datatable id="table4" class="nowrap text-xs" :heads="$heads" :config="$config"
                                 striped bordered hoverable compressed>
-                                @foreach ($antrians->where('taskid', 2) as $antrian)
+                                @foreach ($antrians->where('taskid', 2)->where('lantaipendaftaran', $request->lantai) as $antrian)
                                     <tr>
                                         <td>
                                             {{ $antrian->angkaantrean }}<br>
@@ -251,7 +251,8 @@
                                                     <span class="badge bg-warning">{{ $antrian->taskid }}. Belum
                                                         Pembayaran</span>
                                                 @else
-                                                    <span class="badge bg-warning">{{ $antrian->taskid }}. Tunggu Poli</span>
+                                                    <span class="badge bg-warning">{{ $antrian->taskid }}. Tunggu
+                                                        Poli</span>
                                                 @endif
                                             @endif
                                             @if ($antrian->taskid == 4)

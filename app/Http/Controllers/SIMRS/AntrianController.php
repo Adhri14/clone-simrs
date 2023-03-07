@@ -213,7 +213,7 @@ class AntrianController extends Controller
         $printer->text("JKN OFFLINE\n");
         $printer->setTextSize(1, 1);
         $printer->text("Kode Booking : " . $antrian->kodebooking . "\n");
-        $printer->qrCode($antrian->kodebooking, Printer::QR_ECLEVEL_L, 10, Printer::QR_MODEL_2);
+        // $printer->qrCode($antrian->kodebooking, Printer::QR_ECLEVEL_L, 10, Printer::QR_MODEL_2);
         $printer->text("================================================\n");
         $printer->text("Nomor Antrian Poliklinik :\n");
         $printer->setTextSize(2, 2);

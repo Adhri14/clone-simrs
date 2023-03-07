@@ -14,6 +14,8 @@ use App\Models\LayananDetailDB;
 use App\Models\ParamedisDB;
 use App\Models\PasienDB;
 use App\Models\PenjaminDB;
+use App\Models\Poliklinik;
+use App\Models\PoliklinikDB;
 use App\Models\SIMRS\Token;
 use App\Models\TarifLayananDetailDB;
 use App\Models\TracerDB;
@@ -718,6 +720,9 @@ class AntrianController extends ApiBPJSController
         if (Carbon::parse($request->tanggalperiksa) >  Carbon::now()->addDay(6)) {
             return $this->sendError("Antrian hanya dapat dibuat untuk 7 hari ke kedepan", null, 400);
         }
+        $poli = PoliklinikDB::where('kodesubspesialis', $request->kodepoli)->first();
+        $request['lantaipendaftaran'] = $poli->lantaipendaftaran;
+        $request['lokasi'] = $poli->lantaipendaftaran;
         // cek duplikasi nik antrian
         $antrian_nik = Antrian::where('tanggalperiksa', $request->tanggalperiksa)
             ->where('nik', $request->nik)
@@ -864,6 +869,8 @@ class AntrianController extends ApiBPJSController
                 "sisakuotanonjkn" => $request->sisakuotanonjkn,
                 "kuotanonjkn" => $request->kuotanonjkn,
                 "keterangan" => $request->keterangan,
+                "lokasi" => $request->lokasi,
+                "lantaipendaftaran" => $request->lantaipendaftaran,
                 "status_api" => 1,
                 "taskid" => 0,
                 "user" => "System Antrian",
@@ -938,6 +945,10 @@ class AntrianController extends ApiBPJSController
         if (Carbon::parse($request->tanggalperiksa) >  Carbon::now()->addDay(6)) {
             return $this->sendError("Antrian hanya dapat dibuat untuk 7 hari ke kedepan", null, 400);
         }
+        $poli = PoliklinikDB::where('kodesubspesialis', $request->kodepoli)->first();
+        $request['lantaipendaftaran'] = $poli->lantaipendaftaran;
+        $request['lokasi'] = $poli->lantaipendaftaran;
+
         // cek duplikasi nik antrian
         $antrian_nik = Antrian::where('tanggalperiksa', $request->tanggalperiksa)
             ->where('nik', $request->nik)
@@ -951,6 +962,7 @@ class AntrianController extends ApiBPJSController
         $pasien = PasienDB::where('no_Bpjs',  $request->nomorkartu)->first();
         if (empty($pasien)) {
             $request['pasienbaru'] = 1;
+            $request['lantaipendaftaran'] = 1;
             // return $this->sendError("Nomor Kartu BPJS Pasien termasuk Pasien Baru di RSUD Waled. Silahkan daftar melalui pendaftaran offline", null, 201);
         } else {
             $request['pasienbaru'] = 0;
@@ -959,7 +971,9 @@ class AntrianController extends ApiBPJSController
                 return $this->sendError("NIK anda yang terdaftar di BPJS dengan Di RSUD Waled berbeda. Silahkan perbaiki melalui pendaftaran offline", null, 201);
             }
         }
-
+        if ($request->jenispasien == "NON-JKN") {
+            $request['lantaipendaftaran'] = 1;
+        }
         // cek jika jkn
         // if (isset($request->nomorreferensi)) {
         //     $request['jenispasien'] = 'JKN';
@@ -1029,6 +1043,7 @@ class AntrianController extends ApiBPJSController
         } else {
             return $this->sendError('Kuota dokter sudah penuh', null, 400);
         }
+
         $antrian_poli = Antrian::where('tanggalperiksa', $request->tanggalperiksa)
             ->where('kodepoli', $request->kodepoli)
             ->count();
@@ -1084,6 +1099,8 @@ class AntrianController extends ApiBPJSController
             "sisakuotanonjkn" => $request->sisakuotanonjkn,
             "kuotanonjkn" => $request->kuotanonjkn,
             "keterangan" => $request->keterangan,
+            "lokasi" => $request->lokasi,
+            "lantaipendaftaran" => $request->lantaipendaftaran,
             "status_api" => 1,
             "taskid" => 0,
             "user" => "System Antrian",

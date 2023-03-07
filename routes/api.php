@@ -55,18 +55,20 @@ Route::prefix('antrian')->group(function () {
     Route::get('status_antrean', [AntrianBPJSController::class, 'status_antrean'])->name('api.status_antrean');
     Route::post('ambil_antrean', [AntrianBPJSController::class, 'ambil_antrean'])->name('api.ambil_antrean');
 });
-Route::get('token', [AntrianBPJSController::class, 'token']);
+Route::get('token', [AntrianAntrianController::class, 'token']);
 Route::prefix('wsrs')->group(function () {
-    Route::post('ambil_antrian', [AntrianBPJSController::class, 'ambil_antrian']);
-    Route::post('status_antrian', [AntrianBPJSController::class, 'status_antrian']);
-    Route::post('sisa_antrian', [AntrianBPJSController::class, 'sisa_antrian']);
-    Route::post('batal_antrian', [AntrianBPJSController::class, 'batal_antrian']);
+    Route::post('ambil_antrian', [AntrianAntrianController::class, 'ambil_antrian']);
+    Route::post('status_antrian', [AntrianAntrianController::class, 'status_antrian']);
+    Route::post('sisa_antrian', [AntrianAntrianController::class, 'sisa_antrian']);
+    Route::post('batal_antrian', [AntrianAntrianController::class, 'batal_antrian']);
     Route::post('checkin_antrian', [AntrianBPJSController::class, 'checkin_antrian']);
-    Route::post('info_pasien_baru', [AntrianBPJSController::class, 'info_pasien_baru']);
+    Route::post('info_pasien_baru', [AntrianAntrianController::class, 'info_pasien_baru']);
+
     Route::post('pasien_pendaftaran', [AntrianBPJSController::class, 'pasien_pendaftaran']);
     Route::post('panggil_pendaftaran', [AntrianBPJSController::class, 'panggil_pendaftaran']);
     Route::post('update_pendaftaran_offline', [AntrianBPJSController::class, 'update_pendaftaran_offline']);
     Route::post('update_pendaftaran_online', [AntrianBPJSController::class, 'update_pendaftaran_online']);
+
     Route::post('jadwal_operasi_rs', [AntrianAntrianController::class, 'jadwal_operasi_rs']);
     Route::post('jadwal_operasi_pasien', [AntrianAntrianController::class, 'jadwal_operasi_pasien']);
     Route::post('ambil_antrean_farmasi', [AntrianAntrianController::class, 'ambil_antrian_farmasi']);
