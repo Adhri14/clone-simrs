@@ -323,13 +323,13 @@ return [
                     'shift'   => 'ml-2',
                     'can' => 'pendaftaran',
                 ],
-                [
-                    'text' => 'Antrian Pendaftaran',
-                    'icon'    => 'fas fa-user-plus',
-                    'url'  => 'antrian/pendaftaran',
-                    'shift'   => 'ml-2',
-                    'can' => 'pendaftaran',
-                ],
+                // [
+                //     'text' => 'Antrian Pendaftaran',
+                //     'icon'    => 'fas fa-user-plus',
+                //     'url'  => 'antrian/pendaftaran',
+                //     'shift'   => 'ml-2',
+                //     'can' => 'pendaftaran',
+                // ],
                 [
                     'text' => 'Antrian Pendaftaran',
                     'icon'    => 'fas fa-user-plus',

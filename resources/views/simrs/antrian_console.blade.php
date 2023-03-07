@@ -31,7 +31,7 @@
                         <x-adminlte-info-box class="btnDaftarBPJS" text="Daftar Pasien BPJS" theme="success" />
                     </div>
                     <div class="col-md-6">
-                        <x-adminlte-info-box class="btnDaftar" text="Daftar Pasien Umum" theme="success" />
+                        <x-adminlte-info-box class="btnDaftarUmum" text="Daftar Pasien Umum" theme="success" />
                     </div>
                     <div class="col-md-6">
                         <x-adminlte-button icon="fas fa-sync" class="withLoad reload" theme="warning" label="Reload" />
@@ -87,14 +87,27 @@
     {{-- Daftar Pasien BPJS --}}
     <x-adminlte-modal id="modalBPJS" size="xl" title="Daftar Antrian Pasien BPJS" theme="success"
         icon="fas fa-user-plus">
-        <x-adminlte-input name="nomorkartu" id="nomorkartu" label="Masukan Nomor BPJS Peserta"
-            placeholder="Masukan Nomor BPJS Peserta" igroup-size="lg">
-            <x-slot name="prependSlot">
-                <div class="input-group-text text-success">
-                    <i class="fas fa-user"></i>
-                </div>
-            </x-slot>
-        </x-adminlte-input>
+        <div id="inputKartu">
+            <x-adminlte-input name="nomorkartu" id="nomorkartu" label="Masukan Nomor BPJS Pasien"
+                placeholder="Masukan Nomor BPJS Peserta" igroup-size="lg">
+                <x-slot name="prependSlot">
+                    <div class="input-group-text text-success">
+                        <i class="fas fa-user"></i>
+                    </div>
+                </x-slot>
+            </x-adminlte-input>
+        </div>
+        <div id="inputNIK">
+            <x-adminlte-input name="nik" id="nik" label="Masukan NIK Pasien" placeholder="Masukan NIK Peserta"
+                igroup-size="lg">
+                <x-slot name="prependSlot">
+                    <div class="input-group-text text-success">
+                        <i class="fas fa-user"></i>
+                    </div>
+                </x-slot>
+            </x-adminlte-input>
+        </div>
+
         <br>
         <div class="form-group">
             <label>Silahkan pilih poliklinik BPJS di bawah ini</label>
@@ -127,12 +140,13 @@
             <div id="rowDokter"></div>
         </div>
         <x-slot name="footerSlot">
-            <x-adminlte-button class="mr-auto" type="submit" theme="success" id="btnDaftarPoliBPJS" icon="fas fa-user-plus"
-                label="Daftar" />
+            <x-adminlte-button class="mr-auto withLoad" type="submit" theme="success" id="btnDaftarPoliBPJS"
+                icon="fas fa-user-plus" label="Daftar BPJS" />
+            <x-adminlte-button class="mr-auto withLoad" type="submit" theme="success" id="btnDaftarPoliUmum"
+                icon="fas fa-user-plus" label="Daftar Umum" />
             {{-- <button type="submit" class="mr-auto btn btn-success" form="daftarbpjseiu">DAFTAR</button> --}}
             <x-adminlte-button theme="secondary" icon="fas fa-times" label="Kembali" data-dismiss="modal" />
         </x-slot>
-
     </x-adminlte-modal>
 @stop
 @section('plugins.Sweetalert2', true);
@@ -263,8 +277,23 @@
             });
             $('.btnDaftarBPJS').click(function() {
                 $('#modalBPJS').modal('show');
+                $('#inputNIK').hide();
+                $('#btnDaftarPoliUmum').hide();
+                $('#btnDaftarPoliBPJS').show();
+                $('#inputKartu').show();
                 setTimeout(function() {
                     $('#nomorkartu').focus();
+                }, 500);
+
+            });
+            $('.btnDaftarUmum').click(function() {
+                $('#modalBPJS').modal('show');
+                $('#inputNIK').show();
+                $('#inputKartu').hide();
+                $('#btnDaftarPoliUmum').show();
+                $('#btnDaftarPoliBPJS').hide();
+                setTimeout(function() {
+                    $('#nik').focus();
                 }, 500);
 
             });
@@ -296,39 +325,21 @@
                     $.LoadingOverlay("hide", true);
                 });
             });
-
             $('#btnDaftarPoliBPJS').click(function() {
                 var nomorkartu = $('#nomorkartu').val();
                 var kodesubspesialis = $("input[name=kodesubspesialis]:checked").val();
                 var kodedokter = $("input[name=kodedokter]:checked").val();
-                // alert(request);
                 var url = "{{ route('antrian.daftar_pasien_bpjs_offline') }}" + "?nomorkartu=" +
                     nomorkartu + "&kodesubspesialis=" + kodesubspesialis + "&kodedokter=" + kodedokter;
                 window.location.href = url;
-                // var hari = "{{ now()->dayOfWeek }}"
-                // $.LoadingOverlay("show");
-                // var url = "{{ route('antrian.jadwaldokter_poli') }}/?kodesubspesialis=" + id + "&hari=" +
-                //     hari;
-                // $.get(url, function(data) {
-                //     $('#daftarDokter').show();
-                //     $.each(data, function(i, item) {
-                //         console.log(item.kodedokter);
-                //         var bigString = [
-                //             '<div class="custom-control custom-radio " >',
-                //             '<input class="custom-control-input btnPoliBPJS" type="radio"',
-                //             'data-id="' + item.kodedokter + '" id="' + item.kodedokter +
-                //             '"',
-                //             'value="' + item.kodedokter + '" name="kodedokter">',
-                //             '<label for="' + item.kodedokter +
-                //             '" class="custom-control-label"',
-                //             'data-id="' + item.kodedokter + '">' + item.namadokter +
-                //             ' </label>',
-                //             ' </div>',
-                //         ];
-                //         $('#rowDokter').append(bigString.join(''));
-                //     });
-                //     $.LoadingOverlay("hide", true);
-                // });
+            });
+            $('#btnDaftarPoliUmum').click(function() {
+                var nik = $('#nik').val();
+                var kodesubspesialis = $("input[name=kodesubspesialis]:checked").val();
+                var kodedokter = $("input[name=kodedokter]:checked").val();
+                var url = "{{ route('antrian.daftar_pasien_umum_offline') }}" + "?nik=" +
+                    nik + "&kodesubspesialis=" + kodesubspesialis + "&kodedokter=" + kodedokter;
+                window.location.href = url;
             });
 
         });

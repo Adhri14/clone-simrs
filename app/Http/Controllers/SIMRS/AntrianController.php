@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\SIMRS;
 
+use App\Http\Controllers\Admin\WhatsappController;
 use App\Http\Controllers\API\AntrianBPJSController;
 use App\Http\Controllers\BPJS\Antrian\AntrianController as AntrianAntrianController;
 use App\Http\Controllers\BPJS\Vclaim\VclaimController;
@@ -84,11 +85,74 @@ class AntrianController extends Controller
         $request['nohp'] = $peserta->mr->noTelepon;
         $request['norm'] = $peserta->mr->noMR;
         $request['jampraktek'] = $jadwal->jadwal;
-        $request['jeniskunjungan'] = 3;
+        $request['jenispasien'] = 'JKN';
         $request['method'] = 'Offline';
 
         $antrian_api = new AntrianAntrianController();
-        $response = $antrian_api->ambil_antrian($request);
+        $response = $antrian_api->ambil_antrian_offline($request);
+        if ($response->status() == 200) {
+            // cek printer
+            try {
+                $connector = new WindowsPrintConnector(env('PRINTER_CHECKIN'));
+                $printer = new Printer($connector);
+                $printer->close();
+            } catch (\Throwable $th) {
+                return $this->sendError('Printer Mesin Antrian Tidak Menyala', null, 201);
+            }
+            $antrian = $response->getData()->response;
+            $this->print_karcis_offline($request, $antrian);
+            Alert::success('Success', 'Anda berhasil mendaftar dengan antrian ' . $antrian->angkaantrean . " / " . $antrian->nomorantrean);
+            return redirect()->route('antrian.console');
+        } else {
+            Alert::error('Error ' . $response->getData()->metadata->code,  $response->getData()->metadata->message);
+            return redirect()->route('antrian.console');
+        }
+    }
+    public function daftar_pasien_umum_offline(Request $request)
+    {
+        $request['tanggalperiksa'] = now()->format('Y-m-d');
+        $request['kodepoli'] = $request->kodesubspesialis;
+        $validator = Validator::make(request()->all(), [
+            "kodesubspesialis" => "required",
+            "kodedokter" => "required",
+            "nik" => "required|numeric",
+        ]);
+        if ($validator->fails()) {
+            Alert::error('Error', $validator->errors()->first());
+            return redirect()->route('antrian.console');
+        }
+
+        // cek peserta
+        $api = new VclaimController();
+        $request['tanggal'] = $request->tanggalperiksa;
+        $response =  $api->peserta_nik($request);
+        if ($response->status() == 200) {
+            $peserta = $response->getData()->response->peserta;
+        } else {
+            Alert::error('Error ' . $response->getData()->metadata->code,  $response->getData()->metadata->message);
+            return redirect()->route('antrian.console');
+        }
+
+        // get jadwal
+        $jadwal = JadwalDokterAntrian::where('kodesubspesialis', $request->kodesubspesialis)
+            ->where('kodedokter', $request->kodedokter)
+            ->where('hari', now()->dayOfWeek)->first();
+        if ($jadwal == null) {
+            Alert::error('Error',  "Jadwal tidak ditemukan");
+            return redirect()->route('antrian.console');
+        }
+
+        $request['nik'] = $peserta->nik;
+        $request['nomorkartu'] = $peserta->noKartu;
+        $request['nama'] = $peserta->nama;
+        $request['nohp'] = $peserta->mr->noTelepon;
+        $request['norm'] = $peserta->mr->noMR;
+        $request['jampraktek'] = $jadwal->jadwal;
+        $request['jenispasien'] = 'NON-JKN';
+        $request['method'] = 'Offline';
+
+        $antrian_api = new AntrianAntrianController();
+        $response = $antrian_api->ambil_antrian_offline($request);
         if ($response->status() == 200) {
             // cek printer
             try {
@@ -183,7 +247,6 @@ class AntrianController extends Controller
             }
         }
         $polis = PoliklinikDB::where('status', 1)->get();
-        dd('cek');
         $dokters = ParamedisDB::where('kode_dokter_jkn', "!=", null)
             ->where('unit', "!=", null)
             ->get();
@@ -199,6 +262,104 @@ class AntrianController extends Controller
             'polis' => $polis,
             'dokters' => $dokters,
         ]);
+    }
+    public function panggil_pendaftaran($kodebooking, $loket, $lantai, Request $request)
+    {
+        $antrian = Antrian::where('kodebooking', $kodebooking)->first();
+        if ($antrian) {
+            $request['kodebooking'] = $antrian->kodebooking;
+            $request['taskid'] = 2;
+            $now = Carbon::now();
+            $request['waktu'] = Carbon::now()->timestamp * 1000;
+            $vclaim = new AntrianBPJSController();
+            $antrian->update([
+                'taskid' => 2,
+                'status_api' => 1,
+                'keterangan' => "Panggilan ke loket pendaftaran",
+                'taskid2' => $now,
+                // 'user' => Auth::user()->name,
+            ]);
+            //panggil urusan mesin antrian
+            try {
+                // notif wa
+                $wa = new WhatsappController();
+                $request['message'] = "Panggilan kepada " . $antrian->nama . " Antrian dengan kode booking " . $antrian->kodebooking . " untuk melakukan pendaftaran di Loket pendaftaran.";
+                $request['number'] = $antrian->nohp;
+                $wa->send_message($request);
+
+                $tanggal = now()->format('Y-m-d');
+                $urutan = $antrian->angkaantrean;
+                $mesin_antrian = DB::connection('mysql3')->table('tb_counter')
+                    ->where('tgl', $tanggal)
+                    ->where('kategori', 'JKN')
+                    ->where('loket', $loket)
+                    ->where('lantai', $lantai)
+                    ->get();
+                if ($mesin_antrian->count() < 1) {
+                    $mesin_antrian = DB::connection('mysql3')->table('tb_counter')->insert([
+                        'tgl' => $tanggal,
+                        'kategori' => 'JKN',
+                        'loket' => $loket,
+                        'counterloket' => $urutan,
+                        'lantai' => $lantai,
+                        'mastercount' => $urutan,
+                        'sound' => 'PLAY',
+                    ]);
+                } else {
+                    DB::connection('mysql3')->table('tb_counter')
+                        ->where('tgl', $tanggal)
+                        ->where('kategori', 'JKN')
+                        ->where('loket', $loket)
+                        ->where('lantai', $lantai)
+                        ->limit(1)
+                        ->update([
+                            // 'counterloket' => $antrian->first()->mastercount + 1,
+                            'counterloket' => $urutan,
+                            // 'mastercount' => $antrian->first()->mastercount + 1,
+                            'mastercount' => $urutan,
+                            'sound' => 'PLAY',
+                        ]);
+                }
+            } catch (\Throwable $th) {
+                Alert::error('Error', $th->getMessage());
+                return redirect()->back();
+            }
+            Alert::success('Success', 'Panggilan Berhasil');
+            return redirect()->back();
+        } else {
+            Alert::error('Error', 'Kode Booking tidak ditemukan');
+            return redirect()->back();
+        }
+    }
+    public function selesai_pendaftaran($kodebooking, Request $request)
+    {
+        $antrian = Antrian::where('kodebooking', $kodebooking)->first();
+        $request['kodebooking'] = $antrian->kodebooking;
+        $request['taskid'] = 3;
+        $request['keterangan'] = "Silahkan menunggu dipoliklinik";
+        $request['waktu'] = Carbon::now()->timestamp * 1000;
+        $vclaim = new AntrianAntrianController();
+        // $response = $vclaim->update_antrean($request);
+        // if ($response->status() == 200) {
+        // } else {
+        //     Alert::error('Error ' . $response->status(), $response->getData()->metadata->message);
+        // }
+        $antrian->update([
+            'taskid' => $request->taskid,
+            'keterangan' => $request->keterangan,
+            'user' => Auth::user()->name,
+        ]);
+        try {
+            // notif wa
+            $wa = new WhatsappController();
+            $request['message'] = "Anda berhasil di daftarkan atas nama pasien " . $antrian->nama . " dengan nomor antrean " . $antrian->nomorantrean . " telah selesai. " . $request->keterangan;
+            $request['number'] = $antrian->nohp;
+            $wa->send_message($request);
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
+        Alert::success('Success', 'Pasien diteruskan ke poliklinik');
+        return redirect()->back();
     }
     // poliklinik
     public function antrian_poliklinik(Request $request)
