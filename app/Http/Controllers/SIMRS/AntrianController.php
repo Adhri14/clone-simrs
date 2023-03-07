@@ -4,9 +4,11 @@ namespace App\Http\Controllers\SIMRS;
 
 use App\Http\Controllers\API\AntrianBPJSController;
 use App\Http\Controllers\BPJS\Antrian\AntrianController as AntrianAntrianController;
+use App\Http\Controllers\BPJS\Vclaim\VclaimController;
 use App\Http\Controllers\Controller;
 use App\Models\Antrian;
 use App\Models\AntrianDB;
+use App\Models\BPJS\Antrian\JadwalDokterAntrian;
 use App\Models\JadwalDokter;
 use App\Models\KunjunganDB;
 use App\Models\ParamedisDB;
@@ -19,12 +21,15 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 use Laravolt\Indonesia\Models\Provinsi;
+use Mike42\Escpos\PrintConnectors\WindowsPrintConnector;
+use Mike42\Escpos\Printer;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class AntrianController extends Controller
 {
-    public function anjungan()
+    public function console()
     {
         $poliklinik = PoliklinikDB::with(['antrians', 'jadwals'])->where('status', 1)->get();
         $jadwal = JadwalDokter::where('hari',  now()->dayOfWeek)->get();
@@ -32,6 +37,126 @@ class AntrianController extends Controller
             'poliklinik' => $poliklinik,
             'jadwal' => $jadwal,
         ]);
+    }
+    public function daftar_pasien_bpjs_offline(Request $request)
+    {
+        $request['tanggalperiksa'] = now()->format('Y-m-d');
+        $request['kodepoli'] = $request->kodesubspesialis;
+        $validator = Validator::make(request()->all(), [
+            "kodesubspesialis" => "required",
+            "kodedokter" => "required",
+            "nomorkartu" => "required|numeric",
+        ]);
+        if ($validator->fails()) {
+            Alert::error('Error', $validator->errors()->first());
+            return redirect()->route('antrian.console');
+        }
+
+        // cek peserta
+        $api = new VclaimController();
+        $request['nomorKartu'] = $request->nomorkartu;
+        $request['tanggal'] = $request->tanggalperiksa;
+        $response =  $api->peserta_nomorkartu($request);
+        if ($response->status() == 200) {
+            $peserta = $response->getData()->response->peserta;
+            // dd($peserta);
+            if ($peserta->statusPeserta->kode == 0) {
+            } else {
+                Alert::error('Error Status Peserta',  "Maaf status peserta " . $peserta->statusPeserta->keterangan);
+                return redirect()->route('antrian.console');
+            }
+        } else {
+            Alert::error('Error ' . $response->getData()->metadata->code,  $response->getData()->metadata->message);
+            return redirect()->route('antrian.console');
+        }
+
+        // get jadwal
+        $jadwal = JadwalDokterAntrian::where('kodesubspesialis', $request->kodesubspesialis)
+            ->where('kodedokter', $request->kodedokter)
+            ->where('hari', now()->dayOfWeek)->first();
+        if ($jadwal == null) {
+            Alert::error('Error',  "Jadwal tidak ditemukan");
+            return redirect()->route('antrian.console');
+        }
+
+        $request['nik'] = $peserta->nik;
+        $request['nama'] = $peserta->nama;
+        $request['nohp'] = $peserta->mr->noTelepon;
+        $request['norm'] = $peserta->mr->noMR;
+        $request['jampraktek'] = $jadwal->jadwal;
+        $request['jeniskunjungan'] = 3;
+        $request['method'] = 'Offline';
+
+        $antrian_api = new AntrianAntrianController();
+        $response = $antrian_api->ambil_antrian($request);
+        if ($response->status() == 200) {
+            // cek printer
+            try {
+                $connector = new WindowsPrintConnector(env('PRINTER_CHECKIN'));
+                $printer = new Printer($connector);
+                $printer->close();
+            } catch (\Throwable $th) {
+                return $this->sendError('Printer Mesin Antrian Tidak Menyala', null, 201);
+            }
+            $antrian = $response->getData()->response;
+            $this->print_karcis_offline($request, $antrian);
+            Alert::success('Success', 'Anda berhasil mendaftar dengan antrian ' . $antrian->angkaantrean . " / " . $antrian->nomorantrean);
+            return redirect()->route('antrian.console');
+        } else {
+            Alert::error('Error ' . $response->getData()->metadata->code,  $response->getData()->metadata->message);
+            return redirect()->route('antrian.console');
+        }
+    }
+    function print_karcis_offline(Request $request, $antrian)
+    {
+        Carbon::setLocale('id');
+        date_default_timezone_set('Asia/Jakarta');
+        $now = Carbon::now();
+        $connector = new WindowsPrintConnector(env('PRINTER_CHECKIN'));
+        $printer = new Printer($connector);
+        $printer->setEmphasis(true);
+        $printer->text("ANTRIAN RAWAT JALAN\n");
+        $printer->text("RSUD WALED KAB. CIREBON\n");
+        $printer->setEmphasis(false);
+        $printer->text("================================================\n");
+        $printer->text("No. RM : " . $request->norm . "\n");
+        $printer->text("Nama : " . $request->nama . "\n");
+        $printer->text("NIK : " . $request->nik . "\n");
+        $printer->text("No. Kartu JKN : " . $request->nomorkartu . "\n");
+        $printer->text("No. Telp. : " . $request->nohp . "\n");
+        $printer->text("================================================\n");
+        $printer->text("Jenis Kunj. : " . $request->method . "\n");
+        $printer->text("Poliklinik : " . $antrian->namapoli . "\n");
+        $printer->text("Dokter : " . $antrian->namadokter . "\n");
+        $printer->text("Jam Praktek : " . $request->jampraktek . "\n");
+        $printer->text("Tanggal : " . Carbon::parse($request->tanggalperiksa)->format('d M Y') . "\n");
+        $printer->text("================================================\n");
+        $printer->text("Keterangan : \n" . $antrian->keterangan . "\n");
+        $printer->text("================================================\n");
+        $printer->setJustification(Printer::JUSTIFY_CENTER);
+        $printer->text("Jenis Pasien :\n");
+        $printer->setTextSize(2, 2);
+        $printer->text("JKN OFFLINE\n");
+        $printer->setTextSize(1, 1);
+        $printer->text("Kode Booking : " . $antrian->kodebooking . "\n");
+        $printer->qrCode($antrian->kodebooking, Printer::QR_ECLEVEL_L, 10, Printer::QR_MODEL_2);
+        $printer->text("================================================\n");
+        $printer->text("Nomor Antrian Poliklinik :\n");
+        $printer->setTextSize(2, 2);
+        $printer->text($antrian->nomorantrean . "\n");
+        $printer->setTextSize(1, 1);
+        $printer->text("Lokasi Poliklinik Lantai " . $request->lokasi . " \n");
+        $printer->text("================================================\n");
+        $printer->text("Angka Antrian :\n");
+        $printer->setTextSize(2, 2);
+        $printer->text($antrian->angkaantrean . "\n");
+        $printer->setTextSize(1, 1);
+        $printer->text("Lokasi Pendaftaran Lantai " . $request->lantaipendaftaran . " \n");
+        $printer->text("================================================\n");
+        $printer->setJustification(Printer::JUSTIFY_LEFT);
+        $printer->text("Cetakan 1 : " . $now . "\n");
+        $printer->cut();
+        $printer->close();
     }
     public function pendaftaran(Request $request)
     {
@@ -58,8 +183,7 @@ class AntrianController extends Controller
             }
         }
         $polis = PoliklinikDB::where('status', 1)->get();
-        dd($antrians);
-
+        dd('cek');
         $dokters = ParamedisDB::where('kode_dokter_jkn', "!=", null)
             ->where('unit', "!=", null)
             ->get();

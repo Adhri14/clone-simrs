@@ -107,6 +107,14 @@ class JadwalDokterController extends Controller
         $jadwal = JadwalDokterAntrian::find($id);
         return response()->json($jadwal);
     }
+    public function jadwaldokter_poli(Request $request)
+    {
+        $jadwals = JadwalDokterAntrian::where('kodesubspesialis', $request->kodesubspesialis)
+            ->where('hari', $request->hari)
+            ->where('libur', 0)
+            ->get();
+        return response()->json($jadwals);
+    }
     public function jadwaldokter_update(Request $request)
     {
         $request->validate([

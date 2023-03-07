@@ -104,7 +104,7 @@
             </x-adminlte-card>
         </div>
     </div>
-    <x-adminlte-modal id="modal" title="Data Pasien" theme="success" v-centered>
+    <x-adminlte-modal id="modal" title="Data Pasien" size="lg" theme="success" v-centered>
         <form action="" id="form">
             @csrf
             <div class="row">
@@ -129,8 +129,69 @@
             </div>
             <x-adminlte-input name="asal_surat" label="Asal Surat" igroup-size="sm" enable-old-support />
             <x-adminlte-input name="perihal" label="Perihal" igroup-size="sm" enable-old-support />
-            <x-adminlte-input name="disposisi" label="Disposisi" igroup-size="sm" enable-old-support />
-            <x-adminlte-input name="pengolah" label="Pengolah" igroup-size="sm" enable-old-support />
+            <div class="row">
+                <div class="col-md-6">
+                    @php
+                        $config = ['format' => 'YYYY-MM-DD'];
+                    @endphp
+                    <x-adminlte-input-date name="tgl_disposisi" label="Tgl Disposisi" igroup-size="sm" :config="$config"
+                        enable-old-support required />
+                </div>
+                <div class="col-md-6">
+                    @php
+                        $config = ['format' => 'YYYY-MM-DD'];
+                    @endphp
+                    <x-adminlte-input-date name="tgl_diteruskan" label="Tgl Diteruskan" igroup-size="sm" :config="$config"
+                        enable-old-support required />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-5">
+                    <x-adminlte-input name="disposisi" label="Disposisi" igroup-size="sm" enable-old-support />
+                    <x-adminlte-input name="pengolah" label="Pengolah" igroup-size="sm" enable-old-support />
+                </div>
+                <div class="col-md-7">
+                    <div class="form-group">
+                        <div class="custom-control custom-checkbox">
+                            <input class="custom-control-input" type="checkbox" id="tindaklanjuti">
+                            <label for="tindaklanjuti" class="custom-control-label">Untuk ditindaklanjuti</label>
+                        </div>
+                        <div class="custom-control custom-checkbox">
+                            <input class="custom-control-input" type="checkbox" id="infeksi_kulit_jaringan">
+                            <label for="infeksi_kulit_jaringan" class="custom-control-label">Proses sesuai kemampuan / peraturan yang berlaku</label>
+                        </div>
+                        <div class="custom-control custom-checkbox">
+                            <input class="custom-control-input" type="checkbox" id="infeksi_mata_telinga">
+                            <label for="infeksi_mata_telinga" class="custom-control-label">Koordinasikan / konfirmasi dengan ybs / instansi terkait</label>
+                        </div>
+                        <div class="custom-control custom-checkbox">
+                            <input class="custom-control-input" type="checkbox" id="infeksi_sendi_tulang">
+                            <label for="infeksi_sendi_tulang" class="custom-control-label">Untuk dibantu / difasilitasi / dipenuhi sesuai kebutuhan</label>
+                        </div>
+                        <div class="custom-control custom-checkbox">
+                            <input class="custom-control-input" type="checkbox" id="pnemonia_non_bakterial">
+                            <label for="pnemonia_non_bakterial" class="custom-control-label">Pelajari / telaah / sarannya</label>
+                        </div>
+                        <div class="custom-control custom-checkbox">
+                            <input class="custom-control-input" type="checkbox" id="infeksi_saluran_cerna">
+                            <label for="infeksi_saluran_cerna" class="custom-control-label">Wakili / hadiri / terima / laporkan hasilnya</label>
+                        </div>
+                        <div class="custom-control custom-checkbox">
+                            <input class="custom-control-input" type="checkbox" id="infeksi_ginjal_kemih">
+                            <label for="infeksi_ginjal_kemih" class="custom-control-label">Agendakan / persiapkan / koordinasikan </label>
+                        </div>
+                        <div class="custom-control custom-checkbox">
+                            <input class="custom-control-input" type="checkbox" id="infeksi_otak_sumsum">
+                            <label for="infeksi_otak_sumsum" class="custom-control-label">Jadwalkan ingatkan waktunya</label>
+                        </div>
+                        <div class="custom-control custom-checkbox">
+                            <input class="custom-control-input" type="checkbox" id="infeksi_obsteri">
+                            <label for="infeksi_obsteri" class="custom-control-label">Siapkan pointer / sambutan / bahan</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <x-adminlte-input name="tanda_terima" label="Tanda Terima" igroup-size="sm" enable-old-support />
             <x-adminlte-input name="no_bpjs" label="No BPJS" igroup-size="sm" enable-old-support />
             <x-adminlte-input name="no_ihs" label="No Satu Sehat" igroup-size="sm" enable-old-support />

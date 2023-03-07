@@ -4,7 +4,6 @@
 
 @section('title', 'Antrian QR Code')
 @section('body')
-
     <div class="wrapper">
         <div class="row p-1">
             {{-- checkin --}}
@@ -29,8 +28,7 @@
                 </x-adminlte-card>
                 <div class="row">
                     <div class="col-md-6">
-                        <x-adminlte-info-box class="btnDaftar" title="Daftar Pasien BPJS" text="Rujukan Pertama FKTP"
-                            theme="success" />
+                        <x-adminlte-info-box class="btnDaftarBPJS" text="Daftar Pasien BPJS" theme="success" />
                     </div>
                     <div class="col-md-6">
                         <x-adminlte-info-box class="btnDaftar" text="Daftar Pasien Umum" theme="success" />
@@ -86,27 +84,71 @@
             </div>
         </div>
     </div>
-    {{-- Pilih Dokter --}}
-    <x-adminlte-modal id="modalDokter" size="xl" title="Daftar Pasien Anjungan Mandiri" theme="success"
+    {{-- Daftar Pasien BPJS --}}
+    <x-adminlte-modal id="modalBPJS" size="xl" title="Daftar Antrian Pasien BPJS" theme="success"
         icon="fas fa-user-plus">
+        <x-adminlte-input name="nomorkartu" id="nomorkartu" label="Masukan Nomor BPJS Peserta"
+            placeholder="Masukan Nomor BPJS Peserta" igroup-size="lg">
+            <x-slot name="prependSlot">
+                <div class="input-group-text text-success">
+                    <i class="fas fa-user"></i>
+                </div>
+            </x-slot>
+        </x-adminlte-input>
+        <br>
+        <div class="form-group">
+            <label>Silahkan pilih poliklinik BPJS di bawah ini</label>
+            <div class="row">
+                @foreach ($poliklinik as $item)
+                    <div class="col-md-4">
+                        <div class="custom-control custom-radio " style="scale: 100%">
+                            <input class="custom-control-input btnPoliBPJS" type="radio"
+                                data-id="{{ $item->kodesubspesialis }}" id="{{ $item->namasubspesialis }}"
+                                value="{{ $item->kodesubspesialis }}" name="kodesubspesialis">
+                            <label for="{{ $item->namasubspesialis }}" class="custom-control-label"
+                                data-id="{{ $item->kodesubspesialis }}">{{ $item->namasubspesialis }} </label>
+                        </div>
+                    </div>
+                    {{-- <x-adminlte-button class="btnPoliBPJS btn-lg m-2" theme="warning" label="{{ $item->namasubspesialis }}"
+                    data-id="{{ $item->kodesubspesialis }}" /> --}}
+                    {{-- <div class="form-check">
+                    <input class="form-check-input" type="radio" name="flexRadioDefault"
+                        id="{{ $item->namasubspesialis }}">
+                    <label class="form-check-label" for="{{ $item->namasubspesialis }}">
+                        Default radio
+                    </label>
+                </div> --}}
+                @endforeach
+            </div>
+        </div>
+        <br>
+        <div class="form-group" id="daftarDokter">
+            <label>Silahkan pilih dokter poliklinik di bawah ini</label>
+            <div id="rowDokter"></div>
+        </div>
+        <x-slot name="footerSlot">
+            <x-adminlte-button class="mr-auto" type="submit" theme="success" id="btnDaftarPoliBPJS" icon="fas fa-user-plus"
+                label="Daftar" />
+            {{-- <button type="submit" class="mr-auto btn btn-success" form="daftarbpjseiu">DAFTAR</button> --}}
+            <x-adminlte-button theme="secondary" icon="fas fa-times" label="Kembali" data-dismiss="modal" />
+        </x-slot>
 
     </x-adminlte-modal>
 @stop
-{{-- @section('plugins.Sweetalert2', true); --}}
+@section('plugins.Sweetalert2', true);
 {{-- @section('plugins.Datatables', true) --}}
 @include('sweetalert::alert')
 @section('adminlte_css')
-    <script src="{{ asset('vendor/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css') }}"></script>
+    {{-- <script src="{{ asset('vendor/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css') }}"></script> --}}
 @endsection
 @section('adminlte_js')
     <script src="{{ asset('vendor/moment/moment.min.js') }}"></script>
-    <script src="{{ asset('vendor/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js') }}"></script>
     <script src="{{ asset('vendor/loading-overlay/loadingoverlay.min.js') }}"></script>
     <script src="{{ asset('vendor/onscan.js/onscan.min.js') }}"></script>
     <script src="{{ asset('vendor/sweetalert/sweetalert.all.js') }}"></script>
     <script src="{{ asset('vendor/sweetalert2/sweetalert2.all.min.js') }}"></script>
     {{-- scan --}}
-    <script>
+    {{-- <script>
         $(function() {
             onScan.attachTo(document, {
                 onScan: function(sCode, iQty) {
@@ -157,7 +199,7 @@
                 },
             });
         });
-    </script>
+    </script> --}}
     {{-- btn chekin --}}
     <script>
         $(function() {
@@ -213,9 +255,82 @@
     {{-- btn daftar --}}
     <script>
         $(function() {
-            $('.btnDaftar').click(function() {
-                $('#modalDokter').modal('show');
+            $(document).ready(function() {
+                $('#daftarDokter').hide();
+                setTimeout(function() {
+                    $('#kodebooking').focus();
+                }, 500);
             });
+            $('.btnDaftarBPJS').click(function() {
+                $('#modalBPJS').modal('show');
+                setTimeout(function() {
+                    $('#nomorkartu').focus();
+                }, 500);
+
+            });
+            $('.btnPoliBPJS').click(function() {
+                $('div#rowDokter').children().remove();
+                var id = $(this).data('id');
+                var hari = "{{ now()->dayOfWeek }}"
+                $.LoadingOverlay("show");
+                var url = "{{ route('antrian.jadwaldokter_poli') }}/?kodesubspesialis=" + id + "&hari=" +
+                    hari;
+                $.get(url, function(data) {
+                    $('#daftarDokter').show();
+                    $.each(data, function(i, item) {
+                        console.log(item.kodedokter);
+                        var bigString = [
+                            '<div class="custom-control custom-radio " >',
+                            '<input class="custom-control-input btnPoliBPJS" type="radio"',
+                            'data-id="' + item.kodedokter + '" id="' + item.kodedokter +
+                            '"',
+                            'value="' + item.kodedokter + '" name="kodedokter">',
+                            '<label for="' + item.kodedokter +
+                            '" class="custom-control-label"',
+                            'data-id="' + item.kodedokter + '">' + item.namadokter +
+                            ' </label>',
+                            ' </div>',
+                        ];
+                        $('#rowDokter').append(bigString.join(''));
+                    });
+                    $.LoadingOverlay("hide", true);
+                });
+            });
+
+            $('#btnDaftarPoliBPJS').click(function() {
+                var nomorkartu = $('#nomorkartu').val();
+                var kodesubspesialis = $("input[name=kodesubspesialis]:checked").val();
+                var kodedokter = $("input[name=kodedokter]:checked").val();
+                // alert(request);
+                var url = "{{ route('antrian.daftar_pasien_bpjs_offline') }}" + "?nomorkartu=" +
+                    nomorkartu + "&kodesubspesialis=" + kodesubspesialis + "&kodedokter=" + kodedokter;
+                window.location.href = url;
+                // var hari = "{{ now()->dayOfWeek }}"
+                // $.LoadingOverlay("show");
+                // var url = "{{ route('antrian.jadwaldokter_poli') }}/?kodesubspesialis=" + id + "&hari=" +
+                //     hari;
+                // $.get(url, function(data) {
+                //     $('#daftarDokter').show();
+                //     $.each(data, function(i, item) {
+                //         console.log(item.kodedokter);
+                //         var bigString = [
+                //             '<div class="custom-control custom-radio " >',
+                //             '<input class="custom-control-input btnPoliBPJS" type="radio"',
+                //             'data-id="' + item.kodedokter + '" id="' + item.kodedokter +
+                //             '"',
+                //             'value="' + item.kodedokter + '" name="kodedokter">',
+                //             '<label for="' + item.kodedokter +
+                //             '" class="custom-control-label"',
+                //             'data-id="' + item.kodedokter + '">' + item.namadokter +
+                //             ' </label>',
+                //             ' </div>',
+                //         ];
+                //         $('#rowDokter').append(bigString.join(''));
+                //     });
+                //     $.LoadingOverlay("hide", true);
+                // });
+            });
+
         });
     </script>
     <script>

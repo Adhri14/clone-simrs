@@ -71,9 +71,12 @@ Route::get('jadwaloperasi_display', [JadwalOperasiController::class, 'jadwaloper
 
 // antrian routes
 Route::prefix('antrian')->name('antrian.')->group(function () {
-    Route::get('console', [AntrianController::class, 'console'])->name('console');
+    Route::get('console', [SIMRSAntrianController::class, 'console'])->name('console');
+    Route::get('jadwaldokter_poli', [SIMRSJadwalDokterController::class, 'jadwaldokter_poli'])->name('jadwaldokter_poli');
+    Route::get('daftar_pasien_bpjs_offline', [SIMRSAntrianController::class, 'daftar_pasien_bpjs_offline'])->name('daftar_pasien_bpjs_offline');
+
+
     Route::get('cek_post', [AntrianController::class, 'cek_post'])->name('cek_post');
-    Route::post('store_offline', [AntrianController::class, 'store_offline'])->name('store_offline');
     Route::get('console_jadwaldokter/{poli}/{tanggal}', [AntrianController::class, 'console_jadwaldokter'])->name('console_jadwaldokter');
     Route::get('tambah_offline/{poli}/{dokter}/{jam}', [AntrianController::class, 'tambah_offline'])->name('tambah_offline');
     Route::get('checkin_update', [AntrianController::class, 'checkin_update'])->name('checkin_update');
