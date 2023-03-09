@@ -57,13 +57,14 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+// user dasar jangan dirubah-rubah
 Route::get('', [HomeController::class, 'landingpage'])->name('landingpage');
 Auth::routes();
 Route::get('profile', [UserController::class, 'profile'])->name('profile');
 Route::get('verifikasi_akun', [VerificationController::class, 'verifikasi_akun'])->name('verifikasi_akun');
 Route::post('verifikasi_kirim', [VerificationController::class, 'verifikasi_kirim'])->name('verifikasi_kirim');
 
-// antrian routes
+// antrian routes (bagian antrian daftar dimesin antrian)
 Route::prefix('antrian')->name('antrian.')->group(function () {
     Route::get('console', [SIMRSAntrianController::class, 'console'])->name('console');
     Route::get('jadwaldokter_poli', [SIMRSJadwalDokterController::class, 'jadwaldokter_poli'])->name('jadwaldokter_poli');
@@ -72,6 +73,7 @@ Route::prefix('antrian')->name('antrian.')->group(function () {
     Route::get('cek_printer', [AntrianController::class, 'cek_printer'])->name('cek_printer');
     Route::get('checkin_update', [AntrianController::class, 'checkin_update'])->name('checkin_update');
 });
+// ??? dicek lagi
 Route::prefix('antrian')->name('antrian.')->middleware(['auth'])->group(function () {
     // console
     Route::get('laporan', [AntrianController::class, 'laporan'])->name('laporan');
@@ -119,7 +121,7 @@ Route::prefix('antrian')->name('antrian.')->middleware(['auth'])->group(function
     Route::post('simpan_baru_online/{kodebooking}', [AntrianController::class, 'simpan_baru_online'])->name('simpan_baru_online');
     Route::get('baru_offline/{kodebooking}', [AntrianController::class, 'baru_offline'])->name('baru_offline');
 });
-// vcalim
+// vcalim ??? dicek lagi
 Route::prefix('vclaim')->name('vclaim.')->middleware(['auth'])->group(function () {
     Route::get('/', [VclaimController::class, 'index'])->name('index');
     Route::get('monitoring_pelayanan_peserta', [VclaimController::class, 'monitoring_pelayanan_peserta'])->name('monitoring_pelayanan_peserta');
@@ -176,7 +178,6 @@ Route::middleware('auth')->group(function () {
     });
     Route::get('kunjungan/show/{kodekunjungan}', [KunjunganController::class, 'show'])->name('kunjungan.show');
     Route::get('kunjungan_tanggal/{tanggal}', [KunjunganController::class, 'kunjungan_tanggal'])->name('kunjungan_tanggal');
-
     // admin
     Route::middleware('permission:admin')->group(function () {
         Route::resource('user', UserController::class);
