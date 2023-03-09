@@ -64,8 +64,10 @@ class DokterController extends Controller
             $dokters = null;
             Alert::error($response->getData()->metadata->message . ' ' . $response->status());
         }
+        $dokter_jkn_simrs = Dokter::get();
         return view('bpjs.antrian.dokter', compact([
-            'dokters'
+            'dokters',
+            'dokter_jkn_simrs',
         ]));
     }
     public function dokter_antrian_refresh(Request $request)

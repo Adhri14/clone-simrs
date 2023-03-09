@@ -18,7 +18,14 @@
                             <td>{{ $poliklinik->kdsubspesialis }}</td>
                             <td>{{ $poliklinik->nmpoli }}</td>
                             <td>{{ $poliklinik->kdpoli }}</td>
-                            <td></td>
+                            <td>
+                                @if ($poli_jkn_simrs->where('kodesubspesialis', $poliklinik->kdsubspesialis)->first() == null)
+                                    Tidak ada
+                                @else
+                                    ada
+                                @endif
+
+                            </td>
                             <td></td>
                         </tr>
                     @endforeach

@@ -16,7 +16,13 @@
                             <td>{{ $loop->iteration }}</td>
                             <td>{{ $dokter->namadokter }}</td>
                             <td>{{ $dokter->kodedokter }}</td>
-                            <td></td>
+                            <td>
+                                @if ($dokter_jkn_simrs->where('kodedokter', $dokter->kodedokter)->first() == null)
+                                    Tidak Ada
+                                @else
+                                    Ada
+                                @endif
+                            </td>
                             <td></td>
                         </tr>
                     @endforeach

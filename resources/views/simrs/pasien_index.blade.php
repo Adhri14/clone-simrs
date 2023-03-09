@@ -27,7 +27,7 @@
                             icon="fas fa-plus" data-toggle="modal" data-target="#modalCustom" />
                     </div>
                     <div class="col-md-4">
-                        <form action="{{ route('simrs.pasien.index') }}" method="get">
+                        <form action="{{ route('poliklinik.pasien.index') }}" method="get">
                             <x-adminlte-input name="search" placeholder="Pencarian NIK / Nama" igroup-size="sm"
                                 value="{{ $request->search }}">
                                 <x-slot name="appendSlot">
@@ -64,9 +64,9 @@
                             <td>{{ $item->alamat }}</td>
                             <td>{{ $item->tgl_entry }} ({{ $item->pic }})</td>
                             <td>
-                                <form action="{{ route('simrs.pasien.destroy', $item->no_rm) }}" method="POST">
+                                <form action="{{ route('poliklinik.pasien.destroy', $item->no_rm) }}" method="POST">
                                     <x-adminlte-button class="btn-xs" theme="warning" icon="fas fa-edit"
-                                        onclick="window.location='{{ route('simrs.pasien.edit', $item->no_rm) }}'" />
+                                        onclick="window.location='{{ route('poliklinik.pasien.edit', $item->no_rm) }}'" />
                                     @csrf
                                     @method('DELETE')
                                     <x-adminlte-button class="btn-xs" theme="danger" icon="fas fa-trash-alt" type="submit"

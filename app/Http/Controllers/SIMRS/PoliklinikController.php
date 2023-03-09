@@ -5,6 +5,7 @@ namespace App\Http\Controllers\SIMRS;
 use App\Http\Controllers\BPJS\Antrian\AntrianController;
 use App\Http\Controllers\Controller;
 use App\Models\BPJS\Antrian\PoliklinikAntrian;
+use App\Models\Poliklinik;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class PoliklinikController extends Controller
@@ -28,9 +29,11 @@ class PoliklinikController extends Controller
             $fingerprint = null;
             Alert::error($response->getData()->metadata->message . ' ' . $response->status(),  'Poliklinik Fingerprint Antrian BPJS');
         }
+        $poli_jkn_simrs = Poliklinik::get();
         return view('bpjs.antrian.poliklinik', compact([
             'polikliniks',
-            'fingerprint'
+            'fingerprint',
+            'poli_jkn_simrs',
         ]));
     }
     public function poliklik_antrian_refresh()

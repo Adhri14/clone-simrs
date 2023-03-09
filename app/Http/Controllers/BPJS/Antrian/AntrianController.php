@@ -153,16 +153,17 @@ class AntrianController extends ApiBPJSController
         } else {
             $decrypt = $this->stringDecrypt($signature['decrypt_key'], $response->json('response'));
             $data = json_decode($decrypt);
-            if ($response->json('metadata.code') == 1) {
+            if ($response->json('metadata.code') == 1)
                 $code = 200;
-            } else if ($response->json('metadata.code') == 2)
+            else if ($response->json('metadata.code') == 2)
                 $code = 400;
+            else if ($response->json('metadata.code') == 0)
+                $code = 404;
             else if ($response->json('metadata.code') == 204)
                 $code = 404;
             else {
                 $code = $response->json('metadata.code');
             }
-
             return $this->sendResponse($response->json('metadata.message'), $data, $code);
         }
     }
