@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class Poliklinik extends Model
 {
     use HasFactory;
-
     protected $connection = 'mysql2';
     protected $table = 'jkn_poli';
 

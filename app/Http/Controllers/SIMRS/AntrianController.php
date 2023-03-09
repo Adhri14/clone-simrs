@@ -34,10 +34,14 @@ class AntrianController extends Controller
     {
         $poliklinik = PoliklinikDB::with(['antrians', 'jadwals'])->where('status', 1)->get();
         $jadwal = JadwalDokter::where('hari',  now()->dayOfWeek)->get();
-        return view('simrs.antrian_console', [
-            'poliklinik' => $poliklinik,
-            'jadwal' => $jadwal,
-        ]);
+        $antrian_terakhir = Antrian::where('tanggalperiksa', now()->format('Y-m-d'))->latest()->first();
+        return view('simrs.antrian_console', compact(
+            [
+                'poliklinik',
+                'jadwal',
+                'antrian_terakhir'
+            ]
+        ));
     }
     public function daftar_pasien_bpjs_offline(Request $request)
     {

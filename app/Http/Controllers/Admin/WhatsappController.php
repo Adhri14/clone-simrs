@@ -128,7 +128,7 @@ class WhatsappController extends Controller
                 return $this->send_message($request);
                 break;
             case 'INFO JADWAL POLIKLINIK':
-                $request['contenttext'] = "Link Jadwal Dokter Poliklinik : \nhttp://sim.rsudwaled.id/antrian/info_jadwaldokter \n\nLink Jadwal Libur Poliklinik : \nhttp://sim.rsudwaled.id/antrian/info_jadwallibur \n\nSilahkan pilih poliklinik yang tersedia untuk daftar online rawat jalan pasien dibawah ini.";
+                $request['contenttext'] = "Link Jadwal Dokter Poliklinik : \nhttp://sim.rsudwaled.id/simrs/#jadwalrawatjalan \n\nSilahkan pilih poliklinik yang tersedia untuk daftar online rawat jalan pasien dibawah ini.";
                 $request['titletext'] = "Info Jadwal Dokter Poliklinik 🧑🏻‍⚕🏥";
                 $request['buttontext'] = 'PILIH POLIKLINIK';
                 $rowpoli = null;

@@ -63,23 +63,13 @@ Route::get('profile', [UserController::class, 'profile'])->name('profile');
 Route::get('verifikasi_akun', [VerificationController::class, 'verifikasi_akun'])->name('verifikasi_akun');
 Route::post('verifikasi_kirim', [VerificationController::class, 'verifikasi_kirim'])->name('verifikasi_kirim');
 
-Route::get('info_jadwaldokter', [JadwalDokterController::class, 'index'])->name('info_jadwaldokter');
-Route::get('info_jadwallibur', [JadwalLiburController::class, 'index'])->name('info_jadwallibur');
-Route::get('info_jadwaloperasi', [JadwalOperasiController::class, 'index'])->name('info_jadwaloperasi');
-Route::get('jadwaloperasi_info', [JadwalOperasiController::class, 'jadwaloperasi_info'])->name('jadwaloperasi_info');
-Route::get('jadwaloperasi_display', [JadwalOperasiController::class, 'jadwaloperasi_display'])->name('jadwaloperasi_display');
-
 // antrian routes
 Route::prefix('antrian')->name('antrian.')->group(function () {
     Route::get('console', [SIMRSAntrianController::class, 'console'])->name('console');
     Route::get('jadwaldokter_poli', [SIMRSJadwalDokterController::class, 'jadwaldokter_poli'])->name('jadwaldokter_poli');
     Route::get('daftar_pasien_bpjs_offline', [SIMRSAntrianController::class, 'daftar_pasien_bpjs_offline'])->name('daftar_pasien_bpjs_offline');
     Route::get('daftar_pasien_umum_offline', [SIMRSAntrianController::class, 'daftar_pasien_umum_offline'])->name('daftar_pasien_umum_offline');
-
-
-    Route::get('cek_post', [AntrianController::class, 'cek_post'])->name('cek_post');
-    Route::get('console_jadwaldokter/{poli}/{tanggal}', [AntrianController::class, 'console_jadwaldokter'])->name('console_jadwaldokter');
-    Route::get('tambah_offline/{poli}/{dokter}/{jam}', [AntrianController::class, 'tambah_offline'])->name('tambah_offline');
+    Route::get('cek_printer', [AntrianController::class, 'cek_printer'])->name('cek_printer');
     Route::get('checkin_update', [AntrianController::class, 'checkin_update'])->name('checkin_update');
 });
 Route::prefix('antrian')->name('antrian.')->middleware(['auth'])->group(function () {
@@ -186,6 +176,7 @@ Route::middleware('auth')->group(function () {
     });
     Route::get('kunjungan/show/{kodekunjungan}', [KunjunganController::class, 'show'])->name('kunjungan.show');
     Route::get('kunjungan_tanggal/{tanggal}', [KunjunganController::class, 'kunjungan_tanggal'])->name('kunjungan_tanggal');
+
     // admin
     Route::middleware('permission:admin')->group(function () {
         Route::resource('user', UserController::class);
@@ -244,19 +235,6 @@ Route::middleware('auth')->group(function () {
     // farmasi
     Route::prefix('farmasi')->name('farmasi.')->group(function () {
         Route::resource('obat', ObatController::class);
-    });
-    // simrs
-    Route::prefix('simrs')->name('simrs.')->group(function () {
-        Route::get('dashboard', [SimrsController::class, 'dashboard'])->name('dashboard');
-        Route::prefix('antrian')->name('antrian.')->group(function () {
-            Route::get('anjungan', [SIMRSAntrianController::class, 'anjungan'])->name('anjungan');
-            Route::get('pendaftaran', [SIMRSAntrianController::class, 'pendaftaran'])->name('pendaftaran');
-            Route::get('laporan', [SIMRSAntrianController::class, 'laporan'])->name('laporan');
-            Route::get('laporan_kunjungan', [SIMRSAntrianController::class, 'laporan_kunjungan'])->name('laporan_kunjungan');
-        });
-        Route::resource('pasien', PasienController::class);
-        Route::resource('dokter', SIMRSDokterController::class);
-        Route::resource('kunjungan', KunjunganController::class);
     });
     // bpjs
     Route::prefix('bpjs')->name('bpjs.')->group(function () {
