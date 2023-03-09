@@ -26,17 +26,28 @@
                         <label>Status = <span id="status">-</span></label>
                     </div>
                 </x-adminlte-card>
-                <div class="row">
-                    <div class="col-md-6">
-                        <x-adminlte-info-box class="btnDaftarBPJS" text="Daftar Pasien BPJS" theme="success" />
+                <x-adminlte-card title="Informasi Antrian" theme="primary" icon="fas fa-user-injured">
+                    <div class="text-center">
+                        <h5>
+                            Nomor Antrian Terakhir
+                        </h5>
+                        <h3>
+                            {{ $antrian_terakhir->angkaantrean }} / {{ $antrian_terakhir->nomorantrean }}
+                        </h3>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <x-adminlte-info-box class="btnDaftarBPJS" text="Daftar Pasien BPJS" theme="success" />
+                            </div>
+                            <div class="col-md-6">
+                                <x-adminlte-info-box class="btnDaftarUmum" text="Daftar Pasien Umum" theme="success" />
+                            </div>
+
+                        </div>
                     </div>
-                    <div class="col-md-6">
-                        <x-adminlte-info-box class="btnDaftarUmum" text="Daftar Pasien Umum" theme="success" />
-                    </div>
-                    <div class="col-md-6">
-                        <x-adminlte-button icon="fas fa-sync" class="withLoad reload" theme="warning" label="Reload" />
-                        <a href="{{ route('antrian.cek_post') }}" class="btn btn-warning">Test Printer</a>
-                    </div>
+                </x-adminlte-card>
+                <div class="col-md-6">
+                    <x-adminlte-button icon="fas fa-sync" class="withLoad reload" theme="warning" label="Reload" />
+                    <a href="{{ route('antrian.cek_printer') }}" class="btn btn-warning">Test Printer</a>
                 </div>
             </div>
             {{-- ambil antrian offline --}}
@@ -70,23 +81,13 @@
                                 @endforeach
                             </x-adminlte-datatable>
                         </div>
-                        {{-- @foreach ($poliklinik as $poli)
-                                <div class="col-md-3">
-                                    <x-adminlte-info-box
-                                        text="{{ $poli->antrians->where('tanggalperiksa', \Carbon\Carbon::now()->format('Y-m-d'))->where('taskid', '!=', 99)->count() }} / {{ $poli->jadwals->where('hari', \Carbon\Carbon::now()->dayOfWeek)->where('kodesubspesialis', $poli->kodesubspesialis)->sum('kapasitaspasien') }}"
-                                        title="{{ $poli->namasubspesialis }} " class="tombolPoli"
-                                        data-id="{{ $poli->kodesubspesialis }}"
-                                        theme="{{ $poli->antrians->where('tanggalperiksa', \Carbon\Carbon::now()->format('Y-m-d'))->count() >=$poli->jadwals->where('hari', \Carbon\Carbon::now()->dayOfWeek)->where('kodesubspesialis', $poli->kodesubspesialis)->sum('kapasitaspasien')? 'danger': 'success' }}" />
-                                </div>
-                            @endforeach --}}
                     </div>
                 </x-adminlte-card>
             </div>
         </div>
     </div>
     {{-- Daftar Pasien BPJS --}}
-    <x-adminlte-modal id="modalBPJS" size="xl" title="Daftar Antrian Pasien BPJS" theme="success"
-        icon="fas fa-user-plus">
+    <x-adminlte-modal id="modalBPJS" size="xl" title="Daftar Antrian Pasien" theme="success" icon="fas fa-user-plus">
         <div id="inputKartu">
             <x-adminlte-input name="nomorkartu" id="nomorkartu" label="Masukan Nomor BPJS Pasien"
                 placeholder="Masukan Nomor BPJS Peserta" igroup-size="lg">
@@ -107,7 +108,6 @@
                 </x-slot>
             </x-adminlte-input>
         </div>
-
         <br>
         <div class="form-group">
             <label>Silahkan pilih poliklinik BPJS di bawah ini</label>
@@ -144,7 +144,6 @@
                 icon="fas fa-user-plus" label="Daftar BPJS" />
             <x-adminlte-button class="mr-auto withLoad" type="submit" theme="success" id="btnDaftarPoliUmum"
                 icon="fas fa-user-plus" label="Daftar Umum" />
-            {{-- <button type="submit" class="mr-auto btn btn-success" form="daftarbpjseiu">DAFTAR</button> --}}
             <x-adminlte-button theme="secondary" icon="fas fa-times" label="Kembali" data-dismiss="modal" />
         </x-slot>
     </x-adminlte-modal>
@@ -332,7 +331,8 @@
                 var kodesubspesialis = $("input[name=kodesubspesialis]:checked").val();
                 var kodedokter = $("input[name=kodedokter]:checked").val();
                 var url = "{{ route('antrian.daftar_pasien_bpjs_offline') }}" + "?nomorkartu=" +
-                    nomorkartu + "&kodesubspesialis=" + kodesubspesialis + "&kodedokter=" + kodedokter+"&nik=" + nik;
+                    nomorkartu + "&kodesubspesialis=" + kodesubspesialis + "&kodedokter=" + kodedokter +
+                    "&nik=" + nik;
                 window.location.href = url;
             });
             $('#btnDaftarPoliUmum').click(function() {

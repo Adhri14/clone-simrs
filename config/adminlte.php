@@ -253,63 +253,56 @@ return [
             'icon'        => 'fas fa-home',
         ],
         //MENU INFO
-        [
-            'text'        => 'Menu Informasi Umum',
-            'icon'        => 'fas fa-info-circle',
-            'submenu' => [
-                [
-                    'text' => 'Daftar Pasien',
-                    'icon'    => 'fas fa-user-plus',
-                    'shift'   => 'ml-2',
-                    'url'  => 'daftar_pasien',
-                    // 'can' => 'admin',
-                ],
-                [
-                    'text' => 'Jadwal Dokter Poliklinik',
-                    'icon'    => 'fas fa-calendar-alt',
-                    'shift'   => 'ml-2',
-                    'url'  => 'info_jadwaldokter',
-                    // 'can' => 'admin',
-                ],
-                [
-                    'text' => 'Jadwal Libur Poliklinik',
-                    'icon'    => 'fas fa-calendar-times',
-                    'shift'   => 'ml-2',
-                    'url'  => 'info_jadwallibur',
-                ],
-                [
-                    'text' => 'Jadwal Operasi',
-                    'icon'    => 'fas fa-calendar-alt',
-                    'shift'   => 'ml-2',
-                    'url'  => 'info_jadwaloperasi',
-                    // 'can' => 'admin',
-                ],
-                // [
-                //     'text' => 'Status Antrian',
-                //     'icon'    => 'fas fa-sign-in-alt',
-                //     'url'  => 'info/antrian',
-                //     'shift'   => 'ml-2',
-                // ],
-                // [
-                //     'text' => 'Info Poliklinik',
-                //     'icon'    => 'fas fa-clinic-medical',
-                //     'shift'   => 'ml-2',
-                //     'url'  => 'info/poliklinik',
-                // ],
-                // [
-                //     'text' => 'Jadwal Poliklinik',
-                //     'icon'    => 'fas fa-calendar-alt',
-                //     'url'  => 'info/jadwal_poliklinik',
-                //     'shift'   => 'ml-2',
-                // ],
-                // [
-                //     'text' => 'Jadwal Libur Poliklinik',
-                //     'icon'    => 'fas fa-calendar-times',
-                //     'shift'   => 'ml-2',
-                //     'url'  => 'info/jadwal_poli_libur',
-                // ],
-            ]
-        ],
+        // [
+        //     'text'        => 'Menu Informasi Umum',
+        //     'icon'        => 'fas fa-info-circle',
+        //     'submenu' => [
+        //         // [
+        //         //     'text' => 'Jadwal Dokter Poliklinik',
+        //         //     'icon'    => 'fas fa-calendar-alt',
+        //         //     'shift'   => 'ml-2',
+        //         //     'url'  => 'info_jadwaldokter',
+        //         //     // 'can' => 'admin',
+        //         // ],
+        //         // [
+        //         //     'text' => 'Jadwal Libur Poliklinik',
+        //         //     'icon'    => 'fas fa-calendar-times',
+        //         //     'shift'   => 'ml-2',
+        //         //     'url'  => 'info_jadwallibur',
+        //         // ],
+        //         // [
+        //         //     'text' => 'Jadwal Operasi',
+        //         //     'icon'    => 'fas fa-calendar-alt',
+        //         //     'shift'   => 'ml-2',
+        //         //     'url'  => 'info_jadwaloperasi',
+        //         //     // 'can' => 'admin',
+        //         // ],
+        //         // [
+        //         //     'text' => 'Status Antrian',
+        //         //     'icon'    => 'fas fa-sign-in-alt',
+        //         //     'url'  => 'info/antrian',
+        //         //     'shift'   => 'ml-2',
+        //         // ],
+        //         // [
+        //         //     'text' => 'Info Poliklinik',
+        //         //     'icon'    => 'fas fa-clinic-medical',
+        //         //     'shift'   => 'ml-2',
+        //         //     'url'  => 'info/poliklinik',
+        //         // ],
+        //         // [
+        //         //     'text' => 'Jadwal Poliklinik',
+        //         //     'icon'    => 'fas fa-calendar-alt',
+        //         //     'url'  => 'info/jadwal_poliklinik',
+        //         //     'shift'   => 'ml-2',
+        //         // ],
+        //         // [
+        //         //     'text' => 'Jadwal Libur Poliklinik',
+        //         //     'icon'    => 'fas fa-calendar-times',
+        //         //     'shift'   => 'ml-2',
+        //         //     'url'  => 'info/jadwal_poli_libur',
+        //         // ],
+        //     ]
+        // ],
         // PENDAFTARAN
         [
             'text'    => 'Aplikasi Pendaftaran',
@@ -494,7 +487,7 @@ return [
         // REKAM MEDIS
         [
             'text'    => 'Rekam Medis',
-            'icon'    => 'fas fa-briefcase-medical',
+            'icon'    => 'fas fa-file-medical',
             'can' => 'rekam-medis',
             'submenu' => [
                 [
@@ -579,7 +572,7 @@ return [
         // BAGIAN UMUM
         [
             'text'    => 'Bagian Umum',
-            'icon'    => 'fas fa-briefcase-medical',
+            'icon'    => 'fas fa-hospital',
             // 'can' => 'rekam-medis',
             'submenu' => [
                 [
@@ -596,104 +589,6 @@ return [
                     'shift'   => 'ml-2',
                     // 'can' => 'bagianumum',
                 ],
-            ],
-        ],
-        // SIMRS
-        [
-            'text' => 'Aplikasi SIMRS',
-            'icon'    => 'fas fa-hospital-alt',
-            'can' => 'admin',
-            'submenu' => [
-                [
-                    'text' => 'Dashboard Antrian',
-                    'icon'    => 'fas fa-hospital-alt',
-                    'url'  => 'simrs/dashboard',
-                    'shift'   => 'ml-2',
-                    'can' => 'admin',
-                ],
-                [
-                    'text' => 'Anjungan Antrian',
-                    'icon'    => 'fas fa-desktop',
-                    'url'  => 'simrs/antrian/anjungan',
-                    'shift'   => 'ml-2',
-                    'can' => 'pendaftaran',
-                ],
-                [
-                    'text' => 'Antrian Pendaftaran',
-                    'icon'    => 'fas fa-user-plus',
-                    'url'  => 'simrs/antrian/pendaftaran',
-                    'shift'   => 'ml-2',
-                    'can' => 'pendaftaran',
-                ],
-                [
-                    'text' => 'Laporan Antrian',
-                    'icon'    => 'fas fa-chart-line',
-                    'url'  => 'simrs/antrian/laporan',
-                    'shift'   => 'ml-2',
-                    'can' => 'pendaftaran',
-                ],
-                [
-                    'text' => 'Laporan Kunjungan',
-                    'icon'    => 'fas fa-chart-line',
-                    'shift'   => 'ml-2',
-                    'url'  => 'simrs/antrian/laporan_kunjungan',
-                    'can' => 'pendaftaran',
-                ],
-                [
-                    'text' => 'Pasien',
-                    'icon'    => 'fas fa-user-injured',
-                    'url'  => 'simrs/pasien',
-                    'shift'   => 'ml-2',
-                    'can' => 'admin',
-                ],
-
-                [
-                    'text' => 'Kunjungan',
-                    'icon'    => 'fas fa-hospital-user',
-                    'url'  => 'simrs/kunjungan',
-                    'shift'   => 'ml-2',
-                    'can' => 'admin',
-                ],
-
-                [
-                    'text' => 'Dokter',
-                    'icon'    => 'fas fa-user-md',
-                    'url'  => 'dokter',
-                    'shift'   => 'ml-2',
-                    'can' => 'pelayanan-medis',
-                ],
-
-                [
-                    'text' => 'Jadwal Libur Poliklinik',
-                    'icon'    => 'fas fa-calendar-times',
-                    'shift'   => 'ml-2',
-                    'url'  => 'jadwallibur',
-                    // 'active'  => ['pelayananmedis/jadwal_poli_libur', 'regex:@^pelayananmedis/jadwal_poli_libur(\/[0-9]+)?+$@', 'regex:@^pelayananmedis/jadwal_poli_libur(\/[0-9]+)?\/edit+$@',  'pelayananmedis/jadwal_poli_libur/create'],
-                    'can' => ['pelayanan-medis'],
-                ],
-                [
-                    'text' => 'Jadwal Opersi',
-                    'icon'    => 'fas fa-calendar-alt',
-                    'shift'   => 'ml-2',
-                    'url'  => 'jadwaloperasi',
-                    'can' => 'pelayanan-medis',
-                ],
-                [
-                    'text' => 'Tarif Layanan',
-                    'icon'    => 'fas fa-hand-holding-medical',
-                    'url'  => 'tarif_layanan',
-                    'shift'   => 'ml-2',
-                    'can' => 'pelayanan-medis',
-                ],
-                [
-                    'text' => 'Tarif Kelompok Layanan',
-                    'icon'    => 'fas fa-hand-holding-medical',
-                    'url'  => 'tarif_kelompok_layanan',
-                    'shift'   => 'ml-2',
-                    'can' => 'pelayanan-medis',
-                ],
-
-
             ],
         ],
         // BUKU TAMU

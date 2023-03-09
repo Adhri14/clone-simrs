@@ -56,7 +56,7 @@ class AntrianController extends Controller
             ->where('kodesubspesialis', $poli->kodesubspesialis);
         return response()->json($jadwals);
     }
-    public function cek_post()
+    public function cek_printer()
     {
         try {
             $connector = new WindowsPrintConnector(env('PRINTER_CHECKIN'));
