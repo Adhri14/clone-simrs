@@ -338,7 +338,7 @@
             $('.pilihKunjungan').click(function() {
                 $.LoadingOverlay("show");
                 var kode = $(this).data('id');
-                var url = "{{ route('simrs.kunjungan.index') }}/" + kode + "/edit";
+                var url = "{{ route('rekammedis.kunjungan.index') }}/" + kode + "/edit";
                 $.get(url, function(data) {
                     console.log(data);
                     $('#kunjunganPasien').modal('hide');
