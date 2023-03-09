@@ -821,7 +821,10 @@ class WhatsappController extends Controller
                     $request['titletext'] = "Layanan Whatsapp RSUD Waled 📱🏥";
                     $request['buttontext'] = 'MENU UTAMA';
                     $request['rowtitle'] = 'INFO CARA PENDAFTARAN,DAFTAR RAWAT JALAN,INFO JADWAL POLIKLINIK,PERTANYAAN DAN PENGADUAN';
-                    return $this->send_list($request);
+                    $this->send_list($request);
+
+                    $request['message'] = "Di RSUD Waled kini dapat juga daftar di Mobile JKN. \nAyo Download aplikasi Mobile JKN di Playstore \n\nLink Download : https://play.google.com/store/apps/details?id=app.bpjs.mobile \n\nYoutube BPJS Kesehatan : https://youtu.be/nA6X209v2uk";
+                    return $this->send_message($request);
                     break;
                 }
         }
