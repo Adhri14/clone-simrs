@@ -725,6 +725,16 @@ class AntrianController extends ApiBPJSController
         $poli = PoliklinikDB::where('kodesubspesialis', $request->kodepoli)->first();
         $request['lantaipendaftaran'] = $poli->lantaipendaftaran;
         $request['lokasi'] = $poli->lantaipendaftaran;
+        // Cek pasien kronis
+        $kunjungan_kronis = KunjunganDB::where("no_rm", 'LIKE', '%' . $request->norm)
+            ->where('catatan', 'KRONIS')
+            ->orderBy('tgl_masuk', 'DESC')
+            ->first();
+        if (isset($kunjungan_kronis)) {
+            if (now() < Carbon::parse($kunjungan_kronis->tgl_masuk)->addDay(30)) {
+                return $this->sendError("Pada kunjungan sebelumnya di tanggal " . Carbon::parse($kunjungan_kronis->tgl_masuk)->translatedFormat('d F Y') . " anda termasuk pasien KRONIS. Sehingga bisa daftar lagi setelah 30 hari.", null, 201);
+            }
+        }
         // cek duplikasi nik antrian
         $antrian_nik = Antrian::where('tanggalperiksa', $request->tanggalperiksa)
             ->where('nik', $request->nik)
@@ -976,63 +986,6 @@ class AntrianController extends ApiBPJSController
         if ($request->jenispasien == "NON-JKN") {
             $request['lantaipendaftaran'] = 1;
         }
-        // cek jika jkn
-        // if (isset($request->nomorreferensi)) {
-        //     $request['jenispasien'] = 'JKN';
-        //     $vclaim = new VclaimController();
-        //     // kunjungan kontrol
-        //     if ($request->jeniskunjungan == 3) {
-        //         $request['noSuratKontrol'] = $request->nomorreferensi;
-        //         $response =  $vclaim->suratkontrol_nomor($request);
-        //         if ($response->status() == 200) {
-        //             $suratkontrol = $response->getData()->response;
-        //             $request['nomorRujukan'] = $suratkontrol->sep->provPerujuk->noRujukan;
-        //             // cek surat kontrol orang lain
-        //             if ($request->nomorkartu != $suratkontrol->sep->peserta->noKartu) {
-        //                 return $this->sendError("Nomor Kartu di Surat Kontrol dengan Kartu BPJS berberda", null, 400);
-        //             }
-        //             // cek surat tanggal kontrol
-        //             if (Carbon::parse($suratkontrol->tglRencanaKontrol) != Carbon::parse($request->tanggalperiksa)) {
-        //                 return $this->sendError("Tanggal periksa tidak sesuai dengan surat kontrol. Silahkan pengajuan perubahan tanggal surat kontrol terlebih dahulu.", null, 400);
-        //             }
-        //         } else {
-        //             return $this->sendError($response->getData()->metadata->message, null, $response->status());
-        //         }
-        //     }
-        //     // kunjungan rujukan
-        //     else {
-        //         $request['nomorRujukan'] = $request->nomorreferensi;
-        //         // rujukan fktp
-        //         if ($request->jeniskunjungan == 1) {
-        //             $request['jenisRujukan'] = 1;
-        //             $response =  $vclaim->rujukan_nomor($request);
-        //         }
-        //         // rujukan antar rs
-        //         else if ($request->jeniskunjungan == 4) {
-        //             $request['jenisRujukan'] = 2;
-        //             $response =  $vclaim->rujukan_rs_nomor($request);
-        //         }
-        //         if ($response->status() == 200) {
-        //             $rujukan  =  $response->getData()->response->rujukan;
-        //             $jumlah_sep  = $vclaim->rujukan_jumlah_sep($request);
-        //             if ($jumlah_sep->status() == 200) {
-        //                 // dd($jumlah_sep);
-        //                 $jumlah_sep =  $jumlah_sep->getData()->response->jumlahSEP;
-        //                 if ($jumlah_sep != 0) {
-        //                     return $this->sendError("Rujukan anda telah digunakan untuk berobat. Untuk kunjungan selanjutnya silahkan gunakan Surat Kontrol yang dibuat di Poliklinik.", null, 400);
-        //                 }
-        //             } else {
-        //                 return $this->sendError($jumlah_sep->getData()->metadata->message, null, $jumlah_sep->status());
-        //             }
-        //         } else {
-        //             return $this->sendError($response->getData()->metadata->message, null, $response->status());
-        //         }
-        //     }
-        // }
-        // // jika non-jkn
-        // else {
-        //     $request['jenispasien'] = 'NON-JKN';
-        // }
         // ambil data pasien
         $request['norm'] = $request->norm;
         $request['nama'] = $request->nama;
@@ -1045,7 +998,6 @@ class AntrianController extends ApiBPJSController
         } else {
             return $this->sendError('Kuota dokter sudah penuh', null, 400);
         }
-
         $antrian_poli = Antrian::where('tanggalperiksa', $request->tanggalperiksa)
             ->where('kodepoli', $request->kodepoli)
             ->count();

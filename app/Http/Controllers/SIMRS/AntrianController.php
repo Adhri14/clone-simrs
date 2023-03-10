@@ -16,6 +16,7 @@ use App\Models\ParamedisDB;
 use App\Models\PenjaminSimrs;
 use App\Models\PoliklinikDB;
 use App\Models\SIMRS\JadwalDokter as SIMRSJadwalDokter;
+use App\Models\SIMRS\Pasien;
 use App\Models\SuratKontrol;
 use App\Models\UnitDB;
 use Carbon\Carbon;
@@ -55,8 +56,16 @@ class AntrianController extends Controller
             Alert::error('Error', $validator->errors()->first());
             return redirect()->route('antrian.console');
         }
-
-        // cek peserta
+        // get jadwal
+        $jadwal = JadwalDokterAntrian::where('kodesubspesialis', $request->kodesubspesialis)
+            ->where('kodedokter', $request->kodedokter)
+            ->where('hari', now()->dayOfWeek)->first();
+        if ($jadwal == null) {
+            Alert::error('Error',  "Jadwal tidak ditemukan");
+            return redirect()->route('antrian.console');
+        }
+        // $pasien = Pasien::where('nik_Bpjs', $request->nik)->first();
+        // // dd($pasien, $request->all());
         $api = new VclaimController();
         $request['tanggal'] = $request->tanggalperiksa;
         if ($request->nik) {
@@ -77,15 +86,6 @@ class AntrianController extends Controller
             Alert::error('Error ' . $response->getData()->metadata->code,  $response->getData()->metadata->message);
             return redirect()->route('antrian.console');
         }
-        // get jadwal
-        $jadwal = JadwalDokterAntrian::where('kodesubspesialis', $request->kodesubspesialis)
-            ->where('kodedokter', $request->kodedokter)
-            ->where('hari', now()->dayOfWeek)->first();
-        if ($jadwal == null) {
-            Alert::error('Error',  "Jadwal tidak ditemukan");
-            return redirect()->route('antrian.console');
-        }
-
         $request['nik'] = $peserta->nik;
         $request['nama'] = $peserta->nama;
         $request['nomorkartu'] = $peserta->noKartu;
@@ -94,7 +94,7 @@ class AntrianController extends Controller
         $request['jampraktek'] = $jadwal->jadwal;
         $request['jenispasien'] = 'JKN';
         $request['method'] = 'Offline';
-
+        // ambil antrian offline
         $antrian_api = new AntrianAntrianController();
         $response = $antrian_api->ambil_antrian_offline($request);
         if ($response->status() == 200) {
@@ -128,7 +128,14 @@ class AntrianController extends Controller
             Alert::error('Error', $validator->errors()->first());
             return redirect()->route('antrian.console');
         }
-
+        // get jadwal
+        $jadwal = JadwalDokterAntrian::where('kodesubspesialis', $request->kodesubspesialis)
+            ->where('kodedokter', $request->kodedokter)
+            ->where('hari', now()->dayOfWeek)->first();
+        if ($jadwal == null) {
+            Alert::error('Error',  "Jadwal tidak ditemukan");
+            return redirect()->route('antrian.console');
+        }
         // cek peserta
         $api = new VclaimController();
         $request['tanggal'] = $request->tanggalperiksa;
@@ -137,15 +144,6 @@ class AntrianController extends Controller
             $peserta = $response->getData()->response->peserta;
         } else {
             Alert::error('Error ' . $response->getData()->metadata->code,  $response->getData()->metadata->message);
-            return redirect()->route('antrian.console');
-        }
-
-        // get jadwal
-        $jadwal = JadwalDokterAntrian::where('kodesubspesialis', $request->kodesubspesialis)
-            ->where('kodedokter', $request->kodedokter)
-            ->where('hari', now()->dayOfWeek)->first();
-        if ($jadwal == null) {
-            Alert::error('Error',  "Jadwal tidak ditemukan");
             return redirect()->route('antrian.console');
         }
         if ($peserta->mr->noTelepon == null) {
@@ -159,12 +157,12 @@ class AntrianController extends Controller
             $request['norm'] = $peserta->mr->noMR;
         }
         $request['nik'] = $peserta->nik;
-        $request['nomorkartu'] = $peserta->noKartu;
         $request['nama'] = $peserta->nama;
+        $request['nomorkartu'] = $peserta->noKartu;
         $request['jampraktek'] = $jadwal->jadwal;
         $request['jenispasien'] = 'NON-JKN';
         $request['method'] = 'Offline';
-
+        // ambil antrian offline
         $antrian_api = new AntrianAntrianController();
         $response = $antrian_api->ambil_antrian_offline($request);
         if ($response->status() == 200) {
