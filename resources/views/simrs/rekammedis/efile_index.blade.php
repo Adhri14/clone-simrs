@@ -57,6 +57,9 @@
                                 @if ($item->jenisberkas == 4)
                                     Berkas Pasien
                                 @endif
+                                @if ($item->jenisberkas == 5)
+                                    IGD
+                                @endif
                             </td>
                             <td>
                                 <a href="{{ $item->fileurl }}" target="_blank" class="btn btn-primary btn-xs"><i
