@@ -144,13 +144,13 @@ class AntrianController extends Controller
         $printer->text("RSUD WALED KAB. CIREBON\n");
         $printer->setEmphasis(false);
         $printer->text("================================================\n");
+        $printer->setJustification(Printer::JUSTIFY_CENTER);
         $printer->text("Angka Antrian Pendaftaran :\n");
         $printer->setTextSize(2, 2);
         $printer->text($antrian->angkaantrean . "\n");
         $printer->setTextSize(1, 1);
         $printer->text("Lokasi Pendaftaran Lantai " . $request->lantaipendaftaran . " \n");
         $printer->text("================================================\n");
-        $printer->setJustification(Printer::JUSTIFY_CENTER);
         $printer->text("Jenis Pasien :\n");
         $printer->setTextSize(2, 2);
         $printer->text($request->jenispasien . "-OFFLINE\n");
@@ -160,7 +160,7 @@ class AntrianController extends Controller
         $printer->setJustification(Printer::JUSTIFY_LEFT);
         $printer->text("================================================\n");
         $printer->text("Jenis Kunj. : " . $request->method . "\n");
-        $printer->text("No. Antrian Poli : " . $antrian->namapoli . "\n");
+        $printer->text("No. Antrian Poli : " . $antrian->nomorantrean . "\n");
         $printer->text("Poliklinik : " . $antrian->namapoli . "\n");
         $printer->text("Dokter : " . $antrian->namadokter . "\n");
         $printer->text("Jam Praktek : " . $request->jampraktek . "\n");
@@ -226,6 +226,7 @@ class AntrianController extends Controller
                 'taskid' => 2,
                 'loket' => $request->loket,
                 'status_api' => 1,
+                'loket' => $request->loket,
                 'keterangan' => "Panggilan ke loket pendaftaran",
                 'taskid2' => $now,
                 'user' => Auth::user()->name,
@@ -233,10 +234,10 @@ class AntrianController extends Controller
             //panggil urusan mesin antrian
             try {
                 // notif wa
-                $wa = new WhatsappController();
-                $request['message'] = "Panggilan antrian atas nama pasien " . $antrian->nama . " dengan nomor antrian " . $antrian->angkaantrean . "/" . $antrian->nomorantrean . " untuk melakukan pendaftaran di Loket " . $loket . " Lantai " . $lantai;
-                $request['number'] = $antrian->nohp;
-                $wa->send_message($request);
+                // $wa = new WhatsappController();
+                // $request['message'] = "Panggilan antrian atas nama pasien " . $antrian->nama . " dengan nomor antrian " . $antrian->angkaantrean . "/" . $antrian->nomorantrean . " untuk melakukan pendaftaran di Loket " . $loket . " Lantai " . $lantai;
+                // $request['number'] = $antrian->nohp;
+                // $wa->send_message($request);
 
                 $tanggal = now()->format('Y-m-d');
                 $urutan = $antrian->angkaantrean;
