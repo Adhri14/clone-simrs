@@ -968,10 +968,13 @@ class AntrianController extends ApiBPJSController
         $antrian_poli = Antrian::where('tanggalperiksa', $request->tanggalperiksa)
             ->where('kodepoli', $request->kodepoli)
             ->count();
-        $antrian_all = Antrian::where('tanggalperiksa', $request->tanggalperiksa)
+        // $antrian_all = Antrian::where('tanggalperiksa', $request->tanggalperiksa)
+        //     ->count();
+        $antrian_lantai = Antrian::where('tanggalperiksa', $request->tanggalperiksa)
+            ->where('lantaipendaftaran', $request->lantaipendaftaran)
             ->count();
         $request['nomorantrean'] = $request->kodepoli . "-" .  str_pad($antrian_poli + 1, 3, '0', STR_PAD_LEFT);
-        $request['angkaantrean'] = $antrian_all + 1;
+        $request['angkaantrean'] = $antrian_lantai + 1;
         $request['kodebooking'] = strtoupper(uniqid());
         // estimasi
         $timestamp = $request->tanggalperiksa . ' ' . explode('-', $request->jampraktek)[0] . ':00';
@@ -1035,7 +1038,6 @@ class AntrianController extends ApiBPJSController
         ];
         return $this->sendResponse("OK", $response);
     }
-
     public function sisa_antrian(Request $request)
     {
         $validator = Validator::make(request()->all(), [

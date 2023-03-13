@@ -60,7 +60,7 @@
                     <div class="row">
                         <div class="col-md-12">
                             @php
-                                $heads = ['Poliklinik', 'Dokter', 'Jadwal', 'Kuota', 'Antrian'];
+                                $heads = ['Poliklinik', 'Dokter', 'Jadwal', 'Lokasi', 'Daftar', 'Kuota', 'Antrian'];
                                 $config['order'] = ['5', 'asc'];
                             @endphp
                             <x-adminlte-datatable id="table1" class="nowrap text-xs" :heads="$heads" :config="$config"
@@ -74,6 +74,8 @@
                                             <td> {{ strtoupper($jadwal->namasubspesialis) }}</td>
                                             <td> {{ $jadwal->namadokter }} {{ $jadwal->libur ? '(TUTUP)' : '' }}</td>
                                             <td> {{ $jadwal->jadwal }}</td>
+                                            <td>Lantai {{ $poli->lokasi }} </td>
+                                            <td>Lantai {{ $poli->lantaipendaftaran }} </td>
                                             <td> {{ $jadwal->kapasitaspasien }}</td>
                                             <td> {{ $poli->antrians->where('tanggalperiksa', \Carbon\Carbon::now()->format('Y-m-d'))->where('kodedokter', $jadwal->kodedokter)->where('taskid', '!=', 99)->count() }}
                                             </td>
