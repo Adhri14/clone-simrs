@@ -972,6 +972,7 @@ class AntrianController extends ApiBPJSController
         //     ->count();
         $antrian_lantai = Antrian::where('tanggalperiksa', $request->tanggalperiksa)
             ->where('lantaipendaftaran', $request->lantaipendaftaran)
+            ->where('jenispasien', $request->jenispasien)
             ->count();
         $request['nomorantrean'] = $request->kodepoli . "-" .  str_pad($antrian_poli + 1, 3, '0', STR_PAD_LEFT);
         $request['angkaantrean'] = $antrian_lantai + 1;
