@@ -336,7 +336,7 @@
             $('#btnDaftarPoliUmum').click(function() {
                 var kodesubspesialis = $("input[name=kodesubspesialis]:checked").val();
                 var kodedokter = $("input[name=kodedokter]:checked").val();
-                var url = "{{ route('antrian.daftar_pasien_umum_offline') }}" + "?=kodesubspesialis=" +
+                var url = "{{ route('antrian.daftar_pasien_umum_offline') }}" + "?kodesubspesialis=" +
                     kodesubspesialis + "&kodedokter=" + kodedokter;
                 window.location.href = url;
             });

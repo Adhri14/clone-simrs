@@ -90,6 +90,7 @@ class AntrianController extends Controller
     }
     public function daftar_pasien_umum_offline(Request $request)
     {
+       dd($request->all());
         $request['tanggalperiksa'] = now()->format('Y-m-d');
         $request['kodepoli'] = $request->kodesubspesialis;
         $validator = Validator::make(request()->all(), [
