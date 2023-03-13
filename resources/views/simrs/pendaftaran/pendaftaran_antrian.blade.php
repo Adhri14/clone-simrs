@@ -24,15 +24,12 @@
                             </x-adminlte-input-date>
                         </div>
                         <div class="col-md-3">
-                            <x-adminlte-select2 name="kodepoli" label="Poliklinik">
-                                <option value="">SEMUA POLIKLINIK (-)</option>
-                                @foreach ($polis as $item)
-                                    <option value="{{ $item->kodesubspesialis }}"
-                                        {{ $item->kodesubspesialis == $request->kodepoli ? 'selected' : null }}>
-                                        {{ $item->namasubspesialis }} ({{ $item->kodesubspesialis }})
-                                    </option>
-                                @endforeach
-                            </x-adminlte-select2>
+                            <x-adminlte-select name="jenispasien" label="Jenis Pasien">
+                                <option value="JKN" {{ $request->jenispasien == 'JKN' ? 'selected' : null }}>BPJS
+                                </option>
+                                <option value="NON-JKN" {{ $request->jenispasien == 'NON-JKN' ? 'selected' : null }}>UMUM
+                                </option>
+                            </x-adminlte-select>
                         </div>
                         <div class="col-md-3">
                             <x-adminlte-select name="loket" label="Loket">
@@ -63,7 +60,8 @@
             @if (isset($antrians))
                 <div class="row">
                     <div class="col-md-3">
-                        <x-adminlte-small-box title="{{ $antrians->where('taskid', 2)->where('lantaipendaftaran', $request->lantai)->first()->nomorantrean ?? '0' }}"
+                        <x-adminlte-small-box
+                            title="{{ $antrians->where('taskid', 2)->where('lantaipendaftaran', $request->lantai)->first()->nomorantrean ?? '0' }}"
                             text="Antrian Saat Ini" theme="primary" icon="fas fa-user-injured" />
                     </div>
                     <div class="col-md-3">
@@ -77,7 +75,8 @@
                             text="Sisa Antrian" theme="warning" icon="fas fa-user-injured" />
                     </div>
                     <div class="col-md-3">
-                        <x-adminlte-small-box title="{{ $antrians->where('method', 'Offline')->where('lantaipendaftaran', $request->lantai)->count() }}"
+                        <x-adminlte-small-box
+                            title="{{ $antrians->where('method', 'Offline')->where('lantaipendaftaran', $request->lantai)->count() }}"
                             text="Total Antrian" theme="success" icon="fas fa-user-injured" />
                     </div>
                 </div>
@@ -97,7 +96,7 @@
                             @endphp
                             <x-adminlte-datatable id="table2" class="nowrap text-xs" :heads="$heads" :config="$config"
                                 striped bordered hoverable compressed>
-                                @foreach ($antrians->where('method', 'Offline')->where('lantaipendaftaran', $request->lantai) as $item)
+                                @foreach ($antrians->where('method', 'Offline')->where('lantaipendaftaran', $request->lantai)->where('jenispasien', $request->jenispasien) as $item)
                                     <tr>
                                         <td>
                                             {{ $item->angkaantrean }}<br>

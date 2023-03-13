@@ -149,17 +149,13 @@ class AntrianController extends Controller
         $printer->setTextSize(2, 2);
         $printer->text($antrian->angkaantrean . "\n");
         $printer->setTextSize(1, 1);
+        $printer->text("Kode Booking : " . $antrian->kodebooking . "\n");
         $printer->text("Lokasi Pendaftaran Lantai " . $request->lantaipendaftaran . " \n");
         $printer->text("================================================\n");
-        $printer->text("Jenis Pasien :\n");
-        $printer->setTextSize(2, 2);
-        $printer->text($request->jenispasien . "-OFFLINE\n");
-        $printer->setTextSize(1, 1);
-        $printer->text("Kode Booking : " . $antrian->kodebooking . "\n");
-        // $printer->qrCode($antrian->kodebooking, Printer::QR_ECLEVEL_L, 10, Printer::QR_MODEL_2);
         $printer->setJustification(Printer::JUSTIFY_LEFT);
         $printer->text("================================================\n");
         $printer->text("Jenis Kunj. : " . $request->method . "\n");
+        $printer->text("Jenis Pasien : " . $request->jenispasien . "\n");
         $printer->text("No. Antrian Poli : " . $antrian->nomorantrean . "\n");
         $printer->text("Poliklinik : " . $antrian->namapoli . "\n");
         $printer->text("Dokter : " . $antrian->namadokter . "\n");
@@ -189,29 +185,21 @@ class AntrianController extends Controller
     public function antrian_pendaftaran(Request $request)
     {
         $antrians = null;
-        if ($request->tanggal && $request->loket && $request->lantai) {
+        if ($request->tanggal && $request->loket && $request->jenispasien  && $request->lantai) {
             $antrians = Antrian::whereDate('tanggalperiksa', $request->tanggal)
+                ->where('jenispasien', $request->jenispasien)
+                ->where('lantaipendaftaran', $request->lantai)
                 ->get();
             if ($request->kodepoli != null) {
                 $antrians = $antrians->where('kodepoli', $request->kodepoli);
             }
         }
         $polis = PoliklinikDB::where('status', 1)->get();
-        $dokters = ParamedisDB::where('kode_dokter_jkn', "!=", null)
-            ->where('unit', "!=", null)
-            ->get();
-        if (isset($request->kodepoli)) {
-            $poli = UnitDB::firstWhere('KDPOLI', $request->kodepoli);
-            $dokters = ParamedisDB::where('unit', $poli->kode_unit)
-                ->where('kode_dokter_jkn', "!=", null)
-                ->get();
-        }
-        return view('simrs.pendaftaran.pendaftaran_antrian', [
-            'antrians' => $antrians,
-            'request' => $request,
-            'polis' => $polis,
-            'dokters' => $dokters,
-        ]);
+        return view('simrs.pendaftaran.pendaftaran_antrian', compact([
+            'antrians',
+            'request',
+            'polis',
+        ]));
     }
     public function panggil_pendaftaran($kodebooking, $loket, $lantai, Request $request)
     {
@@ -238,7 +226,6 @@ class AntrianController extends Controller
                 // $request['message'] = "Panggilan antrian atas nama pasien " . $antrian->nama . " dengan nomor antrian " . $antrian->angkaantrean . "/" . $antrian->nomorantrean . " untuk melakukan pendaftaran di Loket " . $loket . " Lantai " . $lantai;
                 // $request['number'] = $antrian->nohp;
                 // $wa->send_message($request);
-
                 $tanggal = now()->format('Y-m-d');
                 $urutan = $antrian->angkaantrean;
                 if ($antrian->jenispasien == 'JKN') {

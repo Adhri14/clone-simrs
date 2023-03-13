@@ -956,6 +956,9 @@ class AntrianController extends ApiBPJSController
         $poli = PoliklinikDB::where('kodesubspesialis', $request->kodepoli)->first();
         $request['lantaipendaftaran'] = $poli->lantaipendaftaran;
         $request['lokasi'] = $poli->lantaipendaftaran;
+        if ($request->jenispasien == "NON-JKN") {
+            $request['lantaipendaftaran'] = 1;
+        }
         // cek jadwal
         $jadwal = $this->status_antrian($request);
         if ($jadwal->status() == 200) {
@@ -968,8 +971,6 @@ class AntrianController extends ApiBPJSController
         $antrian_poli = Antrian::where('tanggalperiksa', $request->tanggalperiksa)
             ->where('kodepoli', $request->kodepoli)
             ->count();
-        // $antrian_all = Antrian::where('tanggalperiksa', $request->tanggalperiksa)
-        //     ->count();
         $antrian_lantai = Antrian::where('tanggalperiksa', $request->tanggalperiksa)
             ->where('lantaipendaftaran', $request->lantaipendaftaran)
             ->where('jenispasien', $request->jenispasien)
