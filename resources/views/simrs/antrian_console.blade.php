@@ -89,7 +89,7 @@
     </div>
     {{-- Daftar Pasien BPJS --}}
     <x-adminlte-modal id="modalBPJS" size="xl" title="Daftar Antrian Pasien" theme="success" icon="fas fa-user-plus">
-        <div id="inputKartu">
+        {{-- <div id="inputKartu">
             <x-adminlte-input name="nomorkartu" id="nomorkartu" label="Masukan Nomor BPJS Pasien"
                 placeholder="Masukan Nomor BPJS Peserta" igroup-size="lg">
                 <x-slot name="prependSlot">
@@ -108,8 +108,8 @@
                     </div>
                 </x-slot>
             </x-adminlte-input>
-        </div>
-        <br>
+        </div> --}}
+        {{-- <br> --}}
         <div class="form-group">
             <label>Silahkan pilih poliklinik BPJS di bawah ini</label>
             <div class="row">
@@ -327,17 +327,13 @@
                 });
             });
             $('#btnDaftarPoliBPJS').click(function() {
-                var nomorkartu = $('#nomorkartu').val();
-                var nik = $('#nik').val();
                 var kodesubspesialis = $("input[name=kodesubspesialis]:checked").val();
                 var kodedokter = $("input[name=kodedokter]:checked").val();
                 var url = "{{ route('antrian.daftar_pasien_bpjs_offline') }}" + "?nomorkartu=" +
-                    nomorkartu + "&kodesubspesialis=" + kodesubspesialis + "&kodedokter=" + kodedokter +
-                    "&nik=" + nik;
+                    nomorkartu + "&kodesubspesialis=" + kodesubspesialis + "&kodedokter=" + kodedokter ;
                 window.location.href = url;
             });
             $('#btnDaftarPoliUmum').click(function() {
-                var nik = $('#nik').val();
                 var kodesubspesialis = $("input[name=kodesubspesialis]:checked").val();
                 var kodedokter = $("input[name=kodedokter]:checked").val();
                 var url = "{{ route('antrian.daftar_pasien_umum_offline') }}" + "?nik=" +

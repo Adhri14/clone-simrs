@@ -64,33 +64,6 @@ class AntrianController extends Controller
             Alert::error('Error',  "Jadwal tidak ditemukan");
             return redirect()->route('antrian.console');
         }
-        // $pasien = Pasien::where('nik_Bpjs', $request->nik)->first();
-        // // dd($pasien, $request->all());
-        $api = new VclaimController();
-        $request['tanggal'] = $request->tanggalperiksa;
-        if ($request->nik) {
-            $response =  $api->peserta_nik($request);
-        } else {
-            $request['nomorKartu'] = $request->nomorkartu;
-            $response =  $api->peserta_nomorkartu($request);
-        }
-        if ($response->status() == 200) {
-            $peserta = $response->getData()->response->peserta;
-            // dd($peserta);
-            if ($peserta->statusPeserta->kode == 0) {
-            } else {
-                Alert::error('Error Status Peserta',  "Maaf status peserta " . $peserta->statusPeserta->keterangan);
-                return redirect()->route('antrian.console');
-            }
-        } else {
-            Alert::error('Error ' . $response->getData()->metadata->code,  $response->getData()->metadata->message);
-            return redirect()->route('antrian.console');
-        }
-        $request['nik'] = $peserta->nik;
-        $request['nama'] = $peserta->nama;
-        $request['nomorkartu'] = $peserta->noKartu;
-        $request['nohp'] = $peserta->mr->noTelepon;
-        $request['norm'] = $peserta->mr->noMR;
         $request['jampraktek'] = $jadwal->jadwal;
         $request['jenispasien'] = 'JKN';
         $request['method'] = 'Offline';
@@ -122,7 +95,6 @@ class AntrianController extends Controller
         $validator = Validator::make(request()->all(), [
             "kodesubspesialis" => "required",
             "kodedokter" => "required",
-            "nik" => "required|numeric",
         ]);
         if ($validator->fails()) {
             Alert::error('Error', $validator->errors()->first());
@@ -136,29 +108,6 @@ class AntrianController extends Controller
             Alert::error('Error',  "Jadwal tidak ditemukan");
             return redirect()->route('antrian.console');
         }
-        // cek peserta
-        $api = new VclaimController();
-        $request['tanggal'] = $request->tanggalperiksa;
-        $response =  $api->peserta_nik($request);
-        if ($response->status() == 200) {
-            $peserta = $response->getData()->response->peserta;
-        } else {
-            Alert::error('Error ' . $response->getData()->metadata->code,  $response->getData()->metadata->message);
-            return redirect()->route('antrian.console');
-        }
-        if ($peserta->mr->noTelepon == null) {
-            $request['nohp'] = "089529909036";
-        } else {
-            $request['nohp'] = $peserta->mr->noTelepon;
-        }
-        if ($peserta->mr->noMR == null) {
-            $request['norm'] = null;
-        } else {
-            $request['norm'] = $peserta->mr->noMR;
-        }
-        $request['nik'] = $peserta->nik;
-        $request['nama'] = $peserta->nama;
-        $request['nomorkartu'] = $peserta->noKartu;
         $request['jampraktek'] = $jadwal->jadwal;
         $request['jenispasien'] = 'NON-JKN';
         $request['method'] = 'Offline';
@@ -195,12 +144,6 @@ class AntrianController extends Controller
         $printer->text("RSUD WALED KAB. CIREBON\n");
         $printer->setEmphasis(false);
         $printer->text("================================================\n");
-        $printer->text("No. RM : " . $request->norm . "\n");
-        $printer->text("Nama : " . $request->nama . "\n");
-        $printer->text("NIK : " .  substr($request->nik, 0, -12) . "XXXX" . substr($request->nik, 8) . "\n");
-        $printer->text("No. Kartu JKN : " . $request->nomorkartu . "\n");
-        $printer->text("No. Telp. : " . $request->nohp . "\n");
-        $printer->text("================================================\n");
         $printer->text("Jenis Kunj. : " . $request->method . "\n");
         $printer->text("Poliklinik : " . $antrian->namapoli . "\n");
         $printer->text("Dokter : " . $antrian->namadokter . "\n");
@@ -212,7 +155,7 @@ class AntrianController extends Controller
         $printer->setJustification(Printer::JUSTIFY_CENTER);
         $printer->text("Jenis Pasien :\n");
         $printer->setTextSize(2, 2);
-        $printer->text("JKN OFFLINE\n");
+        $printer->text($request->jenispasien . " - OFFLINE\n");
         $printer->setTextSize(1, 1);
         $printer->text("Kode Booking : " . $antrian->kodebooking . "\n");
         // $printer->qrCode($antrian->kodebooking, Printer::QR_ECLEVEL_L, 10, Printer::QR_MODEL_2);
