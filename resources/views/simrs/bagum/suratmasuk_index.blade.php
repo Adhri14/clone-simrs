@@ -65,7 +65,8 @@
             <x-adminlte-card theme="primary" icon="fas fa-envelope" collapsible
                 title="Info cara menggunakan aplikasi antrian Online">
                 <x-adminlte-button theme="success" label="Tambah Surat Masuk" class=" btn-sm" />
-                <a href="{{ route('bagianumum.disposisi.create') }}" class="btn btn-primary btn-sm ">Blanko Disposisi</a>
+                <x-adminlte-button theme="primary" label="Blanko Disposisi" class=" btn-sm" id="cetakBlanko" />
+                {{-- <a href="{{ route('bagianumum.disposisi.create') }}" class="btn btn-primary btn-sm ">Blanko Disposisi</a> --}}
                 @php
                     $heads = ['Action', 'No', 'Kode', 'Tanggal', 'No Surat', 'Asal', 'Perihal', 'Tgl Disposisi', 'Urutan Disposisi', 'Tgl Diteruskan', 'Disposisi', 'Pengolah', 'T Terima', ' Tgl Selesai', 'Tgl Terima'];
                     $config['scrollX'] = true;
@@ -158,43 +159,49 @@
                         </div>
                         <div class="custom-control custom-checkbox">
                             <input class="custom-control-input" type="checkbox" id="infeksi_kulit_jaringan">
-                            <label for="infeksi_kulit_jaringan" class="custom-control-label">Proses sesuai kemampuan / peraturan yang berlaku</label>
+                            <label for="infeksi_kulit_jaringan" class="custom-control-label">Proses sesuai kemampuan /
+                                peraturan yang berlaku</label>
                         </div>
                         <div class="custom-control custom-checkbox">
                             <input class="custom-control-input" type="checkbox" id="infeksi_mata_telinga">
-                            <label for="infeksi_mata_telinga" class="custom-control-label">Koordinasikan / konfirmasi dengan ybs / instansi terkait</label>
+                            <label for="infeksi_mata_telinga" class="custom-control-label">Koordinasikan / konfirmasi dengan
+                                ybs / instansi terkait</label>
                         </div>
                         <div class="custom-control custom-checkbox">
                             <input class="custom-control-input" type="checkbox" id="infeksi_sendi_tulang">
-                            <label for="infeksi_sendi_tulang" class="custom-control-label">Untuk dibantu / difasilitasi / dipenuhi sesuai kebutuhan</label>
+                            <label for="infeksi_sendi_tulang" class="custom-control-label">Untuk dibantu / difasilitasi /
+                                dipenuhi sesuai kebutuhan</label>
                         </div>
                         <div class="custom-control custom-checkbox">
                             <input class="custom-control-input" type="checkbox" id="pnemonia_non_bakterial">
-                            <label for="pnemonia_non_bakterial" class="custom-control-label">Pelajari / telaah / sarannya</label>
+                            <label for="pnemonia_non_bakterial" class="custom-control-label">Pelajari / telaah /
+                                sarannya</label>
                         </div>
                         <div class="custom-control custom-checkbox">
                             <input class="custom-control-input" type="checkbox" id="infeksi_saluran_cerna">
-                            <label for="infeksi_saluran_cerna" class="custom-control-label">Wakili / hadiri / terima / laporkan hasilnya</label>
+                            <label for="infeksi_saluran_cerna" class="custom-control-label">Wakili / hadiri / terima /
+                                laporkan hasilnya</label>
                         </div>
                         <div class="custom-control custom-checkbox">
                             <input class="custom-control-input" type="checkbox" id="infeksi_ginjal_kemih">
-                            <label for="infeksi_ginjal_kemih" class="custom-control-label">Agendakan / persiapkan / koordinasikan </label>
+                            <label for="infeksi_ginjal_kemih" class="custom-control-label">Agendakan / persiapkan /
+                                koordinasikan </label>
                         </div>
                         <div class="custom-control custom-checkbox">
                             <input class="custom-control-input" type="checkbox" id="infeksi_otak_sumsum">
-                            <label for="infeksi_otak_sumsum" class="custom-control-label">Jadwalkan ingatkan waktunya</label>
+                            <label for="infeksi_otak_sumsum" class="custom-control-label">Jadwalkan ingatkan
+                                waktunya</label>
                         </div>
                         <div class="custom-control custom-checkbox">
                             <input class="custom-control-input" type="checkbox" id="infeksi_obsteri">
-                            <label for="infeksi_obsteri" class="custom-control-label">Siapkan pointer / sambutan / bahan</label>
+                            <label for="infeksi_obsteri" class="custom-control-label">Siapkan pointer / sambutan /
+                                bahan</label>
                         </div>
                     </div>
                 </div>
             </div>
 
             <x-adminlte-input name="tanda_terima" label="Tanda Terima" igroup-size="sm" enable-old-support />
-            <x-adminlte-input name="no_bpjs" label="No BPJS" igroup-size="sm" enable-old-support />
-            <x-adminlte-input name="no_ihs" label="No Satu Sehat" igroup-size="sm" enable-old-support />
             <div class="row">
                 <div class="col-md-6">
 
@@ -262,27 +269,27 @@
                 window.open(url, 'window name', 'window settings');
                 return false;
             });
+            $('#cetakBlanko').click(function() {
+                var url = "{{ route('bagianumum.disposisi.create') }}";
+                window.open(url, 'window name', 'window settings');
+                return false;
+            });
             $('.editSuratMasuk').click(function() {
                 var id = $(this).data('id');
                 $.LoadingOverlay("show");
                 $.get("{{ route('bagianumum.suratmasuk.index') }}/" + id, function(data) {
                     console.log(data);
-                    // $('#kodebooking').html(data.kodebooking);
-                    // $('#angkaantrean').html(data.angkaantrean);
-                    // $('#nomorantrean').html(data.nomorantrean);
-                    // $('#tanggalperiksa').html(data.tanggalperiksa);
-                    // $('#norm').html(data.norm);
-                    // $('#nik').html(data.nik);
-                    // $('#nomorkartu').html(data.nomorkartu);
-                    // $('#nama').html(data.nama);
-                    // $('#nohp').html(data.nohp);
-                    // $('#nomorrujukan').html(data.nomorrujukan);
-                    // $('#nomorsuratkontrol').html(data.nomorsuratkontrol);
-                    // $('#nomorsep').html(data.nomorsep);
-                    // $('#jenispasien').html(data.jenispasien);
-                    // $('#namapoli').html(data.namapoli);
-                    // $('#namadokter').html(data.namadokter);
-                    // $('#jampraktek').html(data.jampraktek);
+                    $('#no_urut').val(data.no_urut);
+                    $('#kode').val(data.kode);
+                    $('#no_surat').val(data.no_surat);
+                    $('#tgl_surat').val(data.tgl_surat);
+                    $('#asal_surat').val(data.asal_surat);
+                    $('#perihal').val(data.perihal);
+                    $('#disposisi').val(data.disposisi);
+                    $('#tgl_disposisi').val(data.tgl_disposisi);
+                    $('#tgl_diteruskan').val(data.tgl_diteruskan);
+                    $('#pengolah').val(data.pengolah);
+                    $('#tanda_terima').val(data.tanda_terima);
                     // switch (data.jeniskunjungan) {
                     //     case "1":
                     //         var jeniskunjungan = "Rujukan FKTP";

@@ -199,6 +199,7 @@ Route::middleware('auth')->group(function () {
         Route::get('antrian_panggil_ulang/{antrian}', [SIMRSAntrianController::class, 'panggil_ulang_poliklinik'])->name('antrian_panggil_ulang');
         Route::get('antrian_batal/{antrian}', [SIMRSAntrianController::class, 'batal_antrian_poliklinik'])->name('antrian_batal');
         Route::get('lanjut_farmasi/{antrian}', [SIMRSAntrianController::class, 'lanjut_farmasi'])->name('lanjut_farmasi');
+        Route::get('lanjut_farmasi_racikan/{antrian}', [SIMRSAntrianController::class, 'lanjut_farmasi_racikan'])->name('lanjut_farmasi_racikan');
         Route::get('selesai_poliklinik/{antrian}', [SIMRSAntrianController::class, 'selesai_poliklinik'])->name('selesai_poliklinik');
         Route::get('suratkontrol_poliklinik', [SIMRSAntrianController::class, 'suratkontrol_poliklinik'])->name('suratkontrol_poliklinik');
         Route::get('laporan_kunjungan_poliklinik', [SIMRSAntrianController::class, 'laporan_kunjungan_poliklinik'])->name('laporan_kunjungan_poliklinik');

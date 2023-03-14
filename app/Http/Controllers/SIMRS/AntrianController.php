@@ -414,7 +414,45 @@ class AntrianController extends Controller
     {
         $antrian = Antrian::firstWhere('kodebooking', $kodebooking);
         $request['kodebooking'] = $antrian->kodebooking;
-        $request['jenisresep'] = $antrian->jenisresep ?? 'racikan';
+        $request['jenisresep'] = 'non-racikan';
+        $request['taskid'] = 5;
+        $request['keterangan'] = "Silahkan tunggu di farmasi untuk pengambilan obat.";
+        $request['waktu'] = Carbon::now()->timestamp * 1000;
+        $api = new AntrianAntrianController();
+        $response = $api->update_antrean($request);
+        if ($response->status() == 200) {
+            $antrian->update([
+                'taskid' => $request->taskid,
+                'status_api' => 0,
+                'keterangan' => $request->keterangan,
+                'user' => Auth::user()->name,
+            ]);
+            // try {
+            //     // notif wa
+            //     $wa = new WhatsappController();
+            //     $request['message'] = "Pelayanan di poliklinik atas nama pasien " . $antrian->nama . " dengan nomor antrean " . $antrian->nomorantrean . " telah selesai. " . $request->keterangan;
+            //     $request['number'] = $antrian->nohp;
+            //     $wa->send_message($request);
+            // } catch (\Throwable $th) {
+            //     //throw $th;
+            // }
+            Alert::success('Success', 'Pasien Dilanjutkan Ke Farmasi');
+        } else {
+            Alert::error('Error ' . $response->status(), $response->getData()->metadata->message);
+        }
+        $response = $api->ambil_antrian_farmasi($request);
+        if ($response->status() == 200) {
+            Alert::success('Success', 'Pasien Dilanjutkan Ke Farmasi');
+        } else {
+            Alert::error('Error Tambah Antrian Farmasi ' . $response->status(), $response->getData()->metadata->message);
+        }
+        return redirect()->back();
+    }
+    public function lanjut_farmasi_racikan($kodebooking, Request $request)
+    {
+        $antrian = Antrian::firstWhere('kodebooking', $kodebooking);
+        $request['kodebooking'] = $antrian->kodebooking;
+        $request['jenisresep'] = 'racikan';
         $request['taskid'] = 5;
         $request['keterangan'] = "Silahkan tunggu di farmasi untuk pengambilan obat.";
         $request['waktu'] = Carbon::now()->timestamp * 1000;
