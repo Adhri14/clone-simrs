@@ -86,7 +86,7 @@
                             title="Antrian Offline Pasien ({{ $antrians->where('method', 'Offline')->where('lantaipendaftaran', $request->lantai)->count() }} Orang)"
                             theme="warning" icon="fas fa-info-circle" collapsible>
                             @php
-                                $heads = ['Antrian', 'Pasien', 'Status / Action', 'Kunjungan', 'SEP / Ref'];
+                                $heads = ['Antrian', 'Kunjungan', 'Status / Action'];
                                 $config['order'] = ['2', 'asc'];
                                 $config['paging'] = false;
                                 $config['info'] = false;
@@ -102,13 +102,35 @@
                                             {{ $item->angkaantrean }}<br>
                                             {{ $item->nomorantrean }}<br>
                                         </td>
-                                        <td>
+                                        {{-- <td>
                                             RM : {{ $item->norm }}<br>
                                             <b>{{ $item->nama }}</b>
                                             @isset($item->nomorkartu)
                                                 <br>{{ $item->nomorkartu }}
                                             @endisset
-
+                                        </td> --}}
+                                        <td>
+                                            @if ($item->jeniskunjungan == 0)
+                                                Offline
+                                            @endif
+                                            @if ($item->jeniskunjungan == 1)
+                                                Rujukan FKTP
+                                            @endif
+                                            @if ($item->jeniskunjungan == 3)
+                                                Kontrol
+                                            @endif
+                                            @if ($item->jeniskunjungan == 4)
+                                                Rujukan RS
+                                            @endif
+                                            <br>{{ $item->jenispasien }}
+                                            @if ($item->pasienbaru == 1)
+                                                <span class="badge bg-secondary">Baru</span>
+                                            @endif
+                                            @if ($item->pasienbaru == 0)
+                                                <span class="badge bg-secondary">Lama</span>
+                                            @endif
+                                            <span class="badge bg-success">{{ $item->kodepoli }}</span>
+                                            <br>{{ substr($item->namadokter, 0, 19) }}...
                                         </td>
                                         <td>
                                             @if ($item->taskid == 0)
@@ -161,30 +183,7 @@
                                                 title="Batal Antrian {{ $item->nomorantrean }}"
                                                 onclick="window.location='{{ route('poliklinik.antrian_batal', $item) }}'" />
                                         </td>
-                                        <td>
-                                            @if ($item->jeniskunjungan == 0)
-                                                Offline
-                                            @endif
-                                            @if ($item->jeniskunjungan == 1)
-                                                Rujukan FKTP
-                                            @endif
-                                            @if ($item->jeniskunjungan == 3)
-                                                Kontrol
-                                            @endif
-                                            @if ($item->jeniskunjungan == 4)
-                                                Rujukan RS
-                                            @endif
-                                            <br>{{ $item->jenispasien }}
-                                            @if ($item->pasienbaru == 1)
-                                                <span class="badge bg-secondary">Baru</span>
-                                            @endif
-                                            @if ($item->pasienbaru == 0)
-                                                <span class="badge bg-secondary">Lama</span>
-                                            @endif
-                                            <span class="badge bg-success">{{ $item->kodepoli }}</span>
-                                            <br>{{ substr($item->namadokter, 0, 19) }}...
-                                        </td>
-                                        <td>
+                                        {{-- <td>
                                             @isset($item->nomorsep)
                                                 SEP : {{ $item->nomorsep }}
                                             @else
@@ -201,7 +200,7 @@
                                                 <br>S. Kontrol : -
                                             @endisset
 
-                                        </td>
+                                        </td> --}}
                                     </tr>
                                 @endforeach
                             </x-adminlte-datatable>
@@ -211,8 +210,8 @@
                         <x-adminlte-card theme="success" icon="fas fa-info-circle" collapsible
                             title="Proses Pendaftaran Antrian Offline ({{ $antrians->where('taskid', 2)->where('lantaipendaftaran', $request->lantai)->count() }} Orang)">
                             @php
-                                $heads = ['Antrian', 'Pasien', 'Status/Action', 'Kunjungan', 'SEP / Ref'];
-                                $config['order'] = ['3', 'asc'];
+                                $heads = ['Antrian', 'Kunjungan', 'Status/Action'];
+                                $config['order'] = ['2', 'asc'];
                                 $config['paging'] = false;
                                 $config['info'] = false;
                                 $config['scrollY'] = '400px';
@@ -228,13 +227,36 @@
                                             {{ $antrian->nomorantrean }}<br>
                                         </td>
                                         <td>
+                                            @if ($antrian->jeniskunjungan == 0)
+                                                Offline
+                                            @endif
+                                            @if ($antrian->jeniskunjungan == 1)
+                                                Rujukan FKTP
+                                            @endif
+                                            @if ($antrian->jeniskunjungan == 3)
+                                                Kontrol
+                                            @endif
+                                            @if ($antrian->jeniskunjungan == 4)
+                                                Rujukan RS
+                                            @endif
+                                            <br>{{ $antrian->jenispasien }}
+                                            @if ($antrian->pasienbaru == 1)
+                                                <span class="badge bg-secondary">Baru</span>
+                                            @endif
+                                            @if ($antrian->pasienbaru == 0)
+                                                <span class="badge bg-secondary">Lama</span>
+                                            @endif
+                                            <span class="badge bg-success">{{ $antrian->kodepoli }}</span>
+                                            <br>{{ substr($antrian->namadokter, 0, 19) }}...
+                                        </td>
+                                        {{-- <td>
                                             RM : {{ $antrian->norm }}<br>
                                             <b>{{ $antrian->nama }}</b>
                                             @isset($antrian->nomorkartu)
                                                 <br>{{ $antrian->nomorkartu }}
                                             @endisset
 
-                                        </td>
+                                        </td> --}}
                                         <td>
                                             @if ($antrian->taskid == 0)
                                                 <span class="badge bg-secondary">0. Antri Pendaftaran</span>
@@ -291,30 +313,8 @@
                                                 title="Batal Antrian {{ $antrian->nomorantrean }}"
                                                 onclick="window.location='{{ route('poliklinik.antrian_batal', $antrian) }}'" />
                                         </td>
-                                        <td>
-                                            @if ($antrian->jeniskunjungan == 0)
-                                                Offline
-                                            @endif
-                                            @if ($antrian->jeniskunjungan == 1)
-                                                Rujukan FKTP
-                                            @endif
-                                            @if ($antrian->jeniskunjungan == 3)
-                                                Kontrol
-                                            @endif
-                                            @if ($antrian->jeniskunjungan == 4)
-                                                Rujukan RS
-                                            @endif
-                                            <br>{{ $antrian->jenispasien }}
-                                            @if ($antrian->pasienbaru == 1)
-                                                <span class="badge bg-secondary">Baru</span>
-                                            @endif
-                                            @if ($antrian->pasienbaru == 0)
-                                                <span class="badge bg-secondary">Lama</span>
-                                            @endif
-                                            <span class="badge bg-success">{{ $antrian->kodepoli }}</span>
-                                            <br>{{ substr($antrian->namadokter, 0, 19) }}...
-                                        </td>
-                                        <td>
+
+                                        {{-- <td>
                                             @isset($antrian->nomorsep)
                                                 SEP : {{ $antrian->nomorsep }}
                                             @else
@@ -331,7 +331,7 @@
                                                 <br>S. Kontrol : -
                                             @endisset
 
-                                        </td>
+                                        </td> --}}
                                     </tr>
                                 @endforeach
                             </x-adminlte-datatable>
