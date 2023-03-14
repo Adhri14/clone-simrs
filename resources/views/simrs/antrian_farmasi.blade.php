@@ -19,7 +19,7 @@
                 </x-adminlte-alert>
             @endif
             <x-adminlte-card title="Filter Data Antrian" theme="secondary" collapsible>
-                <form action="{{ route('antrian.farmasi') }}" method="get">
+                <form action="" method="get">
                     <div class="row">
                         <div class="col-md-6">
                             <x-adminlte-input name="user" label="User" readonly value="{{ Auth::user()->name }}" />
@@ -46,14 +46,13 @@
                 <div class="row">
                     <div class="col-md-3">
                         <x-adminlte-small-box title="{{ $antrians->where('taskid', 6)->first()->angkaantrean ?? '0' }}"
-                            text="Antrian Saat Ini" theme="primary" class="withLoad" icon="fas fa-sign-in-alt"
-                             />
+                            text="Antrian Saat Ini" theme="primary" class="withLoad" icon="fas fa-sign-in-alt" />
                     </div>
                     <div class="col-md-3">
                         <x-adminlte-small-box
                             title="{{ $antrians->where('taskid', 5)->where('status_api', 0)->first()->angkaantrean ?? '0' }}"
-                          text="Antrian Selanjutnya" theme="success" icon="fas fa-sign-in-alt"
-                            url="{{ route('antrian.racik_farmasi',$antrians->where('taskid', 5)->where('status_api', 0)->first()->kodebooking ?? '0') }}"
+                            text="Antrian Selanjutnya" theme="success" icon="fas fa-sign-in-alt"
+                            url="{{ route('farmasi.racik_farmasi',$antrians->where('taskid', 5)->where('status_api', 0)->first()->kodebooking ?? '0') }}"
                             url-text="Panggil Antrian Selanjutnya" />
                     </div>
                     <div class="col-md-3">
@@ -77,8 +76,8 @@
                                 $heads = ['No', 'No RM / Kartu', 'Poliklinik', 'Action'];
                                 $config['order'] = ['0', 'asc'];
                             @endphp
-                            <x-adminlte-datatable id="table2" class="nowrap text-xs" :heads="$heads" :config="$config" striped
-                                bordered hoverable compressed>
+                            <x-adminlte-datatable id="table2" class="nowrap text-xs" :heads="$heads" :config="$config"
+                                striped bordered hoverable compressed>
                                 @foreach ($antrians->where('taskid', 5)->where('status_api', 0) as $item)
                                     <tr>
                                         <td>
@@ -128,7 +127,7 @@
                                                 <span class="badge bg-secondary">Lama</span>
                                             @endif
                                             @if (isset($item->method))
-                                                <span class="badge bg-secondary">{{ $item->method }}LINE</span>
+                                                <span class="badge bg-secondary">{{ $item->method }}</span>
                                             @else
                                                 <span class="badge bg-secondary">NULL</span>
                                             @endif
@@ -141,13 +140,13 @@
                                                 <x-adminlte-button class="btn-xs" label="Racik Obat" theme="success"
                                                     icon="fas fa-prescription-bottle-alt" data-toggle="tooltip"
                                                     title="Racik Obat Antrian {{ $item->nomorantrean }}"
-                                                    onclick="window.location='{{ route('antrian.racik_farmasi', $item->kodebooking) }}'" />
+                                                    onclick="window.location='{{ route('farmasi.racik_farmasi', $item->kodebooking) }}'" />
                                             @endif
                                             @if ($item->taskid == 6)
                                                 <x-adminlte-button class="btn-xs" label="Selesai Racik" theme="success"
                                                     icon="fas fa-prescription-bottle-alt" data-toggle="tooltip"
                                                     title="Racik Obat Antrian {{ $item->nomorantrean }}"
-                                                    onclick="window.location='{{ route('antrian.selesai_farmasi', $item->kodebooking) }}'" />
+                                                    onclick="window.location='{{ route('farmasi.selesai_farmasi', $item->kodebooking) }}'" />
                                             @endif
                                         </td>
                                     </tr>
@@ -215,7 +214,7 @@
                                                 <span class="badge bg-secondary">Lama</span>
                                             @endif
                                             @if (isset($item->method))
-                                                <span class="badge bg-secondary">{{ $item->method }}LINE</span>
+                                                <span class="badge bg-secondary">{{ $item->method }}</span>
                                             @else
                                                 <span class="badge bg-secondary">NULL</span>
                                             @endif
@@ -229,13 +228,14 @@
                                                     theme="success" icon="fas fa-prescription-bottle-alt"
                                                     data-toggle="tooltip"
                                                     title="Racik Obat Antrian {{ $item->nomorantrean }}"
-                                                    onclick="window.location='{{ route('antrian.racik_farmasi', $item->kodebooking) }}'" />
+                                                    onclick="window.location='{{ route('farmasi.racik_farmasi', $item->kodebooking) }}'" />
                                             @endif
                                             @if ($item->taskid == 6)
-                                                <x-adminlte-button class="btn-xs withLoad" label="Selesai" theme="success"
-                                                    icon="fas fa-prescription-bottle-alt" data-toggle="tooltip"
+                                                <x-adminlte-button class="btn-xs withLoad" label="Selesai"
+                                                    theme="success" icon="fas fa-prescription-bottle-alt"
+                                                    data-toggle="tooltip"
                                                     title="Racik Obat Antrian {{ $item->nomorantrean }}"
-                                                    onclick="window.location='{{ route('antrian.selesai_farmasi', $item->kodebooking) }}'" />
+                                                    onclick="window.location='{{ route('farmasi.selesai_farmasi', $item->kodebooking) }}'" />
                                             @endif
                                         </td>
                                     </tr>
@@ -312,7 +312,7 @@
                 @if ($antrians->count() > 0)
                     {{-- <x-adminlte-modal id="modalPembayaran" title="Pembayaran Antrian Pasien" size="xl"
                         theme="success" icon="fas fa-user-plus" v-centered>
-                        <form name="formLayanan" id="formLayanan" action="{{ route('antrian.pendaftaran') }}"
+                        <form name="formLayanan" id="formLayanan" action="{{ route('farmasi.pendaftaran') }}"
                             method="post">
                             @csrf
                             <input type="hidden" name="antrianid" id="antrianid" value="">
@@ -364,9 +364,9 @@
                             <x-slot name="footerSlot">
                                 <x-adminlte-button class="mr-auto" label="Lanjut Farmasi" theme="warning"
                                     icon="fas fa-prescription-bottle-alt"
-                                    onclick=" window.location='{{ route('antrian.lanjut_farmasi', $item->kodebooking) }}'" />
+                                    onclick=" window.location='{{ route('farmasi.lanjut_farmasi', $item->kodebooking) }}'" />
                                 <x-adminlte-button label="Selesai" theme="success" icon="fas fa-check"
-                                    onclick="window.location='{{ route('antrian.selesai', $item->kodebooking) }}'" />
+                                    onclick="window.location='{{ route('farmasi.selesai', $item->kodebooking) }}'" />
                                 <x-adminlte-button theme="danger" label="Dismiss" data-dismiss="modal" />
                             </x-slot>
                         </form>

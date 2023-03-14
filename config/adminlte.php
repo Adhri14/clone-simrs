@@ -420,7 +420,7 @@ return [
                 [
                     'text' => 'Antrian Obat',
                     'icon'    => 'fas fa-pills',
-                    'url'  => 'antrian/farmasi',
+                    'url'  => 'farmasi/antrian_farmasi',
                     'shift'   => 'ml-2',
                     'can' => 'farmasi',
                 ],

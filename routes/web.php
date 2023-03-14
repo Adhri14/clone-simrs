@@ -99,11 +99,6 @@ Route::prefix('antrian')->name('antrian.')->middleware(['auth'])->group(function
     // Route::get('surat_kontrol_poli', [AntrianController::class, 'surat_kontrol_poli'])->name('surat_kontrol_poli')->middleware('permission:poliklinik');
     Route::post('surat_kontrol_create', [AntrianController::class, 'surat_kontrol_create'])->name('surat_kontrol_create')->middleware('permission:poliklinik');
     Route::get('laporan_kunjungan_poliklinik', [AntrianController::class, 'laporan_kunjungan_poliklinik'])->name('laporan_kunjungan_poliklinik')->middleware('permission:poliklinik');
-    // farmasi
-    Route::get('farmasi', [AntrianController::class, 'farmasi'])->name('farmasi')->middleware('permission:farmasi');
-    Route::get('panggil_farmasi/{kodebooking}', [AntrianController::class, 'panggil_farmasi'])->name('panggil_farmasi')->middleware('permission:farmasi');
-    Route::get('racik_farmasi/{kodebooking}', [AntrianController::class, 'racik_farmasi'])->name('racik_farmasi')->middleware('permission:farmasi');
-    Route::get('selesai_farmasi/{kodebooking}', [AntrianController::class, 'selesai_farmasi'])->name('selesai_farmasi')->middleware('permission:farmasi');
     Route::get('{kodebookig}/show', [AntrianController::class, 'show'])->name('show');
     Route::get('display_pendaftaran', [AntrianController::class, 'display_pendaftaran'])->name('display_pendaftaran');
     Route::get('/', [AntrianController::class, 'index'])->name('index');
@@ -236,6 +231,10 @@ Route::middleware('auth')->group(function () {
     });
     // farmasi
     Route::prefix('farmasi')->name('farmasi.')->group(function () {
+        // farmasi
+        Route::get('antrian_farmasi', [SIMRSAntrianController::class, 'antrian_farmasi'])->name('antrian_farmasi')->middleware('permission:farmasi');
+        Route::get('racik_farmasi/{kodebooking}', [SIMRSAntrianController::class, 'racik_farmasi'])->name('racik_farmasi')->middleware('permission:farmasi');
+        Route::get('selesai_farmasi/{kodebooking}', [SIMRSAntrianController::class, 'selesai_farmasi'])->name('selesai_farmasi')->middleware('permission:farmasi');
         Route::resource('obat', ObatController::class);
     });
     // bpjs
