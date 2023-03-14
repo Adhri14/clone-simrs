@@ -27,13 +27,50 @@
                     </div>
                 </x-adminlte-card>
                 <x-adminlte-card title="Informasi Antrian" theme="primary" icon="fas fa-user-injured">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="text-center">
+                                <h6>
+                                    Antrian Lt 1
+                                </h6>
+                                <h4>
+                                    {{ $antrian_terakhir1->angkaantrean }}
+                                </h4>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="text-center">
+                                <h6>
+                                    Antrian Lt 2
+                                </h6>
+                                <h4>
+                                    {{ $antrian_terakhir2->angkaantrean }}
+                                </h4>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="text-center">
+                                <h6>
+                                    Antrian Lt Online
+                                </h6>
+                                <h4>
+                                    {{ $antrian_terakhir3->angkaantrean }}
+                                </h4>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="text-center">
+                                <h6>
+                                    Antrian Total
+                                </h6>
+                                <h4>
+                                    {{ $antrian_terakhir3->angkaantrean }}
+                                </h4>
+                            </div>
+                        </div>
+                    </div>
                     <div class="text-center">
-                        <h5>
-                            Nomor Antrian Terakhir
-                        </h5>
-                        <h3>
-                            {{ $antrian_terakhir->angkaantrean }} / {{ $antrian_terakhir->nomorantrean }}
-                        </h3>
+
                         <div class="row">
                             <div class="col-md-6">
                                 <x-adminlte-info-box class="btnDaftarBPJS" text="Daftar Pasien BPJS" theme="success" />

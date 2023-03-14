@@ -827,6 +827,7 @@ class AntrianController extends ApiBPJSController
             ->where('kodepoli', $request->kodepoli)
             ->count();
         $antrian_all = Antrian::where('tanggalperiksa', $request->tanggalperiksa)
+            ->where('method', '!=', 'Offline')
             ->count();
         $request['nomorantrean'] = $request->kodepoli . "-" .  str_pad($antrian_poli + 1, 3, '0', STR_PAD_LEFT);
         $request['angkaantrean'] = $antrian_all + 1;
