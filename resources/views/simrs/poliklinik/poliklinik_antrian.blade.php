@@ -86,7 +86,7 @@
                             @endphp
                             <x-adminlte-datatable id="table2" class="nowrap text-xs" :heads="$heads" :config="$config"
                                 striped bordered hoverable compressed>
-                                @foreach ($antrians->where('taskid', '!=', 4) as $item)
+                                @foreach ($antrians->where('taskid', '!=', 4)->where('method', '!=', 'Offline')  as $item)
                                     <tr>
                                         <td>
                                             {{ $item->nomorantrean }}<br>
@@ -215,7 +215,7 @@
                             @endphp
                             <x-adminlte-datatable id="table4" class="nowrap text-xs" :heads="$heads" :config="$config"
                                 striped bordered hoverable compressed>
-                                @foreach ($antrians->where('taskid', 4) as $antrian)
+                                @foreach ($antrians->where('taskid', 4)->where('method', '!=', 'Offline') as $antrian)
                                     <tr>
                                         <td>
                                             {{ $antrian->nomorantrean }}<br>
