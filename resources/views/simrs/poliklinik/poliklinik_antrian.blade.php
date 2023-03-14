@@ -86,7 +86,7 @@
                             @endphp
                             <x-adminlte-datatable id="table2" class="nowrap text-xs" :heads="$heads" :config="$config"
                                 striped bordered hoverable compressed>
-                                @foreach ($antrians->where('taskid', '!=', 4)->where('method', '!=', 'Offline')  as $item)
+                                @foreach ($antrians->where('taskid', '!=', 4)->where('method', '!=', 'Offline') as $item)
                                     <tr>
                                         <td>
                                             {{ $item->nomorantrean }}<br>
@@ -396,9 +396,9 @@
                             <x-adminlte-button class="mr-auto btnSuratKontrol" label="Buat Surat Kontrol" theme="primary"
                                 icon="fas fa-prescription-bottle-alt" />
                             <a href="#" id="lanjutFarmasi" class="btn btn-success withLoad"> <i
-                                    class="fas fa-prescription-bottle-alt"></i> Lanjut Farmasi</a>
+                                    class="fas fa-prescription-bottle-alt"></i>Farmasi Non-Racikan</a>
                             <a href="#" id="lanjutFarmasiRacikan" class="btn btn-success withLoad"> <i
-                                    class="fas fa-prescription-bottle-alt"></i> Lanjut Farmasi Racikan</a>
+                                    class="fas fa-prescription-bottle-alt"></i>Farmasi Racikan</a>
                             <a href="#" id="selesaiPoliklinik" class="btn btn-warning withLoad"> <i
                                     class="fas fa-check"></i> Selesai</a>
                             <x-adminlte-button theme="danger" label="Tutup" data-dismiss="modal" />
