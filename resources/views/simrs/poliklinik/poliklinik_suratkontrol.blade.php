@@ -70,8 +70,11 @@
                                     <br>{{ $item->kode_kunjungan }}
                                 </td>
                                 <td>
-                                    RM : {{ $item->no_rm }}<br><b>{{ $item->pasien->nama_px }}</b><br>
-                                    {{ $item->pasien->no_Bpjs }}
+                                    RM :
+                                    {{ $item->no_rm ? $item->no_rm : null }}<br>
+                                    <b>{{ $item->pasien ? $item->pasien->nama_px : null }}</b>
+                                    <br>
+                                    {{ $item->pasien ? $item->pasien->no_Bpjs : null }}
                                 </td>
                                 <td>
                                     <x-adminlte-button class="btn-xs btnBuatSuratKontrol" label="S. Kontrol" theme="primary"
@@ -84,9 +87,9 @@
                                 </td>
                                 <td>{{ $item->unit->nama_unit }}<br>{{ $item->dokter->nama_paramedis }}</td>
                                 <td>
-                                    {{ $item->pasien->nik_bpjs }}
-                                    <br>
-                                    {{ \Carbon\Carbon::parse($item->pasien->tgl_lahir)->format('Y-m-d') }}
+                                    {{ $item->pasien ? $item->pasien->nik_bpjs : null }}
+                                    {{-- <br> --}}
+                                    {{-- {{ \Carbon\Carbon::parse($item->pasien->tgl_lahir)->format('Y-m-d') }} --}}
                                 </td>
                             </tr>
                         @endforeach
