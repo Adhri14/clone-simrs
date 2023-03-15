@@ -35,9 +35,10 @@ class AntrianController extends Controller
     {
         $poliklinik = PoliklinikDB::with(['antrians', 'jadwals'])->where('status', 1)->get();
         $jadwal = JadwalDokter::where('hari',  now()->dayOfWeek)->get();
-        $antrian_terakhir1 = Antrian::where('tanggalperiksa', now()->format('Y-m-d'))->where('method', 'Offline')->where('lantaipendaftaran', 1)->where('jenispasien', 'JKN')->latest()->first();
+        $antrian_terakhir1 = Antrian::where('tanggalperiksa', now()->format('Y-m-d'))->where('method', 'Offline')->where('lantaipendaftaran', 1)->latest()->first();
         $antrian_terakhir2 = Antrian::where('tanggalperiksa', now()->format('Y-m-d'))->where('method', 'Offline')->where('lantaipendaftaran', 2)->where('jenispasien', 'JKN')->latest()->first();
         $antrian_terakhir3 = Antrian::where('tanggalperiksa', now()->format('Y-m-d'))->where('method', '!=', 'Offline')->latest()->first();
+        $antrian_terakhir4 = Antrian::where('tanggalperiksa', now()->format('Y-m-d'))->where('taskid', '!=', '99')->count();
         return view('simrs.antrian_console', compact(
             [
                 'poliklinik',
@@ -45,6 +46,7 @@ class AntrianController extends Controller
                 'antrian_terakhir1',
                 'antrian_terakhir2',
                 'antrian_terakhir3',
+                'antrian_terakhir4',
             ]
         ));
     }
