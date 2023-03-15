@@ -18,6 +18,7 @@ use App\Models\PenjaminDB;
 use App\Models\Poliklinik;
 use App\Models\PoliklinikDB;
 use App\Models\SIMRS\Token;
+use App\Models\SIMRS\Unit;
 use App\Models\TarifLayananDetailDB;
 use App\Models\TracerDB;
 use App\Models\TransaksiDB;
@@ -731,8 +732,11 @@ class AntrianController extends ApiBPJSController
             ->orderBy('tgl_masuk', 'DESC')
             ->first();
         if (isset($kunjungan_kronis)) {
-            if (now() < Carbon::parse($kunjungan_kronis->tgl_masuk)->addDay(30)) {
-                return $this->sendError("Pada kunjungan sebelumnya di tanggal " . Carbon::parse($kunjungan_kronis->tgl_masuk)->translatedFormat('d F Y') . " anda termasuk pasien KRONIS. Sehingga bisa daftar lagi setelah 30 hari.", null, 201);
+            $unit = Unit::firstWhere('kode_unit', $kunjungan_kronis->kode_unit);
+            if ($unit->KDPOLI ==  $request->kodepoli) {
+                if (now() < Carbon::parse($kunjungan_kronis->tgl_masuk)->addDay(30)) {
+                    return $this->sendError("Pada kunjungan sebelumnya di tanggal " . Carbon::parse($kunjungan_kronis->tgl_masuk)->translatedFormat('d F Y') . " anda termasuk pasien KRONIS. Sehingga bisa daftar lagi setelah 30 hari.", null, 201);
+                }
             }
         }
         // cek duplikasi nik antrian

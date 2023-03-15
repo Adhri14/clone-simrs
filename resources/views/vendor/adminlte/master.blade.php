@@ -52,7 +52,7 @@
     @if(config('adminlte.use_ico_only'))
         <link rel="shortcut icon" href="{{ asset('vendor/adminlte/dist/img/rswaledico.png') }}" />
     @elseif(config('adminlte.use_full_favicon'))
-        <link rel="shortcut icon" href="{{ asset('favicons/favicon.ico') }}" />
+        <link rel="shortcut icon" href="{{ asset('vendor/adminlte/dist/img/rswaledico.png') }}" />
         <link rel="apple-touch-icon" sizes="57x57" href="{{ asset('vendor/adminlte/dist/img/rswaledico.png') }}">
         <link rel="apple-touch-icon" sizes="60x60" href="{{ asset('vendor/adminlte/dist/img/rswaledico.png') }}">
         <link rel="apple-touch-icon" sizes="72x72" href="{{ asset('vendor/adminlte/dist/img/rswaledico.png') }}">

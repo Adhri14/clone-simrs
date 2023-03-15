@@ -446,11 +446,11 @@ class AntrianController extends Controller
             Alert::error('Error ' . $response->status(), $response->getData()->metadata->message);
         }
         $response = $api->ambil_antrian_farmasi($request);
-        if ($response->status() == 200) {
-            Alert::success('Success', 'Pasien Dilanjutkan Ke Farmasi');
-        } else {
-            Alert::error('Error Tambah Antrian Farmasi ' . $response->status(), $response->getData()->metadata->message);
-        }
+        // if ($response->status() == 200) {
+        //     Alert::success('Success', 'Pasien Dilanjutkan Ke Farmasi');
+        // } else {
+        //     Alert::error('Error Tambah Antrian Farmasi ' . $response->status(), $response->getData()->metadata->message);
+        // }
         return redirect()->back();
     }
     public function lanjut_farmasi_racikan($kodebooking, Request $request)
@@ -484,11 +484,11 @@ class AntrianController extends Controller
             Alert::error('Error ' . $response->status(), $response->getData()->metadata->message);
         }
         $response = $api->ambil_antrian_farmasi($request);
-        if ($response->status() == 200) {
-            Alert::success('Success', 'Pasien Dilanjutkan Ke Farmasi');
-        } else {
-            Alert::error('Error Tambah Antrian Farmasi ' . $response->status(), $response->getData()->metadata->message);
-        }
+        // if ($response->status() == 200) {
+        //     Alert::success('Success', 'Pasien Dilanjutkan Ke Farmasi');
+        // } else {
+        //     Alert::error('Error Tambah Antrian Farmasi ' . $response->status(), $response->getData()->metadata->message);
+        // }
         return redirect()->back();
     }
     public function selesai_poliklinik($kodebooking, Request $request)
