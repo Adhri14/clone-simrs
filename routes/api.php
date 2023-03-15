@@ -17,6 +17,7 @@ use App\Http\Controllers\SIMRS\ICD10Controller;
 use App\Http\Controllers\SIMRS\ICD9Controller;
 use App\Http\Controllers\SIMRS\LayananController;
 use App\Http\Controllers\SIMRS\ObatController;
+use App\Http\Controllers\SIMRS\PasienController as SIMRSPasienController;
 use App\Http\Controllers\SIMRS\PenunjangController;
 use App\Http\Controllers\SIMRS\RISController;
 use App\Http\Controllers\VclaimController;
@@ -38,7 +39,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 Route::prefix('vclaim')->group(function () {
-    Route::get('caripasien', [PasienController::class, 'caripasien'])->name('api.caripasien');
+    Route::get('caripasien', [SIMRSPasienController::class, 'caripasien'])->name('api.caripasien');
 });
 Route::prefix('antrian')->group(function () {
     Route::get('signature', [AntrianBPJSController::class, 'signature']);
