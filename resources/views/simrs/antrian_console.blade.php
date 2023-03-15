@@ -34,7 +34,7 @@
                                     Antrian Lt 1
                                 </h6>
                                 <h4>
-                                    {{ $antrian_terakhir1->angkaantrean ?? '0' }}
+                                    {{ $antrian_terakhir1 ?? '0' }}
                                 </h4>
                             </div>
                         </div>
@@ -44,7 +44,7 @@
                                     Antrian Lt 2
                                 </h6>
                                 <h4>
-                                    {{ $antrian_terakhir2->angkaantrean ?? '0' }}
+                                    {{ $antrian_terakhir2 ?? '0' }}
                                 </h4>
                             </div>
                         </div>
@@ -54,7 +54,7 @@
                                     Antrian Online
                                 </h6>
                                 <h4>
-                                    {{ $antrian_terakhir3->angkaantrean ?? '0' }}
+                                    {{ $antrian_terakhir3 ?? '0' }}
                                 </h4>
                             </div>
                         </div>
