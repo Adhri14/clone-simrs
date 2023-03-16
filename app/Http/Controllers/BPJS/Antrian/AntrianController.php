@@ -678,11 +678,21 @@ class AntrianController extends ApiBPJSController
         }
         // cek jadwal dokter
         $jadwal = $jadwals->where('kodedokter', $request->kodedokter)->first();
-        $antrians = Antrian::where('kodepoli', $request->kodepoli)
+        // if ($request->method == 'Offline') {
+        //     dd($request->all());
+        //     $antrians = Antrian::where('kodepoli', $request->kodepoli)
+        //         ->where('kodedokter', $request->kodedokter)
+        //         ->where('tanggalperiksa', $request->tanggalperiksa)
+        //         ->where('taskid', '!=', 99)
+        //         ->count();
+        // } else {
+        $antrians = Antrian::where('method', '!=', 'Bridging')
+            ->where('kodepoli', $request->kodepoli)
             ->where('kodedokter', $request->kodedokter)
             ->where('tanggalperiksa', $request->tanggalperiksa)
             ->where('taskid', '!=', 99)
             ->count();
+        // }
         if (isset($jadwal)) {
             // cek jadwal libur
             if ($jadwal->libur == 1) {
