@@ -346,6 +346,31 @@ class AntrianController extends ApiBPJSController
         );
         return $this->response_decrypt($response, $signature);
     }
+    // bridging pendaftaran pa agil
+    public function update_antrean_pendaftaran(Request $request)
+    {
+        // cek request
+        $validator = Validator::make(request()->all(), [
+            "kodebooking" => "required",
+            "taskid" => "required",
+            "waktu" => "required|numeric",
+        ]);
+        if ($validator->fails()) {
+            return $this->sendError($validator->errors()->first(), $validator->errors(), 201);
+        }
+        $response = $this->update_antrean($request);
+        if ($response->status() == 200) {
+            $antrian = Antrian::firstWhere('kodebooking', $request->kodebooking);
+            $antrian->update([
+                'taskid' => $request->taskid,
+                'status_api' => 1,
+                'method' => 'Bridging',
+                'keterangan' => "Pendaftaran melalui bridging",
+                'user' => 'Pendaftaran',
+            ]);
+        }
+        return response()->json($response);
+    }
     public function batal_antrean(Request $request)
     {
         $validator = Validator::make(request()->all(), [
