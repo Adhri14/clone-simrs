@@ -369,6 +369,10 @@ class AntrianController extends ApiBPJSController
                 'user' => 'Pendaftaran',
             ]);
         }
+        // kirim notif
+        $wa = new WhatsappController();
+        $request['notif'] = 'Daftar antrian bridging ' . $request->kodebooking;
+        $wa->send_notif($request);
         return response()->json($response);
     }
     public function batal_antrean(Request $request)
