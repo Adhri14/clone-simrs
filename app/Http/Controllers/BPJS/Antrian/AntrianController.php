@@ -686,10 +686,10 @@ class AntrianController extends ApiBPJSController
         //         ->where('taskid', '!=', 99)
         //         ->count();
         // } else {
-        $antrians = Antrian::where('method', '!=', 'Bridging')
+        $antrians = Antrian::where('tanggalperiksa', $request->tanggalperiksa)
+            ->where('method', '!=', 'Bridging')
             ->where('kodepoli', $request->kodepoli)
             ->where('kodedokter', $request->kodedokter)
-            ->where('tanggalperiksa', $request->tanggalperiksa)
             ->where('taskid', '!=', 99)
             ->count();
         // }
