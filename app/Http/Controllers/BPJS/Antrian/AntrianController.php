@@ -854,6 +854,10 @@ class AntrianController extends ApiBPJSController
             $request['namapoli'] = $jadwal->namasubspesialis;
             $request['namadokter'] = $jadwal->namadokter;
         } else {
+            // kirim notif
+            $wa = new WhatsappController();
+            $request['notif'] = 'Kuota dokter penuh ' . $request->kodepoli;
+            $wa->send_notif($request);
             return $this->sendError('Kuota dokter sudah penuh', null, 400);
         }
         $antrian_poli = Antrian::where('tanggalperiksa', $request->tanggalperiksa)
