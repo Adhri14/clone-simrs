@@ -334,6 +334,140 @@
                             </x-adminlte-datatable>
                         </x-adminlte-card>
                     </div>
+                    <div class="col-md-12">
+                        <x-adminlte-card theme="secondary" icon="fas fa-info-circle" collapsible="collapsed"
+                            title="Antrian Pelayanan Poliklinik ({{ $antrians->where('taskid', 4)->count() }} Orang)">
+                            @php
+                                $heads = ['Kodeboking', 'Kunjungan', 'Pasien', 'Action', 'SEP / Ref'];
+                                $config['order'] = ['3', 'asc'];
+                                $config['paging'] = false;
+                                $config['info'] = false;
+                                $config['scrollY'] = '400px';
+                                $config['scrollCollapse'] = true;
+                                $config['scrollX'] = true;
+                            @endphp
+                            <x-adminlte-datatable id="table5" class="nowrap text-xs" :heads="$heads"
+                                :config="$config" striped bordered hoverable compressed>
+                                @foreach ($antrians->where('method', '!=', 'Offline') as $antrian)
+                                    <tr>
+                                        <td>
+                                            {{ $antrian->nomorantrean }}<br>
+                                            {{ $antrian->kodebooking }}<br>
+                                        </td>
+                                        <td>
+                                            @if ($antrian->jeniskunjungan == 1)
+                                                Rujukan FKTP
+                                            @endif
+                                            @if ($antrian->jeniskunjungan == 3)
+                                                Kontrol
+                                            @endif
+                                            @if ($antrian->jeniskunjungan == 4)
+                                                Rujukan RS
+                                            @endif
+                                            <br>{{ $antrian->jenispasien }}
+                                            @if ($antrian->pasienbaru == 1)
+                                                <span class="badge bg-secondary">Baru</span>
+                                            @endif
+                                            @if ($antrian->pasienbaru == 0)
+                                                <span class="badge bg-secondary">Lama</span>
+                                            @endif
+                                            @if (isset($antrian->method))
+                                                <span class="badge bg-secondary">{{ $antrian->method }}</span>
+                                            @else
+                                                <span class="badge bg-secondary">NULL</span>
+                                            @endif
+                                            <span class="badge bg-success">{{ $antrian->kodepoli }}</span>
+                                            <br>{{ substr($antrian->namadokter, 0, 19) }}...
+                                        </td>
+                                        <td>
+                                            RM : {{ $antrian->norm }}<br>
+                                            <b>{{ $antrian->nama }}</b>
+                                            @isset($antrian->nomorkartu)
+                                                <br>{{ $antrian->nomorkartu }}
+                                            @endisset
+                                        </td>
+                                        <td>
+                                            @if ($antrian->taskid == 0)
+                                                <span class="badge bg-secondary">Belum Chekcin</span>
+                                            @endif
+                                            @if ($antrian->taskid == 1)
+                                                <span class="badge bg-secondary">{{ $antrian->taskid }}. Chekcin</span>
+                                            @endif
+                                            @if ($antrian->taskid == 2)
+                                                <span class="badge bg-secondary">{{ $antrian->taskid }}.
+                                                    Pendaftaran</span>
+                                            @endif
+                                            @if ($antrian->taskid == 3)
+                                                @if ($antrian->status_api == 0)
+                                                    <span class="badge bg-warning">{{ $antrian->taskid }}. Belum
+                                                        Pembayaran</span>
+                                                @else
+                                                    <span class="badge bg-warning">{{ $antrian->taskid }}. Tunggu
+                                                        Poli</span>
+                                                @endif
+                                            @endif
+                                            @if ($antrian->taskid == 4)
+                                                <span class="badge bg-success">{{ $antrian->taskid }}. Periksa Poli</span>
+                                            @endif
+                                            @if ($antrian->taskid == 5)
+                                                @if ($antrian->status_api == 0)
+                                                    <span class="badge bg-success">{{ $antrian->taskid }}. Tunggu
+                                                        Farmasi</span>
+                                                @endif
+                                                @if ($antrian->status_api == 1)
+                                                    <span class="badge bg-success">{{ $antrian->taskid }}. Selesai</span>
+                                                @endif
+                                            @endif
+                                            @if ($antrian->taskid == 6)
+                                                <span class="badge bg-success">{{ $antrian->taskid }}. Racik Obat</span>
+                                            @endif
+                                            @if ($antrian->taskid == 7)
+                                                <span class="badge bg-success">{{ $antrian->taskid }}. Selesai</span>
+                                            @endif
+                                            @if ($antrian->taskid == 99)
+                                                <span class="badge bg-danger">{{ $antrian->taskid }}. Batal</span>
+                                            @endif
+                                            <br>
+                                            {{-- @if ($antrian->taskid == 4)
+                                                <x-adminlte-button class="btn-xs mt-1 withLoad" label="Panggil"
+                                                    theme="primary" icon="fas fa-volume-down" data-toggle="tooltip"
+                                                    title="Panggil Antrian {{ $antrian->nomorantrean }}"
+                                                    onclick="window.location='{{ route('poliklinik.antrian_panggil_ulang', $antrian) }}'" />
+
+                                                <x-adminlte-button class="btn-xs mt-1 btnLayani" label="Layani"
+                                                    theme="success" icon="fas fa-hand-holding-medical"
+                                                    data-toggle="tooltop"
+                                                    title="Layani Pasien {{ $antrian->nomorantrean }}"
+                                                    data-id="{{ $antrian->id }}" />
+                                            @endif
+                                            <x-adminlte-button class="btn-xs mt-1 withLoad" theme="danger"
+                                                icon="fas fa-times" data-toggle="tooltop"
+                                                title="Batal Antrian {{ $antrian->nomorantrean }}"
+                                                onclick="window.location='{{ route('poliklinik.antrian_batal', $antrian) }}'" /> --}}
+                                        </td>
+                                        <td>
+                                            @isset($antrian->nomorsep)
+                                                SEP : {{ $antrian->nomorsep }}
+                                            @else
+                                                SEP : -
+                                            @endisset
+                                            @isset($antrian->nomorrujukan)
+                                                <br>Rujukan : {{ $antrian->nomorrujukan }}
+                                            @else
+                                                <br>Rujukan : -
+                                            @endisset
+                                            @isset($antrian->nomorsuratkontrol)
+                                                <br>S. Kontrol : {{ $antrian->nomorsuratkontrol }}
+                                            @else
+                                                <br>S. Kontrol : -
+                                            @endisset
+
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </x-adminlte-datatable>
+                        </x-adminlte-card>
+                    </div>
                 </div>
                 <x-adminlte-modal id="modalPelayanan" title="Pelayanan Pasien Poliklinik" size="xl" theme="success"
                     icon="fas fa-user-plus" v-centered static-backdrop scrollable>
