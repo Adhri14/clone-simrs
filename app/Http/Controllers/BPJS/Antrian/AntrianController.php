@@ -982,6 +982,7 @@ class AntrianController extends ApiBPJSController
             return $this->sendError($response->getData()->metadata->message, null, 400);
         }
     }
+    // ambil antrian mesin antrian
     public function ambil_antrian_offline(Request $request)
     {
         $validator = Validator::make(request()->all(), [
