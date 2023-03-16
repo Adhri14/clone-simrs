@@ -734,7 +734,7 @@ class AntrianController extends ApiBPJSController
         if (isset($kunjungan_kronis)) {
             $unit = Unit::firstWhere('kode_unit', $kunjungan_kronis->kode_unit);
             if ($unit->KDPOLI ==  $request->kodepoli) {
-                if (now() < Carbon::parse($kunjungan_kronis->tgl_masuk)->addDay(30)) {
+                if (now() < Carbon::parse($kunjungan_kronis->tgl_masuk)->addDay(29)) {
                     return $this->sendError("Pada kunjungan sebelumnya di tanggal " . Carbon::parse($kunjungan_kronis->tgl_masuk)->translatedFormat('d F Y') . " anda termasuk pasien KRONIS. Sehingga bisa daftar lagi setelah 30 hari.", null, 201);
                 }
             }
