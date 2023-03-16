@@ -950,7 +950,7 @@ class AntrianController extends ApiBPJSController
             $wa->send_list($request);
             // kirim notif
             $wa = new WhatsappController();
-            $request['notif'] = 'Antrian berhasil didaftarkan melalui ' . $request->method . "\n*Nama :* " . $request->nama . "\n*Poliklinik :* " . $request->namapoli .  "\n*Tanggal Periksa :* " . $request->tanggalperiksa . "\n*Jenis Kunjungan :* " . $request->jeniskunjungan;
+            $request['notif'] = 'Antrian berhasil didaftarkan melalui ' . $request->method . "\n*Kodebooking :* " . $request->kodebooking . "\n*Nama :* " . $request->nama . "\n*Poliklinik :* " . $request->namapoli .  "\n*Tanggal Periksa :* " . $request->tanggalperiksa . "\n*Jenis Kunjungan :* " . $request->jeniskunjungan;
             $wa->send_notif($request);
             // antrian offline
             if ($request->method == 'Offline') {
