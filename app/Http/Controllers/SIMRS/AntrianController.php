@@ -37,8 +37,8 @@ class AntrianController extends Controller
         $jadwal = JadwalDokter::where('hari',  now()->dayOfWeek)->get();
         $antrian_terakhir1 = Antrian::where('tanggalperiksa', now()->format('Y-m-d'))->where('method', 'Offline')->where('lantaipendaftaran', 1)->count();
         $antrian_terakhir2 = Antrian::where('tanggalperiksa', now()->format('Y-m-d'))->where('method', 'Offline')->where('lantaipendaftaran', 2)->where('jenispasien', 'JKN')->count();
-        $antrian_terakhir3 = Antrian::where('tanggalperiksa', now()->format('Y-m-d'))->where('method', '!=', 'Offline')->count();
-        $antrian_terakhir4 = Antrian::where('tanggalperiksa', now()->format('Y-m-d'))->count();
+        $antrian_terakhir3 = Antrian::where('tanggalperiksa', now()->format('Y-m-d'))->where('method', '!=', 'Offline')->where('method', '!=', 'Bridging')->count();
+        $antrian_terakhir4 = Antrian::where('tanggalperiksa', now()->format('Y-m-d'))->where('method', '!=', 'Bridging')->count();
         return view('simrs.antrian_console', compact(
             [
                 'poliklinik',
@@ -174,19 +174,6 @@ class AntrianController extends Controller
         $printer->cut();
         $printer->close();
     }
-    // public function pendaftaran(Request $request)
-    // {
-    //     $antrians = [];
-    //     if ($request->tanggal) {
-    //         $antrians = Antrian::where('tanggalperiksa', $request->tanggal)->get();
-    //     }
-    //     $provinsis = Provinsi::get();
-    //     return view('simrs.laporan_antrian', [
-    //         'antrians' => $antrians,
-    //         'request' => $request,
-    //         'provinsis' => $provinsis,
-    //     ]);
-    // }
     // pendaftaran
     public function antrian_pendaftaran(Request $request)
     {
