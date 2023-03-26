@@ -34,7 +34,7 @@
                                 @endforeach
                             </x-adminlte-select2>
                         </div>
-                        <div class="col-md-4">
+                        {{-- <div class="col-md-4">
                             <x-adminlte-select2 name="kodedokter" label="Dokter">
                                 <option value="">SEMUA DOKTER (-)</option>
                                 @foreach ($dokters as $item)
@@ -44,7 +44,7 @@
                                     </option>
                                 @endforeach
                             </x-adminlte-select2>
-                        </div>
+                        </div> --}}
                     </div>
                     <x-adminlte-button type="submit" class="withLoad" theme="primary" label="Submit Pencarian" />
                 </form>
