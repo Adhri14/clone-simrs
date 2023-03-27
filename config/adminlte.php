@@ -454,6 +454,13 @@ return [
                     'can' => 'pelayanan-medis',
                 ],
                 [
+                    'text' => 'Poliklinik',
+                    'icon'    => 'fas fa-clinic-medical',
+                    'url'  => 'pelayananmedis/poliklinik',
+                    'shift'   => 'ml-2',
+                    'can' => 'pelayanan-medis',
+                ],
+                [
                     'text' => 'Tarif Layanan',
                     'icon'    => 'fas fa-hand-holding-medical',
                     'url'  => 'pelayananmedis/tarif_layanan',
@@ -529,6 +536,13 @@ return [
                             'text' => 'Index Dokter',
                             'icon'    => 'fas fa-user-md',
                             'url'  => 'index_dokter',
+                            'shift'   => 'ml-3',
+                            'can' => 'rekam-medis',
+                        ],
+                        [
+                            'text' => 'Index Daerah',
+                            'icon'    => 'fas fa-maps',
+                            'url'  => 'index_daerah',
                             'shift'   => 'ml-3',
                             'can' => 'rekam-medis',
                         ],

@@ -25,7 +25,7 @@
             <div class="col-md-7">
                 <x-adminlte-card title="Jadwal Dokter Poliklinik" theme="primary" icon="fas fa-info-circle" collapsible>
                     @php
-                        $heads = ['Hari', 'Dokter', 'Jam Praktek', 'Kapasitas', 'Action'];
+                        $heads = ['Hari', 'Dokter', 'Jam Praktek', 'Kuota Online', 'Kuota Offline', 'Action'];
                         $config['paging'] = false;
                         $config['info'] = false;
                         $config['scrollY'] = '400px';
@@ -40,6 +40,7 @@
                                 <td>{{ $item->namadokter }} ({{ $item->kodedokter }})</td>
                                 <td>{{ $item->jadwal }} </td>
                                 <td>{{ $item->kapasitaspasien }} </td>
+                                <td></td>
                                 <td>
                                     <x-adminlte-button label="Edit" class="btn-xs mb-1 btnEdit" icon='fas fa-edit'
                                         theme="warning" data-toggle="tooltip" title="Edit Jadwal Dokter"

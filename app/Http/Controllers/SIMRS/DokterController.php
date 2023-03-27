@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\BPJS\Antrian\DokterAntrian;
 use App\Models\Dokter;
 use App\Models\ParamedisDB;
+use App\Models\User;
 use Illuminate\Http\Request;
 use RealRashid\SweetAlert\Facades\Alert;
 
@@ -14,22 +15,38 @@ class DokterController extends Controller
 {
     public function index(Request $request)
     {
-        $paramedis = ParamedisDB::paginate();
+        $paramedis = ParamedisDB::get(['kode_paramedis', 'kode_dokter_jkn', 'nama_paramedis', 'sip_dr']);
         $paramedis_total = ParamedisDB::count();
         $total_paramedis = ParamedisDB::count();
-        $dokters = Dokter::get();
+
+        // get dokter vclaim bpjs
+        $controller = new AntrianController();
+        $response = $controller->ref_dokter();
+        if ($response->status() == 200) {
+            $dokter_bpjs = collect($response->getData()->response);
+        } else {
+            $dokter_bpjs = null;
+            Alert::error($response->getData()->metadata->message . ' ' . $response->status());
+        }
+
+        // $paramedis->where('kode_dokter_jkn', )
         return view('simrs.dokter_index', compact([
             'request',
-            'dokters',
+            'dokter_bpjs',
             'paramedis',
             'paramedis_total',
             'total_paramedis',
         ]));
     }
+    public function show($id)
+    {
+        $dokter = ParamedisDB::where('kode_paramedis', $id)->first();
+        return response()->json($dokter);
+    }
     public function create()
     {
-        $api = new AntrianBPJSController();
-        $dokters = $api->ref_dokter()->response;
+        $api = new AntrianController();
+        $dokters = $api->ref_dokter()->getData()->response;
         foreach ($dokters as $value) {
             Dokter::updateOrCreate(
                 [
@@ -50,8 +67,8 @@ class DokterController extends Controller
             ]);
             $user->assignRole('Dokter');
         }
-        Alert::success('Success', 'Refresh Data Dokter Berhasil');
-        return redirect()->route('dokter.index');
+        Alert::success('Success', 'Refresh User Data Dokter Berhasil');
+        return redirect()->back();
     }
     public function dokter_antrian_bpjs()
     {

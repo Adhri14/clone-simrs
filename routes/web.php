@@ -138,6 +138,7 @@ Route::get('pasien_daerah', [PasienController::class, 'pasien_daerah'])->name('p
 Route::get('pasien_demografi', [PasienController::class, 'pasien_demografi'])->name('pasien_demografi');
 Route::get('index_penyakit_rajal', [IndexController::class, 'index_penyakit_rajal'])->name('index_penyakit_rajal');
 Route::get('index_dokter', [IndexController::class, 'index_dokter'])->name('index_dokter');
+Route::get('index_daerah', [IndexController::class, 'index_daerah'])->name('index_daerah');
 
 Route::resource('tindakan', PasienController::class)->middleware('permission:rekam-medis');
 Route::resource('tarif_kelompok_layanan', TarifKelompokLayananController::class);
@@ -205,7 +206,7 @@ Route::middleware('auth')->group(function () {
         Route::resource('pasien', PasienController::class);
     });
     // yanmed
-    Route::prefix('pelayananmedis')->name('pelayanan-medis.')->group(function () {
+    Route::prefix('pelayananmedis')->name('pelayananmedis.')->group(function () {
         Route::resource('dokter', SIMRSDokterController::class);
         Route::resource('tarif_layanan', TarifLayananController::class)->only(['index']);
         Route::get('poliklinik_antrian', [SIMRSPoliklinikController::class, 'poliklik_antrian_yanmed'])->name('poliklinik_antrian');
