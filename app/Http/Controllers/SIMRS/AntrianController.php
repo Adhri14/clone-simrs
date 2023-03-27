@@ -734,10 +734,13 @@ class AntrianController extends Controller
             $response = $api->dashboard_bulan($request);
             if ($response->metadata->code == 200) {
                 Alert::success('Success', "Success Message " . $response->metadata->message);
-                $antrians = $response->response->list;
+                $antrians = collect( $response->response->list);
+                $antri_group = collect($antrians)->groupBy('namapoli');
+                // dd($antrians);
                 return view('simrs.antrian_laporan_bulan', [
                     'antrians' => $antrians,
                     'request' => $request,
+                    'antri_group' => $antri_group,
                 ]);
             } else {
                 Alert::error('Error Title', "Error Message " . $response->metadata->message);
