@@ -102,7 +102,7 @@
                                             <td>{{ $item->pasien->kecamatans ? $item->pasien->kecamatans->nama_kecamatan : '' }}
                                             </td>
                                             <td>{{ $item->no_sep ? 'JKN' : 'UMUM' }}</td>
-                                            <td>{{ $item->penjamin_simrs->nama_penjamin }}
+                                            <td>{{ $item->penjamin_simrs ? $item->penjamin_simrs->nama_penjamin : 'null' }}
                                             </td>
                                             <td>{{ $item->counter == 1 ? 'BARU' : 'LAMA' }}</td>
                                             <td>{{ $item->diagnosapoli ? $item->diagnosapoli->diag_00 : '' }}</td>
@@ -130,20 +130,22 @@
                                     <tbody>
                                         @foreach ($kunjungans->groupBy('kode_penjamin') as $key => $item)
                                             <tr>
-                                                <td>{{ $penjaminrs->where('kode_penjamin', $key)->first()->nama_penjamin }}
+                                                <td>{{ $penjaminrs->where('kode_penjamin', $key)->first() ? $penjaminrs->where('kode_penjamin', $key)->first()->nama_penjamin : '' }}
                                                 </td>
                                                 <td>
-                                                    @if ($penjaminrs->where('kode_penjamin', $key)->first()->kode_kelompok == 1)
-                                                        BPJS
-                                                    @endif
-                                                    @if ($penjaminrs->where('kode_penjamin', $key)->first()->kode_kelompok == 2)
-                                                        BPJS
-                                                    @endif
-                                                    @if ($penjaminrs->where('kode_penjamin', $key)->first()->kode_kelompok == 3)
-                                                        UMUM
-                                                    @endif
-                                                    @if ($penjaminrs->where('kode_penjamin', $key)->first()->kode_kelompok == 4)
-                                                        DINKES
+                                                    @if ($penjaminrs->where('kode_penjamin', $key)->first())
+                                                        @if ($penjaminrs->where('kode_penjamin', $key)->first()->kode_kelompok == 1)
+                                                            BPJS
+                                                        @endif
+                                                        @if ($penjaminrs->where('kode_penjamin', $key)->first()->kode_kelompok == 2)
+                                                            BPJS
+                                                        @endif
+                                                        @if ($penjaminrs->where('kode_penjamin', $key)->first()->kode_kelompok == 3)
+                                                            UMUM
+                                                        @endif
+                                                        @if ($penjaminrs->where('kode_penjamin', $key)->first()->kode_kelompok == 4)
+                                                            DINKES
+                                                        @endif
                                                     @endif
                                                 </td>
                                                 <td>{{ $item->count() }}</td>

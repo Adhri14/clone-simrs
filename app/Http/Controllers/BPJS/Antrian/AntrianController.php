@@ -948,17 +948,13 @@ class AntrianController extends ApiBPJSController
             $wa = new WhatsappController();
             $request['notif'] = 'Antrian berhasil didaftarkan melalui ' . $request->method . "\n*Kodebooking :* " . $request->kodebooking . "\n*Nama :* " . $request->nama . "\n*Poliklinik :* " . $request->namapoli .  "\n*Tanggal Periksa :* " . $request->tanggalperiksa . "\n*Jenis Kunjungan :* " . $request->jeniskunjungan;
             $wa->send_notif($request);
-            // antrian offline
-            if ($request->method == 'Offline') {
-            } else {
-                // kirim qr code
-                $qr = QrCode::backgroundColor(255, 255, 51)->format('png')->generate($request->kodebooking, "public/storage/antrian/" . $request->kodebooking . ".png");
-                $wa = new WhatsappController();
-                $request['fileurl'] = asset("storage/antrian/" . $request->kodebooking . ".png");
-                $request['caption'] = "Kode booking : " . $request->kodebooking . "\nSilahkan gunakan *QR Code* ini untuk checkin di mesin antrian rawat jalan.";
-                $request['number'] = $request->nohp;
-                $wa->send_image($request);
-            }
+            // kirim qr code
+            $qr = QrCode::backgroundColor(255, 255, 51)->format('png')->generate($request->kodebooking, "public/storage/antrian/" . $request->kodebooking . ".png");
+            $wa = new WhatsappController();
+            $request['fileurl'] = asset("storage/antrian/" . $request->kodebooking . ".png");
+            $request['caption'] = "Kode booking : " . $request->kodebooking . "\nSilahkan gunakan *QR Code* ini untuk checkin di mesin antrian rawat jalan.";
+            $request['number'] = $request->nohp;
+            $wa->send_image($request);
             $response = [
                 "nomorantrean" => $request->nomorantrean,
                 "angkaantrean" => $request->angkaantrean,

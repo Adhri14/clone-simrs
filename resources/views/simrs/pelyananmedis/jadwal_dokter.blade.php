@@ -45,7 +45,7 @@
                                     @if ($jadwal_antrian->where('kodesubspesialis', $jadwal->kodesubspesialis)->where('kodedokter', $jadwal->kodedokter)->where('hari', $jadwal->hari)->first())
                                         <button class="btn btn-secondary btn-xs">Sudah Ada</button>
                                     @else
-                                        <form action="{{ route('pelayanan-medis.jadwaldokter_add') }}" method="POST">
+                                        <form action="{{ route('pelayananmedis.jadwaldokter_add') }}" method="POST">
                                             @csrf
                                             <input type="hidden" name="kodePoli" value="{{ $jadwal->kodepoli }}">
                                             <input type="hidden" name="namaPoli" value="{{ $jadwal->namapoli }}">
@@ -112,7 +112,7 @@
         </div>
     </div>
     <x-adminlte-modal id="modalJadwal" title="Jadwal Praktek" theme="warning" icon="fas fa-calendar-alt">
-        <form name="formUpdateJadwal" id="formUpdateJadwal" action="{{ route('pelayanan-medis.jadwaldokter_update') }}"
+        <form name="formUpdateJadwal" id="formUpdateJadwal" action="{{ route('pelayananmedis.jadwaldokter_update') }}"
             method="POST">
             @csrf
             @method('PUT')
@@ -139,7 +139,7 @@
                 </div>
             </div>
         </form>
-        <form name="formDeleteJadwal" id="formDeleteJadwal" action="{{ route('pelayanan-medis.jadwaldokter_delete') }}"
+        <form name="formDeleteJadwal" id="formDeleteJadwal" action="{{ route('pelayananmedis.jadwaldokter_delete') }}"
             method="POST">
             @csrf
             @method('DELETE')
@@ -165,7 +165,7 @@
             $('.btnJadwal').click(function() {
                 var jadwalid = $(this).data('id');
                 $.LoadingOverlay("show");
-                $.get("{{ route('pelayanan-medis.jadwaldokter.index') }}" + '/' + jadwalid + '/get',
+                $.get("{{ route('pelayananmedis.jadwaldokter.index') }}" + '/' + jadwalid + '/get',
                     function(data) {
                         console.log(data);
                         $('#namasubspesialis').val(data.namasubspesialis);
