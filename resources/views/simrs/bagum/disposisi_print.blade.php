@@ -14,7 +14,7 @@
                             <b>RUMAH SAKIT UMUM DAERAH WALED KABUPATEN CIREBON</b><br>
                             Jl. Prabu Kiansantang No.4 Desa Waled Kota Kec. Waled Kab. Cirebon 45187
                             <br>
-                            www.rsudwaled.id - brsud.waled@gmail.com - Whatasapp 0895 4000 60700 - Call Center (0231) 661126
+                            www.rsudwaled.id - brsud.waled@gmail.com - Call Center (0231) 661126
                         </div>
                         <hr width="100%" hight="20px" class="m-1 " color="black" size="50px" />
                     </div>
@@ -23,29 +23,7 @@
                             <b class="text-xl">LEMBAR DISPOSISI</b> <br>
                             <br>
                         </div>
-                        {{-- <div class="col-sm-6 invoice-col">
-                            <dl class="row">
-                                <dt class="col-sm-4 m-0">Surat Dari </dt>
-                                <dd class="col-sm-8 m-0">: </b></dd>
-                                <dt class="col-sm-4 m-0">No Surat </dt>
-                                <dd class="col-sm-8 m-0">: </b></dd>
-                                <dt class="col-sm-4 m-0">Tanggal Surat </dt>
-                                <dd class="col-sm-8 m-0">: </b></dd>
-                            </dl>
-
-                        </div>
-                        <div class="col-sm-6 invoice-col">
-                            <dl class="row">
-                                <dt class="col-sm-4 m-0">Diterima Tgl. </dt>
-                                <dd class="col-sm-8 m-0">: </b></dd>
-                                <dt class="col-sm-4 m-0">No. Agenda</dt>
-                                <dd class="col-sm-8 m-0">: </b></dd>
-                                <dt class="col-sm-4 m-0">Sifat </dt>
-                                <dd class="col-sm-8 m-0">: </b></dd>
-                            </dl>
-                        </div> --}}
                     </div>
-
                     <div class="col-12 table-responsive">
                         <table class="table table-sm">
                             <tbody>
@@ -64,12 +42,12 @@
                                     </td>
                                     <td>
                                         <dl class="row">
-                                            <dt class="col-sm-4 ">Diterima Tgl. </dt>
+                                            <dt class="col-sm-4 ">No. Agenda</dt>
+                                            <dd class="col-sm-8 ">: {{ $surat->no_urut }}</dd>
+                                            <dt class="col-sm-4 ">Tgl. Disposisi </dt>
                                             <dd class="col-sm-8 ">:
                                                 {{ Carbon\Carbon::parse($surat->tgl_input)->translatedFormat('l, d F Y') }}
                                                 </b></dd>
-                                            <dt class="col-sm-4 ">No. Agenda</dt>
-                                            <dd class="col-sm-8 ">: {{ $surat->no_urut }}</dd>
                                         </dl>
                                         <div class="row">
                                             <dt class="col-sm-4 ">Sifat </dt>
@@ -207,8 +185,10 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td rowspan="2" style="vertical-align:bottom;">
-                                        .........................................................</td>
+                                    <td style="vertical-align:bottom;">
+                                        <b>Tgl Diteruskan :</b>
+                                        {{ Carbon\Carbon::parse($surat->tgl_diteruskan)->translatedFormat('l, d F Y') }}
+                                    </td>
                                     <td>
                                         <div>
                                             <input type="checkbox">
@@ -219,32 +199,50 @@
                                         </div>
                                     </td>
                                 </tr>
+
                                 <tr>
-                                    <td>
-                                        <div>
-                                            <input type="checkbox">
-                                            <label>
-                                                ..........................................
-                                            </label>
-                                        </div>
+                                    <td colspan="2">
+                                        <b>Catatan Disposisi :</b>
+                                        <br>
+                                        {{ $surat->disposisi }}
+                                        <br><br><br>
                                     </td>
-                                </tr>
-                                <tr>
-                                    <td colspan="2"><b>Catatan : </b><br><br><br><br><br><br><br><br></td>
                                 </tr>
                                 <tr>
                                     <td colspan="2">
                                         <div class="row">
-                                            <div class="col-md-6 text-center">
-
+                                            <div class="col-md-6 ">
+                                                <div class="text-center">
+                                                    <b>Telah diterima oleh</b>
+                                                    <br>
+                                                    <br><br><br>
+                                                    <br>
+                                                    <u>
+                                                        <b>
+                                                            {{ $surat->tanda_terima }}
+                                                        </b>
+                                                    </u>
+                                                    <br>
+                                                </div>
+                                                <div>
+                                                    Tgl. Diterima :
+                                                    {{ Carbon\Carbon::parse($surat->tgl_terima_surat)->translatedFormat('l, d F Y') }}
+                                                </div>
                                             </div>
-                                            <div class="col-md-6 text-center">
-                                                <b>Penerima Surat</b>
-                                                <br>{{ Carbon\Carbon::parse($surat->tgl_terima_surat)->translatedFormat('l, d F Y') }}
-                                                <br><br><br>
-                                                {{ $surat->tanda_terima }}
-                                                <br>
-                                                <br>
+                                            <div class="col-md-6 ">
+                                                <div class="text-center">
+                                                    <b>Direktur RSUD Waled</b>
+                                                    <br>
+                                                    <br><br><br>
+                                                    <br>
+                                                    <u>
+                                                        <b>Dr. LUTFHI </b>
+                                                    </u>
+                                                    <br>
+                                                </div>
+                                                {{-- <div>
+                                                    Tgl. Tandatangan : .........................
+                                                </div> --}}
                                             </div>
                                         </div>
                                     </td>
@@ -252,8 +250,8 @@
                             </tbody>
                         </table>
                     </div>
-                    <div class="footer-space">&nbsp;</div>
-                    <div class="footer">SIPAS RSUD WALED V.2</div>
+                    {{-- <div class="footer-space">&nbsp;</div> --}}
+                    <div class="footer">E-DISPOSISI RSUD WALED</div>
                 </section>
             </div>
             <button class="btn btn-success btnPrint" onclick="printDiv('printMe')"><i class="fas fa-print"> Print

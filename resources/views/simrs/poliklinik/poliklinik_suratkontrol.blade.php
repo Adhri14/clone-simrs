@@ -54,7 +54,7 @@
                 <x-adminlte-card title="Kunjungan Poliklinik ({{ $kunjungans->count() }} Orang)" theme="primary"
                     icon="fas fa-info-circle" collapsible>
                     @php
-                        $heads = ['Tgl Kunjungan', 'Pasien', 'Action', 'SEP / Ref', 'Poliklinik', 'NIK / Tgl Lahir'];
+                        $heads = ['No','Tgl Kunjungan', 'Pasien', 'Action', 'SEP / Ref', 'Poliklinik', 'NIK / Tgl Lahir'];
                         $config['paging'] = false;
                         $config['info'] = false;
                         $config['scrollY'] = '400px';
@@ -65,6 +65,9 @@
                         bordered hoverable compressed>
                         @foreach ($kunjungans as $item)
                             <tr class={{ $item->surat_kontrol ? 'text-success' : null }}>
+                                <td>
+                                    {{ $loop->iteration }}
+                                </td>
                                 <td>
                                     {{ $item->tgl_masuk }}
                                     <br>{{ $item->kode_kunjungan }}
