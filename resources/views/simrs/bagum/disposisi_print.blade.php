@@ -42,7 +42,7 @@
                                     </td>
                                     <td>
                                         <dl class="row">
-                                            <dt class="col-sm-4 ">No. Agenda</dt>
+                                            <dt class="col-sm-4 ">No. Disposisi</dt>
                                             <dd class="col-sm-8 ">: {{ $surat->no_urut }}</dd>
                                             <dt class="col-sm-4 ">Tgl. Disposisi </dt>
                                             <dd class="col-sm-8 ">:
@@ -77,9 +77,8 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td colspan="2" style="height: 100px"><b>Hal : </b>
-                                        <br>
-                                        {{ $surat->perihal }}
+                                    <td colspan="2" style="height: 100px"><b>Perihal : </b>
+                                        <pre>{{ $surat->perihal }}</pre>
                                     </td>
                                 </tr>
                                 <tr>
@@ -88,7 +87,8 @@
                                 </tr>
                                 <tr>
                                     <td rowspan="2" style="vertical-align:bottom;">
-                                        {{ $surat->pengolah }} <br>
+                                        {{ $surat->pengolah ? $surat->pengolah : '.........................................................' }}
+                                        <br>
                                     </td>
                                     <td>
                                         <div>
@@ -177,7 +177,6 @@
                                         <div>
                                             <input type="checkbox">
                                             Jadwalkan ingatkan waktunya
-
                                             {{-- <label>
                                                 Jadwalkan ingatkan waktunya
                                             </label> --}}
@@ -185,9 +184,9 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td style="vertical-align:bottom;">
+                                    <td rowspan="2" style="vertical-align:bottom;">
                                         <b>Tgl Diteruskan :</b>
-                                        {{ Carbon\Carbon::parse($surat->tgl_diteruskan)->translatedFormat('l, d F Y') }}
+                                        {{ $surat->tgl_diteruskan ? \Carbon\Carbon::parse($surat->tgl_diteruskan)->translatedFormat('l, d F Y') : '...................' }}
                                     </td>
                                     <td>
                                         <div>
@@ -199,13 +198,21 @@
                                         </div>
                                     </td>
                                 </tr>
-
+                                <tr>
+                                    <td>
+                                        <div>
+                                            <input type="checkbox">
+                                            Simpan / Arsipkan
+                                            {{-- <label>
+                                                Siapkan pointer / sambutan / bahan
+                                            </label> --}}
+                                        </div>
+                                    </td>
+                                </tr>
                                 <tr>
                                     <td colspan="2">
                                         <b>Catatan Disposisi :</b>
-                                        <br>
-                                        {{ $surat->disposisi }}
-                                        <br><br><br>
+                                        <pre>{{ $surat->disposisi }}</pre>
                                     </td>
                                 </tr>
                                 <tr>
@@ -226,7 +233,7 @@
                                                 </div>
                                                 <div>
                                                     Tgl. Diterima :
-                                                    {{ Carbon\Carbon::parse($surat->tgl_terima_surat)->translatedFormat('l, d F Y') }}
+                                                    {{ $surat->tgl_penyelesaian ? Carbon\Carbon::parse($surat->tgl_penyelesaian)->translatedFormat('l, d F Y') : '..............' }}
                                                 </div>
                                             </div>
                                             <div class="col-md-6 ">
@@ -236,13 +243,10 @@
                                                     <br><br><br>
                                                     <br>
                                                     <u>
-                                                        <b>Dr. LUTFHI </b>
+                                                        <b>dr. M. LUTHFI, Sp.PD-KHOM, FINASIM.,MMRS</b>
                                                     </u>
                                                     <br>
                                                 </div>
-                                                {{-- <div>
-                                                    Tgl. Tandatangan : .........................
-                                                </div> --}}
                                             </div>
                                         </div>
                                     </td>
@@ -299,8 +303,13 @@
         th,
         td {
             border: 1px solid #333333 !important;
-            font-size: 15px !important;
+            font-size: 17 !important;
             padding: 3px !important;
+        }
+        pre {
+            padding: 2 !important;
+            font-size: 20 !important;
+            border: none
         }
     </style>
 

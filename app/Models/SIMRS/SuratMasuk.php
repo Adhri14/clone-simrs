@@ -11,4 +11,6 @@ class SuratMasuk extends Model
     protected $connection = 'mysql5';
     protected $table = 'ts_surat_masuk';
     protected $primaryKey = 'id_surat_masuk';
+
+    protected $guarded = ['id'];
 }

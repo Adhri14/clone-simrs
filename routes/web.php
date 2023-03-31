@@ -39,6 +39,7 @@ use App\Http\Controllers\SIMRS\PasienController;
 use App\Http\Controllers\SIMRS\PoliklinikController as SIMRSPoliklinikController;
 use App\Http\Controllers\SIMRS\SimrsController;
 use App\Http\Controllers\SIMRS\SuratKontrolController;
+use App\Http\Controllers\SIMRS\SuratLampiranController;
 use App\Http\Controllers\SIMRS\SuratMasukController;
 use App\Http\Controllers\SIMRS\TarifLayananController;
 use App\Http\Controllers\TarifKelompokLayananController;
@@ -228,6 +229,7 @@ Route::middleware('auth')->group(function () {
     // bagum
     Route::prefix('bagianumum')->name('bagianumum.')->group(function () {
         Route::resource('suratmasuk', SuratMasukController::class);
+        Route::resource('suratlampiran', SuratLampiranController::class);
         Route::resource('disposisi', DisposisiController::class);
     });
     // farmasi

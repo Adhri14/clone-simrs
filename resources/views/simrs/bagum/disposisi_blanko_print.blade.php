@@ -40,7 +40,7 @@
                                     </td>
                                     <td>
                                         <dl class="row">
-                                            <dt class="col-sm-4 ">No. Agenda</dt>
+                                            <dt class="col-sm-4 ">No. Disposisi</dt>
                                             <dd class="col-sm-8 ">: </b></dd>
                                             <dt class="col-sm-4 ">Tgl. Disposisi </dt>
                                             <dd class="col-sm-8 ">: </b></dd>
@@ -263,7 +263,7 @@
         td {
             border: 1px solid #333333 !important;
             font-size: 17px !important;
-            padding: 5px !important;
+            padding: 3px !important;
         }
     </style>
 
