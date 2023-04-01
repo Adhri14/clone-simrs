@@ -32,7 +32,7 @@
                     </div>
                 </div>
                 @php
-                    $heads = ['Action', 'No / Kode', 'Tgl Surat', 'No Surat', 'Asal', 'Perihal', 'Tgl Disposisi', 'Tgl Diteruskan', 'Pengolah', 'Disposisi', 'Penerima', ' Tgl Terima'];
+                    $heads = ['Action', 'No / Kode', 'Tgl Surat', 'No Surat', 'Asal', 'Perihal', 'Tgl Disposisi',  'Pengolah', 'Disposisi', 'Penerima', ' Tgl Terima'];
                     $config['scrollX'] = true;
                     $config['paging'] = false;
                     $config['searching'] = false;
@@ -51,13 +51,12 @@
 
                                 @if ($item->lampiran)
                                     <x-adminlte-button class="btn-xs mb-1 lihatLampiran" theme="success" icon="fas fa-eye"
-                                        title="Lihat Lampiran Surat" data-id="{{ $item->lampiran->fileurl }}" />
+                                        title="Lihat Lampiran Surat" data-id="{{ $item->id_surat_masuk }}"
+                                        data-url="{{ $item->lampiran->fileurl }}" />
                                 @else
                                     <x-adminlte-button class="btn-xs mb-1 uploadLampiran" theme="primary"
                                         icon="fas fa-upload" title="Upload Surat" data-id="{{ $item->id_surat_masuk }}" />
                                 @endif
-
-
                             </td>
                             <td>{{ $item->no_urut }} / {{ $item->kode }}</td>
                             <td>{{ $item->tgl_surat }}</td>
@@ -65,7 +64,7 @@
                             <td>{{ $item->asal_surat }}</td>
                             <td>{{ $item->perihal }}</td>
                             <td>{{ $item->tgl_disposisi }}</td>
-                            <td>{{ $item->tgl_diteruskan }}</td>
+                            {{-- <td>{{ $item->tgl_diteruskan }}</td> --}}
                             <td>{{ $item->pengolah }}</td>
                             <td>{{ $item->disposisi }}</td>
                             <td>{{ $item->tanda_terima }}</td>
@@ -199,19 +198,9 @@
                     </div>
                 </x-slot>
             </x-adminlte-input-file>
-            <button type="submit">Submit</button>
         </form>
         <x-slot name="footerSlot">
             <button type="submit" form="formLampiran" class="btn btn-success mr-auto">Simpan</button>
-            {{-- <x-adminlte-button class="mr-auto " id="btnStore" type="submit" theme="success" icon="fas fa-save"
-                label="Simpan" />
-            <x-adminlte-button class="mr-auto" id="btnUpdate" theme="warning" icon="fas fa-edit" label="Update" />
-            <x-adminlte-button id="btnDelete" theme="danger" icon="fas fa-trash-alt" label="Delete" />
-            <form name="formDelete" id="formDelete" action="" method="POST">
-                @csrf
-                @method('DELETE')
-                <input type="hidden" name="id_surat" id="id_surat">
-            </form> --}}
             <x-adminlte-button theme="secondary" icon="fas fa-arrow-left" label="Kembali" data-dismiss="modal" />
         </x-slot>
     </x-adminlte-modal>
@@ -219,26 +208,38 @@
         <div class="row">
             <div class="col-md-6">
                 <div class="row">
-                    <dt class="col-sm-4">Pasien</dt>
-                    <dd class="col-sm-8">: <span id="nama"></span> / <span id="norm"></span></dd>
-                    <dt class="col-sm-4">BPJS / NIK</dt>
-                    <dd class="col-sm-8">: <span id="nomorkartu"></span> / <span id="nik"></span></dd>
+                    <dt class="col-sm-4">No Surat</dt>
+                    <dd class="col-sm-8">: <span id="nama"></span></dd>
+                    <dt class="col-sm-4">Tgl Surat</dt>
+                    <dd class="col-sm-8">: <span id="nomorkartu"></span></dd>
+                    <dt class="col-sm-4">Tgl Disposisi</dt>
+                    <dd class="col-sm-8">: <span id="namafile"></span></dd>
                 </div>
             </div>
             <div class="col-md-6">
                 <div class="row">
-                    <dt class="col-sm-4">Nama Berkas</dt>
-                    <dd class="col-sm-8">:
-                        <span id="namafile"></span> /
-                        <span id="jenisberkas"></span>
-                    </dd>
-                    <dt class="col-sm-4">Tanggal Scan</dt>
-                    <dd class="col-sm-8">: <span id="tanggalscan"></span></dd>
+                    <dt class="col-sm-4">Asal Surat</dt>
+                    <dd class="col-sm-8">: <span id="nomorkartu"></span></dd>
+                    <dt class="col-sm-4">Perihal</dt>
+                    <dd class="col-sm-8">: <span id="nomorkartu"></span></dd>
                 </div>
             </div>
         </div>
         <iframe id="fileurl" src="" width="100%" height="700px">
         </iframe>
+        <x-slot name="footerSlot">
+            {{-- <button type="submit" form="formLampiran" class="btn btn-success mr-auto">Simpan</button>
+            <x-adminlte-button class="mr-auto " id="btnStore" type="submit" theme="success" icon="fas fa-save"
+                label="Simpan" /> --}}
+            {{-- <x-adminlte-button class="mr-auto" id="btnUpdate" theme="warning" icon="fas fa-edit" label="Update" /> --}}
+            <x-adminlte-button id="btnDeleteLampiran" theme="danger" icon="fas fa-trash-alt" label="Delete" />
+            <form name="formDeleteLampiran" id="formDeleteLampiran" action="" method="POST">
+                @csrf
+                @method('DELETE')
+                <input type="hidden" name="id_surat" id="id_lampiran_delete">
+            </form>
+            <x-adminlte-button theme="secondary" icon="fas fa-arrow-left" label="Kembali" data-dismiss="modal" />
+        </x-slot>
     </x-adminlte-modal>
 @stop
 
@@ -247,7 +248,6 @@
 @section('plugins.TempusDominusBs4', true)
 @section('plugins.Sweetalert2', true)
 @section('plugins.BsCustomFileInput', true)
-
 
 @section('js')
     <script>
@@ -361,11 +361,31 @@
                 // })
             });
             $('.lihatLampiran').click(function() {
-                var url = $(this).data('id');
+                var url = $(this).data('url');
+                var id = $(this).data('id');
                 $.LoadingOverlay("show");
                 $('#modalFile').modal('show');
                 $("#fileurl").attr("src", url);
+                $('#id_lampiran_delete').val(id);
                 $.LoadingOverlay("hide", true);
+            });
+            $('#btnDeleteLampiran').click(function(e) {
+                e.preventDefault();
+                swal.fire({
+                    title: 'Apakah anda ingin menghapus surat ini ?',
+                    showConfirmButton: false,
+                    showDenyButton: true,
+                    showCancelButton: true,
+                    denyButtonText: `Ya, Hapus`,
+                }).then((result) => {
+                    if (result.isDenied) {
+                        $.LoadingOverlay("show");
+                        var id = $('#id_lampiran_delete').val();
+                        var url = "{{ route('bagianumum.suratlampiran.index') }}/" + id;
+                        $('#formDeleteLampiran').attr('action', url);
+                        $('#formDeleteLampiran').submit();
+                    }
+                })
             });
         });
     </script>

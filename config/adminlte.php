@@ -587,21 +587,28 @@ return [
         [
             'text'    => 'Bagian Umum',
             'icon'    => 'fas fa-hospital',
-            // 'can' => 'rekam-medis',
+            'can' => 'bagian-umum',
             'submenu' => [
                 [
                     'text' => 'Surat Masuk',
-                    'icon'    => 'fas fa-user-injured',
+                    'icon'    => 'fas fa-envelope',
                     'url'  => 'bagianumum/suratmasuk',
                     'shift'   => 'ml-2',
-                    // 'can' => 'bagianumum',
+                    'can' => 'bagian-umum',
+                ],
+                [
+                    'text' => 'Disposisi',
+                    'icon'    => 'fas fa-file-signature',
+                    'url'  => 'bagianumum/disposisi',
+                    'shift'   => 'ml-2',
+                    'can' => 'bagian-umum',
                 ],
                 [
                     'text' => 'Surat Keluar',
-                    'icon'    => 'fas fa-user-injured',
+                    'icon'    => 'fas fa-envelope',
                     'url'  => 'bagianumum/suratkeluar',
                     'shift'   => 'ml-2',
-                    // 'can' => 'bagianumum',
+                    'can' => 'bagian-umum',
                 ],
             ],
         ],

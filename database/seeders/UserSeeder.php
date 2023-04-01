@@ -50,7 +50,14 @@ class UserSeeder extends Seeder
             'email_verified_at' => now()
         ]);
         $user->assignRole('Admin Super');
-
+        $user = User::create([
+            "name" => "Bagian Umum",
+            "email" => "bagum@gmail.com",
+            "username" => "bagianumum",
+            "phone" => "089529909036",
+            'password' => bcrypt('bagianumum'),
+        ]);
+        $user->assignRole('Bagian Umum');
         $user = User::create([
             "name" => "Admin Pendaftaran",
             "email" => "adminpendaftaran@gmail.com",
