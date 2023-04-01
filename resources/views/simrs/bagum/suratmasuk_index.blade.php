@@ -10,19 +10,19 @@
             <x-adminlte-card theme="primary" icon="fas fa-envelope" collapsible title="Surat Masuk">
                 <div class="row">
                     <div class="col-md-8">
-                        <x-adminlte-button theme="success" label="Tambah Surat Masuk" class=" btn-sm" id="tambahSurat" />
-                        <x-adminlte-button theme="primary" label="Blanko Disposisi" class=" btn-sm" id="cetakBlanko" />
-                        <x-adminlte-button label="Refresh" class="btn-sm" theme="warning" title="Refresh User"
+                        <x-adminlte-button theme="success" label="Tambah Surat Masuk" class=" btn-sm mb-2" id="tambahSurat" />
+                        <x-adminlte-button theme="primary" label="Blanko Disposisi" class=" btn-sm mb-2" id="cetakBlanko" />
+                        <x-adminlte-button label="Refresh" class="btn-sm mb-2" theme="warning" title="Refresh User"
                             icon="fas fa-sync" onclick="window.location='{{ route('bagianumum.suratmasuk.index') }}'" />
                     </div>
                     <div class="col-md-4">
                         <form action="" method="get">
-                            <x-adminlte-input name="search" placeholder="Pencarian Asal / Perihal Surat" igroup-size="sm"
+                            <x-adminlte-input name="search" class=" mb-2" placeholder="Pencarian Asal / Perihal Surat" igroup-size="sm"
                                 value="{{ $request->search }}">
-                                <x-slot name="appendSlot">
+                                <x-slot name="appendSlot" class="mb-2">
                                     <x-adminlte-button type="submit" theme="primary" label="Cari!" />
                                 </x-slot>
-                                <x-slot name="prependSlot">
+                                <x-slot name="prependSlot" class="mb-2">
                                     <div class="input-group-text text-primary">
                                         <i class="fas fa-search"></i>
                                     </div>
@@ -32,23 +32,22 @@
                     </div>
                 </div>
                 @php
-                    $heads = ['Action', 'No / Kode', 'Tgl Surat', 'No Surat', 'Asal', 'Perihal', 'Tgl Disposisi', 'Pengolah', 'Disposisi', 'Penerima', ' Tgl Terima'];
+                    $heads = ['Action', 'No / Kode', 'No Surat / Tgl', 'Asal', 'Perihal', 'Pengolah', 'Disposisi', 'Penerima'];
                     $config['scrollX'] = true;
                     $config['paging'] = false;
                     $config['searching'] = false;
                     $config['info'] = false;
                     $config['order'] = ['1', 'desc'];
                 @endphp
-                <x-adminlte-datatable id="table1" class="text-xs" :heads="$heads" :config="$config" bordered hoverable
-                    compressed>
+                <x-adminlte-datatable id="table1" class="text-xs nowrap" :heads="$heads" :config="$config" bordered
+                    hoverable compressed>
                     @foreach ($surats as $item)
                         <tr>
                             <td>
                                 <x-adminlte-button class="btn-xs mb-1 cetakDisposisi" theme="success" icon="fas fa-print"
-                                    title="Cetak Disposisi" data-id="{{ $item->id_surat_masuk }}" /> <br>
-                                <x-adminlte-button class="btn-xs mb-1 editSuratMasuk" theme="warning" icon="fas fa-edit"
-                                    title="Edit Surat Masuk" data-id="{{ $item->id_surat_masuk }}" />
-
+                                    title="Cetak Disposisi" data-id="{{ $item->id_surat_masuk }}" />
+                                {{-- <x-adminlte-button class="btn-xs mb-1 editSuratMasuk" theme="warning" icon="fas fa-edit"
+                                    title="Edit Surat Masuk" data-id="{{ $item->id_surat_masuk }}" /> --}}
                                 @if ($item->lampiran)
                                     <x-adminlte-button class="btn-xs mb-1 lihatLampiran" theme="success" icon="fas fa-eye"
                                         title="Lihat Lampiran Surat" data-id="{{ $item->id_surat_masuk }}"
@@ -58,17 +57,20 @@
                                         icon="fas fa-upload" title="Upload Surat" data-id="{{ $item->id_surat_masuk }}" />
                                 @endif
                             </td>
-                            <td>{{ $item->no_urut }} / {{ $item->kode }}</td>
-                            <td>{{ $item->tgl_surat }}</td>
-                            <td>{{ $item->no_surat }}</td>
+                            <td class="editSuratMasuk  {{ $item->disposisi ? 'table-success' : 'table-danger' }}"
+                                data-id="{{ $item->id_surat_masuk }}">{{ $item->no_urut }}/{{ $item->kode }} <br>
+                                {{ $item->tgl_disposisi }}
+                            </td>
+                            <td>
+                                {{ $item->no_surat }} <br>
+                                {{ $item->tgl_surat }}
+                            </td>
                             <td>{{ $item->asal_surat }}</td>
-                            <td>{{ $item->perihal }}</td>
-                            <td>{{ $item->tgl_disposisi }}</td>
-                            {{-- <td>{{ $item->tgl_diteruskan }}</td> --}}
+                            <td> {{ substr($item->perihal, 0, 19) }}...</td>
                             <td>{{ $item->pengolah }}</td>
-                            <td>{{ $item->disposisi }}</td>
+                            <td> {{ substr($item->disposisi, 0, 19) }}...</td>
+                            {{-- <td>{{ $item->tgl_diteruskan }}</td> --}}
                             <td>{{ $item->tanda_terima }}</td>
-                            <td>{{ $item->tgl_terima_surat }}</td>
                         </tr>
                     @endforeach
                 </x-adminlte-datatable>
@@ -86,7 +88,7 @@
         <form action="" id="formSurat" method="POST">
             @csrf
             <div class="row">
-                <div class="col-md-4">
+                <div class="col-md-6">
                     <input type="hidden" name="id_surat" id="id_surat">
                     <input type="hidden" name="_method" id="method">
                     <x-adminlte-input name="no_urut" label="No Urut" igroup-size="sm" enable-old-support readonly />
@@ -108,7 +110,7 @@
                         <option value="4">Rahasia</option>
                     </x-adminlte-select>
                 </div>
-                <div class="col-md-7">
+                <div class="col-md-6">
                     <x-adminlte-input-date name="tgl_diteruskan" label="Tgl Diteruskan" igroup-size="sm"
                         :config="$config" enable-old-support />
                     <x-adminlte-input name="pengolah" label="Diteruskan Kpd" igroup-size="sm" enable-old-support />
@@ -165,11 +167,11 @@
                     </div>
                     <x-adminlte-textarea name="disposisi" rows=5 placeholder="Catatan Disposisi"
                         label="Catatan Disposisi" />
+                    <x-adminlte-input name="tanda_terima" label="Tanda Terima" igroup-size="sm" enable-old-support />
+                    <x-adminlte-input-date name="tgl_terima_surat" label="Tgl Terima Disposisi" igroup-size="sm"
+                        :config="$config" enable-old-support />
                 </div>
             </div>
-            <x-adminlte-input name="tanda_terima" label="Tanda Terima" igroup-size="sm" enable-old-support />
-            <x-adminlte-input-date name="tgl_terima_surat" label="Tgl Terima Disposisi" igroup-size="sm"
-                :config="$config" enable-old-support />
         </form>
         <x-slot name="footerSlot">
             {{-- <button type="submit" form="formSurat" class="btn btn-success mr-auto">Simpan</button> --}}
@@ -182,7 +184,6 @@
                 @method('DELETE')
                 <input type="hidden" name="id_surat" id="id_surat">
             </form>
-
             <x-adminlte-button theme="secondary" icon="fas fa-arrow-left" label="Kembali" data-dismiss="modal" />
         </x-slot>
     </x-adminlte-modal>
@@ -331,35 +332,6 @@
                     $.LoadingOverlay("hide", true);
                 })
             });
-            $('.uploadLampiran').click(function() {
-                $.LoadingOverlay("show");
-                var id = $(this).data('id');
-                $('#id_surat_lampiran').val(id);
-                $('#formSurat').trigger("reset");
-                $('#btnStore').hide();
-                $('#btnUpdate').show();
-                $('#modalLampiran').modal('show');
-                $.LoadingOverlay("hide");
-
-                // $.get("{{ route('bagianumum.suratmasuk.index') }}/" + id, function(data) {
-                //     console.log(data);
-                //     $('#id_surat').val(data.id_surat_masuk);
-                //     $('#no_urut').val(data.no_urut);
-                //     $('#kode').val(data.kode);
-                //     $('#no_surat').val(data.no_surat);
-                //     $('#tgl_surat').val(data.tgl_surat);
-                //     $('#asal_surat').val(data.asal_surat);
-                //     $('#perihal').val(data.perihal);
-                //     $('#disposisi').val(data.disposisi);
-                //     $('#tgl_disposisi').val(data.tgl_disposisi);
-                //     $('#tgl_diteruskan').val(data.tgl_diteruskan);
-                //     $('#pengolah').val(data.pengolah);
-                //     $('#tanda_terima').val(data.tanda_terima);
-                //     $('#tgl_terima_surat').val(data.tgl_terima_surat);
-                //     $('#modal').modal('show');
-                //     $.LoadingOverlay("hide", true);
-                // })
-            });
             $('.lihatLampiran').click(function() {
                 var url = $(this).data('url');
                 var id = $(this).data('id');
@@ -387,6 +359,16 @@
                     }
                 })
             });
+        });
+        $(document).on('click', '.uploadLampiran', function() {
+            $.LoadingOverlay("show");
+            var id = $(this).data('id');
+            $('#id_surat_lampiran').val(id);
+            $('#formSurat').trigger("reset");
+            $('#btnStore').hide();
+            $('#btnUpdate').show();
+            $('#modalLampiran').modal('show');
+            $.LoadingOverlay("hide");
         });
     </script>
 @endsection
