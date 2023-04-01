@@ -42,7 +42,7 @@
                                             </dd>
                                             <dt class="col-sm-4 ">Url Lampiran </dt>
                                             <dd class="col-sm-8 ">:
-                                                {!! QrCode::size(100)->generate($surat->lampiran->fileurl) !!}
+                                                {!! $surat->lampiran ? QrCode::size(100)->generate($surat->lampiran->fileurl) : '-' !!}
                                             </dd>
 
                                         </dl>
