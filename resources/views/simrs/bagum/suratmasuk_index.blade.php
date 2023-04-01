@@ -39,15 +39,11 @@
                     $config['info'] = false;
                     $config['order'] = ['1', 'desc'];
                 @endphp
-                <x-adminlte-datatable id="table1" class="text-xs" :heads="$heads" :config="$config" bordered
-                    hoverable compressed>
+                <x-adminlte-datatable id="table1" class="text-xs" :heads="$heads" :config="$config" bordered hoverable
+                    compressed>
                     @foreach ($surats as $item)
                         <tr>
                             <td>
-                                <x-adminlte-button class="btn-xs mb-1 cetakDisposisi" theme="success" icon="fas fa-print"
-                                    title="Cetak Disposisi" data-id="{{ $item->id_surat_masuk }}" />
-                                {{-- <x-adminlte-button class="btn-xs mb-1 editSuratMasuk" theme="warning" icon="fas fa-edit"
-                                    title="Edit Surat Masuk" data-id="{{ $item->id_surat_masuk }}" /> --}}
                                 @if ($item->lampiran)
                                     <x-adminlte-button class="btn-xs mb-1 lihatLampiran" theme="success" icon="fas fa-eye"
                                         title="Lihat Lampiran Surat" data-id="{{ $item->id_surat_masuk }}"
@@ -56,6 +52,11 @@
                                     <x-adminlte-button class="btn-xs mb-1 uploadLampiran" theme="primary"
                                         icon="fas fa-upload" title="Upload Surat" data-id="{{ $item->id_surat_masuk }}" />
                                 @endif
+                                <x-adminlte-button class="btn-xs mb-1 cetakDisposisi" theme="warning" icon="fas fa-print"
+                                    title="Cetak Disposisi" data-id="{{ $item->id_surat_masuk }}" />
+                                {{-- <x-adminlte-button class="btn-xs mb-1 editSuratMasuk" theme="warning" icon="fas fa-edit"
+                                    title="Edit Surat Masuk" data-id="{{ $item->id_surat_masuk }}" /> --}}
+
                             </td>
                             <td class="editSuratMasuk  {{ $item->disposisi ? 'table-success' : 'table-danger' }}"
                                 data-id="{{ $item->id_surat_masuk }}">
@@ -92,24 +93,48 @@
                 <div class="col-md-6">
                     <input type="hidden" name="id_surat" id="id_surat">
                     <input type="hidden" name="_method" id="method">
-                    <x-adminlte-input name="no_urut" label="No Urut" igroup-size="sm" enable-old-support readonly />
-                    <x-adminlte-input name="kode" label="Kode Surat" igroup-size="sm" enable-old-support />
-                    <x-adminlte-input name="no_surat" label="Nomor Surat" igroup-size="sm" enable-old-support required />
-                    @php
-                        $config = ['format' => 'YYYY-MM-DD'];
-                    @endphp
-                    <x-adminlte-input-date name="tgl_surat" value="{{ now()->format('Y-m-d') }}" label="Tgl Surat"
-                        igroup-size="sm" :config="$config" enable-old-support required />
+                    <div class="row">
+                        <div class="col-md-6">
+                            <x-adminlte-input name="no_urut" label="No Urut" igroup-size="sm" enable-old-support readonly />
+                        </div>
+                        <div class="col-md-6">
+                            <x-adminlte-input name="kode" label="Kode Surat" igroup-size="sm" enable-old-support />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <x-adminlte-input name="no_surat" label="Nomor Surat" igroup-size="sm" enable-old-support
+                                required />
+
+                        </div>
+                        <div class="col-md-6">
+                            @php
+                                $config = ['format' => 'YYYY-MM-DD'];
+                            @endphp
+                            <x-adminlte-input-date name="tgl_surat" value="{{ now()->format('Y-m-d') }}" label="Tgl Surat"
+                                igroup-size="sm" :config="$config" enable-old-support required />
+                        </div>
+                    </div>
+
                     <x-adminlte-input name="asal_surat" label="Asal Surat" igroup-size="sm" enable-old-support required />
                     <x-adminlte-textarea name="perihal" rows=5 placeholder="Perihal" label="Perihal" required />
-                    <x-adminlte-input-date name="tgl_disposisi" value="{{ now()->format('Y-m-d') }}" label="Tgl Disposisi"
-                        igroup-size="sm" :config="$config" enable-old-support required />
-                    <x-adminlte-select name="sifat" label="Sifat Surat">
-                        <option value="1">Biasa</option>
-                        <option value="2">Segera</option>
-                        <option value="3">Sangat Segera</option>
-                        <option value="4">Rahasia</option>
-                    </x-adminlte-select>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <x-adminlte-input-date name="tgl_disposisi" value="{{ now()->format('Y-m-d') }}"
+                                label="Tgl Disposisi" igroup-size="sm" :config="$config" enable-old-support required />
+                        </div>
+                        <div class="col-md-6">
+                            <x-adminlte-select name="sifat" label="Sifat Surat">
+                                <option value="1">Biasa</option>
+                                <option value="2">Segera</option>
+                                <option value="3">Sangat Segera</option>
+                                <option value="4">Rahasia</option>
+                            </x-adminlte-select>
+                        </div>
+                    </div>
+                    <x-adminlte-input name="tanda_terima" label="Tanda Terima" igroup-size="sm" enable-old-support />
+                    <x-adminlte-input-date name="tgl_terima_surat" label="Tgl Terima Disposisi" igroup-size="sm"
+                        :config="$config" enable-old-support />
                 </div>
                 <div class="col-md-6">
                     <x-adminlte-input-date name="tgl_diteruskan" label="Tgl Diteruskan" igroup-size="sm"
@@ -127,51 +152,55 @@
                                 peraturan yang berlaku</label>
                         </div>
                         <div class="custom-control custom-checkbox">
-                            <input class="custom-control-input" type="checkbox" id="koordinasikan">
+                            <input class="custom-control-input" type="checkbox" id="koordinasikan" name="koordinasikan">
                             <label for="koordinasikan" class="custom-control-label">Koordinasikan / konfirmasi
                                 dengan
                                 ybs / instansi terkait</label>
                         </div>
                         <div class="custom-control custom-checkbox">
-                            <input class="custom-control-input" type="checkbox" id="untuk_dibantu">
+                            <input class="custom-control-input" type="checkbox" id="untuk_dibantu" name="untuk_dibantu">
                             <label for="untuk_dibantu" class="custom-control-label">Untuk dibantu / difasilitasi /
                                 dipenuhi sesuai kebutuhan</label>
                         </div>
                         <div class="custom-control custom-checkbox">
-                            <input class="custom-control-input" type="checkbox" id="pelajari">
+                            <input class="custom-control-input" type="checkbox" id="pelajari" name="pelajari">
                             <label for="pelajari" class="custom-control-label">Pelajari / telaah /
                                 sarannya</label>
                         </div>
                         <div class="custom-control custom-checkbox">
-                            <input class="custom-control-input" type="checkbox" id="wakili_hadiri">
+                            <input class="custom-control-input" type="checkbox" id="wakili_hadiri" name="wakili_hadiri">
                             <label for="wakili_hadiri" class="custom-control-label">Wakili / hadiri / terima /
                                 laporkan hasilnya</label>
                         </div>
                         <div class="custom-control custom-checkbox">
-                            <input class="custom-control-input" type="checkbox" id="agendakan">
+                            <input class="custom-control-input" type="checkbox" id="agendakan" name="agendakan">
                             <label for="agendakan" class="custom-control-label">Agendakan / persiapkan /
                                 koordinasikan </label>
                         </div>
                         <div class="custom-control custom-checkbox">
-                            <input class="custom-control-input" type="checkbox" id="ingatkan_waktunya">
+                            <input class="custom-control-input" type="checkbox" id="ingatkan_waktunya"
+                                name="ingatkan_waktunya">
                             <label for="ingatkan_waktunya" class="custom-control-label">Jadwalkan ingatkan
                                 waktunya</label>
                         </div>
                         <div class="custom-control custom-checkbox">
-                            <input class="custom-control-input" type="checkbox" id="siapkan_bahan">
+                            <input class="custom-control-input" type="checkbox" id="siapkan_bahan" name="siapkan_bahan">
                             <label for="siapkan_bahan" class="custom-control-label">Siapkan pointer / sambutan /
                                 bahan</label>
                         </div>
                         <div class="custom-control custom-checkbox">
-                            <input class="custom-control-input" type="checkbox" id="simpan_arsipkan">
+                            <input class="custom-control-input" type="checkbox" id="simpan_arsipkan"
+                                name="simpan_arsipkan">
                             <label for="simpan_arsipkan" class="custom-control-label">Simpan / arsipkan</label>
                         </div>
                     </div>
                     <x-adminlte-textarea name="disposisi" rows=5 placeholder="Catatan Disposisi"
                         label="Catatan Disposisi" />
-                    <x-adminlte-input name="tanda_terima" label="Tanda Terima" igroup-size="sm" enable-old-support />
-                    <x-adminlte-input-date name="tgl_terima_surat" label="Tgl Terima Disposisi" igroup-size="sm"
-                        :config="$config" enable-old-support />
+                    <div class="custom-control custom-checkbox">
+                        <input class="custom-control-input" type="checkbox" id="ttd_direktur" name="ttd_direktur">
+                        <label for="ttd_direktur" class="custom-control-label">Telah Ditandatangi Oleh Direktur</label>
+                    </div>
+
                 </div>
             </div>
         </form>

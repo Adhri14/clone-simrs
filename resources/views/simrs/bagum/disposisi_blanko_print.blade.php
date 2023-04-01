@@ -70,7 +70,7 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td colspan="2"><b>Hal : </b><br><br><br><br></td>
+                                    <td colspan="2"><b>Perihal : </b><br><br><br><br></td>
                                 </tr>
                                 <tr>
                                     <td><b>Diteruskan kepada Sdr. : </b></td>
@@ -165,14 +165,24 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td tyle="vertical-align:bottom;">
-                                        <b>Tgl. Diteruskan : </b>
+                                    <td rowspan="2" style="vertical-align:bottom;">
+                                        <b>Tgl. Diteruskan : ................. </b>
                                     </td>
                                     <td>
                                         <div>
                                             <input type="checkbox">
                                             <label>
                                                 Siapkan pointer / sambutan / bahan
+                                            </label>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div>
+                                            <input type="checkbox">
+                                            <label>
+                                                Simpan / arsipkan
                                             </label>
                                         </div>
                                     </td>

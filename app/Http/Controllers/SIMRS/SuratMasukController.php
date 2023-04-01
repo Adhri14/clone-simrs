@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\SIMRS\SuratMasuk;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class SuratMasukController extends Controller
@@ -17,7 +18,6 @@ class SuratMasukController extends Controller
                 $query->where('asal_surat', "like", "%" . $request->search . "%")
                     ->orWhere('perihal', "like", "%" . $request->search . "%");
             })->paginate(25);
-
         $surat_total = SuratMasuk::count();
         return view('simrs.bagum.suratmasuk_index', compact([
             'request',
@@ -55,6 +55,7 @@ class SuratMasukController extends Controller
             'asal_surat' => $request->asal_surat,
             'perihal' => $request->perihal,
             'tgl_disposisi' => $request->tgl_disposisi,
+            'user' => Auth::user()->name,
         ]);
         Alert::success('Success', 'Surat Masuk Berhasil Diinputkan');
         return redirect()->back();
@@ -70,6 +71,35 @@ class SuratMasukController extends Controller
     }
     public function update(Request $request, $id)
     {
+
+        $tindakan = [];
+        if (isset($request->tindaklanjuti)) {
+            array_push($tindakan, "tindaklanjuti");
+        }
+        if (isset($request->proses_sesuai_kemampuan)) {
+            array_push($tindakan, "proses_sesuai_kemampuan");
+        }
+        if (isset($request->untuk_dibantu)) {
+            array_push($tindakan, "untuk_dibantu");
+        }
+        if (isset($request->pelajari)) {
+            array_push($tindakan, "pelajari");
+        }
+        if (isset($request->wakili_hadiri)) {
+            array_push($tindakan, "wakili_hadiri");
+        }
+        if (isset($request->agendakan)) {
+            array_push($tindakan, "agendakan");
+        }
+        if (isset($request->ingatkan_waktunya)) {
+            array_push($tindakan, "ingatkan_waktunya");
+        }
+        if (isset($request->siapkan_bahan)) {
+            array_push($tindakan, "siapkan_bahan");
+        }
+        if (isset($request->simpan_arsipkan)) {
+            array_push($tindakan, "simpan_arsipkan");
+        }
         $surat = SuratMasuk::firstWhere('id_surat_masuk', $request->id_surat);
         $surat->update($request->all());
         Alert::success('Success', 'Surat Berhasil Diupdate');
