@@ -44,7 +44,7 @@ class SuratMasukController extends Controller
         $no_urut_bulan = SuratMasuk::whereYear('tgl_disposisi', $tgl_disposisi->year)
             ->whereMonth('tgl_disposisi', $tgl_disposisi->month)
             ->count();
-        $request['no_urut'] = $no_urut_bulan;
+        $request['no_urut'] = $no_urut_bulan + 1;
         // insert surat masuk
         SuratMasuk::create([
             'no_urut' => $request->no_urut,

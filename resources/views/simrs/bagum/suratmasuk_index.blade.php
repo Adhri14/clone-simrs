@@ -32,7 +32,7 @@
                     </div>
                 </div>
                 @php
-                    $heads = ['Action', 'No / Kode', 'Tgl Surat', 'No Surat', 'Asal', 'Perihal', 'Tgl Disposisi',  'Pengolah', 'Disposisi', 'Penerima', ' Tgl Terima'];
+                    $heads = ['Action', 'No / Kode', 'Tgl Surat', 'No Surat', 'Asal', 'Perihal', 'Tgl Disposisi', 'Pengolah', 'Disposisi', 'Penerima', ' Tgl Terima'];
                     $config['scrollX'] = true;
                     $config['paging'] = false;
                     $config['searching'] = false;
@@ -274,9 +274,9 @@
             $('#btnStore').click(function(e) {
                 $.LoadingOverlay("show");
                 e.preventDefault();
-                var url = "{{ route('bagianumum.suratmasuk.store') }}/";
+                var url = "{{ route('bagianumum.suratmasuk.store') }}";
                 $('#formSurat').attr('action', url);
-                $('#method').val('POST');
+                $("#method").prop('disabled', true);
                 $('#formSurat').submit();
             });
             $('#btnUpdate').click(function(e) {
