@@ -48,8 +48,16 @@
                                     title="Cetak Disposisi" data-id="{{ $item->id_surat_masuk }}" /> <br>
                                 <x-adminlte-button class="btn-xs mb-1 editSuratMasuk" theme="warning" icon="fas fa-edit"
                                     title="Edit Surat Masuk" data-id="{{ $item->id_surat_masuk }}" />
-                                <x-adminlte-button class="btn-xs mb-1 uploadLampiran" theme="primary" icon="fas fa-upload"
-                                    title="Upload Surat" data-id="{{ $item->id_surat_masuk }}" />
+
+                                @if ($item->lampiran)
+                                    <x-adminlte-button class="btn-xs mb-1 lihatLampiran" theme="success" icon="fas fa-eye"
+                                        title="Lihat Lampiran Surat" data-id="{{ $item->lampiran->fileurl }}" />
+                                @else
+                                    <x-adminlte-button class="btn-xs mb-1 uploadLampiran" theme="primary"
+                                        icon="fas fa-upload" title="Upload Surat" data-id="{{ $item->id_surat_masuk }}" />
+                                @endif
+
+
                             </td>
                             <td>{{ $item->no_urut }} / {{ $item->kode }}</td>
                             <td>{{ $item->tgl_surat }}</td>
@@ -102,8 +110,8 @@
                     </x-adminlte-select>
                 </div>
                 <div class="col-md-7">
-                    <x-adminlte-input-date name="tgl_diteruskan" label="Tgl Diteruskan" igroup-size="sm" :config="$config"
-                        enable-old-support />
+                    <x-adminlte-input-date name="tgl_diteruskan" label="Tgl Diteruskan" igroup-size="sm"
+                        :config="$config" enable-old-support />
                     <x-adminlte-input name="pengolah" label="Diteruskan Kpd" igroup-size="sm" enable-old-support />
                     <div class="form-group">
                         <div class="custom-control custom-checkbox">
@@ -180,8 +188,10 @@
         </x-slot>
     </x-adminlte-modal>
     <x-adminlte-modal id="modalLampiran" title="Lampiran Surat Masuk" size="xl" theme="success" v-centered>
-        <form action="{{ route('bagianumum.suratlampiran.store') }}" id="formLampiran" method="POST" enctype="multipart/form-data">
+        <form action="{{ route('bagianumum.suratlampiran.store') }}" id="formLampiran" method="POST"
+            enctype="multipart/form-data">
             @csrf
+            <input type="hidden" name="id_surat" id="id_surat_lampiran">
             <x-adminlte-input-file name="file" placeholder="Pilih file...">
                 <x-slot name="prependSlot">
                     <div class="input-group-text bg-lightblue">
@@ -204,6 +214,31 @@
             </form> --}}
             <x-adminlte-button theme="secondary" icon="fas fa-arrow-left" label="Kembali" data-dismiss="modal" />
         </x-slot>
+    </x-adminlte-modal>
+    <x-adminlte-modal id="modalFile" size="xl" theme="warning" title="Lampiran Surat Masuk">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="row">
+                    <dt class="col-sm-4">Pasien</dt>
+                    <dd class="col-sm-8">: <span id="nama"></span> / <span id="norm"></span></dd>
+                    <dt class="col-sm-4">BPJS / NIK</dt>
+                    <dd class="col-sm-8">: <span id="nomorkartu"></span> / <span id="nik"></span></dd>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="row">
+                    <dt class="col-sm-4">Nama Berkas</dt>
+                    <dd class="col-sm-8">:
+                        <span id="namafile"></span> /
+                        <span id="jenisberkas"></span>
+                    </dd>
+                    <dt class="col-sm-4">Tanggal Scan</dt>
+                    <dd class="col-sm-8">: <span id="tanggalscan"></span></dd>
+                </div>
+            </div>
+        </div>
+        <iframe id="fileurl" src="" width="100%" height="700px">
+        </iframe>
     </x-adminlte-modal>
 @stop
 
@@ -297,8 +332,9 @@
                 })
             });
             $('.uploadLampiran').click(function() {
-                var id = $(this).data('id');
                 $.LoadingOverlay("show");
+                var id = $(this).data('id');
+                $('#id_surat_lampiran').val(id);
                 $('#formSurat').trigger("reset");
                 $('#btnStore').hide();
                 $('#btnUpdate').show();
@@ -323,6 +359,13 @@
                 //     $('#modal').modal('show');
                 //     $.LoadingOverlay("hide", true);
                 // })
+            });
+            $('.lihatLampiran').click(function() {
+                var url = $(this).data('id');
+                $.LoadingOverlay("show");
+                $('#modalFile').modal('show');
+                $("#fileurl").attr("src", url);
+                $.LoadingOverlay("hide", true);
             });
         });
     </script>

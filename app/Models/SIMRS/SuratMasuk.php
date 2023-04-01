@@ -13,4 +13,10 @@ class SuratMasuk extends Model
     protected $primaryKey = 'id_surat_masuk';
 
     protected $guarded = ['id'];
+
+
+    public function lampiran()
+    {
+        return $this->hasOne(SuratLampiran::class, 'surat_id', 'id_surat_masuk');
+    }
 }

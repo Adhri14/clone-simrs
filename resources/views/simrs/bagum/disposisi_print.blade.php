@@ -37,7 +37,14 @@
                                             <dt class="col-sm-4 ">Tanggal Surat </dt>
                                             <dd class="col-sm-8 ">:
                                                 {{ Carbon\Carbon::parse($surat->tgl_surat)->translatedFormat('l, d F Y') }}</b>
+                                                <br>
+
                                             </dd>
+                                            <dt class="col-sm-4 ">Url Lampiran </dt>
+                                            <dd class="col-sm-8 ">:
+                                                {!! QrCode::size(100)->generate($surat->lampiran->fileurl) !!}
+                                            </dd>
+
                                         </dl>
                                     </td>
                                     <td>
@@ -256,6 +263,9 @@
                     </div>
                     {{-- <div class="footer-space">&nbsp;</div> --}}
                     <div class="footer">E-DISPOSISI RSUD WALED</div>
+
+
+
                 </section>
             </div>
             <button class="btn btn-success btnPrint" onclick="printDiv('printMe')"><i class="fas fa-print"> Print
@@ -306,6 +316,7 @@
             font-size: 17 !important;
             padding: 3px !important;
         }
+
         pre {
             padding: 2 !important;
             font-size: 20 !important;
