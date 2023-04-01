@@ -12,7 +12,7 @@ class SuratMasukController extends Controller
 {
     public function index(Request $request)
     {
-        $surats = SuratMasuk::orderBy('tgl_input', 'desc')
+        $surats = SuratMasuk::orderBy('id_surat_masuk', 'desc')
             ->where(function ($query) use ($request) {
                 $query->where('asal_surat', "like", "%" . $request->search . "%")
                     ->orWhere('perihal', "like", "%" . $request->search . "%");

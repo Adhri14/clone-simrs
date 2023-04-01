@@ -50,7 +50,9 @@
                                     <td>
                                         <dl class="row">
                                             <dt class="col-sm-4 ">No. Disposisi</dt>
-                                            <dd class="col-sm-8 ">: {{ $surat->no_urut }}</dd>
+                                            <dd class="col-sm-8 ">:
+                                                {{ str_pad($surat->no_urut, 3, '0', STR_PAD_LEFT) }}/{{ $surat->kode }}/{{ Carbon\Carbon::parse($surat->disposisi)->translatedFormat('m/Y') }}
+                                            </dd>
                                             <dt class="col-sm-4 ">Tgl. Disposisi </dt>
                                             <dd class="col-sm-8 ">:
                                                 {{ Carbon\Carbon::parse($surat->tgl_input)->translatedFormat('l, d F Y') }}

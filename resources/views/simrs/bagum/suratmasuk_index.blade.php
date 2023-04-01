@@ -17,7 +17,7 @@
                     </div>
                     <div class="col-md-4">
                         <form action="" method="get">
-                            <x-adminlte-input name="search" class=" mb-2" placeholder="Pencarian Asal / Perihal Surat" igroup-size="sm"
+                            <x-adminlte-input name="search" placeholder="Pencarian Asal / Perihal Surat" igroup-size="sm"
                                 value="{{ $request->search }}">
                                 <x-slot name="appendSlot" class="mb-2">
                                     <x-adminlte-button type="submit" theme="primary" label="Cari!" />
@@ -32,7 +32,7 @@
                     </div>
                 </div>
                 @php
-                    $heads = ['Action', 'No / Kode', 'No Surat / Tgl', 'Asal', 'Perihal', 'Pengolah', 'Disposisi', 'Penerima'];
+                    $heads = ['Action', 'ID / No / Kode', 'No Surat / Tgl', 'Asal', 'Perihal', 'Pengolah', 'Disposisi', 'Penerima'];
                     $config['scrollX'] = true;
                     $config['paging'] = false;
                     $config['searching'] = false;
@@ -58,7 +58,7 @@
                                 @endif
                             </td>
                             <td class="editSuratMasuk  {{ $item->disposisi ? 'table-success' : 'table-danger' }}"
-                                data-id="{{ $item->id_surat_masuk }}">{{ $item->no_urut }}/{{ $item->kode }} <br>
+                                data-id="{{ $item->id_surat_masuk }}">{{ $item->id_surat_masuk }}/{{ $item->no_urut }}/{{ $item->kode }} <br>
                                 {{ $item->tgl_disposisi }}
                             </td>
                             <td>
