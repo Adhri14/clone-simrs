@@ -100,6 +100,10 @@ class SuratMasukController extends Controller
         if (isset($request->simpan_arsipkan)) {
             array_push($tindakan, "simpan_arsipkan");
         }
+        // ttd direktur
+        if (isset($request->ttd_direktur)) {
+            $request['ttd_direktur'] = now();
+        }
         $surat = SuratMasuk::firstWhere('id_surat_masuk', $request->id_surat);
         $surat->update($request->all());
         Alert::success('Success', 'Surat Berhasil Diupdate');

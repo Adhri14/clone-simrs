@@ -30,18 +30,17 @@
                                 <tr>
                                     <td style="width: 450px">
                                         <dl class="row">
-                                            <dt class="col-sm-4 ">Surat Dari </dt>
-                                            <dd class="col-sm-8 ">: {{ $surat->asal_surat }}</b></dd>
-                                            <dt class="col-sm-4 ">No Surat </dt>
-                                            <dd class="col-sm-8 ">: {{ $surat->no_surat }}</b></dd>
-                                            <dt class="col-sm-4 ">Tanggal Surat </dt>
-                                            <dd class="col-sm-8 ">:
+                                            <dt class="col-sm-4 ">Surat Dari : </dt>
+                                            <dd class="col-sm-8 ">{{ $surat->asal_surat }}</b></dd>
+                                            <dt class="col-sm-4 ">No Surat : </dt>
+                                            <dd class="col-sm-8 ">{{ $surat->no_surat }}</b></dd>
+                                            <dt class="col-sm-4 ">Tanggal Surat : </dt>
+                                            <dd class="col-sm-8 ">
                                                 {{ Carbon\Carbon::parse($surat->tgl_surat)->translatedFormat('l, d F Y') }}</b>
                                                 <br>
-
                                             </dd>
-                                            <dt class="col-sm-4 ">Url Lampiran </dt>
-                                            <dd class="col-sm-8 ">:
+                                            <dt class="col-sm-4 ">Url Lampiran :</dt>
+                                            <dd class="col-sm-8 ">
                                                 {!! $surat->lampiran ? QrCode::size(100)->generate($surat->lampiran->fileurl) : '-' !!}
                                             </dd>
 
@@ -51,11 +50,11 @@
                                         <dl class="row">
                                             <dt class="col-sm-4 ">No. Disposisi</dt>
                                             <dd class="col-sm-8 ">:
-                                                {{ str_pad($surat->no_urut, 3, '0', STR_PAD_LEFT) }}/{{ $surat->kode }}/{{ Carbon\Carbon::parse($surat->disposisi)->translatedFormat('m/Y') }}
+                                                {{ str_pad($surat->no_urut, 3, '0', STR_PAD_LEFT) }}/{{ $surat->kode }}/{{ Carbon\Carbon::parse($surat->tgl_disposisi)->translatedFormat('m/Y') }}
                                             </dd>
                                             <dt class="col-sm-4 ">Tgl. Disposisi </dt>
                                             <dd class="col-sm-8 ">:
-                                                {{ Carbon\Carbon::parse($surat->tgl_input)->translatedFormat('l, d F Y') }}
+                                                {{ Carbon\Carbon::parse($surat->tgl_disposisi)->translatedFormat('l, d F Y') }}
                                                 </b></dd>
                                         </dl>
                                         <div class="row">
@@ -231,7 +230,11 @@
                                                 <div class="text-center">
                                                     <b>Telah diterima oleh</b>
                                                     <br>
-                                                    <br><br><br>
+                                                    @if ($surat->tanda_terima)
+                                                        {!! $surat->tanda_terima ? QrCode::size(100)->generate($pernyataan_penerima) : '-' !!}
+                                                    @else
+                                                        <br><br><br>
+                                                    @endif
                                                     <br>
                                                     <u>
                                                         <b>
@@ -242,14 +245,18 @@
                                                 </div>
                                                 <div>
                                                     Tgl. Diterima :
-                                                    {{ $surat->tgl_penyelesaian ? Carbon\Carbon::parse($surat->tgl_penyelesaian)->translatedFormat('l, d F Y') : '..............' }}
+                                                    {{ $surat->tgl_terima_surat ? Carbon\Carbon::parse($surat->tgl_terima_surat)->translatedFormat('l, d F Y') : '..............' }}
                                                 </div>
                                             </div>
                                             <div class="col-md-6 ">
                                                 <div class="text-center">
                                                     <b>Direktur RSUD Waled</b>
                                                     <br>
-                                                    <br><br><br>
+                                                    @if ($surat->ttd_direktur)
+                                                        {!! $surat->ttd_direktur ? QrCode::size(100)->generate($pernyataan_direktur) : '-' !!}
+                                                    @else
+                                                        <br><br><br>
+                                                    @endif
                                                     <br>
                                                     <u>
                                                         <b>dr. M. LUTHFI, Sp.PD-KHOM, FINASIM.,MMRS</b>
@@ -315,13 +322,13 @@
         th,
         td {
             border: 1px solid #333333 !important;
-            font-size: 17 !important;
+            font-size: 16px !important;
             padding: 3px !important;
         }
 
         pre {
             padding: 2 !important;
-            font-size: 20 !important;
+            font-size: 19px !important;
             border: none
         }
     </style>

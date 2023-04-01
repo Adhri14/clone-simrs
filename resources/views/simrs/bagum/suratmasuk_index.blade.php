@@ -359,6 +359,10 @@
                     $('#pengolah').val(data.pengolah);
                     $('#tanda_terima').val(data.tanda_terima);
                     $('#tgl_terima_surat').val(data.tgl_terima_surat);
+                    if (typeof(data.ttd_direktur) != "undefined" && data.ttd_direktur !== null)
+                        $('#ttd_direktur').prop('checked', true);
+                    else
+                        $('#ttd_direktur').prop('checked', false);
                     $('#modal').modal('show');
                     $.LoadingOverlay("hide", true);
                 })

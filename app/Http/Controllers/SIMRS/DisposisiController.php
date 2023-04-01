@@ -4,6 +4,7 @@ namespace App\Http\Controllers\SIMRS;
 
 use App\Http\Controllers\Controller;
 use App\Models\SIMRS\SuratMasuk;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class DisposisiController extends Controller
@@ -48,7 +49,20 @@ class DisposisiController extends Controller
     public function show($id)
     {
         $surat = SuratMasuk::find($id);
-        return view('simrs.bagum.disposisi_print', compact(['surat']));
+        $pernyataan_direktur = null;
+        $pernyataan_penerima = null;
+        $nomor = str_pad($surat->no_urut, 3, '0', STR_PAD_LEFT) . '/' . $surat->kode . '/' . Carbon::parse($surat->tgl_disposisi)->translatedFormat('m/Y');
+
+        if (isset($surat->ttd_direktur)) {
+            $pernyataan_direktur = "E-Disposisi dengan nomor " . $nomor . " telah ditandatangani oleh Direktur RSUD Waled pada tanggal ";
+        }
+        if ($surat->tgl_terima_surat && $surat->tanda_terima) {
+            $pernyataan_penerima = "E-Disposisi dengan nomor " . $nomor . " telah diterima dan ditandatangani oleh " . $surat->tanda_terima . " pada tanggal " . Carbon::parse($surat->tgl_terima_surat)->translatedFormat('l, d F Y');
+        }
+
+
+
+        return view('simrs.bagum.disposisi_print', compact(['surat', 'pernyataan_direktur', 'pernyataan_penerima']));
     }
 
     /**
