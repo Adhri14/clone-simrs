@@ -39,7 +39,7 @@
                     $config['info'] = false;
                     $config['order'] = ['1', 'desc'];
                 @endphp
-                <x-adminlte-datatable id="table1" class="text-xs nowrap" :heads="$heads" :config="$config" bordered
+                <x-adminlte-datatable id="table1" class="text-xs" :heads="$heads" :config="$config" bordered
                     hoverable compressed>
                     @foreach ($surats as $item)
                         <tr>
@@ -58,7 +58,8 @@
                                 @endif
                             </td>
                             <td class="editSuratMasuk  {{ $item->disposisi ? 'table-success' : 'table-danger' }}"
-                                data-id="{{ $item->id_surat_masuk }}">{{ $item->id_surat_masuk }}/{{ $item->no_urut }}/{{ $item->kode }} <br>
+                                data-id="{{ $item->id_surat_masuk }}">
+                                {{ $item->id_surat_masuk }}/{{ $item->no_urut }}/{{ $item->kode }} <br>
                                 {{ $item->tgl_disposisi }}
                             </td>
                             <td>
@@ -66,9 +67,9 @@
                                 {{ $item->tgl_surat }}
                             </td>
                             <td>{{ $item->asal_surat }}</td>
-                            <td> {{ substr($item->perihal, 0, 19) }}...</td>
+                            <td> {{ $item->perihal }}</td>
                             <td>{{ $item->pengolah }}</td>
-                            <td> {{ substr($item->disposisi, 0, 19) }}...</td>
+                            <td> {{ $item->disposisi }}</td>
                             {{-- <td>{{ $item->tgl_diteruskan }}</td> --}}
                             <td>{{ $item->tanda_terima }}</td>
                         </tr>
@@ -116,53 +117,54 @@
                     <x-adminlte-input name="pengolah" label="Diteruskan Kpd" igroup-size="sm" enable-old-support />
                     <div class="form-group">
                         <div class="custom-control custom-checkbox">
-                            <input class="custom-control-input" type="checkbox" id="tindaklanjuti">
+                            <input class="custom-control-input" type="checkbox" id="tindaklanjuti" name="tindaklanjuti">
                             <label for="tindaklanjuti" class="custom-control-label">Untuk ditindaklanjuti</label>
                         </div>
                         <div class="custom-control custom-checkbox">
-                            <input class="custom-control-input" type="checkbox" id="infeksi_kulit_jaringan">
-                            <label for="infeksi_kulit_jaringan" class="custom-control-label">Proses sesuai kemampuan /
+                            <input class="custom-control-input" type="checkbox" id="proses_sesuai_kemampuan"
+                                name="proses_sesuai_kemampuan">
+                            <label for="proses_sesuai_kemampuan" class="custom-control-label">Proses sesuai kemampuan /
                                 peraturan yang berlaku</label>
                         </div>
                         <div class="custom-control custom-checkbox">
-                            <input class="custom-control-input" type="checkbox" id="infeksi_mata_telinga">
-                            <label for="infeksi_mata_telinga" class="custom-control-label">Koordinasikan / konfirmasi
+                            <input class="custom-control-input" type="checkbox" id="koordinasikan">
+                            <label for="koordinasikan" class="custom-control-label">Koordinasikan / konfirmasi
                                 dengan
                                 ybs / instansi terkait</label>
                         </div>
                         <div class="custom-control custom-checkbox">
-                            <input class="custom-control-input" type="checkbox" id="infeksi_sendi_tulang">
-                            <label for="infeksi_sendi_tulang" class="custom-control-label">Untuk dibantu / difasilitasi /
+                            <input class="custom-control-input" type="checkbox" id="untuk_dibantu">
+                            <label for="untuk_dibantu" class="custom-control-label">Untuk dibantu / difasilitasi /
                                 dipenuhi sesuai kebutuhan</label>
                         </div>
                         <div class="custom-control custom-checkbox">
-                            <input class="custom-control-input" type="checkbox" id="pnemonia_non_bakterial">
-                            <label for="pnemonia_non_bakterial" class="custom-control-label">Pelajari / telaah /
+                            <input class="custom-control-input" type="checkbox" id="pelajari">
+                            <label for="pelajari" class="custom-control-label">Pelajari / telaah /
                                 sarannya</label>
                         </div>
                         <div class="custom-control custom-checkbox">
-                            <input class="custom-control-input" type="checkbox" id="infeksi_saluran_cerna">
-                            <label for="infeksi_saluran_cerna" class="custom-control-label">Wakili / hadiri / terima /
+                            <input class="custom-control-input" type="checkbox" id="wakili_hadiri">
+                            <label for="wakili_hadiri" class="custom-control-label">Wakili / hadiri / terima /
                                 laporkan hasilnya</label>
                         </div>
                         <div class="custom-control custom-checkbox">
-                            <input class="custom-control-input" type="checkbox" id="infeksi_ginjal_kemih">
-                            <label for="infeksi_ginjal_kemih" class="custom-control-label">Agendakan / persiapkan /
+                            <input class="custom-control-input" type="checkbox" id="agendakan">
+                            <label for="agendakan" class="custom-control-label">Agendakan / persiapkan /
                                 koordinasikan </label>
                         </div>
                         <div class="custom-control custom-checkbox">
-                            <input class="custom-control-input" type="checkbox" id="infeksi_otak_sumsum">
-                            <label for="infeksi_otak_sumsum" class="custom-control-label">Jadwalkan ingatkan
+                            <input class="custom-control-input" type="checkbox" id="ingatkan_waktunya">
+                            <label for="ingatkan_waktunya" class="custom-control-label">Jadwalkan ingatkan
                                 waktunya</label>
                         </div>
                         <div class="custom-control custom-checkbox">
-                            <input class="custom-control-input" type="checkbox" id="infeksi_obsteri">
-                            <label for="infeksi_obsteri" class="custom-control-label">Siapkan pointer / sambutan /
+                            <input class="custom-control-input" type="checkbox" id="siapkan_bahan">
+                            <label for="siapkan_bahan" class="custom-control-label">Siapkan pointer / sambutan /
                                 bahan</label>
                         </div>
                         <div class="custom-control custom-checkbox">
-                            <input class="custom-control-input" type="checkbox" id="infeksi_obsteri">
-                            <label for="infeksi_obsteri" class="custom-control-label">Simpan / arsipkan</label>
+                            <input class="custom-control-input" type="checkbox" id="simpan_arsipkan">
+                            <label for="simpan_arsipkan" class="custom-control-label">Simpan / arsipkan</label>
                         </div>
                     </div>
                     <x-adminlte-textarea name="disposisi" rows=5 placeholder="Catatan Disposisi"
