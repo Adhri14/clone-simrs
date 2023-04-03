@@ -1436,6 +1436,28 @@ class AntrianController extends ApiBPJSController
                         ];
                     }
                 }
+                 // create sep
+                 $sep = $vclaim->sep_insert($request);
+                 // berhasil buat sep
+                 if ($sep->metaData->code == 200) {
+                     // update antrian sep
+                     $request["nomorsep"] = $sep->response->sep->noSep;
+                     $antrian->update([
+                         "nomorsep" => $request->nomorsep
+                     ]);
+                     // print sep
+                     $print_sep = new AntrianController();
+                     $print_sep->print_sep($request, $sep);
+                 }
+                 // gagal buat sep
+                 else {
+                     return [
+                         "metadata" => [
+                             "message" => "Gagal Buat SEP : " . $sep->metaData->message,
+                             "code" => 201,
+                         ],
+                     ];
+                 }
                 // rj jkn tipe transaki 2 status layanan 2 status layanan detail opn
                 $tipetransaksi = 2;
                 $statuslayanan = 2;
@@ -1470,28 +1492,6 @@ class AntrianController extends ApiBPJSController
             $response = $this->update_antrean($request);
             // jika antrian berhasil diupdate di bpjs
             if ($response->status() == 200) {
-                // create sep
-                $sep = $vclaim->sep_insert($request);
-                // berhasil buat sep
-                if ($sep->metaData->code == 200) {
-                    // update antrian sep
-                    $request["nomorsep"] = $sep->response->sep->noSep;
-                    $antrian->update([
-                        "nomorsep" => $request->nomorsep
-                    ]);
-                    // print sep
-                    $print_sep = new AntrianController();
-                    $print_sep->print_sep($request, $sep);
-                }
-                // gagal buat sep
-                else {
-                    return [
-                        "metadata" => [
-                            "message" => "Gagal Buat SEP : " . $sep->metaData->message,
-                            "code" => 201,
-                        ],
-                    ];
-                }
                 // insert simrs create kunjungan
                 try {
                     $paramedis = ParamedisDB::firstWhere('kode_dokter_jkn', $antrian->kodedokter);
