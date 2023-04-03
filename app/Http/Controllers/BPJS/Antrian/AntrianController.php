@@ -1948,8 +1948,6 @@ class AntrianController extends ApiBPJSController
     }
     function print_karcis(Request $request,  $kunjungan)
     {
-
-        dd($request->all());
         Carbon::setLocale('id');
         date_default_timezone_set('Asia/Jakarta');
         $now = Carbon::now();
