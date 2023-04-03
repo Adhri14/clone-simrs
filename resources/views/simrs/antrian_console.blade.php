@@ -202,7 +202,7 @@
     <script src="{{ asset('vendor/sweetalert/sweetalert.all.js') }}"></script>
     <script src="{{ asset('vendor/sweetalert2/sweetalert2.all.min.js') }}"></script>
     {{-- scan --}}
-    {{-- <script>
+    <script>
         $(function() {
             onScan.attachTo(document, {
                 onScan: function(sCode, iQty) {
@@ -253,7 +253,7 @@
                 },
             });
         });
-    </script> --}}
+    </script>
     {{-- btn chekin --}}
     <script>
         $(function() {
