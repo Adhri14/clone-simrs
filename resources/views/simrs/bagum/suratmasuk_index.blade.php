@@ -115,7 +115,6 @@
                                 igroup-size="sm" :config="$config" enable-old-support required />
                         </div>
                     </div>
-
                     <x-adminlte-input name="asal_surat" label="Asal Surat" igroup-size="sm" enable-old-support required />
                     <x-adminlte-textarea name="perihal" rows=5 placeholder="Perihal" label="Perihal" required />
                     <div class="row">
