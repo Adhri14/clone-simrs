@@ -1948,6 +1948,8 @@ class AntrianController extends ApiBPJSController
     }
     function print_karcis(Request $request,  $kunjungan)
     {
+
+        dd($request->all());
         Carbon::setLocale('id');
         date_default_timezone_set('Asia/Jakarta');
         $now = Carbon::now();
@@ -1960,8 +1962,8 @@ class AntrianController extends ApiBPJSController
         $printer->text("================================================\n");
         $printer->text("No. RM : " . $request->norm . "\n");
         $printer->text("Nama : " . $request->nama . "\n");
-        $printer->text("NIK : " . $request->nik . "\n");
-        $printer->text("No. Kartu JKN : " . $request->nomorkartu . "\n");
+        // $printer->text("NIK : " . $request->nik . "\n");
+        // $printer->text("No. Kartu JKN : " . $request->nomorkartu . "\n");
         $printer->text("No. Telp. : " . $request->nohp . "\n");
         $printer->text("No. Rujukan : " . $request->nomorrujukan . "\n");
         $printer->text("No. Surat Kontrol : " . $request->nomorsuratkontrol . "\n");
@@ -1988,7 +1990,7 @@ class AntrianController extends ApiBPJSController
         $printer->setTextSize(1, 1);
         $printer->text("Kode Booking : " . $request->kodebooking . "\n");
         $printer->text("Kode Kunjungan : " . $kunjungan->kode_kunjungan . "\n");
-        $printer->qrCode($request->kodebooking, Printer::QR_ECLEVEL_L, 10, Printer::QR_MODEL_2);
+        // $printer->qrCode($request->kodebooking, Printer::QR_ECLEVEL_L, 10, Printer::QR_MODEL_2);
         $printer->text("================================================\n");
         $printer->text("Nomor Antrian Poliklinik :\n");
         $printer->setTextSize(2, 2);
@@ -2072,10 +2074,10 @@ class AntrianController extends ApiBPJSController
             case '1':
                 $request['jeniskunjungan_print'] = 'RUJUKAN FKTP';
                 break;
-            case '1':
+            case '2':
                 $request['jeniskunjungan_print'] = 'RUJUKAN INTERNAL';
                 break;
-            case '1':
+            case '3':
                 if (isset($antrian->nomorreferensi)) {
                     $request['jeniskunjungan_print'] = 'KONTROL';
                 } else {
@@ -2083,7 +2085,7 @@ class AntrianController extends ApiBPJSController
                     $request['jeniskunjungan_print'] = 'KUNJUNGAN UMUM';
                 }
                 break;
-            case '1':
+            case '4':
                 $request['jeniskunjungan_print'] = 'RUJUKAN RS';
                 break;
             default:
@@ -2108,6 +2110,7 @@ class AntrianController extends ApiBPJSController
         $request['angkaantrean'] = $antrian->angkaantrean;
         $request['lantaipendaftaran'] = $antrian->lantaipendaftaran;
         $request['nomorsep'] = $antrian->nomorsep;
+        $request['keterangan'] = $antrian->keterangan;
         $kunjungan = KunjunganDB::firstWhere('kode_kunjungan', $antrian->kode_kunjungan);
         $this->print_karcis($request, $kunjungan);
         return  $this->sendResponse("Print Ulang Berhasil", null, 200);
