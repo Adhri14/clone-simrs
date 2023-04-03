@@ -62,7 +62,7 @@ Route::prefix('wsrs')->group(function () {
     Route::post('ambil_antrian', [AntrianAntrianController::class, 'ambil_antrian']);
     Route::post('sisa_antrian', [AntrianAntrianController::class, 'sisa_antrian']);
     Route::post('batal_antrian', [AntrianAntrianController::class, 'batal_antrian']);
-    Route::post('checkin_antrian', [AntrianBPJSController::class, 'checkin_antrian']);
+    Route::post('checkin_antrian', [AntrianAntrianController::class, 'checkin_antrian']);
     Route::post('info_pasien_baru', [AntrianAntrianController::class, 'info_pasien_baru']);
     Route::post('jadwal_operasi_rs', [AntrianAntrianController::class, 'jadwal_operasi_rs']);
     Route::post('jadwal_operasi_pasien', [AntrianAntrianController::class, 'jadwal_operasi_pasien']);
