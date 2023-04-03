@@ -1,6 +1,6 @@
 @extends('vendor.medilab.master')
 
-@section('title', 'SIMRS Waled')
+@section('title', 'SIRAMAH-RS Waled')
 
 @section('content')
     <section id="why-us" class="why-us">
@@ -8,7 +8,7 @@
             <div class="row">
                 <div class="col-lg-4 d-flex align-items-stretch">
                     <div class="content">
-                        <h3>Apa sih SIM RSUD Waled ?</h3>
+                        <h3>Apa sih SIRAMAH-RS Waled ?</h3>
                         <p>
                             SIMRS adalah suatu sistem teknologi informasi komunikasi yang
                             memproses dan mengintegrasikan seluruh alur proses pelayanan

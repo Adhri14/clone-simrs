@@ -655,6 +655,13 @@ return [
                     'can' => 'bpjs',
                 ],
                 [
+                    'text' => 'Poliklinik',
+                    'icon'    => 'fas fa-clinic-medical',
+                    'url'  => 'bpjs/antrian/poli',
+                    'shift'   => 'ml-2',
+                    'can' => 'bpjs',
+                ],
+                [
                     'text' => 'Dokter',
                     'icon'    => 'fas fa-user-md',
                     'url'  => 'bpjs/antrian/dokter',
