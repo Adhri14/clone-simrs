@@ -1259,7 +1259,6 @@ class AntrianController extends ApiBPJSController
                 $request['nik'] = $antrian->nik;
                 $request['nohp'] = $antrian->nohp;
                 $request['kodedokter'] = $antrian->kodedokter;
-                // insert sep
                 $vclaim = new VclaimBPJSController();
                 // daftar pake surat kontrol
                 if ($antrian->jeniskunjungan == 3) {
@@ -1366,7 +1365,6 @@ class AntrianController extends ApiBPJSController
                                 $request['dpjpLayan'] =  $suratkontrol->response->kodeDokter;
                             }
                         }
-                        $sep = $vclaim->insert_sep($request);
                     }
                     // gagal get surat kontrol
                     else {
@@ -1383,6 +1381,7 @@ class AntrianController extends ApiBPJSController
                     $request['nomorrujukan'] = $antrian->nomorreferensi;
                     $request['nomorreferensi'] = $antrian->nomorreferensi;
                     $request['jeniskunjungan_print'] = 'RUJUKAN';
+                    $vclaim = new VclaimBPJSController();
                     if ($antrian->jeniskunjungan == 4) {
                         $data = $vclaim->rujukan_rs_nomor($request);
                     } else  if ($antrian->jeniskunjungan == 1) {
@@ -1436,28 +1435,6 @@ class AntrianController extends ApiBPJSController
                             ],
                         ];
                     }
-                    // create sep
-                    $sep = $vclaim->sep_insert($request);
-                }
-                // berhasil buat sep
-                if ($sep->metaData->code == 200) {
-                    // update antrian sep
-                    $request["nomorsep"] = $sep->response->sep->noSep;
-                    $antrian->update([
-                        "nomorsep" => $request->nomorsep
-                    ]);
-                    // print sep
-                    $print_sep = new AntrianController();
-                    $print_sep->print_sep($request, $sep);
-                }
-                // gagal buat sep
-                else {
-                    return [
-                        "metadata" => [
-                            "message" => "Gagal Buat SEP : " . $sep->metaData->message,
-                            "code" => 201,
-                        ],
-                    ];
                 }
                 // rj jkn tipe transaki 2 status layanan 2 status layanan detail opn
                 $tipetransaksi = 2;
@@ -1493,6 +1470,28 @@ class AntrianController extends ApiBPJSController
             $response = $this->update_antrean($request);
             // jika antrian berhasil diupdate di bpjs
             if ($response->status() == 200) {
+                // create sep
+                $sep = $vclaim->sep_insert($request);
+                // berhasil buat sep
+                if ($sep->metaData->code == 200) {
+                    // update antrian sep
+                    $request["nomorsep"] = $sep->response->sep->noSep;
+                    $antrian->update([
+                        "nomorsep" => $request->nomorsep
+                    ]);
+                    // print sep
+                    $print_sep = new AntrianController();
+                    $print_sep->print_sep($request, $sep);
+                }
+                // gagal buat sep
+                else {
+                    return [
+                        "metadata" => [
+                            "message" => "Gagal Buat SEP : " . $sep->metaData->message,
+                            "code" => 201,
+                        ],
+                    ];
+                }
                 // insert simrs create kunjungan
                 try {
                     $paramedis = ParamedisDB::firstWhere('kode_dokter_jkn', $antrian->kodedokter);
