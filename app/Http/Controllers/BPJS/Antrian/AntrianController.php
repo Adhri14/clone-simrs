@@ -719,8 +719,10 @@ class AntrianController extends ApiBPJSController
             ->where('taskid', '!=', 99)
             ->count();
         // cek kapasitas pasien
-        if ($antrians >= $jadwal->kapasitaspasien) {
-            return $this->sendError("Kuota Dokter Telah Penuh", null, 201);
+        if ($request->method != 'Bridging') {
+            if ($antrians >= $jadwal->kapasitaspasien) {
+                return $this->sendError("Kuota Dokter Telah Penuh", null, 201);
+            }
         }
         //  get nomor antrian
         $nomorantean = 0;
