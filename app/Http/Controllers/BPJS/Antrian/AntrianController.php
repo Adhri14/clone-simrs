@@ -891,7 +891,7 @@ class AntrianController extends ApiBPJSController
             $message = $jadwal->getData()->metadata->message;
             // kirim notif
             $wa = new WhatsappController();
-            $request['notif'] = 'Mohon maaf jadwal , ' . $message;
+            $request['notif'] = 'Method ' . $request->method . ' jadwal , ' . $message;
             $wa->send_notif($request);
             return $this->sendError('Mohon maaf , ' . $message, null, 400);
         }
@@ -1048,7 +1048,7 @@ class AntrianController extends ApiBPJSController
             $message = $jadwal->getData()->metadata->message;
             // kirim notif
             $wa = new WhatsappController();
-            $request['notif'] = 'Mohon maaf jadwal , ' . $message;
+            $request['notif'] = 'Method ' . $request->method . ' jadwal , ' . $message;
             $wa->send_notif($request);
             return $this->sendError('Mohon maaf , ' . $message, null, 400);
         }
@@ -1436,28 +1436,28 @@ class AntrianController extends ApiBPJSController
                         ];
                     }
                 }
-                 // create sep
-                 $sep = $vclaim->sep_insert($request);
-                 // berhasil buat sep
-                 if ($sep->metaData->code == 200) {
-                     // update antrian sep
-                     $request["nomorsep"] = $sep->response->sep->noSep;
-                     $antrian->update([
-                         "nomorsep" => $request->nomorsep
-                     ]);
-                     // print sep
-                     $print_sep = new AntrianController();
-                     $print_sep->print_sep($request, $sep);
-                 }
-                 // gagal buat sep
-                 else {
-                     return [
-                         "metadata" => [
-                             "message" => "Gagal Buat SEP : " . $sep->metaData->message,
-                             "code" => 201,
-                         ],
-                     ];
-                 }
+                // create sep
+                $sep = $vclaim->sep_insert($request);
+                // berhasil buat sep
+                if ($sep->metaData->code == 200) {
+                    // update antrian sep
+                    $request["nomorsep"] = $sep->response->sep->noSep;
+                    $antrian->update([
+                        "nomorsep" => $request->nomorsep
+                    ]);
+                    // print sep
+                    $print_sep = new AntrianController();
+                    $print_sep->print_sep($request, $sep);
+                }
+                // gagal buat sep
+                else {
+                    return [
+                        "metadata" => [
+                            "message" => "Gagal Buat SEP : " . $sep->metaData->message,
+                            "code" => 201,
+                        ],
+                    ];
+                }
                 // rj jkn tipe transaki 2 status layanan 2 status layanan detail opn
                 $tipetransaksi = 2;
                 $statuslayanan = 2;
