@@ -891,7 +891,7 @@ class AntrianController extends ApiBPJSController
             $message = $jadwal->getData()->metadata->message;
             // kirim notif
             $wa = new WhatsappController();
-            $request['notif'] = 'Method ' . $request->method . ' jadwal , ' . $message;
+            $request['notif'] = 'Method ambil antrian ' . $request->method . ' jadwal , ' . $message . ' kodepoli ' . $request->kodepoli;
             $wa->send_notif($request);
             return $this->sendError('Mohon maaf , ' . $message, null, 400);
         }
