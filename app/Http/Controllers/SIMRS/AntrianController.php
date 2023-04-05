@@ -174,6 +174,11 @@ class AntrianController extends Controller
         $printer->cut();
         $printer->close();
     }
+    public function daftar_online(Request $request)
+    {
+        return view('simrs.pendaftaran.daftar_online');
+        dd($request->all());
+    }
     public function checkin_update(Request $request)
     {
         // checking request
