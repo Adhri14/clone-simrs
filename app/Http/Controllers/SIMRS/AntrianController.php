@@ -199,8 +199,7 @@ class AntrianController extends Controller
         $antrian = Antrian::firstWhere('kodebooking', $request->kodebooking);
         if (isset($antrian)) {
             $api = new AntrianAntrianController();
-            $response = json_decode(json_encode($api->checkin_antrian($request)));
-            dd($request->all(), $response);
+            $response =$api->checkin_antrian($request)->getData();
             return $response;
         }
         // jika antrian tidak ditemukan
