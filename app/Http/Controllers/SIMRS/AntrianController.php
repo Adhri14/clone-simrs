@@ -174,6 +174,39 @@ class AntrianController extends Controller
         $printer->cut();
         $printer->close();
     }
+    public function checkin_update(Request $request)
+    {
+        // checking request
+        $validator = Validator::make(request()->all(), [
+            "kodebooking" => "required",
+            "waktu" => "required|numeric",
+        ]);
+        if ($validator->fails()) {
+            $response = [
+                'metadata' => [
+                    'code' => 400,
+                    'message' => $validator->errors()->first(),
+                ],
+            ];
+            return $response;
+        }
+        // cari antrian
+        $antrian = Antrian::firstWhere('kodebooking', $request->kodebooking);
+        if (isset($antrian)) {
+            $api = new AntrianAntrianController();
+            $response =$api->checkin_antrian($request)->getData();
+            return $response;
+        }
+        // jika antrian tidak ditemukan
+        else {
+            return $response = [
+                'metadata' => [
+                    'code' => 400,
+                    'message' => "Antrian tidak ditemukan",
+                ],
+            ];
+        }
+    }
     // pendaftaran
     public function antrian_pendaftaran(Request $request)
     {
@@ -734,7 +767,7 @@ class AntrianController extends Controller
             $response = $api->dashboard_bulan($request);
             if ($response->metadata->code == 200) {
                 Alert::success('Success', "Success Message " . $response->metadata->message);
-                $antrians = collect( $response->response->list);
+                $antrians = collect($response->response->list);
                 $antri_group = collect($antrians)->groupBy('namapoli');
                 // dd($antrians);
                 return view('simrs.antrian_laporan_bulan', [
