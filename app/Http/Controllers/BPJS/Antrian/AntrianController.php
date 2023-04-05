@@ -1425,27 +1425,26 @@ class AntrianController extends ApiBPJSController
                     }
                 }
                 dd($request->all());
-                // if (!isset($antrian->nomorsep)) {
-                // create sep
-                $sep = json_decode(json_encode($vclaim->sep_insert($request)));
-                // berhasil buat sep
-                if ($sep->metaData->code == 200) {
-                    // update antrian sep
-                    $request["nomorsep"] = $sep->response->sep->noSep;
-                    $antrian->update([
-                        "nomorsep" => $request->nomorsep
-                    ]);
-                    // print sep
-                    $this->print_sep($request, $sep);
+                if (!isset($antrian->nomorsep)) {
+                    // create sep
+                    $sep = json_decode(json_encode($vclaim->sep_insert($request)));
+                    // berhasil buat sep
+                    if ($sep->metaData->code == 200) {
+                        // update antrian sep
+                        $request["nomorsep"] = $sep->response->sep->noSep;
+                        $antrian->update([
+                            "nomorsep" => $request->nomorsep
+                        ]);
+                        // print sep
+                        $this->print_sep($request, $sep);
+                    }
+                    // gagal buat sep
+                    else {
+                        return $this->sendError("Gagal Buat SEP : " . $sep->metaData->message,  null, 400);
+                    }
+                } else {
+                    $requests["nomorsep"] = $antrian->nomorsep;
                 }
-                // gagal buat sep
-                else {
-                    return $this->sendError("Gagal Buat SEP : " . $sep->metaData->message,  null, 400);
-                }
-                // }
-                // else {
-                //     $requests["nomorsep"] = $antrian->nomorsep;
-                // }
                 // rj jkn tipe transaki 2 status layanan 2 status layanan detail opn
                 $tipetransaksi = 2;
                 $statuslayanan = 2;
