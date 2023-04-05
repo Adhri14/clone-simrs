@@ -243,6 +243,11 @@ return [
         ],
         ['header' => 'MENU UTAMA'],
         [
+            'text'        => 'Daftar Online',
+            'url'         => 'daftar_online',
+            'icon'        => 'fas fa-user-plus',
+        ],
+        [
             'text'        => 'Landing Page',
             'url'         => '',
             'icon'        => 'fas fa-home',

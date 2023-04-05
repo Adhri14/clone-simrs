@@ -65,6 +65,13 @@ Route::get('profile', [UserController::class, 'profile'])->name('profile');
 Route::get('verifikasi_akun', [VerificationController::class, 'verifikasi_akun'])->name('verifikasi_akun');
 Route::post('verifikasi_kirim', [VerificationController::class, 'verifikasi_kirim'])->name('verifikasi_kirim');
 
+// layanan umum
+Route::get('bpjs/vclaim/surat_kontrol_print/{suratkontrol}', [SuratKontrolController::class, 'print'])->name('bpjs.vclaim.surat_kontrol_print');
+Route::get('bukutamu', [BukuTamuController::class, 'bukutamu'])->name('bukutamu');
+Route::post('bukutamu', [BukuTamuController::class, 'store'])->name('bukutamu_store');
+Route::get('daftar_online', [SIMRSAntrianController::class, 'daftar_online'])->name('daftar_online');
+
+
 // antrian routes (bagian antrian daftar dimesin antrian)
 Route::prefix('antrian')->name('antrian.')->group(function () {
     Route::get('console', [SIMRSAntrianController::class, 'console'])->name('console');
@@ -155,9 +162,6 @@ Route::get('bar_qr_scanner', [BarcodeController::class, 'scanner'])->name('bar_q
 Route::get('thermal_printer', [ThermalPrintController::class, 'thermal_printer'])->name('thermal_printer');
 Route::get('thermal_print', [ThermalPrintController::class, 'thermal_print'])->name('thermal_print');
 Route::get('whatsapp', [WhatsappController::class, 'whatsapp'])->name('whatsapp');
-Route::get('bukutamu', [BukuTamuController::class, 'bukutamu'])->name('bukutamu');
-Route::post('bukutamu', [BukuTamuController::class, 'store'])->name('bukutamu_store');
-Route::get('bpjs/vclaim/surat_kontrol_print/{suratkontrol}', [SuratKontrolController::class, 'print'])->name('bpjs.vclaim.surat_kontrol_print');
 
 // auth
 Route::middleware('auth')->group(function () {

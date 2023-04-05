@@ -35,12 +35,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
 Route::prefix('vclaim')->group(function () {
     Route::get('caripasien', [SIMRSPasienController::class, 'caripasien'])->name('api.caripasien');
 });
+// tanda tanya
 Route::prefix('antrian')->group(function () {
     Route::get('signature', [AntrianBPJSController::class, 'signature']);
     Route::get('ref_poli', [AntrianBPJSController::class, 'ref_poli']);
@@ -56,6 +54,7 @@ Route::prefix('antrian')->group(function () {
     Route::get('status_antrean', [AntrianBPJSController::class, 'status_antrean'])->name('api.status_antrean');
     Route::post('ambil_antrean', [AntrianBPJSController::class, 'ambil_antrean'])->name('api.ambil_antrean');
 });
+//
 Route::get('token', [AntrianAntrianController::class, 'token']);
 Route::prefix('wsrs')->group(function () {
     Route::post('status_antrian', [AntrianAntrianController::class, 'status_antrian']);
@@ -68,8 +67,7 @@ Route::prefix('wsrs')->group(function () {
     Route::post('jadwal_operasi_pasien', [AntrianAntrianController::class, 'jadwal_operasi_pasien']);
     Route::post('ambil_antrean_farmasi', [AntrianAntrianController::class, 'ambil_antrian_farmasi']);
     Route::post('status_antrean_farmasi', [AntrianAntrianController::class, 'status_antrian_farmasi']);
-    // integrasi bridging pendaftaran pa agil
-    Route::post('update_antrean_pendaftaran', [AntrianAntrianController::class, 'update_antrean_pendaftaran']);
+    Route::post('update_antrean_pendaftaran', [AntrianAntrianController::class, 'update_antrean_pendaftaran']); #integrasi bridging pendaftaran agil
 });
 Route::prefix('vclaim')->group(function () {
     // ref

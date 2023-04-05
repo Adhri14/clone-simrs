@@ -43,15 +43,15 @@
             </ul>
             <i class="bi bi-list mobile-nav-toggle"></i>
         </nav>
-        <a href="{{ route('landingpage') }}#daftaronline" class="appointment-btn scrollto">
+        <a href="{{ route('daftar_online') }}" class="appointment-btn scrollto">
             Daftar
         </a>
     </div>
 </header>
-<section id="hero" class="d-flex align-items-center">
+{{-- <section id="hero" class="d-flex align-items-center">
     <div class="container">
         <h1>SIRAMAH-RS Waled</h1>
         <h2>Sistem Informasi Manajemen Kesehatan Terintegrasi RS Waled</h2>
         <a href="#about" class="btn-get-started scrollto">Daftar Online</a>
     </div>
-</section>
+</section> --}}

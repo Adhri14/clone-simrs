@@ -174,6 +174,11 @@ class AntrianController extends Controller
         $printer->cut();
         $printer->close();
     }
+    public function daftar_online(Request $request)
+    {
+        return view('simrs.pendaftaran.daftar_online');
+        dd($request->all());
+    }
     // pendaftaran
     public function antrian_pendaftaran(Request $request)
     {
@@ -734,7 +739,7 @@ class AntrianController extends Controller
             $response = $api->dashboard_bulan($request);
             if ($response->metadata->code == 200) {
                 Alert::success('Success', "Success Message " . $response->metadata->message);
-                $antrians = collect( $response->response->list);
+                $antrians = collect($response->response->list);
                 $antri_group = collect($antrians)->groupBy('namapoli');
                 // dd($antrians);
                 return view('simrs.antrian_laporan_bulan', [
