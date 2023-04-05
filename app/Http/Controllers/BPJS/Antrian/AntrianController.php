@@ -1260,7 +1260,6 @@ class AntrianController extends ApiBPJSController
                 $request['nik'] = $antrian->nik;
                 $request['nohp'] = $antrian->nohp;
                 $request['kodedokter'] = $antrian->kodedokter;
-                dd($request->all());
                 $vclaim = new VclaimBPJSController();
                 // daftar pake surat kontrol
                 if ($antrian->jeniskunjungan == 3) {
@@ -1425,14 +1424,14 @@ class AntrianController extends ApiBPJSController
                         return $this->sendError($data->metaData->message,  null, 400);
                     }
                 }
-                dd($request->all());
                 if (!isset($antrian->nomorsep)) {
                     // create sep
                     $sep = json_decode(json_encode($vclaim->sep_insert($request)));
                     // berhasil buat sep
                     if ($sep->metaData->code == 200) {
                         // update antrian sep
-                        $request["nomorsep"] = $sep->response->sep->noSep;
+                        $sep = $sep->response->sep;
+                        $request["nomorsep"] = $sep->noSep;
                         $antrian->update([
                             "nomorsep" => $request->nomorsep
                         ]);
@@ -2011,15 +2010,14 @@ class AntrianController extends ApiBPJSController
             $printer->setEmphasis(false);
             $printer->text("================================================\n");
             $printer->setJustification(Printer::JUSTIFY_CENTER);
+            $printer->text("SEP untuk " . $value . "\n");
             $printer->text("Nomor SEP :\n");
             $printer->setTextSize(2, 2);
             $printer->setEmphasis(true);
             $printer->text($sep->noSep . "\n");
             $printer->setEmphasis(false);
             $printer->setTextSize(1, 1);
-            $printer->qrCode($sep->noSep, Printer::QR_ECLEVEL_L, 10, Printer::QR_MODEL_2);
             $printer->text("Tgl SEP : " . $sep->tglSep . " \n");
-            $printer->text("SEP untuk " . $value . "\n");
             $printer->setJustification(Printer::JUSTIFY_LEFT);
             $printer->text("================================================\n");
             $printer->text("Nama Pasien : " . $sep->peserta->nama . " \n");
@@ -2098,7 +2096,17 @@ class AntrianController extends ApiBPJSController
         $request['nomorsep'] = $antrian->nomorsep;
         $request['keterangan'] = $antrian->keterangan;
         $kunjungan = KunjunganDB::firstWhere('kode_kunjungan', $antrian->kode_kunjungan);
-        $this->print_karcis($request, $kunjungan);
+        // print
+        $api = new VclaimController();
+        $request['noSep'] = $antrian->nomorsep;
+        $response = $api->sep_nomor($request);
+        if ($response->status() == 200) {
+            $sep =  $response->getData()->response;
+            $this->print_sep($request, $sep);
+            $this->print_karcis($request, $kunjungan);
+        } else {
+            return  $this->sendError($response->getData()->metadata->message, null, 400);
+        }
         return  $this->sendResponse("Print Ulang Berhasil", null, 200);
     }
 }
