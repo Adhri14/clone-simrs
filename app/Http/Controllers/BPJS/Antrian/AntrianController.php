@@ -1261,6 +1261,7 @@ class AntrianController extends ApiBPJSController
                 $request['nik'] = $antrian->nik;
                 $request['nohp'] = $antrian->nohp;
                 $request['kodedokter'] = $antrian->kodedokter;
+                dd($request->all());
                 $vclaim = new VclaimBPJSController();
                 // daftar pake surat kontrol
                 if ($antrian->jeniskunjungan == 3) {

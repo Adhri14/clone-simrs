@@ -622,39 +622,6 @@ class AntrianController extends Controller
             'response' => $response,
         ]);
     }
-    public function checkin_update(Request $request)
-    {
-        // checking request
-        $validator = Validator::make(request()->all(), [
-            "kodebooking" => "required",
-            "waktu" => "required|numeric",
-        ]);
-        if ($validator->fails()) {
-            $response = [
-                'metadata' => [
-                    'code' => 400,
-                    'message' => $validator->errors()->first(),
-                ],
-            ];
-            return $response;
-        }
-        // cari antrian
-        $antrian = Antrian::firstWhere('kodebooking', $request->kodebooking);
-        if (isset($antrian)) {
-            $api = new AntrianBPJSController();
-            $response = json_decode(json_encode($api->checkin_antrian($request)));
-            return $response;
-        }
-        // jika antrian tidak ditemukan
-        else {
-            return $response = [
-                'metadata' => [
-                    'code' => 400,
-                    'message' => "Antrian tidak ditemukan",
-                ],
-            ];
-        }
-    }
     // pendaftaran
     public function pendaftaran(Request $request)
     {

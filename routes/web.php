@@ -79,7 +79,7 @@ Route::prefix('antrian')->name('antrian.')->group(function () {
     Route::get('daftar_pasien_bpjs_offline', [SIMRSAntrianController::class, 'daftar_pasien_bpjs_offline'])->name('daftar_pasien_bpjs_offline');
     Route::get('daftar_pasien_umum_offline', [SIMRSAntrianController::class, 'daftar_pasien_umum_offline'])->name('daftar_pasien_umum_offline');
     Route::get('cek_printer', [AntrianController::class, 'cek_printer'])->name('cek_printer');
-    Route::get('checkin_update', [AntrianController::class, 'checkin_update'])->name('checkin_update');
+    Route::get('checkin_update', [SIMRSAntrianController::class, 'checkin_update'])->name('checkin_update');
 });
 // ??? dicek lagi
 Route::prefix('antrian')->name('antrian.')->middleware(['auth'])->group(function () {
