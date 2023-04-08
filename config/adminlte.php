@@ -335,6 +335,13 @@ return [
                     'shift'   => 'ml-2',
                     'can' => 'pendaftaran',
                 ],
+                [
+                    'text' => 'Capaian Antrian',
+                    'icon'    => 'fas fa-chart-bar',
+                    'url'  => 'pendaftaran/antrian_capaian',
+                    'shift'   => 'ml-2',
+                    'can' => 'pendaftaran',
+                ],
             ],
         ],
         // KASIR
@@ -1073,7 +1080,7 @@ return [
             ],
         ],
         'DatatablesPlugins' => [
-            'active' => false,
+            'active' => true,
             'files' => [
                 [
                     'type' => 'js',
@@ -1109,11 +1116,6 @@ return [
                     'type' => 'js',
                     'asset' => true,
                     'location' => 'vendor/datatables-plugins/pdfmake/vfs_fonts.js',
-                ],
-                [
-                    'type' => 'js',
-                    'asset' => true,
-                    'location' => 'vendor/datatables-plugins/buttons/js/buttons.colVis.min.js',
                 ],
                 [
                     'type' => 'css',
