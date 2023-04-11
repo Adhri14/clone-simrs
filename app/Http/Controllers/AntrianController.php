@@ -69,7 +69,7 @@ class AntrianController extends Controller
             Alert::success('Success', 'Mesin menyala dan siap digunakan.');
             return redirect()->route('antrian.console');
         } catch (\Throwable $th) {
-            //throw $th;
+            // throw $th;
             Alert::error('Error', 'Mesin antrian tidak menyala. Silahkan hubungi admin.');
             return redirect()->route('antrian.console');
         }
