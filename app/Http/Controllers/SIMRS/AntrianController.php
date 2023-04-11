@@ -199,7 +199,7 @@ class AntrianController extends Controller
         $antrian = Antrian::firstWhere('kodebooking', $request->kodebooking);
         if (isset($antrian)) {
             $api = new AntrianAntrianController();
-            $response =$api->checkin_antrian($request)->getData();
+            $response = $api->checkin_antrian($request)->getData();
             return $response;
         }
         // jika antrian tidak ditemukan
@@ -867,5 +867,92 @@ class AntrianController extends Controller
             'jadwaldokter' => $jadwaldokter,
             'request' => $request,
         ]);
+    }
+    public function antrian_capaian(Request $request)
+    {
+        $antrians_total = Antrian::select(
+            DB::raw("count(*) as total"),
+            DB::raw("(DATE_FORMAT(created_at, '%Y-%m')) as bulan")
+        )
+
+
+            ->orderBy('created_at')
+            ->groupBy(DB::raw("DATE_FORMAT(created_at, '%Y-%m')"))
+            ->get();
+
+        $tanggal_awal = Antrian::orderBy('tanggalperiksa', 'ASC')->first()->tanggalperiksa;
+        $kunjungans = KunjunganDB::whereBetween('tgl_masuk', [Carbon::parse($tanggal_awal)->startOfDay(), Carbon::now()->endOfDay()])
+            ->where('kode_unit', "!=", null)
+            ->where('kode_unit', 'LIKE', '10%')
+            ->where('kode_unit', '!=', 1002)
+            ->where('kode_unit', "!=", 1023)
+            ->where('kode_unit', "!=", 1015)
+            ->select(
+                DB::raw("count(*) as total"),
+                DB::raw("(DATE_FORMAT(tgl_masuk, '%Y-%m')) as bulan")
+            )
+            ->orderBy('tgl_masuk')
+            ->groupBy(DB::raw("DATE_FORMAT(tgl_masuk, '%Y-%m')"))
+            ->get();
+        $antrian_nobatal = Antrian::where('taskid', '!=', 99)
+            ->where('method', '!=', 'Offline')
+            ->select(
+                DB::raw("count(*) as total"),
+                DB::raw("(DATE_FORMAT(created_at, '%Y-%m')) as bulan")
+            )
+            ->orderBy('created_at')
+            ->groupBy(DB::raw("DATE_FORMAT(created_at, '%Y-%m')"))
+            ->get();
+
+        $antrian_selesai = Antrian::whereIn('taskid',  [5, 7])
+            ->select(
+                DB::raw("count(*) as total"),
+                DB::raw("(DATE_FORMAT(created_at, '%Y-%m')) as bulan")
+            )
+            ->orderBy('created_at')
+            ->groupBy(DB::raw("DATE_FORMAT(created_at, '%Y-%m')"))
+            ->get();
+
+        $antrian_whatsapp = Antrian::where('taskid', '!=', 99)
+            ->whereIn('method', ['Whatsapp', 'ON'])
+            ->select(
+                DB::raw("count(*) as total"),
+                DB::raw("(DATE_FORMAT(created_at, '%Y-%m')) as bulan")
+            )
+            ->orderBy('created_at')
+            ->groupBy(DB::raw("DATE_FORMAT(created_at, '%Y-%m')"))
+            ->get();
+
+
+        $antrian_jkn = Antrian::where('taskid', '!=', 99)
+            ->whereIn('method', ['JKN Mobile'])
+            ->select(
+                DB::raw("count(*) as total"),
+                DB::raw("(DATE_FORMAT(created_at, '%Y-%m')) as bulan")
+            )
+            ->orderBy('created_at')
+            ->groupBy(DB::raw("DATE_FORMAT(created_at, '%Y-%m')"))
+            ->get();
+
+        $antrian_lainnya = Antrian::where('taskid', '!=', 99)
+            ->whereNotIn('method', ['JKN Mobile', 'Whatsapp', 'ON', 'OFF', 'Offline'])
+            ->select(
+                DB::raw("count(*) as total"),
+                DB::raw("(DATE_FORMAT(created_at, '%Y-%m')) as bulan")
+            )
+            ->orderBy('created_at')
+            ->groupBy(DB::raw("DATE_FORMAT(created_at, '%Y-%m')"))
+            ->get();
+
+        return view('simrs.pendaftaran.capaian_antrian', compact([
+            // 'antrians_total',
+            'antrian_nobatal',
+            'antrian_selesai',
+            'antrian_whatsapp',
+            'antrian_jkn',
+            'antrian_lainnya',
+            'kunjungans',
+            'request',
+        ]));
     }
 }
