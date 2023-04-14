@@ -7,6 +7,7 @@ use App\Http\Controllers\API\VclaimBPJSController;
 use App\Http\Controllers\API\WhatsappController;
 use App\Http\Controllers\BPJS\Antrian\AntrianController as AntrianAntrianController;
 use App\Http\Controllers\BPJS\Vclaim\VclaimController as VclaimVclaimController;
+use App\Http\Controllers\Inacbg\InacbgController;
 use App\Http\Controllers\PasienController;
 use App\Http\Controllers\SatuSehat\EncounterController;
 use App\Http\Controllers\SatuSehat\LocationController;
@@ -245,4 +246,18 @@ Route::prefix('ris')->name('api.ris.')->group(function () {
     Route::get('jenispemeriksaan_get', [RISController::class, 'jenispemeriksaan_get'])->name('jenispemeriksaan_get');
     Route::get('ruangan_get', [RISController::class, 'ruangan_get'])->name('ruangan_get');
     Route::get('order_get', [RISController::class, 'order_get'])->name('order_get');
+});
+// INACBG
+Route::prefix('eclaim')->name('api.eclaim.')->group(function () {
+    Route::post('search_procedures', [InacbgController::class, 'search_procedures'])->name('search_procedures');
+    Route::post('search_diagnosis_inagrouper', [InacbgController::class, 'search_diagnosis_inagrouper'])->name('search_diagnosis_inagrouper');
+    Route::post('search_procedures_inagrouper', [InacbgController::class, 'search_procedures_inagrouper'])->name('search_procedures_inagrouper');
+    Route::post('new_claim', [InacbgController::class, 'new_claim'])->name('new_claim');
+    Route::post('set_claim', [InacbgController::class, 'set_claim'])->name('set_claim');
+    Route::post('grouper', [InacbgController::class, 'grouper'])->name('grouper');
+    Route::post('get_claim_data', [InacbgController::class, 'get_claim_data'])->name('get_claim_data');
+    Route::post('get_claim_status', [InacbgController::class, 'get_claim_status'])->name('get_claim_status');
+
+
+
 });
