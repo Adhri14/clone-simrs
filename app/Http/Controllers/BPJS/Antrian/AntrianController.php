@@ -24,8 +24,10 @@ use App\Models\TracerDB;
 use App\Models\TransaksiDB;
 use App\Models\UnitDB;
 use Carbon\Carbon;
+use Faker\Core\Number;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
@@ -1513,17 +1515,18 @@ class AntrianController extends ApiBPJSController
                     );
                     $kunjungan = KunjunganDB::where('no_rm', $antrian->norm)->where('counter', $counter)->first();
                     // get transaksi sebelumnya
-                    $trx_lama = TransaksiDB::where('unit', $unit->kode_unit)
-                        ->whereBetween('tgl', [Carbon::now()->startOfDay(), [Carbon::now()->endOfDay()]])
-                        ->count();
+                    // $trx_lama = TransaksiDB::where('unit', $unit->kode_unit)
+                    //     ->whereBetween('tgl', [Carbon::now()->startOfDay(), [Carbon::now()->endOfDay()]])
+                    //     ->count();
                     // get kode layanan
-                    $kodelayanan = $unit->prefix_unit . $now->format('y') . $now->format('m') . $now->format('d')  . str_pad($trx_lama + 1, 6, '0', STR_PAD_LEFT);
+                    // $kodelayanan = $unit->prefix_unit . $now->format('y') . $now->format('m') . $now->format('d')  . str_pad($trx_lama + 1, 6, '0', STR_PAD_LEFT);
+                    $kodelayanan = collect(DB::connection('mysql2')->select('CALL GET_NOMOR_LAYANAN_HEADER(' . $unit->kode_unit . ')'))->first()->no_trx_layanan;
                     //  insert transaksi
-                    $trx_baru = TransaksiDB::create([
-                        'tgl' => $now->format('Y-m-d'),
-                        'no_trx_layanan' => $kodelayanan,
-                        'unit' => $unit->kode_unit,
-                    ]);
+                    // $trx_baru = TransaksiDB::create([
+                    //     'tgl' => $now->format('Y-m-d'),
+                    //     'no_trx_layanan' => $kodelayanan,
+                    //     'unit' => $unit->kode_unit,
+                    // ]);
                     //  insert layanan header
                     $layananbaru = LayananDB::create(
                         [
