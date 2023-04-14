@@ -11,7 +11,7 @@ class FileRMController extends Controller
 {
     public function index()
     {
-        $filerm = FileRekamMedis::get();
+        $filerm = FileRekamMedis::latest()->limit(100)->get();
         return view('simrs.rekammedis.efile_index', [
             'filerm' => $filerm,
         ]);

@@ -35,7 +35,7 @@
                     ];
                 @endphp
                 <x-adminlte-datatable id="table1" class="nowrap" :heads="$heads" :config="$config" striped bordered
-                    hoverable compressed with-buttons>
+                    hoverable compressed>
                     @foreach ($filerm as $item)
                         <tr>
                             <td>{{ $item->id }}</td>
