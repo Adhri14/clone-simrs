@@ -124,6 +124,7 @@ class DisposisiController extends Controller
         Alert::success('Success', 'Disposisi Surat Berhasil Diupdate');
         return redirect()->back();
     }
+    // tambahan fitur hapus
     public function destroy($id, Request $request)
     {
         $surat = SuratMasuk::where('id_surat_masuk', $id)->first();
