@@ -26,10 +26,6 @@ class SuratMasukController extends Controller
             'surat_total'
         ]));
     }
-    public function create()
-    {
-        //
-    }
     public function store(Request $request)
     {
         $request->validate([
