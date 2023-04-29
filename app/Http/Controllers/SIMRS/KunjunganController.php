@@ -47,7 +47,7 @@ class KunjunganController extends ApiController
     }
     public function edit($kodekunjungan)
     {
-        $kunjungan = KunjunganDB::firstWhere('kode_kunjungan', $kodekunjungan);
+        $kunjungan = KunjunganDB::with(['pasien'])->firstWhere('kode_kunjungan', $kodekunjungan);
         return response()->json($kunjungan);
     }
     public function kunjungan_tanggal($tanggal)

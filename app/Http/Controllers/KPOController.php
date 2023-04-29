@@ -14,19 +14,16 @@ class KPOController extends Controller
 {
     public function index(Request $request)
     {
-        $icd10 = ICD10::limit(10)->get();
         $units = Unit::whereIn('kelas_unit', ['1', '2'])->pluck('nama_unit', 'kode_unit');
         $kunjungans = null;
         if (isset($request->unit)) {
-            $kunjungans = KunjunganDB::with(['pasien'])
+            $kunjungans = KunjunganDB::with(['pasien','unit'])
                 ->whereDate('tgl_masuk', $request->tanggal)
                 ->where('kode_unit', $request->unit)
                 ->get();
-
             Alert::success("Success", "Data kunjungan ditemukan " . $kunjungans->count() . " pasien");
         }
         return view('simrs.kpo_create', compact([
-            'icd10',
             'request',
             'units',
             'kunjungans',

@@ -249,9 +249,10 @@ Route::prefix('ris')->name('api.ris.')->group(function () {
 });
 // INACBG
 Route::prefix('eclaim')->name('api.eclaim.')->group(function () {
-    Route::post('search_procedures', [InacbgController::class, 'search_procedures'])->name('search_procedures');
-    Route::post('search_diagnosis_inagrouper', [InacbgController::class, 'search_diagnosis_inagrouper'])->name('search_diagnosis_inagrouper');
-    Route::post('search_procedures_inagrouper', [InacbgController::class, 'search_procedures_inagrouper'])->name('search_procedures_inagrouper');
+    Route::get('search_diagnosis', [InacbgController::class, 'search_diagnosis'])->name('search_diagnosis');
+    Route::get('search_procedures', [InacbgController::class, 'search_procedures'])->name('search_procedures');
+    Route::get('search_diagnosis_inagrouper', [InacbgController::class, 'search_diagnosis_inagrouper'])->name('search_diagnosis_inagrouper');
+    Route::get('search_procedures_inagrouper', [InacbgController::class, 'search_procedures_inagrouper'])->name('search_procedures_inagrouper');
     Route::post('new_claim', [InacbgController::class, 'new_claim'])->name('new_claim');
     Route::post('set_claim', [InacbgController::class, 'set_claim'])->name('set_claim');
     Route::post('grouper', [InacbgController::class, 'grouper'])->name('grouper');

@@ -34,8 +34,16 @@
                         </div>
                     </div>
                 </form>
-                <x-adminlte-button theme="success" class="cariPasien" type="submit" label="Pilih Pasien" />
-                <dl class="row">
+                <x-adminlte-button theme="success" class="cariPasien" type="submit"
+                    label="Pilih Pasien ({{ $kunjungans ? $kunjungans->count() : '0' }} Pasien) " />
+                <x-adminlte-input name="nomor_kartu" label="Nomor Kartu" />
+                <x-adminlte-input name="nomor_sep" label="Nomor SEP" />
+                <x-adminlte-input name="nomor_rm" label="Nomor RM" />
+                <x-adminlte-input name="nama_pasien" label="Nama Pasien" />
+                <x-adminlte-input name="tgl_lahir" label="Tgl Lahir" />
+                <x-adminlte-input name="gender" label="Gender" />
+                <x-adminlte-button theme="success" id="btnNewClaim" label="Create Claim" />
+                {{-- <dl class="row">
                     <input type="hidden" name="kode_kunjungan" id="kode_kunjungan">
                     <dt class="col-sm-3">No RM</dt>
                     <dd class="col-sm-9">: <span id="no_rm"></span></dd>
@@ -51,62 +59,78 @@
                     <dd class="col-sm-9">: -</dd>
                     <dt class="col-sm-3">Nama</dt>
                     <dd class="col-sm-9">: -</dd>
-                </dl>
+                </dl> --}}
             </x-adminlte-card>
-            {{-- kelompok diagnisa --}}
+        </div>
+        <div class="col-md-8">
             <div class="card card-primary card-tabs">
                 <div class="card-header p-0 pt-1">
                     <ul class="nav nav-tabs">
                         <li class="pt-2 px-3">
-                            <h3 class="card-title"><b>Diagnosa</b></h3>
+                            <h3 class="card-title"><b>Riwayat Pasien</b></h3>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link active" data-toggle="pill" href="#icd10Tab">ICD-10</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" data-toggle="pill" href="#icd9Tab">ICD-9</a>
+                            <a class="nav-link active" data-toggle="pill" href="#inacbg">INACBG</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" data-toggle="pill" href="#diagTab">Infeksi</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="pill" href="#orderTab">List Order
+                                Obat</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="pill" id="btnLayanan" href="#resumeTab">Resume
+                                Medis</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="pill" href="#antibiotikTab">Evaluasi
+                                Antibiotik</a>
                         </li>
                     </ul>
                 </div>
                 <div class="card-body">
                     <div class="tab-content">
-                        <div class="tab-pane fade show active" id="icd10Tab">
-                            <x-adminlte-select2 name="icd10_primer" label="Diagnosa Primer ICD-10" required>
-                                {{-- @foreach ($icd10 as $item)
-                                    <option value="" disabled selected>Pilih Diagnosa Sekunder</option>
-                                    <option value="{{ $item->diag }}">
-                                        {{ $item->diag }} - {{ $item->nama }}
-                                    </option>
-                                @endforeach --}}
+                        {{-- icd 10 --}}
+                        <div class="tab-pane fade show active" id="inacbg">
+                            <x-adminlte-select name="cara_masuk" label="Cara Masuk">
+                                <option value="gp">Rujukan FKTP</option>
+                                <option value="hosp-trans">Rujukan FKRTL</option>
+                                <option value="mp">Rujukan Spesialis</option>
+                                <option value="outp">Dari Rawat Jalan</option>
+                                <option value="inp">Dari Rawat Inap</option>
+                                <option value="emd">Dari Rawat Darurat</option>
+                                <option value="born">Lahir di RS</option>
+                                <option value="nursing">Rujukan Panti Jompo</option>
+                                <option value="psych">Rujukan dari RS Jiwa</option>
+                                <option value="rehab"> Rujukan Fasilitas Rehab</option>
+                                <option value="other">Lain-lain</option>
+                            </x-adminlte-select>
+                            <x-adminlte-select name="jenis_rawat" label="Jenis Rawat">
+                                <option value="1">Rawat Inap</option>
+                                <option value="2">Rawat Jalan</option>
+                                <option value="3">Rawat IGD</option>
+                            </x-adminlte-select>
+                            <x-adminlte-select name="kelas_rawat" label="Kelas Rawat">
+                                <option value="3">Kelas 3</option>
+                                <option value="2">Kelas 2</option>
+                                <option value="1">Kelas 1</option>
+                            </x-adminlte-select>
+                            <x-adminlte-select name="discharge_status" label="Cara Pulang">
+                                <option value="1">Atas persetujuan dokter</option>
+                                <option value="2">Dirujuk</option>
+                                <option value="3">Atas permintaan sendiri</option>
+                                <option value="4">Meninggal</option>
+                                <option value="5">Lain-lain</option>
+                            </x-adminlte-select>
+                            <x-adminlte-select2 id="diagnosa" name="diagnosa[]" :config="$config"
+                                label="Diagnosa ICD-10" multiple>
                             </x-adminlte-select2>
-                            <x-adminlte-select2 name="icd10_sekunder" id="icd10_sekunder" :config="$config"
-                                name="icd10_sekunder[]" label="Diagnosa Sekunder ICD-10" multiple>
-                                {{-- @foreach ($icd10 as $item)
-                                    <option value="{{ $item->diag }}">
-                                        {{ $item->diag }} - {{ $item->nama }}
-                                    </option>
-                                @endforeach --}}
+                            <x-adminlte-select2 id="procedure" name="procedure[]" label="Tindakan ICD-9"
+                                :config="$config" multiple>
                             </x-adminlte-select2>
                         </div>
-                        <div class="tab-pane fade" id="icd9Tab">
-                            @php
-                                $config = [
-                                    'placeholder' => 'Select multiple options...',
-                                    'allowClear' => true,
-                                ];
-                            @endphp
-                            <x-adminlte-select2 id="icd9" name="icd9[]" label="Tindakan ICD-9" :config="$config"
-                                multiple>
-                                {{-- @foreach ($icd10 as $item)
-                                    <option value="{{ $item->diag }}">
-                                        {{ $item->diag }} - {{ $item->nama }}
-                                    </option>
-                                @endforeach --}}
-                            </x-adminlte-select2>
-                        </div>
+                        {{-- infeksi --}}
                         <div class="tab-pane fade" id="diagTab">
                             <h5>Kelompok Diagnosa Infeksi</h5>
                             <div class="form-group">
@@ -116,7 +140,8 @@
                                 </div>
                                 <div class="custom-control custom-checkbox">
                                     <input class="custom-control-input" type="checkbox" id="pnemonia-bakterial">
-                                    <label for="pnemonia-bakterial" class="custom-control-label">Pnemonia Bakterial</label>
+                                    <label for="pnemonia-bakterial" class="custom-control-label">Pnemonia
+                                        Bakterial</label>
                                 </div>
                                 <div class="custom-control custom-checkbox">
                                     <input class="custom-control-input" type="checkbox" id="intraabdomen-komplikata">
@@ -200,35 +225,8 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-8">
-            <div class="card card-primary card-tabs">
-                <div class="card-header p-0 pt-1">
-                    <ul class="nav nav-tabs">
-                        <li class="pt-2 px-3">
-                            <h3 class="card-title"><b>Riwayat Pasien</b></h3>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link active" data-toggle="pill" href="#orderTab">List Order
-                                Obat</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" data-toggle="pill" id="btnLayanan" href="#resumeTab">Resume
-                                Medis</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" data-toggle="pill" href="#antibiotikTab">Evaluasi
-                                Antibiotik</a>
-                        </li>
-                    </ul>
-                </div>
-                <div class="card-body">
-                    <div class="tab-content">
                         {{-- order obat --}}
-                        <div class="tab-pane fade show active" id="orderTab">
+                        <div class="tab-pane fade" id="orderTab">
                             <div class="row">
                                 <div class="col-md-6">
                                     <x-adminlte-select name="tipeobat" label="Tipe Obat">
@@ -289,7 +287,6 @@
             </div>
         </div>
     </div>
-
     <x-adminlte-modal id="kunjunganPasien" size="lg" title="Daftar Kunjungnan Pasien" theme="success"
         icon="fas fa-user-md">
         <dl class="row">
@@ -297,21 +294,24 @@
             <dd class="col-sm-10">: {{ $request->tanggal }}</dd>
         </dl>
         @php
-            $heads = ['Kode Kunjungan', 'No RM', 'Nama Pasien', 'Unit', 'Dokter', 'Action'];
+            $heads = ['Kunjungan', 'No RM', 'Nama Pasien', 'No Kartu', 'SEP', 'Tgl Lahir', 'Unit', 'Action'];
             $config['paging'] = false;
             $config['info'] = false;
             $config['scrollY'] = '400px';
+            $config['scrollX'] = true;
         @endphp
-        <x-adminlte-datatable id="table1" class="nowrap text-xs" :heads="$heads" :config="$config" bordered
+        <x-adminlte-datatable id="table5" class="nowrap text-xs" :heads="$heads" :config="$config" bordered
             hoverable compressed>
             @isset($kunjungans)
                 @foreach ($kunjungans as $item)
                     <tr>
                         <td>{{ $item->kode_kunjungan }}</td>
                         <td>{{ $item->no_rm }}</td>
-                        <td>{{ $item->pasien->nama_px }}</td>
-                        <td>{{ $item->kode_unit }}</td>
-                        <td>{{ $item->kode_dokter }}</td>
+                        <td>{{ $item->pasien->nama_px }} ({{ $item->pasien->jenis_kelamin }})</td>
+                        <td>{{ $item->pasien->no_Bpjs }}</td>
+                        <td>{{ $item->no_sep }}</td>
+                        <td>{{ \Carbon\Carbon::parse($item->pasien->tgl_lahir)->format('Y-m-d') }}</td>
+                        <td>{{ $item->unit->nama_unit }}</td>
                         <td>
                             <x-adminlte-button theme="success" class="btn-xs pilihKunjungan"
                                 data-id="{{ $item->kode_kunjungan }}" label="Pilih" />
@@ -328,6 +328,13 @@
 @section('plugins.Select2', true)
 @section('plugins.TempusDominusBs4', true)
 @section('js')
+    <script type="text/javascript">
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+    </script>
     <script>
         $(function() {
             $('.cariPasien').click(function() {
@@ -342,9 +349,12 @@
                 $.get(url, function(data) {
                     console.log(data);
                     $('#kunjunganPasien').modal('hide');
-                    $('#nama_px').html(data.nama_pasien);
-                    $('#no_rm').html(data.no_rm);
-                    $('#kode_kunjungan').val(data.kode_kunjungan);
+                    $('#nomor_sep').val(data.no_sep);
+                    $('#nomor_rm').val(data.no_rm);
+                    $('#nama_pasien').val(data.nama_pasien);
+                    $('#nomor_kartu').val(data.pasien.no_Bpjs);
+                    $('#tgl_lahir').val(data.pasien.tgl_lahir);
+                    $('#gender').val(data.pasien.jenis_kelamin);
                     $.LoadingOverlay("hide");
                 });
             });
@@ -375,20 +385,71 @@
                 });
                 $.LoadingOverlay("hide", true);
             });
+            $('#btnNewClaim').click(function() {
+                $.LoadingOverlay("show");
+                var nomor_sep = $('#nomor_sep').val();
+                var nomor_rm = $('#nomor_rm').val();
+                var nama_pasien = $('#nama_pasien').val();
+                var nomor_kartu = $('#nomor_kartu').val();
+                var tgl_lahir = $('#tgl_lahir').val();
+                var gender = $('#gender').val();
+                var dataInput = {
+                    nomor_sep: nomor_sep,
+                    nomor_rm: nomor_rm,
+                    nama_pasien: nama_pasien,
+                    nomor_kartu: nomor_kartu,
+                    tgl_lahir: tgl_lahir,
+                    gender: gender,
+                }
+                var url = "{{ route('api.eclaim.new_claim') }}";
+                $.ajax({
+                    data: dataInput,
+                    url: url,
+                    type: "POST",
+                    success: function(data) {
+                        if (data.metadata.code == 200) {
+                            swal.fire(
+                                'Success',
+                                data.metadata.message,
+                                'success'
+                            );
+                        } else {
+                            console.log(data);
+                            swal.fire(
+                                'Error',
+                                data.metadata.message,
+                                'error'
+                            );
+
+                        }
+                        $.LoadingOverlay("hide");
+                    },
+                    error: function(data) {
+                        console.log(data);
+                        swal.fire(
+                            'Error ' + data.responseJSON.metadata.code,
+                            data.responseJSON.metadata.message,
+                            'error'
+                        );
+                        $.LoadingOverlay("hide");
+                    }
+                });
+            });
         });
     </script>
     <script>
         $(function() {
-            $("#icd10_primer").select2({
+            $("#diagnosa").select2({
+                placeholder: 'Silahkan pilih Diagnosa ICD-10',
                 theme: "bootstrap4",
                 ajax: {
-                    url: "{{ route('api.simrs.get_icd10') }}",
+                    url: "{{ route('api.eclaim.search_diagnosis') }}",
                     type: "get",
                     dataType: 'json',
                     delay: 100,
                     data: function(params) {
                         return {
-                            search: params.term // search term
+                            keyword: params.term // search term
                         };
                     },
                     processResults: function(response) {
@@ -399,38 +460,17 @@
                     cache: true
                 }
             });
-            $("#icd10_sekunder").select2({
-                placeholder: 'Silahkan pilih diagnosa sekunder',
+            $("#procedure").select2({
+                placeholder: 'Silahkan pilih Tindakan ICD-9',
                 theme: "bootstrap4",
                 ajax: {
-                    url: "{{ route('api.simrs.get_icd10') }}",
+                    url: "{{ route('api.eclaim.search_procedures') }}",
                     type: "get",
                     dataType: 'json',
                     delay: 100,
                     data: function(params) {
                         return {
-                            search: params.term // search term
-                        };
-                    },
-                    processResults: function(response) {
-                        return {
-                            results: response
-                        };
-                    },
-                    cache: true
-                }
-            });
-            $("#icd9").select2({
-                placeholder: 'Silahkan pilih diagnosa sekunder',
-                theme: "bootstrap4",
-                ajax: {
-                    url: "{{ route('api.simrs.get_icd9') }}",
-                    type: "get",
-                    dataType: 'json',
-                    delay: 100,
-                    data: function(params) {
-                        return {
-                            search: params.term // search term
+                            keyword: params.term // search term
                         };
                     },
                     processResults: function(response) {

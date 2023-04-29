@@ -3,6 +3,13 @@
 @section('title', 'SIRAMAH-RS Waled')
 
 @section('content')
+    <section id="hero" class="d-flex align-items-center">
+        <div class="container">
+            <h1>SIRAMAH-RS Waled</h1>
+            <h2>Sistem Informasi Manajemen Kesehatan Terintegrasi RS Waled</h2>
+            <a href="#about" class="btn-get-started scrollto">Daftar Online</a>
+        </div>
+    </section>
     <section id="why-us" class="why-us">
         <div class="container">
             <div class="row">
@@ -213,7 +220,7 @@
                     sint consectetur velit. Quisquam quos quisquam cupiditate. Et nemo qui impedit suscipit alias
                     ea. Quia fugiat sit in iste officiis commodi quidem hic quas.</p>
             </div>
-            <div class="row " >
+            <div class="row ">
                 <div class="col-lg-6 col-md-6 d-flex align-items-stretch">
                     <div class="icon-box">
                         <div class="icon"><i class="fas fa-heartbeat"></i></div>

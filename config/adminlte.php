@@ -14,7 +14,7 @@ return [
     |
     */
 
-    'title' => 'SIM RSUD Waled',
+    'title' => 'SIRAMAH-RS Waled',
     'title_prefix' => '',
     'title_postfix' => '',
 
@@ -45,12 +45,12 @@ return [
     |
     */
 
-    'logo' => '<b>SIMRS Waled</b>',
+    'logo' => '<b>SIRAMAH-RS Waled</b>',
     'logo_img' => 'vendor/adminlte/dist/img/rswaledico.png',
     'logo_img_class' => 'brand-image',
     'logo_img_xl' => null,
     'logo_img_xl_class' => 'brand-image-xs',
-    'logo_img_alt' => 'SIMRS Waled',
+    'logo_img_alt' => 'SIRAMAH-RS Waled',
 
     /*
     |--------------------------------------------------------------------------
