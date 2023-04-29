@@ -292,13 +292,13 @@
                 $.LoadingOverlay("hide", true);
             });
             $('#cetakBlanko').click(function() {
-                var url = "{{ route('bagianumum.suratmasuk.index') }}/" + id;
+                var url = "{{ route('bagianumum.disposisi.index') }}/" + id;
                 window.open(url, 'window name', 'window settings');
                 return false;
             });
             $('.cetakDisposisi').click(function() {
                 var id = $(this).data('id');
-                var url = "{{ route('bagianumum.suratmasuk.index') }}/" + id;
+                var url = "{{ route('bagianumum.disposisi.index') }}/" + id;
                 window.open(url, 'window name', 'window settings');
                 return false;
             });
