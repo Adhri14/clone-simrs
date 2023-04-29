@@ -292,7 +292,7 @@
                 $.LoadingOverlay("hide", true);
             });
             $('#cetakBlanko').click(function() {
-                var url = "{{ route('bagianumum.disposisi.index') }}/" + id;
+                var url = "{{ route('bagianumum.disposisi.create') }}";
                 window.open(url, 'window name', 'window settings');
                 return false;
             });
