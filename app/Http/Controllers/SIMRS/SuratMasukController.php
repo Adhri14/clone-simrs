@@ -66,10 +66,6 @@ class SuratMasukController extends Controller
         $surat = SuratMasuk::find($id);
         return response()->json($surat);
     }
-    public function edit($id)
-    {
-        //
-    }
     public function update(Request $request, $id)
     {
 
