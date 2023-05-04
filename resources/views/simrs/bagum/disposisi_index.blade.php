@@ -1,19 +1,19 @@
 @extends('adminlte::page')
-@section('title', 'Surat Masuk')
+@section('title', 'Disposisi')
 @section('content_header')
-    <h1>Surat Masuk</h1>
+    <h1>Disposisi</h1>
 @stop
 
 @section('content')
     <div class="row">
         <div class="col-12">
-            <x-adminlte-card theme="primary" icon="fas fa-envelope" collapsible title="Surat Masuk">
+            <x-adminlte-card theme="primary" icon="fas fa-envelope" collapsible title="Disposisi">
                 <div class="row">
                     <div class="col-md-8">
-                        <x-adminlte-button theme="success" label="Tambah Surat Masuk" class=" btn-sm mb-2" id="tambahSurat" />
+                        {{-- <x-adminlte-button theme="success" label="Tambah Disposisi Surat" class=" btn-sm mb-2" id="tambahSurat" />
                         <x-adminlte-button theme="primary" label="Blanko Disposisi" class=" btn-sm mb-2" id="cetakBlanko" />
                         <x-adminlte-button label="Refresh" class="btn-sm mb-2" theme="warning" title="Refresh User"
-                            icon="fas fa-sync" onclick="window.location='{{ route('bagianumum.suratmasuk.index') }}'" />
+                            icon="fas fa-sync" onclick="window.location='{{ route('bagianumum.disposisi.index') }}'" /> --}}
                     </div>
                     <div class="col-md-4">
                         <form action="" method="get">
@@ -86,7 +86,7 @@
             </x-adminlte-card>
         </div>
     </div>
-    <x-adminlte-modal id="modal" title="Surat Masuk" size="xl" theme="success" v-centered>
+    <x-adminlte-modal id="modal" title="Disposisi Surat" size="xl" theme="success" v-centered>
         <form action="" id="formSurat" method="POST">
             @csrf
             <div class="row">
@@ -98,13 +98,13 @@
                             <x-adminlte-input name="no_urut" label="No Urut" igroup-size="sm" enable-old-support readonly />
                         </div>
                         <div class="col-md-6">
-                            <x-adminlte-input name="kode" label="Kode Surat" igroup-size="sm" enable-old-support />
+                            <x-adminlte-input name="kode" label="Kode Surat" igroup-size="sm" enable-old-support readonly/>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-6">
                             <x-adminlte-input name="no_surat" label="Nomor Surat" igroup-size="sm" enable-old-support
-                                required />
+                                required readonly />
 
                         </div>
                         <div class="col-md-6">
@@ -112,18 +112,18 @@
                                 $config = ['format' => 'YYYY-MM-DD'];
                             @endphp
                             <x-adminlte-input-date name="tgl_surat" value="{{ now()->format('Y-m-d') }}" label="Tgl Surat"
-                                igroup-size="sm" :config="$config" enable-old-support required />
+                                igroup-size="sm" :config="$config" enable-old-support required disabled  />
                         </div>
                     </div>
-                    <x-adminlte-input name="asal_surat" label="Asal Surat" igroup-size="sm" enable-old-support required />
-                    <x-adminlte-textarea name="perihal" rows=5 placeholder="Perihal" label="Perihal" required />
+                    <x-adminlte-input name="asal_surat" label="Asal Surat" igroup-size="sm" enable-old-support required readonly/>
+                    <x-adminlte-textarea name="perihal" rows=5 placeholder="Perihal" label="Perihal" required readonly/>
                     <div class="row">
                         <div class="col-md-6">
                             <x-adminlte-input-date name="tgl_disposisi" value="{{ now()->format('Y-m-d') }}"
-                                label="Tgl Disposisi" igroup-size="sm" :config="$config" enable-old-support required />
+                                label="Tgl Disposisi" igroup-size="sm" :config="$config" enable-old-support required disabled />
                         </div>
                         <div class="col-md-6">
-                            <x-adminlte-select name="sifat" label="Sifat Surat">
+                            <x-adminlte-select name="sifat" label="Sifat Surat" readonly>
                                 <option value="1">Biasa</option>
                                 <option value="2">Segera</option>
                                 <option value="3">Sangat Segera</option>
@@ -131,72 +131,80 @@
                             </x-adminlte-select>
                         </div>
                     </div>
-                    <x-adminlte-input name="tanda_terima" label="Tanda Terima" igroup-size="sm" enable-old-support />
-                    <x-adminlte-input-date name="tgl_terima_surat"  label="Tgl Terima Disposisi" igroup-size="sm"
-                        :config="$config" enable-old-support disabled />
+                    <x-adminlte-input name="tanda_terima" label="Tanda Terima" igroup-size="sm" enable-old-support readonly />
+                     <x-adminlte-input-date name="tgl_disposisi" value="{{ now()->format('Y-m-d') }}"
+                                label="Tgl Terima Disposisi" igroup-size="sm" :config="$config" enable-old-support required/>
+                    {{-- <x-adminlte-input-date name="tgl_terima_surat" value="{{ now()->format('Y-m-d') }}" label="Tgl Terima Disposisi" igroup-size="sm"
+                        :config="$config" enable-old-support /> --}}
                 </div>
                 <div class="col-md-6">
+
                     <x-adminlte-input-date name="tgl_diteruskan" label="Tgl Diteruskan" igroup-size="sm"
-                        :config="$config" enable-old-support disabled/>
-                    <x-adminlte-input name="pengolah" label="Diteruskan Kpd" igroup-size="sm" enable-old-support readonly />
+                        :config="$config" enable-old-support />
+                    {{-- <x-adminlte-input name="pengolah" label="Diteruskan Kpd" igroup-size="sm" enable-old-support /> --}}
+                    <x-adminlte-select name="pengolah" label="Diteruskan Kpd" igroup-size="sm" enable-old-support>
+                        <option value="1">Wakil Direktur Umum Dan Keuangan</option>
+                        <option value="2">Wakil Direktur Pelayanan Dan Pendidikan</option>
+
+                    </x-adminlte-select>
                     <div class="form-group">
                         <div class="custom-control custom-checkbox">
-                            <input class="custom-control-input" type="checkbox" id="tindaklanjuti" name="tindaklanjuti" disabled>
+                            <input class="custom-control-input" type="checkbox" id="tindaklanjuti" name="tindaklanjuti">
                             <label for="tindaklanjuti" class="custom-control-label">Untuk ditindaklanjuti</label>
                         </div>
                         <div class="custom-control custom-checkbox">
                             <input class="custom-control-input" type="checkbox" id="proses_sesuai_kemampuan"
-                                name="proses_sesuai_kemampuan" disabled>
+                                name="proses_sesuai_kemampuan">
                             <label for="proses_sesuai_kemampuan" class="custom-control-label">Proses sesuai kemampuan /
                                 peraturan yang berlaku</label>
                         </div>
                         <div class="custom-control custom-checkbox">
-                            <input class="custom-control-input" type="checkbox" id="koordinasikan" name="koordinasikan" disabled>
+                            <input class="custom-control-input" type="checkbox" id="koordinasikan" name="koordinasikan">
                             <label for="koordinasikan" class="custom-control-label">Koordinasikan / konfirmasi
                                 dengan
                                 ybs / instansi terkait</label>
                         </div>
                         <div class="custom-control custom-checkbox">
-                            <input class="custom-control-input" type="checkbox" id="untuk_dibantu" name="untuk_dibantu" disabled>
+                            <input class="custom-control-input" type="checkbox" id="untuk_dibantu" name="untuk_dibantu">
                             <label for="untuk_dibantu" class="custom-control-label">Untuk dibantu / difasilitasi /
                                 dipenuhi sesuai kebutuhan</label>
                         </div>
                         <div class="custom-control custom-checkbox">
-                            <input class="custom-control-input" type="checkbox" id="pelajari" name="pelajari" disabled>
+                            <input class="custom-control-input" type="checkbox" id="pelajari" name="pelajari">
                             <label for="pelajari" class="custom-control-label">Pelajari / telaah /
                                 sarannya</label>
                         </div>
                         <div class="custom-control custom-checkbox">
-                            <input class="custom-control-input" type="checkbox" id="wakili_hadiri" name="wakili_hadiri" disabled>
+                            <input class="custom-control-input" type="checkbox" id="wakili_hadiri" name="wakili_hadiri">
                             <label for="wakili_hadiri" class="custom-control-label">Wakili / hadiri / terima /
                                 laporkan hasilnya</label>
                         </div>
                         <div class="custom-control custom-checkbox">
-                            <input class="custom-control-input" type="checkbox" id="agendakan" name="agendakan" disabled>
+                            <input class="custom-control-input" type="checkbox" id="agendakan" name="agendakan">
                             <label for="agendakan" class="custom-control-label">Agendakan / persiapkan /
                                 koordinasikan </label>
                         </div>
                         <div class="custom-control custom-checkbox">
                             <input class="custom-control-input" type="checkbox" id="ingatkan_waktunya"
-                                name="ingatkan_waktunya" disabled>
+                                name="ingatkan_waktunya">
                             <label for="ingatkan_waktunya" class="custom-control-label">Jadwalkan ingatkan
                                 waktunya</label>
                         </div>
                         <div class="custom-control custom-checkbox">
-                            <input class="custom-control-input" type="checkbox" id="siapkan_bahan" name="siapkan_bahan" disabled>
+                            <input class="custom-control-input" type="checkbox" id="siapkan_bahan" name="siapkan_bahan">
                             <label for="siapkan_bahan" class="custom-control-label">Siapkan pointer / sambutan /
                                 bahan</label>
                         </div>
                         <div class="custom-control custom-checkbox">
                             <input class="custom-control-input" type="checkbox" id="simpan_arsipkan"
-                                name="simpan_arsipkan" disabled>
+                                name="simpan_arsipkan">
                             <label for="simpan_arsipkan" class="custom-control-label">Simpan / arsipkan</label>
                         </div>
                     </div>
                     <x-adminlte-textarea name="disposisi" rows=5 placeholder="Catatan Disposisi"
-                        label="Catatan Disposisi" readonly/>
+                        label="Catatan Disposisi" />
                     <div class="custom-control custom-checkbox">
-                        <input class="custom-control-input" type="checkbox" id="ttd_direktur" name="ttd_direktur" disabled>
+                        <input class="custom-control-input" type="checkbox" id="ttd_direktur" name="ttd_direktur">
                         <label for="ttd_direktur" class="custom-control-label">Telah Ditandatangi Oleh Direktur</label>
                     </div>
 
@@ -305,7 +313,7 @@
             $('#btnStore').click(function(e) {
                 $.LoadingOverlay("show");
                 e.preventDefault();
-                var url = "{{ route('bagianumum.suratmasuk.store') }}";
+                var url = "{{ route('bagianumum.disposisi.store') }}";
                 $('#formSurat').attr('action', url);
                 $("#method").prop('disabled', true);
                 $('#formSurat').submit();
@@ -314,7 +322,7 @@
                 $.LoadingOverlay("show");
                 e.preventDefault();
                 var id = $('#id_surat').val();
-                var url = "{{ route('bagianumum.suratmasuk.index') }}/" + id;
+                var url = "{{ route('bagianumum.disposisi.index') }}/" + id;
                 $('#formSurat').attr('action', url);
                 $('#method').val('PUT');
                 $('#formSurat').submit();
@@ -322,7 +330,7 @@
             $('#btnDelete').click(function(e) {
                 e.preventDefault();
                 swal.fire({
-                    title: 'Apakah anda ingin menghapus surat ini ?',
+                    title: 'Apakah anda ingin menghapus disposisi surat ini ?',
                     showConfirmButton: false,
                     showDenyButton: true,
                     showCancelButton: true,
@@ -331,7 +339,7 @@
                     if (result.isDenied) {
                         $.LoadingOverlay("show");
                         var id = $('#id_surat').val();
-                        var url = "{{ route('bagianumum.suratmasuk.index') }}/" + id;
+                        var url = "{{ route('bagianumum.disposisi.index') }}/" + id;
                         $('#formDelete').attr('action', url);
                         $('#formDelete').submit();
                     }
@@ -343,7 +351,8 @@
                 $('#formSurat').trigger("reset");
                 $('#btnStore').hide();
                 $('#btnUpdate').show();
-                $.get("{{ route('bagianumum.suratmasuk.index') }}/" + id, function(data) {
+                var url = "{{ route('bagianumum.suratmasuk.index') }}/" + id;
+                $.get(url, function(data) {
                     console.log(data);
                     $('#id_surat').val(data.id_surat_masuk);
                     $('#no_urut').val(data.no_urut);
@@ -378,7 +387,7 @@
             $('#btnDeleteLampiran').click(function(e) {
                 e.preventDefault();
                 swal.fire({
-                    title: 'Apakah anda ingin menghapus surat ini ?',
+                    title: 'Apakah anda ingin menghapus disposisi surat ini ?',
                     showConfirmButton: false,
                     showDenyButton: true,
                     showCancelButton: true,

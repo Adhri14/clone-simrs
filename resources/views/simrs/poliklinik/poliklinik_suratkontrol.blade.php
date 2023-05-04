@@ -54,7 +54,7 @@
                 <x-adminlte-card title="Kunjungan Poliklinik ({{ $kunjungans->count() }} Orang)" theme="primary"
                     icon="fas fa-info-circle" collapsible>
                     @php
-                        $heads = ['No','Tgl Kunjungan', 'Pasien', 'Action', 'SEP / Ref', 'Poliklinik', 'NIK / Tgl Lahir'];
+                        $heads = ['No', 'Tgl Kunjungan', 'Pasien', 'Action', 'SEP / Ref', 'Poliklinik', 'NIK / Tgl Lahir'];
                         $config['paging'] = false;
                         $config['info'] = false;
                         $config['scrollY'] = '400px';

@@ -48,10 +48,3 @@
         </a>
     </div>
 </header>
-{{-- <section id="hero" class="d-flex align-items-center">
-    <div class="container">
-        <h1>SIRAMAH-RS Waled</h1>
-        <h2>Sistem Informasi Manajemen Kesehatan Terintegrasi RS Waled</h2>
-        <a href="#about" class="btn-get-started scrollto">Daftar Online</a>
-    </div>
-</section> --}}

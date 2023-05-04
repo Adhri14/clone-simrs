@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'SIM RSUD Waled')
+@section('title', 'SIRAMAH-RS Waled')
 
 @section('content_header')
     <h1 class="m-0 text-dark">Dashboard</h1>

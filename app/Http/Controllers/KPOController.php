@@ -14,22 +14,29 @@ class KPOController extends Controller
 {
     public function index(Request $request)
     {
-        $icd10 = ICD10::limit(10)->get();
         $units = Unit::whereIn('kelas_unit', ['1', '2'])->pluck('nama_unit', 'kode_unit');
         $kunjungans = null;
-        if (isset($request->unit)) {
-            $kunjungans = KunjunganDB::with(['pasien'])
-                ->whereDate('tgl_masuk', $request->tanggal)
-                ->where('kode_unit', $request->unit)
-                ->get();
+        $kunjungan = null;
 
-            Alert::success("Success", "Data kunjungan ditemukan " . $kunjungans->count() . " pasien");
+
+        if (isset($request->unit)) {
+            if (isset($request->kunjungan)) {
+                $kunjungan = KunjunganDB::with(['pasien', 'unit'])->find($request->kunjungan);
+                Alert::success("Success", "Pasien telah dipilih.");
+            } else {
+                $kunjungans = KunjunganDB::with(['pasien', 'unit'])
+                    ->whereDate('tgl_masuk', $request->tanggal)
+                    ->where('kode_unit', $request->unit)
+                    ->get();
+                Alert::success("Success", "Data kunjungan ditemukan " . $kunjungans->count() . " pasien");
+            }
         }
+        // dd($kunjungan);
         return view('simrs.kpo_create', compact([
-            'icd10',
             'request',
             'units',
             'kunjungans',
+            'kunjungan'
         ]));
     }
     public function kunjungan_tanggal($tanggal)
@@ -44,27 +51,22 @@ class KPOController extends Controller
     {
         //
     }
-
     public function store(Request $request)
     {
         //
     }
-
     public function show($id)
     {
         //
     }
-
     public function edit($id)
     {
         //
     }
-
     public function update(Request $request, $id)
     {
         //
     }
-
     public function destroy($id)
     {
         //
