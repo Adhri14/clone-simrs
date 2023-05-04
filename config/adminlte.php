@@ -599,7 +599,7 @@ return [
         [
             'text'    => 'Bagian Umum',
             'icon'    => 'fas fa-hospital',
-            'can' => 'bagian-umum',
+            'can' => ['bagian-umum','direktur'],
             'submenu' => [
                 [
                     'text' => 'Surat Masuk',
@@ -613,7 +613,7 @@ return [
                     'icon'    => 'fas fa-file-signature',
                     'url'  => 'bagianumum/disposisi',
                     'shift'   => 'ml-2',
-                    'can' => 'bagian-umum',
+                    'can' => 'direktur',
                 ],
                 [
                     'text' => 'Surat Keluar',
