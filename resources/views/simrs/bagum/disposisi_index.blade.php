@@ -351,7 +351,7 @@
                 $('#formSurat').trigger("reset");
                 $('#btnStore').hide();
                 $('#btnUpdate').show();
-                var url = "{{ route('bagianumum.disposisi.index') }}/" + id;
+                var url = "{{ route('bagianumum.suratmasuk.index') }}/" + id;
                 $.get(url, function(data) {
                     console.log(data);
                     $('#id_surat').val(data.id_surat_masuk);

@@ -444,7 +444,7 @@ return [
                     'can' => 'rekam-medis',
                 ],
                 [
-                    'text' => 'Aplikasi KPO',
+                    'text' => 'E-KPO Rawat Jalan',
                     'icon'    => 'fas fa-pills',
                     'url'  => 'kpo',
                     'shift'   => 'ml-2',

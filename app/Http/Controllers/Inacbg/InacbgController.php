@@ -155,9 +155,13 @@ class InacbgController extends ApiBPJSController
             "nomor_sep" =>  "required",
             "nomor_kartu" =>  "required",
             "tgl_masuk" =>  "required|date",
+            "cara_masuk" =>  "required",
+            "jenis_rawat" =>  "required",
+            "kelas_rawat" =>  "required",
             "diagnosa" =>  "required",
             // "procedure" =>  "required",
         ]);
+        return $this->sendResponse('ok', $request->diagnosa);
         if ($validator->fails()) {
             return $this->sendError($validator->errors()->first(), null, 400);
         }
@@ -172,9 +176,9 @@ class InacbgController extends ApiBPJSController
                 "nomor_kartu" => $request->nomor_kartu,
                 "tgl_masuk" => $request->tgl_masuk,
                 "tgl_pulang" => $request->tgl_pulang,
-                "cara_masuk" => "gp", #isi
-                "jenis_rawat" => "2", #inap, jalan, igd
-                "kelas_rawat" => "1", #kelas rawat
+                "cara_masuk" => $request->cara_masuk, #isi
+                "jenis_rawat" => $request->jenis_rawat, #inap, jalan, igd
+                "kelas_rawat" => $request->kelas_rawat, #kelas rawat
                 "adl_sub_acute" => "0",
                 "adl_chronic" => "0",
                 "icu_indikator" => "0",
@@ -195,28 +199,28 @@ class InacbgController extends ApiBPJSController
                 "diastole" => 70, #yg dbawah
                 "discharge_status" => "1", #kluar
                 "diagnosa" => $request->diagnosa,
-                "procedure" => $request->procedure,
+                "procedure" => "85.51",
                 "diagnosa_inagrouper" => $request->diagnosa_inagrouper,
                 "procedure_inagrouper" => $request->procedure_inagrouper,
                 "tarif_rs" => [
-                    "prosedur_non_bedah" => "300000",
-                    "prosedur_bedah" => "20000000",
-                    "konsultasi" => "300000",
-                    "tenaga_ahli" => "200000",
-                    "keperawatan" => "80000",
-                    "penunjang" => "1000000",
-                    "radiologi" => "500000",
-                    "laboratorium" => "600000",
-                    "pelayanan_darah" => "150000",
-                    "rehabilitasi" => "100000",
-                    "kamar" => "6000000",
-                    "rawat_intensif" => "2500000",
-                    "obat" => "100000",
-                    "obat_kronis" => "1000000",
-                    "obat_kemoterapi" => "5000000",
-                    "alkes" => "500000",
-                    "bmhp" => "400000",
-                    "sewa_alat" => "210000"
+                    "prosedur_non_bedah" => "0",
+                    "prosedur_bedah" => "0",
+                    "konsultasi" => "30000",
+                    "tenaga_ahli" => "0",
+                    "keperawatan" => "0",
+                    "penunjang" => "0",
+                    "radiologi" => "0",
+                    "laboratorium" => "0",
+                    "pelayanan_darah" => "0",
+                    "rehabilitasi" => "0",
+                    "kamar" => "0",
+                    "rawat_intensif" => "0",
+                    "obat" => "0",
+                    "obat_kronis" => "0",
+                    "obat_kemoterapi" => "0",
+                    "alkes" => "0",
+                    "bmhp" => "0",
+                    "sewa_alat" => "0"
                 ],
                 "pemulasaraan_jenazah" => "0",
                 "kantong_jenazah" => "0",
@@ -297,7 +301,7 @@ class InacbgController extends ApiBPJSController
                 //         ]
                 //     ]
                 // ],
-                "tarif_poli_eks" => "0",
+                "tarif_poli_eks" => "#",
                 "nama_dokter" => "RUDY, DR",
                 "kode_tarif" => "BP",
                 "payor_id" => "3",
@@ -305,6 +309,86 @@ class InacbgController extends ApiBPJSController
                 // "cob_cd" => "0001",
                 "coder_nik" => "123123123123",
 
+            ]
+        ];
+        $json_request = json_encode($request_data);
+        return $this->send_request($json_request);
+    }
+    public function set_claim_rajal(Request $request)
+    {
+        $validator = Validator::make(request()->all(), [
+            "nomor_sep" =>  "required",
+            "nomor_kartu" =>  "required",
+            "tgl_masuk" =>  "required|date",
+            "cara_masuk" =>  "required",
+            "jenis_rawat" =>  "required",
+            "kelas_rawat" =>  "required",
+            "discharge_status" =>  "required",
+            "diagnosa" =>  "required",
+            // "procedure" =>  "required",
+        ]);
+
+        if ($validator->fails()) {
+            return $this->sendError($validator->errors()->first(), null, 400);
+        }
+
+        $icd10 = $request->diagnosa[0];
+        $jumlah_diag = count($request->diagnosa) - 1;
+        for ($i = 1; $i  <= $jumlah_diag; $i++) {
+            $icd10 = $icd10 . '#' . $request->diagnosa[$i];
+        }
+
+        $icd9 = $request->procedure[0];
+        $jumlah_diag = count($request->procedure) - 1;
+        for ($i = 1; $i  <= $jumlah_diag; $i++) {
+            $icd9 = $icd9 . '#' . $request->procedure[$i];
+        }
+
+        $request_data = [
+            "metadata" => [
+                "method" => "set_claim_data",
+                "nomor_sep" => $request->nomor_sep,
+
+            ],
+            "data" => [
+                "nomor_sep" =>  $request->nomor_sep,
+                "nomor_kartu" => $request->nomor_kartu,
+                "tgl_masuk" => $request->tgl_masuk,
+                "tgl_pulang" => $request->tgl_pulang,
+                "cara_masuk" => $request->cara_masuk, #isi
+                "jenis_rawat" => $request->jenis_rawat, #inap, jalan, igd
+                "kelas_rawat" => $request->kelas_rawat, #kelas rawat
+                "sistole" => 120, #detak tensi
+                "diastole" => 70, #yg dbawah
+                "discharge_status" => $request->discharge_status, #kluar
+                "diagnosa" => $icd10,
+                "procedure" => $icd9,
+                "tarif_rs" => [
+                    "prosedur_non_bedah" => "0",
+                    "prosedur_bedah" => "0",
+                    "konsultasi" => "30000",
+                    "tenaga_ahli" => "0",
+                    "keperawatan" => "0",
+                    "penunjang" => "0",
+                    "radiologi" => "0",
+                    "laboratorium" => "0",
+                    "pelayanan_darah" => "0",
+                    "rehabilitasi" => "0",
+                    "kamar" => "0",
+                    "rawat_intensif" => "0",
+                    "obat" => "0",
+                    "obat_kronis" => "0",
+                    "obat_kemoterapi" => "0",
+                    "alkes" => "0",
+                    "bmhp" => "0",
+                    "sewa_alat" => "0"
+                ],
+                "nama_dokter" => "RUDY, DR",
+                "kode_tarif" => "BP",
+                "payor_id" => "3",
+                "payor_cd" => "JKN",
+                // "cob_cd" => "0001",
+                "coder_nik" => "123123123123",
             ]
         ];
         $json_request = json_encode($request_data);
