@@ -15,24 +15,33 @@ class User extends Authenticatable
 
     protected $fillable = [
         'name',
-        'username',
         'phone',
         'email',
+        'google_id',
+        'username',
         'password',
+        'avatar',
+        'avatar_original',
         'email_verified_at',
         'user_id',
     ];
-
     protected $hidden = [
         'password',
         'remember_token',
     ];
-
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
     public function verificator()
     {
         return $this->hasOne(User::class, 'id', 'user_id');
+    }
+    public function adminlte_image()
+    {
+        if ($this->avatar) {
+            return $this->avatar;
+        } else {
+            return 'https://picsum.photos/300/300';
+        }
     }
 }

@@ -12,23 +12,12 @@ class UserSeeder extends Seeder
     public function run()
     {
         $user = User::create([
-            "name" => "Admin IT",
-            "email" => "adminit@gmail.com",
-            "username" => "adminit",
-            "phone" => "089529909036",
-            'password' => bcrypt('qweqwe123'),
-            'user_id' => 2,
-            'email_verified_at' => now()
-
-        ]);
-        $user->assignRole('Admin');
-        $user = User::create([
             "name" => "Admin Super",
-            "email" => "adminrs@gmail.com",
+            "email" => "brsud.waled@gmail.com",
             "username" => "adminrs",
             "phone" => "089529909036",
             'password' => bcrypt('qweqwe123'),
-            'user_id' => 2,
+            'user_id' => 1,
             'email_verified_at' => now()
         ]);
         $user->assignRole('Admin Super');
@@ -38,6 +27,8 @@ class UserSeeder extends Seeder
             "username" => "marwan",
             "phone" => "089529909036",
             'password' => bcrypt('qweqwe123'),
+            // 'user_id' => 1,
+            // 'email_verified_at' => now()
         ]);
         $user->assignRole('Admin Super');
         $user = User::create([
@@ -46,7 +37,7 @@ class UserSeeder extends Seeder
             "username" => "antrianbpjs",
             "phone" => "089529909036",
             'password' => bcrypt('antrianbpjs'),
-            'user_id' => 2,
+            'user_id' => 1,
             'email_verified_at' => now()
         ]);
         $user->assignRole('Admin Super');
@@ -56,6 +47,8 @@ class UserSeeder extends Seeder
             "username" => "bagianumum",
             "phone" => "089529909036",
             'password' => bcrypt('bagianumum'),
+            'user_id' => 1,
+            'email_verified_at' => now()
         ]);
         $user->assignRole('Bagian Umum');
         $user = User::create([
@@ -64,6 +57,8 @@ class UserSeeder extends Seeder
             "username" => "adminpendaftaran",
             "phone" => "089529909036",
             'password' => bcrypt('adminpendaftaran'),
+            'user_id' => 1,
+            'email_verified_at' => now()
         ]);
         $user->assignRole('Pendaftaran');
         $user = User::create([
@@ -72,6 +67,8 @@ class UserSeeder extends Seeder
             "username" => "adminkasir",
             "phone" => "089529909036",
             'password' => bcrypt('adminkasir'),
+            'user_id' => 1,
+            'email_verified_at' => now()
         ]);
         $user->assignRole('Kasir');
         $user = User::create([
@@ -80,6 +77,8 @@ class UserSeeder extends Seeder
             "username" => "adminpoli",
             "phone" => "089529909036",
             'password' => bcrypt('adminpoli'),
+            'user_id' => 1,
+            'email_verified_at' => now()
         ]);
         $user->assignRole('Poliklinik');
         $user = User::create([
@@ -88,6 +87,8 @@ class UserSeeder extends Seeder
             "username" => "adminfarmasi",
             "phone" => "089529909036",
             'password' => bcrypt('adminfarmasi'),
+            'user_id' => 1,
+            'email_verified_at' => now()
         ]);
         $user->assignRole('Farmasi');
         $user = User::create([
@@ -96,6 +97,8 @@ class UserSeeder extends Seeder
             "username" => "adminyanmed",
             "phone" => "089529909036",
             'password' => bcrypt('adminyanmed'),
+            'user_id' => 1,
+            'email_verified_at' => now()
         ]);
         $user->assignRole('Pelayanan Medis');
         $user = User::create([
@@ -104,6 +107,8 @@ class UserSeeder extends Seeder
             "username" => "adminrekammedis",
             "phone" => "089529909036",
             'password' => bcrypt('adminrekammedis'),
+            'user_id' => 1,
+            'email_verified_at' => now()
         ]);
         $user->assignRole('Rekam Medis');
 

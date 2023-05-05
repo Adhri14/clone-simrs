@@ -46,7 +46,7 @@
                     </div>
                 </div>
                 @php
-                    $heads = ['ID', 'Name', 'Username', 'Email', 'Phone', 'Role', 'Verify', 'Action'];
+                    $heads = ['ID', 'Name', 'Username', 'Email', 'Phone', 'Role', 'Verify', 'Created_at','Action'];
                     $config['paging'] = false;
                     $config['lengthMenu'] = false;
                     $config['searching'] = false;
@@ -80,6 +80,7 @@
                                     {{ $item->verificator->name }}
                                 @endisset
                             </td>
+                            <td>{{ $item->created_at }}</td>
                             <td>
                                 <form action="{{ route('user.destroy', $item) }}" method="POST">
                                     <x-adminlte-button class="btn-xs" theme="success" icon="fas fa-check"
