@@ -613,7 +613,7 @@ return [
                     'icon'    => 'fas fa-file-signature',
                     'url'  => 'bagianumum/disposisi',
                     'shift'   => 'ml-2',
-                    'can' => 'direktur',
+                    'can' =>  ['bagian-umum','direktur'],
                 ],
                 [
                     'text' => 'Surat Keluar',

@@ -133,7 +133,7 @@
                     </div>
                     <x-adminlte-input name="tanda_terima" label="Tanda Terima" igroup-size="sm" enable-old-support />
                     <x-adminlte-input-date name="tgl_terima_surat"  label="Tgl Terima Disposisi" igroup-size="sm"
-                        :config="$config" enable-old-support disabled />
+                        :config="$config" enable-old-support  />
                 </div>
                 <div class="col-md-6">
                     <x-adminlte-input-date name="tgl_diteruskan" label="Tgl Diteruskan" igroup-size="sm"

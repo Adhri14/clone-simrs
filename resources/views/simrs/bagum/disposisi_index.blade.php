@@ -133,7 +133,7 @@
                     </div>
                     <x-adminlte-input name="tanda_terima" label="Tanda Terima" igroup-size="sm" enable-old-support readonly />
                      <x-adminlte-input-date name="tgl_disposisi" value="{{ now()->format('Y-m-d') }}"
-                                label="Tgl Terima Disposisi" igroup-size="sm" :config="$config" enable-old-support required/>
+                                label="Tgl Terima Disposisi" igroup-size="sm" :config="$config" enable-old-support required readonly />
                     {{-- <x-adminlte-input-date name="tgl_terima_surat" value="{{ now()->format('Y-m-d') }}" label="Tgl Terima Disposisi" igroup-size="sm"
                         :config="$config" enable-old-support /> --}}
                 </div>
