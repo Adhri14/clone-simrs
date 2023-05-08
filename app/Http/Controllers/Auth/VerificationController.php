@@ -44,14 +44,20 @@ class VerificationController extends Controller
     public function verifikasi_kirim(Request $request)
     {
         $user = User::where('username', $request->username)
-            ->orWhere('email', $request->username)->first();
+            ->orWhere('email', $request->email)->first();
         $wa = new WhatsappController();
+
+        $user->update([
+            'username' => $request->username,
+            'phone' => $request->phone,
+        ]);
+
         $request['message'] = "*Verifikasi Akun SIMRS WALED* \nPesan verifikasi akun anda telah dikirim dengan sebagai berikut.\n\nNAMA : " . $user->name . "\nPHONE : " . $user->phone . "\nEMAIL : " . $user->email . "\n\nSilahkan menunggu Administrator atau Kepegawaian untuk memverifikasi anda.";
         $request['number'] = $user->phone;
         $wa->send_message($request);
         $request['notif'] = "*Verifikasi Akun SIMRS WALED* \nTelah registrasi akun baru dengan data sebagai berikut.\n\nNAMA : " . $user->name . "\nPHONE : " . $user->phone . "\nEMAIL : " . $user->email . "\n\nMohon segera lakukan verifikasi registrasi tersebut.\nsim.rsudwaled.id";
         $wa->send_notif($request);
-        Alert::success('Succes','Berhasil Kirim Pesan Verifikasi. Silahkan menunggu verifikasi');
+        Alert::success('Succes', 'Berhasil Kirim Pesan Verifikasi. Silahkan menunggu verifikasi');
         return redirect()->route('login');
     }
 }

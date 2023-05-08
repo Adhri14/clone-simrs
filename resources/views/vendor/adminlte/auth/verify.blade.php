@@ -13,13 +13,17 @@
     verifikasi.
     <br>
     <br>
-    <label>Username : {{ $user->username }}</label>
+    <label>Nama : {{ $user->name }}</label>
     <br>
+    <label>Email : {{ $user->email }}</label>
+    {{-- <label>Username : {{ $user->username }}</label> --}}
     <form class="d-inline" method="POST" action="{{ route('verifikasi_kirim') }}">
         @csrf
-        <input type="hidden" name="username" value="{{ $user->username }}">
+        <input type="hidden" name="email" value="{{ $user->email }}">
+        <x-adminlte-input name="username" value="{{ $user->username }}" label="Username"
+            placeholder="Username" enable-old-support />
         <x-adminlte-input name="phone" value="{{ $user->phone }}" type="number" label="Nomor HP / Telepon"
-            placeholder="Nomor HP / Telepon yang dapat dihubungi" enable-old-support />
+            placeholder="Nomor HP yang dapat dihubungi" enable-old-support />
         <button type="submit" class="btn btn-sm btn-primary">
             Verifikasi Akun
         </button>

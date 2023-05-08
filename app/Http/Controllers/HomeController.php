@@ -11,12 +11,16 @@ use RealRashid\SweetAlert\Facades\Alert;
 
 class HomeController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         if (Auth()->user()->email_verified_at == null) {
+            Alert::success('Success', 'Akun SIMRS Waled anda telah didaftarkan, silahkan masukan nomor telepon anda untuk meminta verifikasi.');
+            $user = Auth::user();
             Auth::logout();
-            Alert::success('Success', 'Akun SIMRS Waled anda telah didaftarkan, silahkan login untuk meminta verifikasi.');
-            return redirect()->route('login');
+
+            return view('vendor.adminlte.auth.verify', compact(['request', 'user']));
+            // return redirect()->route('login');
+
         } else {
             return view('home');
         }
