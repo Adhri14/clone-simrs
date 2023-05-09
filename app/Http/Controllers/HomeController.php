@@ -17,7 +17,6 @@ class HomeController extends Controller
             Alert::success('Success', 'Akun SIMRS Waled anda telah didaftarkan, silahkan masukan nomor telepon anda untuk meminta verifikasi.');
             $user = Auth::user();
             Auth::logout();
-
             return view('vendor.adminlte.auth.verify', compact(['request', 'user']));
             // return redirect()->route('login');
 
