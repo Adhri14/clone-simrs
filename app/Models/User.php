@@ -34,7 +34,7 @@ class User extends Authenticatable
     ];
     public function verificator()
     {
-        return $this->hasOne(User::class, 'id', 'user_id');
+        return $this->hasOne(User::class, 'id', 'user_verify');
     }
     public function adminlte_image()
     {
