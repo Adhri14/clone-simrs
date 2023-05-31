@@ -142,11 +142,8 @@
                     <x-adminlte-input-date name="tgl_diteruskan" label="Tgl Diteruskan" igroup-size="sm"
                         :config="$config" enable-old-support />
                     {{-- <x-adminlte-input name="pengolah" label="Diteruskan Kpd" igroup-size="sm" enable-old-support /> --}}
-                    <x-adminlte-select name="pengolah" label="Diteruskan Kpd" igroup-size="sm" enable-old-support>
-                        <option value="1">Wakil Direktur Umum Dan Keuangan</option>
-                        <option value="2">Wakil Direktur Pelayanan Dan Pendidikan</option>
+                    <x-adminlte-input name="pengolah" label="Diteruskan Kpd" igroup-size="sm" enable-old-support required/>
 
-                    </x-adminlte-select>
                     <div class="form-group">
                         <div class="custom-control custom-checkbox">
                             <input class="custom-control-input" type="checkbox" id="tindaklanjuti" name="tindaklanjuti">

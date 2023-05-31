@@ -58,6 +58,9 @@ class SuratMasukController extends Controller
         $request['number'] = "120363115261279867@g.us";
         $request['message'] = "Telah diinput surat masuk oleh *" . Auth::user()->name .  "*\n\n*No Surat :* " . $request->no_surat . "\n*Asal Surat :* " . $request->asal_surat . "\n*Perihal :* " . $request->perihal . "\n\nSilahkan untuk mengeceknya dan men-disposisikan dapat diakses dengan link berikut. \nhttp://sim.rsudwaled.id/simrs/bagianumum/suratmasuk";
         $wa->send_message_group($request);
+        $request['number'] = "089529909036";
+        $request['message'] = "Telah diinput surat masuk oleh *" . Auth::user()->name .  "*\n\n*No Surat :* " . $request->no_surat . "\n*Asal Surat :* " . $request->asal_surat . "\n*Perihal :* " . $request->perihal . "\n\nSilahkan untuk mengeceknya dan men-disposisikan dapat diakses dengan link berikut. \nhttp://sim.rsudwaled.id/simrs/bagianumum/suratmasuk";
+        $wa->send_message($request);
         Alert::success('Success', 'Surat Masuk Berhasil Diinputkan');
         return redirect()->back();
     }

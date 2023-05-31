@@ -9,6 +9,9 @@ class FileRekamMedis extends Model
 {
     use HasFactory;
 
+    protected $connection = 'mysql2';
+    protected $table = 'jkn_scan_file_rm';
+
     protected $fillable = [
         'norm',
         'nama',
