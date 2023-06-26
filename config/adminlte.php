@@ -14,7 +14,7 @@ return [
     |
     */
 
-    'title' => 'SIRAMAH-RS Waled',
+    'title' => 'SIRAMAH-RS Waleds',
     'title_prefix' => '',
     'title_postfix' => '',
 
@@ -379,13 +379,13 @@ return [
                     'shift'   => 'ml-2',
                     'can' => 'poliklinik',
                 ],
-                [
-                    'text' => 'Jadwal Dokter Poliklinik',
-                    'icon'    => 'fas fa-calendar-alt',
-                    'shift'   => 'ml-2',
-                    'url'  => 'poliklinik/jadwaldokter',
-                    'can' => 'poliklinik',
-                ],
+                // [
+                //     'text' => 'Jadwal Dokter Poliklinik',
+                //     'icon'    => 'fas fa-calendar-alt',
+                //     'shift'   => 'ml-2',
+                //     'url'  => 'poliklinik/jadwaldokter',
+                //     'can' => 'poliklinik',
+                // ],
                 [
                     'text' => 'Data Pasien',
                     'icon'    => 'fas fa-user-injured',

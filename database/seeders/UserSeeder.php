@@ -17,7 +17,7 @@ class UserSeeder extends Seeder
             "username" => "adminrs",
             "phone" => "089529909036",
             'password' => bcrypt('qweqwe123'),
-            'user_id' => 1,
+            'user_verify' => 1,
             'email_verified_at' => now()
         ]);
         $user->assignRole('Admin Super');
@@ -27,8 +27,8 @@ class UserSeeder extends Seeder
             "username" => "marwan",
             "phone" => "089529909036",
             'password' => bcrypt('qweqwe123'),
-            // 'user_id' => 1,
-            // 'email_verified_at' => now()
+            'user_verify' => 1,
+            'email_verified_at' => now()
         ]);
         $user->assignRole('Admin Super');
         $user = User::create([
@@ -37,7 +37,7 @@ class UserSeeder extends Seeder
             "username" => "antrianbpjs",
             "phone" => "089529909036",
             'password' => bcrypt('antrianbpjs'),
-            'user_id' => 1,
+            'user_verify' => 1,
             'email_verified_at' => now()
         ]);
         $user->assignRole('Admin Super');
@@ -47,7 +47,7 @@ class UserSeeder extends Seeder
             "username" => "bagianumum",
             "phone" => "089529909036",
             'password' => bcrypt('bagianumum'),
-            'user_id' => 1,
+            'user_verify' => 1,
             'email_verified_at' => now()
         ]);
         $user->assignRole('Bagian Umum');
@@ -57,7 +57,7 @@ class UserSeeder extends Seeder
             "username" => "adminpendaftaran",
             "phone" => "089529909036",
             'password' => bcrypt('adminpendaftaran'),
-            'user_id' => 1,
+            'user_verify' => 1,
             'email_verified_at' => now()
         ]);
         $user->assignRole('Pendaftaran');
@@ -67,7 +67,7 @@ class UserSeeder extends Seeder
             "username" => "adminkasir",
             "phone" => "089529909036",
             'password' => bcrypt('adminkasir'),
-            'user_id' => 1,
+            'user_verify' => 1,
             'email_verified_at' => now()
         ]);
         $user->assignRole('Kasir');
@@ -77,7 +77,7 @@ class UserSeeder extends Seeder
             "username" => "adminpoli",
             "phone" => "089529909036",
             'password' => bcrypt('adminpoli'),
-            'user_id' => 1,
+            'user_verify' => 1,
             'email_verified_at' => now()
         ]);
         $user->assignRole('Poliklinik');
@@ -87,7 +87,7 @@ class UserSeeder extends Seeder
             "username" => "adminfarmasi",
             "phone" => "089529909036",
             'password' => bcrypt('adminfarmasi'),
-            'user_id' => 1,
+            'user_verify' => 1,
             'email_verified_at' => now()
         ]);
         $user->assignRole('Farmasi');
@@ -97,7 +97,7 @@ class UserSeeder extends Seeder
             "username" => "adminyanmed",
             "phone" => "089529909036",
             'password' => bcrypt('adminyanmed'),
-            'user_id' => 1,
+            'user_verify' => 1,
             'email_verified_at' => now()
         ]);
         $user->assignRole('Pelayanan Medis');
@@ -107,11 +107,10 @@ class UserSeeder extends Seeder
             "username" => "adminrekammedis",
             "phone" => "089529909036",
             'password' => bcrypt('adminrekammedis'),
-            'user_id' => 1,
+            'user_verify' => 1,
             'email_verified_at' => now()
         ]);
         $user->assignRole('Rekam Medis');
-
         $adminpoli = [
             'OBG',
             // 'HIV',
@@ -141,12 +140,12 @@ class UserSeeder extends Seeder
         foreach ($adminpoli as  $value) {
             $poli = PoliklinikAntrian::where('kodeSubspesialis', $value)->first();
             $user = User::create([
-                "name" => "ADMIN " . $poli->namaSubspesialis,
+                "name" => "ADMIN " . $poli->namasubspesialis,
                 "email" => $value . "@gmail.com",
                 "username" => $value,
                 "phone" => '089529909036',
                 'password' => bcrypt('adminpoli'),
-                'user_id' => 2,
+                'user_verify' => 2,
                 'email_verified_at' => now()
             ]);
             $user->assignRole('Poliklinik');
