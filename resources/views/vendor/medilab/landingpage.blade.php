@@ -116,7 +116,7 @@
             </div>
             <div class="faq-list">
                 <ul>
-                    @for ($i = 1; $i <= 6; $i++)
+                    {{-- @for ($i = 1; $i <= 6; $i++)
                         <li data-aos="fade-up" data-aos-delay="{{ $i * 100 }}"> <i
                                 class="bx bx-calendar-exclamation icon-help"></i>
                             <a data-bs-toggle="collapse" data-bs-target="#faq-list-{{ $i }}" class="collapsed"
@@ -154,7 +154,7 @@
                                 </table>
                             </div>
                         </li>
-                    @endfor
+                    @endfor --}}
                 </ul>
             </div>
         </div>

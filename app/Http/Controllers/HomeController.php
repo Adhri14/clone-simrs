@@ -26,12 +26,10 @@ class HomeController extends Controller
     }
     public function landingpage()
     {
-        $jadwal = JadwalDokter::get();
+        // $jadwal = JadwalDokter::get();
 
         // dd($jadwal->groupBy('hari')->first());
 
-        return view('vendor.medilab.landingpage', compact([
-            'jadwal'
-        ]));
+        return view('vendor.medilab.landingpage');
     }
 }

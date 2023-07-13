@@ -45,6 +45,7 @@ use App\Http\Controllers\SIMRS\SuratMasukController;
 use App\Http\Controllers\SIMRS\TarifLayananController;
 use App\Http\Controllers\TarifKelompokLayananController;
 use App\Http\Controllers\VclaimController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 
