@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\WhatsappController;
 use App\Http\Controllers\AntrianController;
 use App\Http\Controllers\Auth\VerificationController;
+use App\Http\Controllers\blog\BlogAdminController;
 use App\Http\Controllers\BPJS\Antrian\AntrianController as AntrianAntrianController;
 use App\Http\Controllers\BPJS\Vclaim\VclaimController as VclaimVclaimController;
 use App\Http\Controllers\FileRMController;
@@ -68,14 +69,14 @@ Route::get('verifikasi_akun', [VerificationController::class, 'verifikasi_akun']
 Route::post('verifikasi_kirim', [VerificationController::class, 'verifikasi_kirim'])->name('verifikasi_kirim');
 
 // Untuk redirect ke Google
-Route::get('login/google/redirect', [SocialiteController::class, 'redirect'])
-    ->middleware(['guest'])
-    ->name('login.google');
+// Route::get('login/google/redirect', [SocialiteController::class, 'redirect'])
+//     ->middleware(['guest'])
+//     ->name('login.google');
 
-// Untuk callback dari Google
-Route::get('login/google/callback', [SocialiteController::class, 'callback'])
-    ->middleware(['guest'])
-    ->name('login.goole.callback');
+// // Untuk callback dari Google
+// Route::get('login/google/callback', [SocialiteController::class, 'callback'])
+//     ->middleware(['guest'])
+//     ->name('login.goole.callback');
 
 // layanan umum
 Route::get('bpjs/vclaim/surat_kontrol_print/{suratkontrol}', [SuratKontrolController::class, 'print'])->name('bpjs.vclaim.surat_kontrol_print');
@@ -198,6 +199,12 @@ Route::middleware('auth')->group(function () {
         Route::resource('permission', PermissionController::class);
         Route::get('user_verifikasi/{user}', [UserController::class, 'user_verifikasi'])->name('user_verifikasi');
         Route::get('delet_verifikasi', [UserController::class, 'delet_verifikasi'])->name('delet_verifikasi');
+
+        Route::get('blog', [BlogAdminController::class, 'index'])->name('blog.index');
+        Route::get('blog/create', [BlogAdminController::class, 'create'])->name('blog.create');
+        Route::post('blog/store', [BlogAdminController::class, 'store'])->name('blog.store');
+        Route::put('blog/update-status/{id}', [BlogAdminController::class, 'updateStatus'])->name('blog.update.status');
+        Route::delete('blog/remove/{id}', [BlogAdminController::class, 'destroy'])->name('blog.destroy');
     });
     // pendaftaran
     Route::middleware('permission:pendaftaran')->prefix('pendaftaran')->name('pendaftaran.')->group(function () {

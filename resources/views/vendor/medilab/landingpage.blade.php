@@ -159,59 +159,6 @@
             </div>
         </div>
     </section>
-    {{-- <section id="jadwalrawatjalan" class="faq section-bg">
-        <div class="container">
-            <div class="section-title">
-                <h2>Jadwal Poliklinik Rawat Jalan</h2>
-                <p>Dokter sewaktu waktu dapat membatalkan jadwal praktek dikarenakan cuti atau berhalangan. Silahkan
-                    tetap dapatkan informasi terbaru jadwal dokter di web kami. <br>Terima kasih dan harap
-                    maklum. Update terakhir {{ \Carbon\Carbon::now() }}</p>
-            </div>
-            <div class="faq-list">
-                <ul>
-                    @for ($i = 1; $i <= 6; $i++)
-                        <li data-aos="fade-up" data-aos-delay="{{ $i * 100 }}"> <i
-                                class="bx bx-calendar-exclamation icon-help"></i>
-                            <a data-bs-toggle="collapse" data-bs-target="#faq-list-{{ $i }}" class="collapsed"
-                                aria-expanded="false">
-                                <b>
-                                    {{ $jadwal->where('hari', $i)->first()->namahari }}
-                                </b><i class="bx bx-chevron-down icon-show"></i><i
-                                    class="bx bx-chevron-up icon-close"></i></a>
-                            <div id="faq-list-{{ $i }}" class="collapse" data-bs-parent=".faq-list">
-                                <table class="table table-hover table-responsive">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col">POLIKLINIK</th>
-                                            <th scope="col">DOKTER</th>
-                                            <th scope="col">JADWAL</th>
-                                            <th scope="col">KUOTA</th>
-                                            <th scope="col">KET</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach ($jadwal->where('hari', $i) as $item)
-                                            <tr class="{{ $item->libur ? 'table-danger' : null }}">
-                                                <td>{{ strtoupper($item->namasubspesialis) }}</td>
-                                                <td>{{ strtoupper($item->namadokter) }}</td>
-                                                <td>{{ $item->jadwal }}</td>
-                                                <td>{{ $item->kapasitaspasien }}</td>
-                                                <td>
-                                                    @if ($item->libur)
-                                                        Libur
-                                                    @endif
-                                                </td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
-                        </li>
-                    @endfor
-                </ul>
-            </div>
-        </div>
-    </section> --}}
     <section id="daftaronline" class="services">
         <div class="container">
             <div class="section-title">

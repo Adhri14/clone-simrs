@@ -32,6 +32,7 @@ class DatabaseSeeder extends Seeder
         $this->call(DokterSeeder::class);
         $this->call(RoleSeeder::class);
         $this->call(UserSeeder::class);
+        $this->call(CategoryAdminSeeder::class);
         // Pasien::factory(100)->create();
     }
 }
