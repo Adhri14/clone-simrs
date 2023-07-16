@@ -5,8 +5,8 @@
 @section('content')
     <section id="hero" class="d-flex align-items-center">
         <div class="container">
-            <h1>SIRAMAH-RS Waled</h1>
-            <h2>Sistem Informasi Manajemen Kesehatan Terintegrasi RS Waled</h2>
+            <h1>RSUD Lamaddukelleng</h1>
+            <h2>WEB Company Profile RSUD Lamaddukelleng</h2>
             <a href="#about" class="btn-get-started scrollto">Daftar Online</a>
         </div>
     </section>
@@ -15,24 +15,14 @@
             <div class="row">
                 <div class="col-lg-4 d-flex align-items-stretch">
                     <div class="content">
-                        <h3>Apa sih SIRAMAH-RS Waled ?</h3>
+                        <h3>Apa sih RSUD Lamaddukelleng ?</h3>
                         <p>
-                            SIMRS adalah suatu sistem teknologi informasi komunikasi yang
+                            RSUD Lamaddukelleng adalah suatu sistem teknologi informasi komunikasi yang
                             memproses dan mengintegrasikan seluruh alur proses pelayanan
                             Rumah Sakit dalam bentuk jaringan koordinasi, pelaporan dan
                             prosedur administrasi untuk memperoleh informasi secara tepat dan
                             akurat, dan merupakan bagian dari Sistem Informasi Kesehatan.
                         </p>
-                        <div class="text-center">
-                            <a href="{{ route('login') }}" class="more-btn">
-                                @guest
-                                    Login Pegawai
-                                @else
-                                    Dashboard Pegawai
-                                @endguest
-                                <i class="bx bx-chevron-right"></i>
-                            </a>
-                        </div>
                     </div>
                 </div>
                 <div class="col-lg-8 d-flex align-items-stretch">
@@ -114,49 +104,6 @@
                     tetap dapatkan informasi terbaru jadwal dokter di web kami. <br>Terima kasih dan harap
                     maklum. Update terakhir {{ \Carbon\Carbon::now() }}</p>
             </div>
-            <div class="faq-list">
-                <ul>
-                    {{-- @for ($i = 1; $i <= 6; $i++)
-                        <li data-aos="fade-up" data-aos-delay="{{ $i * 100 }}"> <i
-                                class="bx bx-calendar-exclamation icon-help"></i>
-                            <a data-bs-toggle="collapse" data-bs-target="#faq-list-{{ $i }}" class="collapsed"
-                                aria-expanded="false">
-                                <b>
-                                    {{ $jadwal->where('hari', $i)->first()->namahari }}
-                                </b><i class="bx bx-chevron-down icon-show"></i><i
-                                    class="bx bx-chevron-up icon-close"></i></a>
-                            <div id="faq-list-{{ $i }}" class="collapse" data-bs-parent=".faq-list">
-                                <table class="table table-hover table-responsive">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col">POLIKLINIK</th>
-                                            <th scope="col">DOKTER</th>
-                                            <th scope="col">JADWAL</th>
-                                            <th scope="col">KUOTA</th>
-                                            <th scope="col">KET</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach ($jadwal->where('hari', $i) as $item)
-                                            <tr class="{{ $item->libur ? 'table-danger' : null }}">
-                                                <td>{{ strtoupper($item->namasubspesialis) }}</td>
-                                                <td>{{ strtoupper($item->namadokter) }}</td>
-                                                <td>{{ $item->jadwal }}</td>
-                                                <td>{{ $item->kapasitaspasien }}</td>
-                                                <td>
-                                                    @if ($item->libur)
-                                                        Libur
-                                                    @endif
-                                                </td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
-                        </li>
-                    @endfor --}}
-                </ul>
-            </div>
         </div>
     </section>
     <section id="daftaronline" class="services">
@@ -227,6 +174,33 @@
             </div>
         </div>
     </section>
+    <section id="blog" class="blog">
+        <div class="container">
+            <div class="section-title">
+                <h2>Blog</h2>
+                <p>Informasi tentang Rumah Sakit Umum Daerah Lamaddukelleng akan sering kita update diblog ini.</p>
+            </div>
+            <div class="row justify-content-center">
+                @foreach ($blogs as $item)
+                    <div class="col-lg-4 mb-3">
+                        <div class="card">
+                            <img src="https://source.unsplash.com/1200x400?{{ $item->Category->name }}" class="card-img-top" alt="...">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ $item->title }}</h5>
+                                <p class="card-text">{{ $item->excerpt }}</p>
+                                <a href="{{ route('blog.show', $item->id) }}">Baca selengkapnya</a>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+            <div class="row mt-4 justify-content-center">
+                <div class="col-lg-6 d-flex justify-content-center">
+                    {{ $blogs->links() }}
+                </div>
+            </div>
+        </div>
+    </section>
     <section id="contact" class="contact">
         <div class="container">
             <div class="section-title">
@@ -237,12 +211,20 @@
             </div>
         </div>
 
-        <div>
+        {{-- <div>
             <iframe
                 src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d2800.7142316722648!2d108.71889725135291!3d-6.913539570187568!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0xd5151423db71bc02!2sRSUD%20Waled%20Cirebon!5e0!3m2!1sen!2sid!4v1669169174657!5m2!1sen!2sid"
                 style="border:0; width: 100%; height: 350px;" allowfullscreen="" loading="lazy"
                 referrerpolicy="no-referrer-when-downgrade"></iframe>
-        </div>
+        </div> --}}
+        {{-- <div>
+            <iframe
+                src="https://maps.google.com/maps?width=1000&amp;height=400&amp;hl=en&amp;q=rsud lamaddukeleng&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed"
+                style="border:0; width: 100%; height: 350px;" allowfullscreen="" loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </div> --}}
+
+        {{-- <div class="mapouter"><div class="gmap_canvas"><iframe class="gmap_iframe" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://maps.google.com/maps?width=1000&amp;height=400&amp;hl=en&amp;q=rsud lamaddukeleng&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed"></iframe><a href="https://connectionsgame.org/">Connections Game</a></div><style>.mapouter{position:relative;text-align:right;width:600px;height:400px;}.gmap_canvas {overflow:hidden;background:none!important;width:100p%;height:400px;}.gmap_iframe {width:100%!important;height:400px!important;}</style></div> --}}
 
         <div class="container">
             <div class="row mt-5">
@@ -251,23 +233,29 @@
                         <div class="address">
                             <i class="bi bi-geo-alt"></i>
                             <h4>Location:</h4>
-                            <p>Jl. Prabu Kiansantang No.4, Desa Waled Kota, Kec. Waled, Kabupaten Cirebon, Jawa Barat 45187
+                            <p>Jalan Kartika Candra Kirana No.9, Tempe, Wajo, Maddukelleng, Sengkang, Kabupaten Wajo, Sulawesi Selatan 90918
                             </p>
                         </div>
                         <div class="email">
                             <i class="bi bi-envelope"></i>
                             <h4>Email:</h4>
-                            <p>brsud.waled@gmail.com</p>
+                            <p>admin.rsud@lamaddukelleng.com</p>
                         </div>
                         <div class="phone">
                             <i class="bi bi-phone"></i>
                             <h4>Call:</h4>
-                            <p>0898 3311 118 (Humas RSUD Waled)</p>
+                            <p>0812 3456 7890 (Humas RSUD Lamaddukelleng)</p>
                         </div>
                     </div>
                 </div>
                 <div class="col-lg-8 mt-5 mt-lg-0">
-                    <form action="forms/contact.php" method="post" role="form" class="php-email-form">
+                    <div>
+            <iframe
+                src="https://maps.google.com/maps?width=1000&amp;height=400&amp;hl=en&amp;q=rsud lamaddukeleng&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed"
+                style="border:0; width: 100%; height: 350px;" allowfullscreen="" loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </div>
+                    {{-- <form action="forms/contact.php" method="post" role="form" class="php-email-form">
                         <div class="row">
                             <div class="col-md-6 form-group">
                                 <input type="text" name="name" class="form-control" id="name"
@@ -291,7 +279,7 @@
                             <div class="sent-message">Your message has been sent. Thank you!</div>
                         </div>
                         <div class="text-center"><button type="submit">Send Message</button></div>
-                    </form>
+                    </form> --}}
                 </div>
             </div>
         </div>

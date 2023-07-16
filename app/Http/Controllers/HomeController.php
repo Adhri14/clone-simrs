@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\API\AntrianBPJSController;
 use App\Http\Controllers\API\VclaimBPJSController;
+use App\Models\BlogAdmin;
 use App\Models\JadwalDokter;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -26,10 +27,7 @@ class HomeController extends Controller
     }
     public function landingpage()
     {
-        // $jadwal = JadwalDokter::get();
-
-        // dd($jadwal->groupBy('hari')->first());
-
-        return view('vendor.medilab.landingpage');
+        $blogs = BlogAdmin::where('status', 'active')->paginate(3);
+        return view('vendor.medilab.landingpage', ['blogs' => $blogs]);
     }
 }

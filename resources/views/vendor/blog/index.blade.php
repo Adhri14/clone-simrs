@@ -58,14 +58,12 @@
                             <td>{{ $item->Category->name }}</td>
                             <td>{{ $item->created_at }}</td>
                             <td>
-                                <form action="{{ route('blog.update.status', $item->id) }}" method="POST" class="d-inline-block">
-                                    @csrf
-                                    @method('PUT')
-                                    <x-adminlte-button class="btn-xs" theme="success" icon="fas fa-check" type="submit" onclick="return confirm('Apakah anda ingin mengupdate status {{ $item->title }} ?')" />
-                                </form>
+                                <x-adminlte-button class="btn-xs" theme="info" icon="fas fa-eye"
+                                title="View Blog {{ $item->title }}"
+                                onclick="window.location='{{ route('blog.show', $item->id) }}'" />
                                 <x-adminlte-button class="btn-xs" theme="warning" icon="fas fa-edit"
-                                title="Edit User {{ $item->title }}"
-                                onclick="window.location='{{ route('user.edit', $item) }}'" />
+                                title="Edit Blog {{ $item->title }}"
+                                onclick="window.location='{{ route('blog.edit', $item->id) }}'" />
                                 <form action="{{ route('blog.destroy', $item->id) }}" method="POST" class="d-inline-block">
                                     @csrf
                                     @method('DELETE')

@@ -47,19 +47,15 @@ class BlogAdminController extends Controller
         return redirect()->route('blog.index');
     }
 
+    public function edit(Request $request)
+    {
+        
+    }
+
     public function destroy(Request $request, $id)
     {
         BlogAdmin::where('id', $id)->delete();
         $request->session()->flash('success', 'Berhasil hapus blog');
-        return redirect()->route('blog.index');
-    }
-
-    public function updateStatus(Request $request, $id)
-    {
-        $post = BlogAdmin::find($id);
-        $post->update(['status' => $post->status === 'active' ? 'non-active' : 'active']);
-        $post->save();
-        $request->session()->flash('success', 'Berhasil update status');
         return redirect()->route('blog.index');
     }
 }
